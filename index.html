@@ -7288,7 +7288,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.1';
-window.CMDGLAS_BUILD=160;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=162;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-18';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18228,14 +18228,14 @@ html,body{overflow:auto;height:auto}
 #hangar-actions{align-items:center !important}
 .h-act-btn{font-size:11px !important;padding:5px 11px !important;white-space:nowrap !important;line-height:1.1 !important;min-height:0 !important;letter-spacing:.5px !important}
 </style>
-<style>html.cmdglas-public #tab-voice,html.cmdglas-public #tab-streamdeck,html.cmdglas-public #tab-allkb,html.cmdglas-public #tab-deckbuilder,html.cmdglas-public #tab-system,html.cmdglas-public #tab-kbref,html.cmdglas-public button.tab[data-tab="system"],html.cmdglas-public .hm-cell:has([data-tab="system"]),html.cmdglas-public .personal-only{display:none !important}</style>
+<style>html.cmdglas-public #tab-voice,html.cmdglas-public #tab-streamdeck,html.cmdglas-public #tab-allkb,html.cmdglas-public #tab-deckbuilder,html.cmdglas-public #tab-system,html.cmdglas-public #tab-kbref,html.cmdglas-public button.tab[data-tab="system"],html.cmdglas-public .hm-cell:has([data-tab="system"]),html.cmdglas-public #tab-peripherals,html.cmdglas-public button.tab[data-tab="peripherals"],html.cmdglas-public button.hm-tile[data-tab="peripherals"],html.cmdglas-public .personal-only{display:none !important}</style>
 <script>/* 2026-07-19 user: ONE tablet, self-sterilizing. On a PUBLIC host it hides the rig-specific
    personalization tabs; on localhost / your LAN / file:// it shows everything. No second file. */
 (function(){try{var h=(location.hostname||'').toLowerCase();
   var local=(h===''||h==='localhost'||h==='127.0.0.1'||/^192\.168\./.test(h)||/^10\./.test(h)||/^172\.(1[6-9]|2\d|3[01])\./.test(h)||/\.local$/.test(h));
   if(local)return;
   document.documentElement.classList.add('cmdglas-public');
-  var GATED={voice:1,streamdeck:1,allkb:1,deckbuilder:1,system:1,kbref:1};
+  var GATED={voice:1,streamdeck:1,allkb:1,deckbuilder:1,system:1,kbref:1,peripherals:1};
   function wrap(){var o=window.setActiveTabById; if(typeof o!=='function'){return setTimeout(wrap,150);} if(o.__gated)return; var w=function(id){if(GATED[id])id='home'; return o.call(this,id);}; w.__gated=1; window.setActiveTabById=w;}
   wrap();
 }catch(e){}})();</script>
