@@ -5247,46 +5247,6 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 <!-- /PERIPHERALS PANEL -->
 <!-- CRAFT CALC PANEL -->
   <div class="panel-page" id="tab-craftcalc">
-    <div class="p-search" style="align-items:center;flex-wrap:wrap;gap:6px">
-      <input class="scinput" id="cc-q" placeholder="Search blueprint (name, variant, category)&#8230;" oninput="ccRender()" style="flex:1;min-width:240px">
-      <span id="cc-count" style="font-size:8px;color:var(--text-dim);letter-spacing:1px"></span>
-      <label style="font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-left:6px">SYSTEM:</label>
-      <select class="scinput" id="cc-sys-filter" onchange="ccApplySysFilter()" style="font-size:9px;padding:2px 6px;max-width:120px"><option value="all">All</option><option value="Stanton">Stanton</option><option value="Pyro">Pyro</option><option value="Nyx">Nyx</option><option value="UNCONFIRMED">Unconfirmed</option></select>
-      <!-- === CATEGORY PILLS MOVED UP (2026-07-17 user order) ================================
-           "move the bottom row of buttons up infront of the buttons above them" -> "blueprints page",
-           with a screenshot of THIS page (the Craft Calculator's blueprint picker - #cc-q,
-           Update saved list [was "Load Overlay List"], Save/Load List). The Blueprints TAB is a different page whose search
-           reads "Search set, item, faction, mission..." - the screenshot is what got followed.
-           WAS: #cc-cat-pills was a SECOND .p-search row below this one. NOW: same element, moved
-           inside this row and placed BEFORE the action buttons - "in front of" as asked.
-           IT IS THE SAME ELEMENT, NOT A COPY. ccRender()/ccCatPills() paint into #cc-cat-pills by
-           id, so moving the node leaves every writer working untouched. Rebuilding the pills here
-           would have created a second store of one truth - the bug pattern this whole tablet keeps
-           relearning.
-           The id, class and gap are preserved; only position changed. .p-search on the parent
-           already carries flex-wrap:wrap, so when the row runs out of width the pills wrap rather
-           than pushing Load List off-screen - that overflow (scrollWidth 949 vs clientWidth 696,
-           CLOSE shoved out of view) is exactly how the overlay topbar broke. flex:1 1 100% on a
-           wrapped pill row would force a break; deliberately NOT set, so it only breaks if it must.
-           VERIFY AT WIDTH, NOT BY EYE: check scrollWidth <= clientWidth at 320/640/900. -->
-      <span id="cc-cat-pills" style="display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center"></span>
-      <button type="button" class="panel-btn" onclick="ccClear()" style="font-size:9px;padding:3px 8px">Clear All</button><button type="button" class="panel-btn" onclick="ccLoadOverlay()" style="font-size:9px;padding:3px 8px;border-color:#39d353;color:#39d353">Update saved list</button>
-      <button type="button" class="panel-btn" onclick="ccSavePreset()" style="font-size:9px;padding:3px 8px">Save List</button>
-      <button type="button" class="panel-btn" onclick="ccLoadPreset()" style="font-size:9px;padding:3px 8px">Load List</button>
-    </div>
-
-    <!-- ============================================================================
-         CRAFTING FIELD MANUAL (2026-07-15, user order: "the crafting calculator also needs a
-         Field Manual Explaining how crafting works ... do a deep down on crafting in it's
-         current state and add the FM buton")
-         Researched 2026-07-15 against: CIG Crafting Gameplay Guide (comm-link 19652, 4.7-era),
-         starcitizen.tools (Item fabricator / Blueprint / Guide:Mining / 4.8.0), RSI Knowledge
-         Base Mining Basics, UEX (fabricator prices, 4.8.x-stamped), Scopique (4.8 PTU band
-         values), The Impound, RSI Community Hub blueprint-finder (4.8 datamine).
-         EVERY claim is tagged VERIFIED / COMMUNITY / UNCONFIRMED. Do not "tidy" the tags away —
-         several of the most useful-sounding numbers are NOT officially published, and the
-         large-item retrieval question is genuinely undocumented by any source.
-         ============================================================================ -->
     <details style="margin:6px 10px 4px;border:1px solid var(--amber-dim);border-radius:6px"><!-- PANEL-PASS 2026-07-15: had NO border — free-hanging when expanded; now enclosed like Salvage/Hauling manuals -->
       <summary style="font-size:12px;letter-spacing:2px;color:var(--amber2);font-weight:700;padding:8px 12px;background:var(--steel);cursor:pointer">CRAFTING &mdash; FIELD MANUAL</summary>
       <div style="font-size:12px;line-height:1.65;color:var(--text-mid);padding:4px 2px 8px">
@@ -5385,6 +5345,48 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 
       </div>
     </details>
+
+    <div class="p-search" style="align-items:center;flex-wrap:wrap;gap:6px"><button type="button" class="panel-btn" onclick="ccLoadOverlay()" style="font-size:9px;padding:3px 8px;border-color:#39d353;color:#39d353">Update saved list</button><button type="button" class="panel-btn" onclick="ccClear()" style="font-size:9px;padding:3px 8px">Clear All</button><button type="button" class="panel-btn" onclick="ccSavePreset()" style="font-size:9px;padding:3px 8px">Save List</button><button type="button" class="panel-btn" onclick="ccLoadPreset()" style="font-size:9px;padding:3px 8px">Load List</button>
+      <input class="scinput" id="cc-q" placeholder="Search blueprint (name, variant, category)&#8230;" oninput="ccRender()" style="flex:1;min-width:240px">
+      <span id="cc-count" style="font-size:8px;color:var(--text-dim);letter-spacing:1px"></span>
+      <label style="font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-left:6px">SYSTEM:</label>
+      <select class="scinput" id="cc-sys-filter" onchange="ccApplySysFilter()" style="font-size:9px;padding:2px 6px;max-width:120px"><option value="all">All</option><option value="Stanton">Stanton</option><option value="Pyro">Pyro</option><option value="Nyx">Nyx</option><option value="UNCONFIRMED">Unconfirmed</option></select>
+      <!-- === CATEGORY PILLS MOVED UP (2026-07-17 user order) ================================
+           "move the bottom row of buttons up infront of the buttons above them" -> "blueprints page",
+           with a screenshot of THIS page (the Craft Calculator's blueprint picker - #cc-q,
+           Update saved list [was "Load Overlay List"], Save/Load List). The Blueprints TAB is a different page whose search
+           reads "Search set, item, faction, mission..." - the screenshot is what got followed.
+           WAS: #cc-cat-pills was a SECOND .p-search row below this one. NOW: same element, moved
+           inside this row and placed BEFORE the action buttons - "in front of" as asked.
+           IT IS THE SAME ELEMENT, NOT A COPY. ccRender()/ccCatPills() paint into #cc-cat-pills by
+           id, so moving the node leaves every writer working untouched. Rebuilding the pills here
+           would have created a second store of one truth - the bug pattern this whole tablet keeps
+           relearning.
+           The id, class and gap are preserved; only position changed. .p-search on the parent
+           already carries flex-wrap:wrap, so when the row runs out of width the pills wrap rather
+           than pushing Load List off-screen - that overflow (scrollWidth 949 vs clientWidth 696,
+           CLOSE shoved out of view) is exactly how the overlay topbar broke. flex:1 1 100% on a
+           wrapped pill row would force a break; deliberately NOT set, so it only breaks if it must.
+           VERIFY AT WIDTH, NOT BY EYE: check scrollWidth <= clientWidth at 320/640/900. -->
+      <span id="cc-cat-pills" style="display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center"></span>
+      
+      
+      
+    </div>
+
+    <!-- ============================================================================
+         CRAFTING FIELD MANUAL (2026-07-15, user order: "the crafting calculator also needs a
+         Field Manual Explaining how crafting works ... do a deep down on crafting in it's
+         current state and add the FM buton")
+         Researched 2026-07-15 against: CIG Crafting Gameplay Guide (comm-link 19652, 4.7-era),
+         starcitizen.tools (Item fabricator / Blueprint / Guide:Mining / 4.8.0), RSI Knowledge
+         Base Mining Basics, UEX (fabricator prices, 4.8.x-stamped), Scopique (4.8 PTU band
+         values), The Impound, RSI Community Hub blueprint-finder (4.8 datamine).
+         EVERY claim is tagged VERIFIED / COMMUNITY / UNCONFIRMED. Do not "tidy" the tags away —
+         several of the most useful-sounding numbers are NOT officially published, and the
+         large-item retrieval question is genuinely undocumented by any source.
+         ============================================================================ -->
+    
 
     <style>
     /* Blueprint/CC control row — readability bump +25% + narrower search (PC preview 2026-07-14) */
@@ -7288,7 +7290,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.1';
-window.CMDGLAS_BUILD=162;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=164;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-18';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -7538,7 +7540,7 @@ function scBuildZoomBar(){
       + B('scr-nav-fs','onclick="window.toggleFullscreen&&toggleFullscreen()" title="Fill the whole screen"',window.SCRI.fs,'FULLSCREEN')
       + B('zb-win','onclick="window.scWindowMode&&scWindowMode()" title="Reopen the tablet in a clean window with no address bar"',window.SCRI.win,'NO URL BAR')
       + B('scr-nav-ops','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'myops\')" title="Go to your OPS gather list"',window.SCRI.ops,'OPS')
-      + B('scr-nav-pop','onclick="window.openSatelliteOverlay&&openSatelliteOverlay()" title="Small always-on-top panel you can keep over the game"',window.SCRI.pop,'POP-OUT')
+      + B('scr-nav-pop','onclick="window.openSatelliteOverlay&&openSatelliteOverlay()" title="Small always-on-top panel you can keep over the game"',window.SCRI.pop,'OPS POP-OUT')
       + B('scr-nav-rfr','onclick="window.location.reload()" title="Reload the whole tablet"',window.SCRI.rfr,'REFRESH')
       + B('zb-reset','onclick="window.zbResetAll?zbResetAll(scActivePanelId()):setTabZoom(scActivePanelId(), 100, true)" title="Reset this page to 100%"',window.SCRI.reset,'RESET');
     document.body.appendChild(rb);
@@ -17388,10 +17390,10 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
       pill.innerHTML='<span class="sca-av">'+esc(initial)+'</span><span class="sca-lines"><span class="sca-l1">'+esc(u.name)+'</span></span><span class="sca-arw">&#9662;</span>';
       pill.onclick=function(){ var m=document.getElementById('sca-usermenu'); if(m&&m.classList.contains('sca-open')) hideMenu(); else showMenu(pill); };
     } else {
-      pill.title='Create an account (existing users can switch to Sign in)';
+      pill.title='Sign in (or create an account)';
       pill.classList.add('sca-pill-out');
-      pill.innerHTML='<span class="sca-lines"><span class="sca-l1">CREATE ACCOUNT</span></span>';
-      pill.onclick=function(){ scAuthOpen('create'); };
+      pill.innerHTML='<span class="sca-lines"><span class="sca-l1">SIGN IN</span></span>';
+      pill.onclick=function(){ scAuthOpen('signin'); };
     }
     pill.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pill.onclick(); } });
     return pill;
