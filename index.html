@@ -10744,7 +10744,7 @@ window.SC_TIPS = [
   {title:"Never quit during tutorials or risk 30K loop", body:"Force-quitting the game while in a tutorial can leave your account in a bad state causing repeated 30K errors. Finish or exit tutorials cleanly.", url:"https://support.robertsspaceindustries.com/hc/en-us/articles/360056254754-Star-Citizen-Alpha-4-8-Known-Issues", tag:"Bugs"},
   {title:"Toggle Helpful Hints to unstick notifications", body:"If refuel and hint notifications get stuck, enable Helpful Hints and Keybind Hints in settings, close menu, reopen, disable both, close again.", url:"https://ggwtb.com/blog/star-citizen-4-8-workaround-guide-for-route-inventory--and-camera-bugs", tag:"Bugs"},
   {title:"Export keybinds via console for backup", body:"Run pp_rebindkeys export all mybindings in the in-game console to save an XML you can back up or share between rigs — survives reinstalls.", url:"https://starcitizen.tools/Guide:Controls/keybind", tag:"QoL"},
-  {title:"Right-click friend to party-launch same shard", body:"To land on the same shard with friends, right-click their name in the menu and party-launch — saves the random-server roulette.", url:"https://starcitizen.tools/Guide:Controls/keybind", tag:"QoL"},
+  {title:"Join a friend on their name for the same shard", body:"To land on the same shard with friends, have the party leader get in-game first, then join on their name — saves the random-server roulette.", url:"https://starcitizen.tools/Guide:Controls/keybind", tag:"QoL"},
   {title:"Starfarer + Senior Contractor unlocks 1.8M refuel", body:"The 1.8M aUEC Urgent Fleet Refuel mission in Pyro needs a MISC Starfarer/Gemini and Senior Contractor with United Wayfarers — clears 5M+/hr.", url:"https://ggwtb.com/blog/star-citizen-patch-4-8-auec-farming-with-refueling-contracts-guides", tag:"aUEC"},
   {title:"Checkmate Station refueling ambush loop", body:"At UWC Junior Contractor, base at Checkmate Station, stack 150K refuel contracts, destroy the beacon, kill the ambusher — 750K-1.2M aUEC/hr.", url:"https://ggwtb.com/blog/star-citizen-4-8-auec-fast-farming-with-refueling-ambush-contracts", tag:"aUEC"}
 ];
@@ -13595,12 +13595,12 @@ that exact formatting at ANY window size by scaling zoom to the window, so the
 page always fits with no horizontal cut-off. Skips touch devices (they have
 their own rules) and COMPACT MODE (its layout is intentionally small). */
 (function(){
-  var DESIGN_W=1700, MIN_W=1700;/* build 465 (user: lock a minimum size so a too-small window can't destroy the layout). The design is 1700px wide; hold the body at that width so when the window shrinks past the 0.5 zoom floor the page SCROLLS at full design width instead of collapsing/reflowing. */
+  var DESIGN_W=1700, MIN_W=1700, DESIGN_H=1130;/* build 465 (user: lock a minimum size so a too-small window can't destroy the layout). The design is 1700px wide; hold the body at that width so when the window shrinks past the 0.5 zoom floor the page SCROLLS at full design width instead of collapsing/reflowing. */
   function fit(){
     try{
       if(window.matchMedia&&matchMedia('(pointer:coarse)').matches)return;
       if(document.body&&document.body.getAttribute('data-portable')==='1'){document.documentElement.style.zoom='';document.body.style.minWidth='';return;}
-      var z=Math.round(Math.min(1.8,Math.max(0.5,window.innerWidth/DESIGN_W))*1000)/1000;
+      var z=Math.round(Math.min(1.8,Math.max(0.5,Math.min(window.innerWidth/DESIGN_W,window.innerHeight/DESIGN_H)))*1000)/1000;
       document.documentElement.style.zoom=z;
       /* Hold a floor: never let the laid-out width fall below MIN_W design px. When the window
          is smaller than MIN_W*z physical px, the body keeps MIN_W and a scrollbar appears — the
@@ -22835,7 +22835,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{margin-top:auto !important;margin-bott
     try{
       if(window.matchMedia && matchMedia('(pointer:coarse)').matches) return 1; /* touch: SC-FIT applies no zoom */
       if(document.body && document.body.getAttribute('data-portable')==='1') return 1; /* compact mode: zoom cleared */
-      return Math.round(Math.min(1.8,Math.max(0.5, window.innerWidth/1700))*1000)/1000; /* MUST mirror SC-FIT */
+      return Math.round(Math.min(1.8,Math.max(0.5, Math.min(window.innerWidth/1700,window.innerHeight/1130)))*1000)/1000; /* MUST mirror SC-FIT */
     }catch(e){ return 1; }
   }
   function fill(){
@@ -24534,14 +24534,14 @@ body.sc-home-mode:not([data-portable="1"]) #home-scroll > .hm-wrap{margin-top:au
 <script id="sc-b389-touchfit-js">/* 2026-07-23 build 389 (user: the tablet must ALWAYS display with symmetry, fully adjusting to the screen without breaking — it broke on the iPad). ROOT CAUSE: SC-FIT (the adaptive zoom that scales the ~1700px design to fit any window, keeping it symmetric) deliberately SKIPS touch devices, so on the iPad the desktop layout rendered at 1:1 and broke — STATUS chips overlapped and the SEARCH/COMMS bars clipped off the screen edges. This runs the SAME fit-to-window zoom on touch, so the iPad gets the identical scaled, symmetric layout, AND sets --sc-touchfill (= innerHeight/zoom) so the b389 CSS above fills the physical viewport height with no dead band. Skips COMPACT MODE (data-portable, its own intentionally-small layout) and defers to the original SC-FIT on non-touch. Reversible: delete this block AND the sc-b389-touchfit-css style. */
 (function(){
   if(window.__touchFit389) return; window.__touchFit389=true;
-  var DESIGN_W=1700, de=document.documentElement;
+  var DESIGN_W=1700, DESIGN_H=1130, de=document.documentElement;
   function isTouch(){ try{ return !!(window.matchMedia && matchMedia('(pointer:coarse)').matches); }catch(e){ return false; } }
   function isCompact(){ try{ return !!(document.body && document.body.getAttribute('data-portable')==='1'); }catch(e){ return false; } }
   function fit(){
     try{
       if(!isTouch()) return; /* desktop keeps using the original SC-FIT */
       if(isCompact()){ de.style.zoom=''; de.style.removeProperty('--sc-touchfill'); return; } /* compact mode owns its own layout */
-      var z=Math.round(Math.min(1.8,Math.max(0.5,window.innerWidth/DESIGN_W))*1000)/1000;
+      var z=Math.round(Math.min(1.8,Math.max(0.5,Math.min(window.innerWidth/DESIGN_W,window.innerHeight/DESIGN_H)))*1000)/1000;
       de.style.zoom=z;
       de.style.setProperty('--sc-touchfill', Math.max(1, Math.round(window.innerHeight / z))+'px');
     }catch(e){}
@@ -25975,7 +25975,7 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
         +'<ol class="cgcp-steps">'
           +'<li>You must be <b>friends on Spectrum</b> first (above). Party invites need an existing friendship.</li>'
           +'<li>In-game, press <span class="cgcp-key">F11</span> (Comm-Link → <b>Friends</b>) <b>or</b> <span class="cgcp-key">F1</span> (mobiGlas → <b>Contacts</b>).</li>'
-          +'<li><b>Right-click</b> your friend and choose <b>Invite to Party</b>. When they accept, the <b>party leader</b> presses <b>Enter Universe</b> so everyone shares one shard.</li>'
+          +'<li><b>Right-click</b> your friend and choose <b>Invite to Party</b>. When they accept, the <b>party leader gets in-game first</b>, then the other members <b>join on the leader by name</b> so everyone is on the same shard.</li>'
         +'</ol></div>'
     +'</section>'
     /* ---- ORG CHAT ---- */
@@ -26196,9 +26196,11 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
 <style id="cg-fixes-2026-07-25">
 /* hide Twitch CHAT button only; video stream stays */
 .cg-tw-chat-btn{display:none !important}
+.cg-tw-chat{display:none !important}
 /* keep the SYSTEM tile reachable on the public site (server or not); page shows its needs-server fallback when opened */
 html.cmdglas-public .hm-cell:has([data-tab="system"]){display:flex !important}
 html.cmdglas-public #tab-system.active{display:flex !important}
 </style>
+<div id="cg-rotate-lock" style="display:none;position:fixed;inset:0;z-index:2147483647;background:#0a0f16;color:#dbeeff;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Rajdhani,Segoe UI,sans-serif;padding:40px"><div style="font-size:56px;margin-bottom:14px;line-height:1">⟳</div><div style="font-size:22px;font-weight:800;letter-spacing:2px">ROTATE TO LANDSCAPE</div><div style="font-size:14px;opacity:.72;margin-top:12px;max-width:360px;line-height:1.5">CmdGlas is built for landscape. Turn your device sideways to use the tablet.</div></div><style id="cg-rotate-lock-css">@media (orientation:portrait) and (max-width:1024px){#cg-rotate-lock{display:flex !important}}</style>
 </body>
 </html>
