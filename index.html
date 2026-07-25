@@ -7925,7 +7925,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=488;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=494;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -21094,7 +21094,7 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
       +'<span class="cd-sweep"></span><span class="cd-wing"></span>'
       +'<div class="cd-head" role="button" tabindex="0" aria-expanded="false">'+MIC
       +'<span class="cd-title">COMMS</span><span class="cd-acc">&#8250;&#8250;</span>'
-      +'<span class="cd-ch">CH-01 · GENERAL</span>'+BCAST
+      +'<select class="cd-ch cd-chsel" id="cd-chsel" title="Pick channel" aria-label="COMMS channel"></select>'+BCAST
       +'<button class="cd-mute" type="button" title="Mute COMMS" aria-label="Mute COMMS">'+SPK_ON+SPK_OFF+'</button>'
       +'<span class="cd-tx" role="button" title="Open COMMS to transmit"><span class="pd"></span>TX</span>'
       +'<span class="cd-chev">▾</span></div>'
@@ -21103,6 +21103,18 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
     document.body.appendChild(wrap);
     var head=wrap.querySelector('.cd-head'), frame=wrap.querySelector('iframe'),
         mute=wrap.querySelector('.cd-mute'), tx=wrap.querySelector('.cd-tx');
+    (function(){ /* build 491: COMMS channel picker */
+      var CH=[['general','General'],['party','Party'],['org','Org'],['chan1','CHAN 1'],['chan2','CHAN 2'],['chan3','CHAN 3'],['chan4','CHAN 4'],['chan5','CHAN 5'],['chan6','CHAN 6']];
+      function g(k,d){try{var v=localStorage.getItem(k);return v==null?d:v;}catch(e){return d;}} function st(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+      var sel=wrap.querySelector('#cd-chsel'); if(!sel) return;
+      var hasOrg=!!((g("cg_org_sid","")||"").trim()); /* build 491: CHAN 1-6 are org-only */
+      sel.innerHTML=CH.map(function(c,i){ var org=(c[0].indexOf("chan")===0); var dis=(org&&!hasOrg)?" disabled":""; var tag=org?" (org)":""; return "<option value=\""+c[0]+"\""+dis+">CH-0"+(i+1)+" \u00b7 "+c[1]+tag+"</option>"; }).join("");
+      var cur=g("cg_comms_channel","general"); if(cur.indexOf("chan")===0 && !hasOrg){ cur="general"; st("cg_comms_channel",cur); } sel.value=cur;
+      frame.setAttribute('data-src','cmdglas_org.html?ch='+encodeURIComponent(sel.value));
+      sel.addEventListener('mousedown',function(e){ e.stopPropagation(); });
+      sel.addEventListener('click',function(e){ e.stopPropagation(); });
+      sel.addEventListener('change',function(e){ e.stopPropagation(); var id=sel.value; st('cg_comms_channel',id); var src='cmdglas_org.html?ch='+encodeURIComponent(id); frame.setAttribute('data-src',src); if(frame.src){ frame.src=src; } });
+    })();
     function setOpen(open){
       wrap.classList.toggle('open', open);
       head.setAttribute('aria-expanded', open?'true':'false');
@@ -24085,7 +24097,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   var LS='cg_npa';
   function load(){ try{ return JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ return {}; } }
   function save(s){ try{ localStorage.setItem(LS, JSON.stringify(s)); }catch(e){} }
-  var state=load(); if(!state.done) state.done={}; if(state.goal===undefined) state.goal=null;
+  var state=load(); if(!state.done) state.done={}; if(state.goal===undefined) state.goal=null; if(state.lastGoal===undefined) state.lastGoal=(state.goal||null); /* build 490 */
 
   // ---- CONTENT (Alpha 4.9). t=instruction, w=where on tablet/in game, h=HOW-TO (plain, thorough). ----
   var GOALS=[
@@ -24186,7 +24198,9 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function esc(s){ return String(s==null?'':s); }
 
   function renderPicker(){
-    var h='<div class="npa-cover"><h1>New Player Assist</h1><div class="npa-sub">Pick a goal &middot; I walk you through it</div></div>';
+    var h=''; /* build 490: prominent flashing toggle back into the walkthrough */
+    if(state.lastGoal && goalById(state.lastGoal)){ var _lg=goalById(state.lastGoal); h+='<button type="button" class="npa-nav npa-flash" data-act="resume"><span class="npa-nav-ar">&#9654;</span> Resume walkthrough: '+esc(_lg.label)+'</button>'; }
+    h+='<div class="npa-cover"><h1>New Player Assist</h1><div class="npa-sub">Pick a goal &middot; I walk you through it</div></div>';
     h+='<div class="npa-lead">Tell me what you want to do and I will take you through it <b>one step at a time</b>. Tick each step when it is done to unlock the next, and hit <b>HOW TO</b> on any step if you have no idea what it means. Your progress is saved.</div>';
     h+='<div class="npa-q">What do you want to do?</div><div class="npa-goals">';
     for(var i=0;i<GOALS.length;i++){ var g=GOALS[i]; var ds=state.done[g.id]||[]; var pc=g.steps.length; var dn=ds.length; var done=dn>=pc;
@@ -24201,7 +24215,8 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function renderGoal(g){
     var ds=doneSet(g.id); var pc=g.steps.length; var dn=ds.length; var pct=Math.round(dn/pc*100);
     var firstUndone=-1; for(var k=0;k<g.steps.length;k++){ if(ds.indexOf(k)<0){ firstUndone=k; break; } }
-    var h='<div class="npa-head"><button type="button" class="npa-btn npa-ghost" data-act="goals">&#8249; Goals</button>'
+    var h='<button type="button" class="npa-nav npa-flash" data-act="goals"><span class="npa-nav-ar">&#9664;</span> All Goals (Player Assist home)</button>'; /* build 490: prominent flashing nav */
+    h+='<div class="npa-head"><button type="button" class="npa-btn npa-ghost" data-act="goals">&#8249; Goals</button>'
       +'<h2><span class="npa-gi">'+g.gi+'</span> '+esc(g.label)+'</h2>'
       +'<button type="button" class="npa-btn npa-ghost" data-act="reset">Reset</button></div>';
     h+='<div class="npa-prog"><i style="width:'+pct+'%"></i></div>';
@@ -24230,10 +24245,11 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function onClick(e){
     var t=e.target;
     var gsel=t.closest?t.closest('[data-goal]'):null;
-    if(gsel){ state.goal=gsel.getAttribute('data-goal'); save(state); renderRoot(); var sc=document.querySelector('#cg-sheet .cgs-scroll,#cg-sheet .cgs-body'); if(sc)sc.scrollTop=0; return; }
+    if(gsel){ state.goal=gsel.getAttribute('data-goal'); state.lastGoal=state.goal; save(state); renderRoot(); var sc=document.querySelector('#cg-sheet .cgs-scroll,#cg-sheet .cgs-body'); if(sc)sc.scrollTop=0; return; }
     var act=t.closest?t.closest('[data-act]'):null;
     if(act){ var a=act.getAttribute('data-act');
       if(a==='goals'){ state.goal=null; save(state); renderRoot(); }
+      else if(a==='resume'){ if(state.lastGoal){ state.goal=state.lastGoal; save(state); renderRoot(); var _sc=document.querySelector('#cg-sheet .cgs-scroll,#cg-sheet .cgs-body'); if(_sc)_sc.scrollTop=0; } }
       else if(a==='reset'){ if(state.goal){ state.done[state.goal]=[]; save(state); renderRoot(); } }
       return; }
     var dn=t.closest?t.closest('[data-done]'):null;
@@ -24264,6 +24280,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
     var wrap=document.createElement('div'); wrap.id='cg-npa-wrap';
     var b=document.createElement('button'); b.type='button'; b.id='cg-npa-btn'; b.className='cg-slowpulse'; b.setAttribute('aria-label','Open the New Player Assist');
     b.innerHTML='<svg class="npa-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v0M11 11h1v5h1"/><path d="M16 12a4 4 0 0 1-4 4 4 4 0 0 1-4-4"/></svg><span>New Player Assist</span>';
+    try{ b.style.setProperty('color','var(--amber2)','important'); }catch(e){} /* build 490: force theme-orange writing */
     b.addEventListener('click', function(e){ e.preventDefault(); openNPA(); });
     wrap.appendChild(b);
     // place it just ABOVE the user manual button if present, else after MORE INFO
@@ -26004,6 +26021,14 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
       +'<div class="cgcp-card"><h4>Add a friend — do this on Spectrum</h4>'
         +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-friend" placeholder="friend’s handle" autocomplete="off"><button type="button" class="cgcp-btn" id="cgcp-openspectrum-friend">Open Spectrum</button><button type="button" class="cgcp-btn ghost" id="cgcp-openfriend">Their RSI page</button></div>'
         +'<div class="cgcp-hint">Add friends on <b>Spectrum</b>, <b>not</b> in-game — the in-game Friends panel is unreliable (handles past “F” often won’t add). In Spectrum: <b>sign in → search their handle → open their profile → press Add Friend</b>. Do the same for you and they can add you back.</div></div>'
+      +'<div class="cgcp-card"><h4>Friends to add — your list</h4>'
+        +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-toadd-in" placeholder="handle to add later" autocomplete="off"><button type="button" class="cgcp-btn" id="cgcp-toadd-add">Add to list</button><button type="button" class="cgcp-btn ghost" id="cgcp-toadd-spectrum">Open Spectrum</button></div>'
+        +'<div class="cgcp-list" id="cgcp-toadd-list"></div>'
+        +'<div class="cgcp-hint">Save the handles you want to add, then go down the list on Spectrum — each name opens straight to their RSI page. You still press <b>Add Friend</b> per person (RSI has no bulk-add).</div></div>'
+      +'<div class="cgcp-card"><h4>Party roster — who is flying with you</h4>'
+        +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-roster-in" placeholder="party member handle" autocomplete="off"><button type="button" class="cgcp-btn" id="cgcp-roster-add">Add to party</button></div>'
+        +'<div class="cgcp-list" id="cgcp-roster-list"></div>'
+        +'<div class="cgcp-hint">A manual roster kept on this tablet so you can see your group at a glance. It does <b>not</b> read the live in-game party — add and remove names yourself. Tap a name to open their RSI page.</div></div>'
       +'<div class="cgcp-card"><h4>Once you’re friends — invite to party (in-game)</h4>'
         +'<ol class="cgcp-steps">'
           +'<li>You must be <b>friends on Spectrum</b> first (above). Party invites need an existing friendship.</li>'
@@ -26034,18 +26059,30 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     +'</section>'
     /* ---- SET UP ---- */
     +'<section data-sec="setup" hidden>'
-      +'<h3>How to set up COMMS</h3>'
-      +'<p class="cgcp-sub">A few short steps. The first three set up COMMS; the last one turns on the tablet PC extras (Twitch, live readouts, second screen).</p>'
-      +'<div class="cgcp-card"><h4>1 · Add your name</h4>'
-        +'<ol class="cgcp-steps"><li>Go to the <b>Party</b> tab at the top.</li><li>Type your <b>RSI handle</b> in the box and it saves by itself.</li></ol></div>'
-      +'<div class="cgcp-card"><h4>2 · Add a friend (on Spectrum)</h4>'
-        +'<ol class="cgcp-steps"><li>In the <b>Party</b> tab, press <b>Open Spectrum</b>.</li><li>Sign in, search your friend’s handle, open their profile, press <b>Add Friend</b>. Do this on Spectrum — the in-game list is unreliable.</li><li>Once you are friends, press <span class="cgcp-key">F11</span> or <span class="cgcp-key">F1</span> in-game, right-click them, pick <b>Invite to Party</b>.</li></ol></div>'
-      +'<div class="cgcp-card"><h4>3 · Join org chat</h4>'
-        +'<ol class="cgcp-steps"><li>Go to the <b>Org Chat</b> tab.</li><li>Type your <b>org tag</b> and press <b>Open Spectrum chat</b> to talk with your org.</li><li>Press <b>Pick your role</b>, or choose <b>Undecided</b> to let the commander decide.</li></ol></div>'
-      /* build 483 (user: how to use the tablet + run the control server + make a desktop shortcut) */
-      +'<div class="cgcp-card"><h4>4 &middot; Unlock the full tablet (PC helper)</h4>'
-        +'<p class="cgcp-sub" style="margin:2px 0 8px">The tablet works in any browser with nothing to install. To turn on the live extras &mdash; Twitch, live server &amp; mission readouts, and the local second screen &mdash; run the small control server on your PC. You only need the tablet folder (the .py server + the .bat files).</p>'
-        +'<ol class="cgcp-steps"><li>In the tablet folder, double-click <b>Create Desktop Shortcuts.bat</b> once &mdash; it puts <b>SC Control Server</b> and <b>SC Tablet</b> shortcuts on your Desktop.</li><li>Double-click <b>SC Control Server</b> and leave its little window open &mdash; that is what serves the tablet.</li><li>Double-click <b>SC Tablet</b> to open the tablet in a clean full-screen window.</li><li>To close it, press <span class="cgcp-key">Alt</span>+<span class="cgcp-key">F4</span> on the tablet, then close the server window when you are done.</li><li>No control server? Everything except the live/PC-only features still works &mdash; just open the tablet in any browser.</li></ol></div>'
+      +'<h3>Set up COMMS</h3>'
+      +'<p class="cgcp-sub">There are two ways to use COMMS and the steps are different. Pick the one you are setting up.</p>'
+      +'<div class="cgcp-choose" id="cgcp-setup-choose">'
+        +'<button type="button" class="cgcp-path cgcp-path-personal" data-setup="personal"><span class="cgcp-path-badge personal">PERSONAL</span><span class="cgcp-path-t">Personal chat</span><span class="cgcp-path-d">Just you and your friends. Add friends, invite them to a party, fly together. No org required.</span><span class="cgcp-path-go">Set up personal &rsaquo;</span></button>'
+        +'<button type="button" class="cgcp-path cgcp-path-org" data-setup="org"><span class="cgcp-path-badge org">ORG</span><span class="cgcp-path-t">Org chat</span><span class="cgcp-path-d">Your whole org: live text channels, member roster, who is online, and the org-only CHAN 1&ndash;6. Needs a one-time switch-on by the org owner.</span><span class="cgcp-path-go">Set up org &rsaquo;</span></button>'
+      +'</div>'
+      +'<div class="cgcp-walk cgcp-walk-personal" id="cgcp-setup-personal" hidden>'
+        +'<div class="cgcp-walk-head"><button type="button" class="cgcp-btn ghost" data-setup="back">&lsaquo; Back</button><span class="cgcp-path-badge personal">PERSONAL</span><h4>Personal chat &mdash; full setup</h4></div>'
+        +'<div class="cgcp-card"><h4>1 &middot; Add your handle</h4><ol class="cgcp-steps"><li>Open the <b>Party</b> tab.</li><li>Type your <b>RSI handle</b> &mdash; it saves itself. This is the name friends search for.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>2 &middot; Build your friends list</h4><ol class="cgcp-steps"><li>In <b>Party</b>, use <b>Friends to add</b>: type each handle, press <b>Add to list</b>.</li><li>Tap each name to open their RSI page, then press <b>Add Friend</b> on Spectrum. RSI has no bulk-add, so it is one at a time &mdash; but no more retyping.</li><li>Add friends on <b>Spectrum</b>, not in-game &mdash; the in-game list is unreliable past &ldquo;F&rdquo;.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>3 &middot; Party up in-game</h4><ol class="cgcp-steps"><li>Once you are friends on Spectrum, in-game press <span class="cgcp-key">F11</span> (Friends) or <span class="cgcp-key">F1</span> (Contacts).</li><li><b>Right-click</b> a friend &rarr; <b>Invite to Party</b>.</li><li>The <b>leader loads in first</b>; everyone else <b>joins on the leader by name</b> so you share a shard.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>4 &middot; Keep a party roster</h4><ol class="cgcp-steps"><li>In <b>Party</b>, use <b>Party roster</b> to note who is flying with you, so you see the group at a glance.</li></ol></div>'
+        +'<div class="cgcp-note">Live text <b>channels</b> in the tablet are an <b>org</b> feature. For personal groups, chat runs on <b>Spectrum</b> and in-game party voice/text.</div>'
+      +'</div>'
+      +'<div class="cgcp-walk cgcp-walk-org" id="cgcp-setup-org" hidden>'
+        +'<div class="cgcp-walk-head"><button type="button" class="cgcp-btn ghost" data-setup="back">&lsaquo; Back</button><span class="cgcp-path-badge org">ORG</span><h4>Org chat &mdash; full setup</h4></div>'
+        +'<div class="cgcp-card"><h4>1 &middot; Set your org</h4><ol class="cgcp-steps"><li>Open the <b>Org Chat</b> tab.</li><li>Type your <b>org SID</b> (the short tag). This unlocks the org channels, including <b>CHAN 1&ndash;6</b>.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>2 &middot; Pick your role</h4><ol class="cgcp-steps"><li>In <b>Org Chat</b>, tap your role &mdash; or <b>Undecided</b> to let the commander assign it.</li></ol></div>'
+        +'<div class="cgcp-card cgcp-owner"><h4>3 &middot; Turn on org chat &mdash; owner only, once</h4><p class="cgcp-sub" style="margin:2px 0 8px">The live org channels run on the tablet&rsquo;s own Supabase backend (the same login you already use). The <b>org owner</b> switches it on one time; every member just signs in.</p><ol class="cgcp-steps"><li>Owner: open your <b>Supabase</b> project &rarr; <b>SQL Editor</b>.</li><li>Run <b>cmdglas_org_phase0.sql</b> once &mdash; it creates the <b>org_messages</b> + <b>org_members</b> tables, turns on <b>Realtime</b>, and sets row-security so members only see their own org.</li><li>Members: nothing to run &mdash; just be <b>signed in</b> to the tablet.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>4 &middot; Use the channels</h4><ol class="cgcp-steps"><li>Open <b>COMMS</b> and pick a channel from the header dropdown: <b>General</b>, <b>Party</b>, <b>Org</b>, and the org-only <b>CHAN 1&ndash;6</b>.</li><li>Type in the box and send. You will see who is online and the member roster.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>5 &middot; Meet up</h4><ol class="cgcp-steps"><li>Use the <b>Meet Up</b> tab: everyone sets the <b>same</b> rally point, then quantum-travels there.</li></ol></div>'
+        +'<div class="cgcp-note">Not signed in, or the owner has not run the SQL yet? The chat window will say <b>COMMS BACKEND NOT SET UP</b> until both are done.</div>'
+      +'</div>'
+      +'<div class="cgcp-card" id="cgcp-setup-extras" style="margin-top:12px" hidden><h4>Optional &middot; Unlock the tablet PC extras</h4><ol class="cgcp-steps"><li>In the tablet folder, double-click <b>Create Desktop Shortcuts.bat</b> once.</li><li>Double-click <b>SC Control Server</b> and leave its window open.</li><li>Double-click <b>SC Tablet</b> to open the tablet full-screen.</li><li>No server? Everything except the live/PC-only features still works in any browser.</li></ol></div>'
     +'</section>'
     +'</div></div>';
     document.body.appendChild(pg);
@@ -26067,6 +26104,21 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     var fIn=pg.querySelector('#cgcp-friend');
     pg.querySelector('#cgcp-openspectrum-friend').addEventListener('click',function(){ openURL(RSI+'/spectrum'); });/* build 456: add friends via Spectrum (in-game list unreliable past F) */
     pg.querySelector('#cgcp-openfriend').addEventListener('click',function(){ var h=handleClean(fIn.value); if(!h){ fIn.focus(); return; } openURL(RSI+'/citizens/'+encodeURIComponent(h)); });
+    /* PARTY roster + friends-to-add lists (build 491) */
+    function _arr(k){ try{ return JSON.parse(LS(k,'[]'))||[]; }catch(e){ return []; } }
+    function _sarr(k,a){ save(k, JSON.stringify(a)); }
+    function renderCgList(listId,key){ var box=pg.querySelector('#'+listId); if(!box) return; var a=_arr(key);
+      if(!a.length){ box.innerHTML='<div class="cgcp-empty">No one yet.</div>'; return; }
+      box.innerHTML=a.map(function(h,i){ return '<div class="cgcp-li"><a class="cgcp-liname" data-open="'+esc(h)+'" title="Open RSI page">'+esc(h)+'</a><button type="button" class="cgcp-lidel" data-del="'+i+'" data-key="'+key+'" data-list="'+listId+'" aria-label="Remove">\u2715</button></div>'; }).join(''); }
+    function addCg(key,inId,listId){ var el=pg.querySelector('#'+inId); if(!el) return; var h=handleClean(el.value); if(!h){ el.focus(); return; } var a=_arr(key); if(a.indexOf(h)<0) a.push(h); _sarr(key,a); el.value=''; renderCgList(listId,key); }
+    renderCgList('cgcp-toadd-list','cg_friends_toadd'); renderCgList('cgcp-roster-list','cg_party_roster');
+    var _ta=pg.querySelector('#cgcp-toadd-add'); if(_ta) _ta.addEventListener('click',function(){ addCg('cg_friends_toadd','cgcp-toadd-in','cgcp-toadd-list'); });
+    var _ts=pg.querySelector('#cgcp-toadd-spectrum'); if(_ts) _ts.addEventListener('click',function(){ openURL(RSI+'/spectrum'); });
+    var _ra=pg.querySelector('#cgcp-roster-add'); if(_ra) _ra.addEventListener('click',function(){ addCg('cg_party_roster','cgcp-roster-in','cgcp-roster-list'); });
+    var _ti=pg.querySelector('#cgcp-toadd-in'); if(_ti) _ti.addEventListener('keydown',function(e){ if(e.key==='Enter') addCg('cg_friends_toadd','cgcp-toadd-in','cgcp-toadd-list'); });
+    var _ri=pg.querySelector('#cgcp-roster-in'); if(_ri) _ri.addEventListener('keydown',function(e){ if(e.key==='Enter') addCg('cg_party_roster','cgcp-roster-in','cgcp-roster-list'); });
+    pg.addEventListener('click',function(e){ var o=e.target.closest?e.target.closest('[data-open]'):null; if(o){ var h=handleClean(o.getAttribute('data-open')); if(h) openURL(RSI+'/citizens/'+encodeURIComponent(h)); return; } var d=e.target.closest?e.target.closest('[data-del]'):null; if(d){ var idx=parseInt(d.getAttribute('data-del'),10); var k=d.getAttribute('data-key'); var lid=d.getAttribute('data-list'); var a=_arr(k); a.splice(idx,1); _sarr(k,a); renderCgList(lid,k); } });
+    pg.addEventListener('click',function(e){ var su=e.target.closest?e.target.closest('[data-setup]'):null; if(!su) return; var m=su.getAttribute('data-setup'); var ch=pg.querySelector('#cgcp-setup-choose'), pp=pg.querySelector('#cgcp-setup-personal'), op=pg.querySelector('#cgcp-setup-org'), ex=pg.querySelector('#cgcp-setup-extras'); if(!ch) return; if(m==='back'){ ch.hidden=false; if(pp)pp.hidden=true; if(op)op.hidden=true; if(ex)ex.hidden=true; } else { ch.hidden=true; if(pp)pp.hidden=(m!=='personal'); if(op)op.hidden=(m!=='org'); if(ex)ex.hidden=false; } });
     /* ORG wiring */
     var oIn=pg.querySelector('#cgcp-org');
     oIn.addEventListener('input',function(){ save('cg_org_sid',oIn.value.trim()); });
@@ -26280,10 +26332,28 @@ html.cmdglas-public #tab-system.active{display:flex !important}
       +'<label>What is the problem? (check any that apply)</label>'
       +'<div class="rp-checks">'+checks
         +'<label class="rp-chk"><input type="checkbox" id="rp-cc-toggle"> Content / manual correction</label>'
+        +'<label class="rp-chk"><input type="checkbox" id="rp-chat-toggle"> Chat / COMMS problem</label>'
       +'</div>'
       +'<div id="cg-report-cc">'
         +'<label>Which manual or page? (e.g. SR-5, a TM section, or the page name)</label>'
         +'<input type="text" id="rp-cc-where" placeholder="e.g. SR-5 Chat Etiquette, or the Mining page">'
+      +'</div>'
+      +'<div id="cg-report-chat">'
+        +'<label>Chat: what broke? (check any)</label>'
+        +'<div class="rp-checks">'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="Cannot sign in or stay signed in"> Can\u2019t sign in / stay signed in</label>'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="Chat says BACKEND NOT SET UP"> Says BACKEND NOT SET UP</label>'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="Connection keeps dropping"> Connection keeps dropping</label>'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="Can read but cannot send"> Can read but can\u2019t send</label>'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="I send but nobody sees it"> I send, nobody sees it</label>'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="Cannot use my org channels (CHAN 1-6 greyed)"> Org channels greyed out</label>'
+          +'<label class="rp-chk"><input type="checkbox" class="rp-chat-issue" value="Lost connection to my party"> Lost my party</label>'
+        +'</div>'
+        +'<label>Are you signed in to the tablet?</label><select id="rp-chat-signedin"><option>Not sure</option><option>Yes</option><option>No</option></select>'
+        +'<label>Is your org SID set (Org Chat tab)?</label><select id="rp-chat-org"><option>Not sure</option><option>Yes</option><option>No</option><option>I am not in an org</option></select>'
+        +'<label>Org owner &amp; comms SQL run once?</label><select id="rp-chat-sql"><option>Not sure</option><option>Owner - I ran the SQL</option><option>Owner - not run yet</option><option>I am a member (not owner)</option></select>'
+        +'<label>The connection dot at the top of chat shows...</label><select id="rp-chat-conn"><option>Not sure / no dot</option><option>Green - connected</option><option>connecting...</option><option>Red - offline</option></select>'
+        +'<label>Did chat ever work for you?</label><select id="rp-chat-worked"><option>Not sure</option><option>Worked before, then stopped</option><option>Never worked</option></select>'
       +'</div>'
       +'<label>Describe the issue or the correction</label>'
       +'<textarea id="rp-details" placeholder="What happened, what you expected, or the correct info..."></textarea>'
@@ -26294,6 +26364,7 @@ html.cmdglas-public #tab-system.active{display:flex !important}
     ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
     ov.querySelector('#rp-cancel').onclick=close;
     ov.querySelector('#rp-cc-toggle').onchange=function(){ document.getElementById('cg-report-cc').classList.toggle('show', this.checked); };
+    ov.querySelector('#rp-chat-toggle').onchange=function(){ document.getElementById('cg-report-chat').classList.toggle('show', this.checked); };
     ov.querySelector('#rp-send').onclick=send;
     return true;
   }
@@ -26303,13 +26374,17 @@ html.cmdglas-public #tab-system.active{display:flex !important}
     var plat=(document.getElementById('rp-platform')||{}).value||'';
     var checked=[].slice.call(document.querySelectorAll('.rp-issue:checked')).map(function(c){ return c.value; });
     var ccOn=document.getElementById('rp-cc-toggle')&&document.getElementById('rp-cc-toggle').checked;
+    var chatOn=document.getElementById('rp-chat-toggle')&&document.getElementById('rp-chat-toggle').checked;
     var where=(document.getElementById('rp-cc-where')||{}).value||'';
     var details=(document.getElementById('rp-details')||{}).value||'';
     if(ccOn) checked.push('Content / manual correction');
-    var subj = ccOn ? ('CmdGlas content correction'+(where?(' - '+where):'')) : ('CmdGlas issue report'+(checked.length?(' - '+checked[0]):''));
+    if(chatOn) checked.push('Chat / COMMS problem');
+    var subj = ccOn ? ('CmdGlas content correction'+(where?(' - '+where):'')) : (chatOn ? 'CmdGlas CHAT issue report' : ('CmdGlas issue report'+(checked.length?(' - '+checked[0]):'')));
     var lines=['Platform: '+plat,'','Issue type(s): '+(checked.length?checked.join(', '):'(none selected)')];
     if(ccOn) lines.push('Manual / page: '+(where||'(not specified)'));
-    lines.push('','Details:',(details||'(none)'),'','---','Sent from CmdGlas '+ver(),(navigator.userAgent||''));
+    lines.push('','Details:',(details||'(none)'));
+    if(chatOn){ var _ci=[].slice.call(document.querySelectorAll('.rp-chat-issue:checked')).map(function(c){return c.value;}); var _gv=function(id){ var e=document.getElementById(id); return e?e.value:''; }; lines.push('','--- CHAT DIAGNOSTICS ---','What broke: '+(_ci.length?_ci.join(', '):'(none checked)'),'Signed in: '+_gv('rp-chat-signedin'),'Org SID set: '+_gv('rp-chat-org'),'Owner / SQL: '+_gv('rp-chat-sql'),'Connection dot: '+_gv('rp-chat-conn'),'Ever worked: '+_gv('rp-chat-worked')); }
+    lines.push('','---','Sent from CmdGlas '+ver(),(navigator.userAgent||''));
     var href='mailto:'+SUPPORT+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join('\n'));
     try{ window.location.href=href; }catch(e){ try{ window.open(href,'_blank'); }catch(_){} }
     setTimeout(close, 400);
@@ -26461,9 +26536,9 @@ body.sc-home-mode #cg-onebar #cg-scdl-wrap{margin:0 0 0 4px !important}
 body.sc-home-mode #cg-onebar #cg-scdl-btn{font-size:8px !important;padding:5px 9px !important;letter-spacing:1px !important;white-space:nowrap !important}
 body.sc-home-mode #cg-onebar #cg-scdl-btn .scdl-ico{font-size:10px !important}
 /* very-bottom, always-visible affiliation disclaimer (home page) */
-#cg-affil-note{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:2147482000;font:600 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:.5px;color:#5c718a;opacity:.85;pointer-events:none;white-space:nowrap;text-align:center;max-width:78vw;overflow:hidden;text-overflow:ellipsis}
+#cg-affil-note{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483601;font:600 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:.5px;color:#6d8298;opacity:.9;pointer-events:none;white-space:nowrap;text-align:center;max-width:70vw;overflow:hidden;text-overflow:ellipsis}
 body:not(.sc-home-mode) #cg-affil-note{display:none}
-@media (pointer:coarse){#cg-affil-note{font-size:8px;bottom:4px}}
+@media (pointer:coarse){#cg-affil-note{font-size:8px;bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
 </style>
 <script id="sc-b488-affil-js">
 (function(){ if(window.__affil488) return; window.__affil488=true;
@@ -26473,6 +26548,92 @@ body:not(.sc-home-mode) #cg-affil-note{display:none}
     document.body.appendChild(d);
   }
   add(); var n=0, iv=setInterval(function(){ add(); if(++n>40) clearInterval(iv); }, 500);
+})();
+</script>
+<style id="sc-b490-npa-css">/* 2026-07-25 build 490 (user: (1) the NEW PLAYER ASSIST button text in the theme orange, breathing slowly; (2) a prominent flashing button inside the Assist to move between the goals list and the walkthrough). Reversible: delete this block + revert the b490 render/JS tweaks. */
+@keyframes cgNpaBreathe{0%,100%{opacity:.6;text-shadow:0 0 0 transparent}50%{opacity:1;text-shadow:0 0 10px var(--amber2)}}
+#cg-npa-btn{color:var(--amber2)!important;border-color:color-mix(in srgb,var(--amber2) 55%,transparent)!important;animation:cgNpaBreathe 4.8s ease-in-out infinite!important}
+#cg-npa-btn .npa-ico{color:var(--amber2)!important}
+#cg-npa-btn:hover,#cg-npa-btn:focus-visible{color:var(--amber3,#ffd479)!important;border-color:var(--amber,#ffb000)!important}
+body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn span{color:var(--amber2)!important}
+@media(prefers-reduced-motion:reduce){#cg-npa-btn{animation:none!important}}
+.npa-nav{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 8px);box-sizing:border-box;margin:4px 4px 12px;padding:12px 16px;cursor:pointer;font-family:'Orbitron','Rajdhani',sans-serif;font-size:14px;letter-spacing:2px;font-weight:800;text-transform:uppercase;color:#08121c;background:linear-gradient(180deg,#ffcf6b,#ff9d2e);border:2px solid #ffd479;border-radius:12px;text-align:center}
+.npa-nav:hover{filter:brightness(1.08)}
+.npa-nav .npa-nav-ar{font-size:16px;line-height:1}
+@keyframes npaFlash{0%,100%{box-shadow:0 0 0 rgba(255,180,0,0);border-color:#ffd479}50%{box-shadow:0 0 22px rgba(255,180,0,.72);border-color:#fff0c8}}
+.npa-flash{animation:npaFlash 1.4s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.npa-flash{animation:none}}
+</style>
+<style id="sc-b491-comms-css">/* 2026-07-25 build 491 (user: party roster + friends-to-add lists in COMMS>Party; 9-channel dropdown General/Party/Org/CHAN 1-6 in the comms header). Reversible: delete this block + the b491 markup/JS. */
+#cg-comms-page .cgcp-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+#cg-comms-page .cgcp-li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 11px;background:rgba(90,180,220,.08);border:1px solid rgba(120,200,240,.28);border-radius:8px}
+#cg-comms-page .cgcp-liname{color:#dff0ff;font-weight:700;font-size:13px;cursor:pointer;text-decoration:underline dotted rgba(150,220,255,.5);text-underline-offset:3px}
+#cg-comms-page .cgcp-liname:hover{color:#eafaff}
+#cg-comms-page .cgcp-lidel{cursor:pointer;background:transparent;border:1px solid rgba(160,120,120,.35);color:#c99;border-radius:6px;font-size:12px;line-height:1;padding:3px 9px}
+#cg-comms-page .cgcp-lidel:hover{color:#ff8080;border-color:rgba(255,128,128,.55)}
+#cg-comms-page .cgcp-empty{font-size:11.5px;color:#7fa1b5;padding:4px 2px}
+#sc-chatdock select.cd-ch{cursor:pointer;background:#0b1622;color:#cfe6f5;border:1px solid rgba(120,200,240,.4);border-radius:6px;font:700 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:.4px;padding:3px 6px;max-width:150px;outline:none}
+#sc-chatdock select.cd-ch:hover{border-color:#7fc4de;color:#eafaff}
+</style>
+<style id="sc-b492-setup-css">/* 2026-07-25 build 492 (user: COMMS Set Up split into Personal vs Org with a clear chooser + tailored walkthroughs). Reversible: delete this block + revert the setup section/handler. */
+#cg-comms-page .cgcp-choose{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+@media (max-width:640px){#cg-comms-page .cgcp-choose{grid-template-columns:1fr}}
+#cg-comms-page .cgcp-path{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;cursor:pointer;padding:16px;border-radius:14px;background:linear-gradient(180deg,rgba(20,40,56,.6),rgba(12,22,32,.6));border:1px solid rgba(90,160,200,.35);transition:border-color .15s,transform .08s,box-shadow .15s;color:inherit;font-family:inherit}
+#cg-comms-page .cgcp-path:hover{transform:translateY(-2px)}
+#cg-comms-page .cgcp-path-personal{border-color:rgba(90,200,240,.5)}
+#cg-comms-page .cgcp-path-personal:hover{border-color:#5fd0ff;box-shadow:0 6px 22px rgba(60,170,220,.28)}
+#cg-comms-page .cgcp-path-org{border-color:rgba(255,190,90,.5)}
+#cg-comms-page .cgcp-path-org:hover{border-color:#ffcf6b;box-shadow:0 6px 22px rgba(230,160,60,.28)}
+#cg-comms-page .cgcp-path-badge{font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+#cg-comms-page .cgcp-path-badge.personal{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6)}
+#cg-comms-page .cgcp-path-badge.org{color:#1a1204;background:linear-gradient(180deg,#ffd479,#ff9d2e)}
+#cg-comms-page .cgcp-path-t{font-family:'Orbitron','Rajdhani',sans-serif;font-size:17px;letter-spacing:1px;color:#eaf6ff;font-weight:800}
+#cg-comms-page .cgcp-path-d{font-size:12.5px;line-height:1.5;color:#a9c0d0}
+#cg-comms-page .cgcp-path-go{margin-top:4px;font:800 11px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;text-transform:uppercase}
+#cg-comms-page .cgcp-path-personal .cgcp-path-go{color:#6fd8ff}
+#cg-comms-page .cgcp-path-org .cgcp-path-go{color:#ffcf6b}
+#cg-comms-page .cgcp-walk-head{display:flex;align-items:center;gap:10px;margin:2px 0 10px;flex-wrap:wrap}
+#cg-comms-page .cgcp-walk-head h4{margin:0;font-family:'Orbitron','Rajdhani',sans-serif;font-size:15px;letter-spacing:1px;color:#eaf6ff}
+#cg-comms-page .cgcp-walk-personal{border-left:3px solid #33b5e6;padding-left:12px}
+#cg-comms-page .cgcp-walk-org{border-left:3px solid #ff9d2e;padding-left:12px}
+#cg-comms-page .cgcp-card.cgcp-owner{border-color:rgba(255,190,90,.5);background:linear-gradient(180deg,rgba(50,38,14,.5),rgba(30,22,8,.5))}
+</style>
+<style id="sc-b493-reportchat-css">/* 2026-07-25 build 493 (user: chat-specific diagnostics inside Report an Issue). Reversible: delete this block + the b493 markup/JS. */
+#cg-report-chat{display:none;margin-top:8px;padding:10px;border:1px dashed rgba(120,200,240,.4);border-radius:8px;background:rgba(90,180,220,.05)}
+#cg-report-chat.show{display:block}
+#cg-report-chat label{margin-top:9px}
+</style>
+<style id="sc-b494-commsmax-css">/* 2026-07-25 build 494 (user: expand button in the lower-right COMMS pill opens the big comms page - WING console + hierarchy). Reversible: delete this block + its JS. */
+#sc-chatdock .cd-expand{flex:0 0 auto;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(120,200,240,.4);border-radius:5px;color:#8fe9ff;cursor:pointer;padding:0;margin:0 1px}
+#sc-chatdock .cd-expand:hover{color:#eafaff;border-color:#7fc4de;background:rgba(90,180,220,.15)}
+#cg-comms-max{position:fixed;inset:2.5%;z-index:2147483630;display:none;flex-direction:column;background:#050b16;border:1px solid rgba(108,180,214,.45);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+#cg-comms-max.open{display:flex}
+#cg-comms-max .ccm-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px;background:linear-gradient(180deg,#0b1f30,#07131f);border-bottom:1px solid rgba(108,180,214,.3);font:800 11px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#9fd8ff}
+#cg-comms-max .ccm-x{background:transparent;border:1px solid rgba(120,200,240,.4);color:#cfe6f5;border-radius:7px;padding:4px 11px;cursor:pointer;font-weight:800;letter-spacing:1px}
+#cg-comms-max .ccm-x:hover{color:#fff;border-color:#ff9a9a}
+#cg-comms-max iframe{flex:1;width:100%;border:0;background:#050b16}
+</style>
+<script id="sc-b494-commsmax-js">
+(function(){ if(window.__commsMax494) return; window.__commsMax494=true;
+  function overlay(){ var o=document.getElementById('cg-comms-max'); if(o) return o;
+    o=document.createElement('div'); o.id='cg-comms-max';
+    o.innerHTML='<div class="ccm-bar"><span>◤ COMMS — WING CONSOLE</span><button type="button" class="ccm-x">CLOSE ✕</button></div><iframe title="CmdGlas COMMS"></iframe>';
+    document.body.appendChild(o);
+    o.querySelector('.ccm-x').addEventListener('click', close_);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close_(); });
+    return o;
+  }
+  function open_(){ var o=overlay(); var f=o.querySelector('iframe'); var ch='general'; try{ ch=localStorage.getItem('cg_comms_channel')||'general'; }catch(e){}
+    f.src='cmdglas_org.html?ch='+encodeURIComponent(ch)+'&cb='+(new Date().getTime()); o.classList.add('open'); }
+  function close_(){ var o=document.getElementById('cg-comms-max'); if(o){ o.classList.remove('open'); var f=o.querySelector('iframe'); if(f) f.src='about:blank'; } }
+  function addBtn(){ var head=document.querySelector('#sc-chatdock .cd-head'); if(!head) return false; if(head.querySelector('.cd-expand')) return true;
+    var chev=head.querySelector('.cd-chev'); var btn=document.createElement('button'); btn.type='button'; btn.className='cd-expand'; btn.title='Expand COMMS — WING console + hierarchy';
+    btn.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+    btn.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); open_(); });
+    if(chev) head.insertBefore(btn, chev); else head.appendChild(btn);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ if(addBtn()||++n>80) clearInterval(iv); }, 300); addBtn();
 })();
 </script>
 </body>
