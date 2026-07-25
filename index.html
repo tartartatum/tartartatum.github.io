@@ -8,7 +8,11 @@ window.HM_ICON_DATA={"mining":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPA
 
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><!-- build 487: Add to Home Screen -> fullscreen, no address bar (iOS) -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CmdGlas">
 <title>Command Glass · 4.9 LIVE</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;700&family=Bruno+Ace&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Bruno+Ace added 2026-07-17 (user picked #19 from the font sampler) for the HOME PAGE TRIAL
@@ -7921,7 +7925,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=486;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=488;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -22467,6 +22471,7 @@ body.sc-home-mode #sc-home-widgets .st-chip{min-width:0}
 <script id="sc-b345-pillcols-js">
 (function(){
   if(window.__pillCols345) return; window.__pillCols345=true;
+  function isTouchDev(){ try{ return !!(window.matchMedia && matchMedia('(pointer:coarse)').matches); }catch(e){ return false; } }
   function seg(){
     var tr=document.getElementById('sc-tools-row'); if(!tr) return null;
     var search=document.getElementById('sc-navsearch'), comms=document.getElementById('sc-chatdock');
@@ -22480,6 +22485,7 @@ body.sc-home-mode #sc-home-widgets .st-chip{min-width:0}
   }
   function apply(){
     var pr=document.getElementById('sc-home-widgets'); if(!pr) return false;
+    if(isTouchDev()){ pr.style.removeProperty('grid-template-columns'); return true; } /* build 487: touch uses the balanced CSS ratio (sc-b487), not the tools-row mirror - outer pills were tiny on iPad */
     var g=seg(); if(!g) return false;
     // mirror the three tools-row segment widths as fr ratios onto the pill grid (zoom-invariant)
     // build 421 (user: "size locked, all of them"): wrap each track in minmax(0,…fr) so the mirrored
@@ -22489,8 +22495,10 @@ body.sc-home-mode #sc-home-widgets .st-chip{min-width:0}
     pr.style.setProperty('grid-template-columns', 'minmax(0,'+g.s.toFixed(2)+'fr) minmax(0,'+g.c.toFixed(2)+'fr) minmax(0,'+g.m.toFixed(2)+'fr)','important');
     return true;
   }
-  var n=0, iv=setInterval(function(){ if(apply()){ clearInterval(iv); setTimeout(apply,300); } else if(++n>60) clearInterval(iv); },400);
-  window.addEventListener('resize', function(){ setTimeout(apply,150); });
+  var n=0, iv=setInterval(function(){ if(apply()){ clearInterval(iv); setTimeout(apply,400); } else if(++n>60) clearInterval(iv); },400);
+  var frozen=false; setTimeout(function(){ frozen=true; }, 2500); /* build 487 (user: the center Twitch pill kept resizing while the others stayed locked). Pill widths mirror the top tools-row and were re-mirrored on every resize / whenever the NAV tray changed width. After ~2.5s the layout is settled - freeze it so the center pill can't shift again. */
+  window.addEventListener('resize', function(){ setTimeout(function(){ if(isTouchDev() || !frozen) apply(); },150); });
+  window.addEventListener('orientationchange', function(){ setTimeout(apply,200); });
 })();
 </script>
 
@@ -23214,23 +23222,23 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Return via any BACK control (Section 9).</li></ol>',
 '<div class="um-note"><b>NOTE.</b> This manual covers the TABLET. For in-game subjects, use LEARN &rarr; SPACE MANUALS or SEARCH &rarr; BY TOPIC.</div></div>',
 /* 2026-07-23 build 390 — ADD-TO-HOME-SCREEN section. Added after verifying (caniuse/MDN + Gadget Hacks/Chrome Help) that the no-address-bar window is controlled by the tablet's display:standalone MANIFEST, not the browser: Safari AND Chrome both work on iPadOS 16.4+. Reversible: delete from this comment through the END-b390 marker. */
-'<div class="um-sec"><h2>Section 12 &mdash; Add Tablet to Home Screen (iPad)</h2><div class="um-purpose">Pin the tablet to the iPad Home Screen so it opens in one tap with no address bar. The clean, no-bar window comes from the tablet itself &mdash; not the browser &mdash; so Safari and Chrome both work on iPadOS 16.4 or newer. Safari is the most reliable.</div>',
-'<div class="um-proc">12-1. Add from Safari (recommended)</div>',
-'<ol class="um-steps"><li>Open the tablet in Safari.</li>',
+'<div class="um-sec"><h2>Section 12 &mdash; Add Tablet to Home Screen (iPad / Android)</h2><div class="um-purpose">Pin the tablet to the Home Screen so it opens in one tap. Whether the address bar can be hidden depends on the browser: on iPhone and iPad, only <b>Safari</b> can open the tablet as a clean, no-address-bar window &mdash; Apple does not let Chrome or any other iOS browser do it, so in <b>Chrome on an iPad you will always see the address bar</b>. On an <b>Android</b> tablet, Chrome can hide it.</div>',
+'<div class="um-proc">12-1. iPad / iPhone &mdash; Safari (the only way to hide the bar)</div>',
+'<ol class="um-steps"><li>Open the tablet in <b>Safari</b> &mdash; not Chrome.</li>',
 '<li>Tap the Share button &mdash; top bar, the square-with-up-arrow icon.</li>',
 '<li>Scroll down and tap &ldquo;Add to Home Screen.&rdquo;</li>',
-'<li>Tap &ldquo;Add&rdquo; &mdash; top-right of the dialog.</li></ol>',
-'<div class="um-proc">12-2. Add from Chrome</div>',
+'<li>Tap &ldquo;Add&rdquo; &mdash; top-right of the dialog.</li>',
+'<li>Open the new Home Screen icon. It launches with no address bar.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> On iPhone/iPad, Chrome cannot make a no-bar window &mdash; that is an Apple restriction, not a fault in the tablet. If you open it in Chrome on the iPad you will keep the address bar. Use Safari for the clean launch.</div>',
+'<div class="um-proc">12-2. Android tablet &mdash; Chrome</div>',
 '<ol class="um-steps"><li>Open the tablet in Chrome.</li>',
-'<li>Tap the Share button &mdash; right of the address bar.</li>',
-'<li>Tap &ldquo;Add to Home Screen.&rdquo;</li>',
-'<li>Tap &ldquo;Add.&rdquo;</li>',
-'<li>Tap the new Home Screen icon. If an address bar still shows, Chrome did not honor the no-bar window on this iPadOS &mdash; use Safari instead.</li></ol>',
+'<li>Tap the &#8942; menu &mdash; top-right.</li>',
+'<li>Tap &ldquo;Add to Home screen&rdquo; (or &ldquo;Install app&rdquo;).</li>',
+'<li>Confirm, then open the new icon &mdash; it launches without the address bar.</li></ol>',
 '<div class="um-proc">12-3. Go true fullscreen (edge to edge)</div>',
 '<ol class="um-steps"><li>Open the tablet.</li>',
 '<li>Tap the FULLSCREEN button &mdash; top bar, right-side button cluster.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> &ldquo;Standalone&rdquo; means no address bar &mdash; not edge-to-edge fullscreen. That is deliberate. Use the Home Screen icon for a clean no-bar launch, and the FULLSCREEN button for true fullscreen.</div>',
-'<div class="um-note"><b>NOTE.</b> A browser other than Safari needs iPadOS 16.4 or newer to make the no-bar window. On older iPadOS, use Safari.</div></div>',
+'<div class="um-note"><b>NOTE.</b> &ldquo;No address bar&rdquo; is not the same as edge-to-edge fullscreen. The Home Screen icon (Safari) gives a clean no-bar launch; the FULLSCREEN button gives true fullscreen.</div></div>',
   /* build 483 (user: how to use the tablet + run the control server + make a desktop shortcut) */
 '<div class="um-sec"><h2>Section 13 &mdash; Run the Control Server &amp; Make a Desktop Shortcut (PC)</h2><div class="um-purpose">The tablet works in any browser with nothing installed. The optional control server (a small program on your PC) unlocks the live extras: Twitch, live server &amp; mission readouts, and the local second screen. You need the tablet folder (the .py server + the .bat launchers).</div>',
 '<div class="um-proc">13-1. Make the desktop shortcuts (once)</div>',
@@ -24740,6 +24748,11 @@ html[data-cgtheme="red"] #cg-theme-pick{filter:hue-rotate(-160deg) saturate(.893
     var wrap=document.createElement('div'); wrap.id='cg-sq42-wrap';
     wrap.innerHTML='<div id="cg-sq42-btn" title="Squadron 42 operator’s manual — coming soon">'+BADGE+'<span>SQ42</span><span class="sq42-tag">SOON</span></div>';
     anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
+    if(!document.getElementById('cg-scdl-wrap')){ /* build 488: Download Star Citizen button next to SQ42 -> official RSI download page */
+      var dl=document.createElement('div'); dl.id='cg-scdl-wrap';
+      dl.innerHTML='<a id="cg-scdl-btn" href="https://robertsspaceindustries.com/en/download" target="_blank" rel="noopener" title="Download Star Citizen — official RSI launcher page"><span class="scdl-ico">\u2913</span><span>DOWNLOAD SC</span></a>';
+      wrap.parentNode.insertBefore(dl, wrap.nextSibling);
+    }
     return true;
   }
   var n=0, iv=setInterval(function(){ if(build()||++n>60) clearInterval(iv); }, 350);
@@ -25307,7 +25320,7 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
 <script id="sc-b421-onebar-js">
 (function(){ if(window.__cgOnebar421) return; window.__cgOnebar421=true;
   var LEFT=['cg-report-wrap','cg-usermanual-wrap','cg-npa-wrap'];  /* build 484 (user: REPORT ISSUE to far-left of the new below-pill row) */
-  var RIGHT=['cg-welcome-wrap','cg-sq42-wrap','cg-pilots-wrap','cg-server-wrap'];   /* build 486 (user: Server status light right after PILOTS ONLINE) */
+  var RIGHT=['cg-welcome-wrap','cg-sq42-wrap','cg-scdl-wrap','cg-pilots-wrap','cg-server-wrap'];   /* build 488 (user: Download Star Citizen next to SQ42) */
   var REQ=['cg-usermanual-wrap','cg-npa-wrap','cg-welcome-wrap','cg-sq42-wrap','cg-theme-pick']; /* gate only on the original wraps; report + pilots are optional and collected in-order when present */
   function ready(){ return document.getElementById('sc-appbar') && REQ.every(function(id){return document.getElementById(id);}); }
   function setup(){
@@ -26430,6 +26443,36 @@ body.sc-home-mode #cg-onebar #cg-server-wrap{margin-left:12px !important}
   try{ new MutationObserver(place).observe(document.body,{childList:true,subtree:true}); }catch(e){}
   var n=0, iv=setInterval(function(){ place(); if(++n>150) clearInterval(iv); }, 400);
   place();
+})();
+</script>
+<style id="sc-b487-touchpills-css">/* 2026-07-25 build 487 (user: on iPad the outer pills render too small). On touch the tools-row mirror is skipped (sc-b421 js), so set a balanced, content-proof ratio here. minmax(0,...) stops the Twitch pill content from stealing width from the side pills. Reversible: delete this block. */
+@media (pointer:coarse){
+  #sc-home-widgets{ grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr) !important; }
+  #sc-home-widgets>.ops-pill.b385,#sc-home-widgets>.wg{ min-width:0 !important; }
+  #sc-home-widgets .ops-pill.b385 .pill-body,#cg-twitch,#cg-twitch .cg-tw-frame{ min-width:0 !important; }
+}
+</style>
+<style id="sc-b488-scdl-css">/* 2026-07-25 build 488 (user: Download Star Citizen button next to SQ42 -> official RSI download page; plus a small visible "not affiliated with CIG" line at the very bottom of the home page). Reversible: delete this block + the sc-b488 js, and remove 'cg-scdl-wrap' from RIGHT[] in sc-b421-onebar-js. */
+#cg-scdl-wrap{display:inline-flex;align-items:center}
+#cg-scdl-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:9px;border:1px solid rgba(120,235,170,.5);background:rgba(20,42,32,.5);color:#bfeecf;font-family:'Rajdhani','Segoe UI',sans-serif;font-weight:800;font-size:10px;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;text-decoration:none;white-space:nowrap}
+#cg-scdl-btn:hover{border-color:#7fe6a8;color:#eafff2;background:rgba(30,58,44,.62)}
+#cg-scdl-btn .scdl-ico{font-size:12px;line-height:1}
+body.sc-home-mode #cg-onebar #cg-scdl-wrap{margin:0 0 0 4px !important}
+body.sc-home-mode #cg-onebar #cg-scdl-btn{font-size:8px !important;padding:5px 9px !important;letter-spacing:1px !important;white-space:nowrap !important}
+body.sc-home-mode #cg-onebar #cg-scdl-btn .scdl-ico{font-size:10px !important}
+/* very-bottom, always-visible affiliation disclaimer (home page) */
+#cg-affil-note{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);z-index:2147482000;font:600 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:.5px;color:#5c718a;opacity:.85;pointer-events:none;white-space:nowrap;text-align:center;max-width:78vw;overflow:hidden;text-overflow:ellipsis}
+body:not(.sc-home-mode) #cg-affil-note{display:none}
+@media (pointer:coarse){#cg-affil-note{font-size:8px;bottom:4px}}
+</style>
+<script id="sc-b488-affil-js">
+(function(){ if(window.__affil488) return; window.__affil488=true;
+  function add(){ if(document.getElementById('cg-affil-note')) return; if(!document.body) return;
+    var d=document.createElement('div'); d.id='cg-affil-note';
+    d.textContent='Unofficial Star Citizen companion — not affiliated with Cloud Imperium Games.';
+    document.body.appendChild(d);
+  }
+  add(); var n=0, iv=setInterval(function(){ add(); if(++n>40) clearInterval(iv); }, 500);
 })();
 </script>
 </body>
