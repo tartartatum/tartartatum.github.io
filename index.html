@@ -7921,7 +7921,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=483;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=485;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -25306,7 +25306,7 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
 </style>
 <script id="sc-b421-onebar-js">
 (function(){ if(window.__cgOnebar421) return; window.__cgOnebar421=true;
-  var LEFT=['cg-usermanual-wrap','cg-report-wrap','cg-npa-wrap'];  /* build 479 (user: REPORT ISSUE next to USER MANUAL) */
+  var LEFT=['cg-report-wrap','cg-usermanual-wrap','cg-npa-wrap'];  /* build 484 (user: REPORT ISSUE to far-left of the new below-pill row) */
   var RIGHT=['cg-welcome-wrap','cg-sq42-wrap','cg-pilots-wrap'];   /* build 479 (user: pilots counter right of SQ42) */
   var REQ=['cg-usermanual-wrap','cg-npa-wrap','cg-welcome-wrap','cg-sq42-wrap','cg-theme-pick']; /* gate only on the original wraps; report + pilots are optional and collected in-order when present */
   function ready(){ return document.getElementById('sc-appbar') && REQ.every(function(id){return document.getElementById(id);}); }
@@ -26356,6 +26356,20 @@ html.cmdglas-public #tab-system.active{display:flex !important}
 @media (pointer:coarse){
   html.sc-locked, html.sc-locked body{ overflow-y:auto !important; height:auto !important; min-height:100% !important; max-height:none !important; -webkit-overflow-scrolling:touch !important; }
 }
+</style>
+<style id="sc-b484-tworow-css">/* 2026-07-25 build 484 (user: move the loose flank buttons DOWN to their own row below the center NAV/RIG/LEARN/MISSION/TABLET pill; keep the pill and everything above it unchanged. REPORT ISSUE sits at far-left of the new row; PILOTS ONLINE stays far-right with a little gap from SQ42). build 485 tweak: bottom cluster centered (grid justify-content:center, auto columns) to remove the wide middle gap. Reversible: delete this block and revert the LEFT[] order in sc-b421-onebar-js. */
+body.sc-home-mode #cg-onebar{
+  grid-template-columns:auto auto !important;
+  grid-template-areas:"pill pill" "left right" !important;
+  justify-content:center !important;   /* build 485: center the whole bottom cluster; kills the big middle gap */
+  row-gap:14px !important;
+  column-gap:10px !important;
+  align-items:center !important;
+}
+body.sc-home-mode #cg-onebar #sc-appbar{grid-area:pill !important;justify-self:center !important;}
+body.sc-home-mode #cg-onebar .cg-ob-left{grid-area:left !important;justify-content:center !important;}
+body.sc-home-mode #cg-onebar .cg-ob-right{grid-area:right !important;justify-content:center !important;}
+body.sc-home-mode #cg-onebar #cg-pilots-wrap{margin-left:12px !important;}
 </style>
 </body>
 </html>
