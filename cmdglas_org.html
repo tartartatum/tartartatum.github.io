@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CmdGlas · COMMS</title>
+<!--
+  CmdGlas COMMS — pop-out companion app (Phase 1).
+  Two modes: CHAT (open text channels) + ORG (member roster + live presence + contacts).
+  Shares the tablet's Supabase project + login (same origin => same localStorage session token).
+  Backend: public.org_messages + public.org_members (see cmdglas_org_phase0.sql).
+  NO secrets — publishable (anon) key only; RLS guards data. Built 2026-07-19.
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bruno+Ace&family=Rajdhani:wght@400;500;600;700&display=swap');
+  :root{
+    --bg0:#080b11; --bg1:#0d1219; --panel:#131c29; --panel2:#1a2230;
+    --line:#2b3542; --line2:#39414d; --blue:#6ecdff; --blue2:#9fd8ff; --blue-dim:#4a708a;
+    --txt:#dfeaf5; --txt-dim:#8ba0b5; --txt-mid:#b9c9d8; --good:#57d38a; --bad:#ff6b6b; --amber:#e0be7d;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:linear-gradient(160deg,var(--bg0),var(--bg1));color:var(--txt);
+    font-family:'Rajdhani','Segoe UI',sans-serif;font-size:15px;overflow:hidden}
+  #app{display:flex;flex-direction:column;height:100%}
+  /* header */
+  header.oc-top{display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--line2);
+    background:linear-gradient(180deg,#131c29,#0d1219);box-shadow:0 6px 14px rgba(0,0,0,.4)}
+  .oc-brand{font-family:'Bruno Ace',sans-serif;font-size:16px;letter-spacing:4px;background:linear-gradient(180deg,#eaf6ff,#9fd8ff 55%,#4fd2ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 5px rgba(0,0,0,.6))}
+  .oc-sub{font-family:'Bruno Ace',sans-serif;font-size:10px;letter-spacing:3px;color:var(--txt-dim);margin-top:2px}
+  .oc-brandwrap{display:flex;flex-direction:column;line-height:1}
+  /* top-level mode tabs */
+  .oc-modes{display:flex;gap:6px;margin-left:14px}
+  .oc-mode{font-family:'Bruno Ace',sans-serif;font-size:11px;letter-spacing:2px;padding:7px 16px;border-radius:9px;cursor:pointer;
+    color:var(--txt-dim);border:1px solid transparent;background:linear-gradient(180deg,#1a2230,#141b26)}
+  .oc-mode:hover{color:var(--txt-mid)}
+  .oc-mode.active{color:var(--blue2);border:1px solid var(--blue-dim);
+    box-shadow:0 2px 0 #0a111c,inset 0 1px 0 rgba(190,225,255,.16);background:linear-gradient(180deg,#22304a,#141d2c)}
+  .oc-spacer{flex:1}
+  .oc-pill{display:flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid var(--line2);border-radius:20px;
+    background:linear-gradient(180deg,#1a2230,#141b26);font-size:12px;letter-spacing:1px;color:var(--txt-mid)}
+  .oc-dot{width:8px;height:8px;border-radius:50%;background:var(--bad);box-shadow:0 0 6px currentColor;flex:none}
+  .oc-dot.on{background:var(--good)}
+  /* view container */
+  .oc-view{flex:1;display:flex;min-height:0}
+  .oc-view.hidden{display:none}
+  /* ---- CHAT ---- */
+  aside.oc-side{width:190px;flex:none;border-right:1px solid var(--line2);background:rgba(10,14,20,.55);
+    display:flex;flex-direction:column;padding:10px 8px;gap:3px;overflow:auto}
+  .oc-ch-h{font-family:'Bruno Ace',sans-serif;font-size:10px;letter-spacing:3px;color:var(--blue-dim);padding:6px 8px 4px}
+  .oc-ch{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;color:var(--txt-dim);
+    border:1px solid transparent;font-size:14px;letter-spacing:.5px}
+  .oc-ch:hover{background:var(--panel);color:var(--txt-mid)}
+  .oc-ch.active{background:linear-gradient(180deg,#1c2a3a,#152030);color:var(--blue2);border-color:var(--blue-dim)}
+  .oc-ch .hash{color:var(--blue-dim);font-weight:700}
+  .oc-stream-wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+  .oc-ch-title{padding:10px 16px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:2px;color:var(--txt-mid);
+    display:flex;align-items:center;gap:10px;background:rgba(19,28,41,.5)}
+  .oc-ch-title .hash{color:var(--blue-dim)}
+  .oc-stream{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+  .oc-msg{padding:6px 10px;border-radius:8px;max-width:80%}
+  .oc-msg .who{font-size:12px;letter-spacing:1px;color:var(--blue2);margin-right:8px;font-weight:600}
+  .oc-msg .ts{font-size:10px;color:var(--txt-dim)}
+  .oc-msg .body{color:var(--txt);margin-top:2px;white-space:pre-wrap;word-break:break-word;line-height:1.35}
+  .oc-msg.mine{align-self:flex-end;background:linear-gradient(180deg,#16263a,#122032);border:1px solid #244057}
+  .oc-msg.sys{align-self:center;max-width:92%;text-align:center;color:var(--txt-dim);font-size:12px;letter-spacing:1px}
+  .oc-day{align-self:center;font-size:10px;letter-spacing:2px;color:var(--txt-dim);margin:8px 0;opacity:.8}
+  .oc-compose{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line2);background:rgba(13,18,25,.7)}
+  .oc-input{flex:1;background:#0e141d;border:1px solid var(--line2);border-radius:10px;color:var(--txt);
+    padding:10px 12px;font-family:inherit;font-size:15px;resize:none;max-height:120px;min-height:42px}
+  .oc-input:focus{outline:none;border-color:var(--blue-dim)}
+  button.oc-send{font-family:'Bruno Ace',sans-serif;background:linear-gradient(180deg,#1d6f9c,#124a68);border:1px solid #3b91bd;color:#eaf6ff;
+    border-radius:10px;padding:0 18px;cursor:pointer;letter-spacing:2px;font-size:12px;min-width:84px;box-shadow:0 2px 0 #0a111c}
+  button.oc-send:hover{filter:brightness(1.12)} button.oc-send:disabled{opacity:.45;cursor:not-allowed}
+  .oc-err{color:var(--bad);font-size:12px;min-height:16px;padding:2px 14px}
+  /* ---- ORG roster ---- */
+  .oc-org{flex:1;display:flex;flex-direction:column;min-width:0}
+  .oc-org-h{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+  .oc-org-h .t{font-family:'Bruno Ace',sans-serif;font-size:13px;letter-spacing:3px;color:var(--blue2)}
+  .oc-org-h .c{font-size:12px;color:var(--txt-dim);letter-spacing:1px}
+  .oc-roster{flex:1;overflow:auto;padding:12px 16px;display:flex;flex-direction:column;gap:7px}
+  .oc-grp{font-family:'Bruno Ace',sans-serif;font-size:10px;letter-spacing:3px;color:var(--blue-dim);margin:6px 2px 2px}
+  .oc-member{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(16,23,33,.6)}
+  .oc-member.on{border-color:rgba(87,211,138,.3)}
+  .oc-av{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    font-family:'Bruno Ace',sans-serif;font-size:13px;color:#04121a;font-weight:700;
+    background:radial-gradient(circle at 50% 28%,#8fe6ff,#3a8fb0 60%,#1a4a5e);box-shadow:0 1px 2px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.35)}
+  .oc-member.off .oc-av{filter:grayscale(.7) brightness(.7)}
+  .oc-mbody{flex:1;min-width:0}
+  .oc-mname{color:var(--txt);font-size:15px;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+  .oc-mname .you{font-size:9px;letter-spacing:1px;color:var(--blue-dim);border:1px solid var(--blue-dim);border-radius:4px;padding:1px 5px}
+  .oc-mmeta{font-size:11px;color:var(--txt-dim);margin-top:2px;letter-spacing:.5px}
+  .oc-status{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:1px;flex:none}
+  .oc-status .d{width:9px;height:9px;border-radius:50%;background:#4a5563}
+  .oc-status.on .d{background:var(--good);box-shadow:0 0 6px var(--good)}
+  .oc-status.on{color:var(--good)} .oc-status.off{color:var(--txt-dim)}
+  .oc-role{font-size:9px;letter-spacing:1px;color:var(--amber);border:1px solid #4a3d18;border-radius:5px;padding:1px 6px;background:rgba(224,190,125,.08)}
+  /* overlays */
+  .oc-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:rgba(6,9,14,.86);backdrop-filter:blur(3px);z-index:50}
+  .oc-card{max-width:460px;width:100%;background:linear-gradient(180deg,#141d2a,#0e141d);border:1px solid var(--line2);
+    border-radius:14px;padding:24px 22px;box-shadow:0 20px 50px rgba(0,0,0,.6);text-align:center}
+  .oc-card h2{font-family:'Bruno Ace',sans-serif;font-size:15px;letter-spacing:3px;margin:0 0 8px;color:var(--blue2)}
+  .oc-card p{color:var(--txt-mid);line-height:1.5;font-size:14px;margin:8px 0}
+  .oc-card code{background:#0a0f16;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--amber);font-size:12px}
+  .oc-btn{display:inline-block;margin-top:12px;background:linear-gradient(180deg,#1d6f9c,#124a68);border:1px solid #3b91bd;
+    color:#eaf6ff;border-radius:10px;padding:9px 18px;cursor:pointer;letter-spacing:2px;font-size:12px;font-family:'Bruno Ace',sans-serif}
+  .oc-btn.ghost{background:transparent;border-color:var(--line2);color:var(--txt-mid)}
+  .hidden{display:none!important}
+  .oc-banner{padding:8px 14px;font-size:12.5px;letter-spacing:.4px;line-height:1.4;border-bottom:1px solid transparent}
+  .oc-banner.hidden{display:none}
+  .oc-banner.warn{background:rgba(224,190,125,.12);color:#f0d79a;border-bottom-color:rgba(224,190,125,.35)}
+  .oc-banner.err{background:rgba(255,107,107,.12);color:#ffb0a8;border-bottom-color:rgba(255,107,107,.35)}
+  .oc-banner.info{background:rgba(108,180,214,.12);color:#bfe4f5;border-bottom-color:rgba(108,180,214,.3)}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#243040;border-radius:6px;border:2px solid transparent;background-clip:content-box}
+</style>
+<style id="oc-holo-restyle">/* 2026-07-21: holographic deep-space restyle to match the CmdGlas COMMS deck (dimmed steel-blue, build 319). Visual only — no JS/logic touched. */
+:root{--blue:#6cb4d4;--blue2:#9fcfe2;--blue-dim:#3f6d86}
+html,body{background:#050b16 !important}
+#app{position:relative;background-color:#050b16;background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 62% 24%,rgba(200,225,255,.9),transparent),radial-gradient(1.6px 1.6px at 84% 60%,#dff,transparent),radial-gradient(1px 1px at 30% 72%,rgba(190,220,255,.8),transparent),radial-gradient(1.2px 1.2px at 92% 40%,#eefaff,transparent),radial-gradient(1px 1px at 46% 90%,rgba(200,225,255,.7),transparent),radial-gradient(ellipse 60% 45% at 24% 16%,rgba(56,150,215,.16),transparent 70%),radial-gradient(ellipse 55% 45% at 82% 86%,rgba(120,80,200,.12),transparent 70%)}
+header.oc-top{background:linear-gradient(180deg,rgba(9,26,40,.72),rgba(5,15,23,.75)) !important;border-bottom:1px solid rgba(108,180,214,.28) !important;box-shadow:0 4px 14px rgba(0,0,0,.5),inset 0 -1px 0 rgba(108,180,214,.22) !important}
+.oc-brand{background:linear-gradient(180deg,#dff2fb,#9fcfe2 55%,#5fb0d2) !important;-webkit-background-clip:text;background-clip:text;color:transparent}
+.oc-mode.active{color:#c3e2ef !important;border-color:rgba(108,180,214,.5) !important;background:linear-gradient(180deg,rgba(40,80,110,.5),rgba(18,32,44,.6)) !important}
+.oc-pill{background:linear-gradient(180deg,rgba(20,34,48,.6),rgba(14,22,32,.6)) !important;border-color:rgba(108,180,214,.28) !important;color:#b9c9d8 !important}
+aside.oc-side{background:rgba(6,16,26,.5) !important;border-right:1px solid rgba(108,180,214,.20) !important}
+.oc-ch-h{color:#5f8ba1 !important}
+.oc-ch{clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);color:#aeddee !important;border-color:transparent !important}
+.oc-ch:hover{background:rgba(100,180,214,.10) !important;color:#d7ecf7 !important}
+.oc-ch .hash{color:#5fb0d2 !important}
+.oc-ch.active{position:relative;background:linear-gradient(90deg,rgba(100,180,214,.26),rgba(100,180,214,.03)) !important;color:#eafaff !important;border-color:transparent !important}
+.oc-ch.active::before{content:'';position:absolute;left:0;top:3px;bottom:3px;width:3px;background:#7fc4de;box-shadow:0 0 7px #7fc4de}
+.oc-ch-title{background:rgba(9,22,34,.5) !important;border-bottom:1px solid rgba(108,180,214,.22) !important;color:#8fdcff !important;letter-spacing:2px}
+.oc-ch-title .hash{color:#5fb0d2 !important}
+.oc-stream{background:transparent !important}
+.oc-msg .who{color:#7fc4de !important}
+.oc-msg.mine{background:linear-gradient(180deg,rgba(20,38,56,.8),rgba(16,30,48,.8)) !important;border:1px solid rgba(100,175,210,.35) !important}
+.oc-compose{background:rgba(6,16,26,.6) !important;border-top:1px solid rgba(108,180,214,.22) !important}
+.oc-input{background:rgba(6,18,28,.82) !important;border:1px solid rgba(108,180,214,.3) !important;color:#d7f2ff !important;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
+.oc-input:focus{border-color:rgba(120,190,215,.7) !important}
+button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;border:1px solid rgba(120,190,215,.8) !important;color:#04141d !important;box-shadow:0 0 9px rgba(75,165,205,.5) !important;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.oc-org-h{border-bottom:1px solid rgba(108,180,214,.22) !important}
+.oc-org-h .t{color:#8fdcff !important}
+.oc-grp{color:#5f8ba1 !important}
+.oc-member{background:rgba(8,20,32,.6) !important;border:1px solid rgba(108,180,214,.2) !important;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.oc-member.on{border-color:rgba(87,211,138,.3) !important}
+.oc-av{background:radial-gradient(circle at 50% 28%,#7fcbe0,#356f88 60%,#1a4a5e) !important}
+.oc-role{color:#c9a86a !important;border-color:#4a3d18 !important}
+.oc-overlay{background:rgba(4,9,16,.88) !important}
+.oc-card{background:linear-gradient(180deg,rgba(12,26,40,.96),rgba(6,14,22,.96)) !important;border:1px solid rgba(108,180,214,.35) !important;clip-path:polygon(13px 0,calc(100% - 26px) 0,100% 26px,100% calc(100% - 13px),calc(100% - 13px) 100%,13px 100%,0 calc(100% - 13px),0 13px)}
+.oc-card h2{color:#9fcfe2 !important}
+.oc-btn{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;border:1px solid rgba(120,190,215,.8) !important;color:#04141d !important}
+.oc-btn.ghost{background:transparent !important;color:#b9c9d8 !important;border-color:rgba(108,180,214,.3) !important}
+::-webkit-scrollbar-thumb{background:#1c3242 !important}
+</style>
+<style id="oc-cmd-css">
+.oc-toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;background:linear-gradient(180deg,#123049,#0e2233);border:1px solid #3b91bd;color:#eaf6ff;padding:10px 16px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.55);font-size:13px;letter-spacing:.4px;max-width:80%;text-align:center;display:none}
+.oc-toast.show{display:block}
+#oc-gate-actions .oc-btn{margin:6px 5px 0}
+.oc-console{padding:12px 14px;overflow:auto;flex:1;min-height:0}
+.oc-applicants{border:1px solid rgba(255,190,90,.4);background:rgba(255,190,90,.06);border-radius:12px;padding:10px 12px;margin-bottom:14px}
+.oc-applicants h3,.oc-board-h{font-family:'Bruno Ace',sans-serif;font-size:11px;letter-spacing:2px;color:#f0d79a;margin:0 0 8px}
+.oc-appl{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid rgba(108,180,214,.2);border-radius:9px;background:rgba(8,20,32,.6);margin-bottom:6px;flex-wrap:wrap}
+.oc-appl .nm{font-size:14px;color:#eaf6ff;flex:1;min-width:110px}
+.oc-appl .oc-aph{font-size:11px;color:#8fd0ea;letter-spacing:.5px;margin-left:6px}
+.oc-apnote{flex-basis:100%;width:100%;font-size:11.5px;color:#c9d7e4;font-style:italic;opacity:.9;margin:2px 0 0}
+/* apply form (required fields before a request can be sent) */
+.oc-apply-form{display:flex;flex-direction:column;gap:9px;max-width:340px;margin:2px auto 0;text-align:left}
+.oc-fl{display:flex;flex-direction:column;gap:4px;font-family:'Bruno Ace',sans-serif;font-size:10px;letter-spacing:1.5px;color:#a9c4d6}
+.oc-fi{background:#0b1622;border:1px solid rgba(120,190,225,.4);border-radius:7px;color:#eaf7ff;font:400 13px/1.4 'Rajdhani','Segoe UI',sans-serif;padding:8px 10px;width:100%;box-sizing:border-box}
+.oc-fi:focus{outline:none;border-color:#7fc4de;box-shadow:0 0 0 2px rgba(120,190,225,.25)}
+.oc-req{color:#ff8a6b}.oc-opt{color:var(--txt-dim);font-size:9px;letter-spacing:1px}
+.oc-ap-err{min-height:14px;font-size:11.5px;color:#ff9a7a}
+.oc-board{display:flex;gap:12px;flex-wrap:wrap}
+.oc-sqn{flex:1 1 260px;min-width:240px;background:rgba(8,20,32,.55);border:1px solid rgba(108,180,214,.25);border-radius:12px;padding:10px 11px}
+.oc-sqn.unassigned{border-style:dashed;border-color:rgba(150,170,190,.35)}
+.oc-sqn-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;border-bottom:1px solid rgba(108,180,214,.2);padding-bottom:7px}
+.oc-sqn-h .sn{font-family:'Bruno Ace',sans-serif;font-size:12px;letter-spacing:1px;color:#9fcfe2}
+.oc-sqn-h .sl{font-size:10px;color:#c9a86a;letter-spacing:.4px;text-align:right}
+.oc-slot{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;background:rgba(16,23,33,.6);border:1px solid rgba(108,180,214,.15);margin-bottom:5px;flex-wrap:wrap}
+.oc-slot .sav{width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Bruno Ace',sans-serif;font-size:10px;color:#04121a;background:radial-gradient(circle at 50% 28%,#7fcbe0,#356f88 60%,#1a4a5e)}
+.oc-slot .snm{font-size:13px;color:#eafaff;flex:1;min-width:80px}
+.oc-slot .sdot{width:8px;height:8px;border-radius:50%;background:#4a5563;flex:none}
+.oc-slot.on .sdot{background:var(--good);box-shadow:0 0 6px var(--good)}
+.oc-ctl{background:#0e141d;border:1px solid var(--line2);color:var(--txt);border-radius:7px;padding:4px 6px;font-family:inherit;font-size:11px}
+.oc-ap{background:linear-gradient(180deg,#1d7a4c,#0f5233);border:1px solid #2f9e6a;color:#eafff2;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:11px}
+.oc-dn{background:transparent;border:1px solid #6a3a3a;color:#ffb0a8;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:11px}
+.oc-ap:hover{filter:brightness(1.1)} .oc-dn:hover{border-color:#a05050}
+.wing-board{padding:16px;overflow:auto;flex:1;min-height:0}
+.wing-you{text-align:center;font-family:'Bruno Ace',sans-serif;font-size:12px;letter-spacing:1px;color:#9fcfe2;margin-bottom:14px;padding:9px;border:1px solid rgba(108,180,214,.3);border-radius:10px;background:rgba(20,40,56,.4)}
+.wing-top{display:flex;justify-content:center}
+.wing-node.cmd{border:1px solid #7fc4de;background:linear-gradient(180deg,rgba(40,90,120,.5),rgba(16,32,44,.6));border-radius:12px;padding:10px 20px;text-align:center;box-shadow:0 0 18px rgba(90,190,230,.25)}
+.wn-t{font-family:'Bruno Ace',sans-serif;font-size:10px;letter-spacing:2px;color:#8fdcff;margin-bottom:4px}
+.wn-n{font-size:14px;color:#eafaff}
+.wn-n.me,.wing-p.me,.wing-lead.me,.wing-col.mine>.wing-col-h{color:#ffe08a !important;text-shadow:0 0 8px rgba(255,207,107,.5)}
+.wing-branches{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.wing-col{flex:1 1 220px;min-width:200px;max-width:300px;background:rgba(8,20,32,.55);border:1px solid rgba(108,180,214,.25);border-radius:12px;padding:10px 12px}
+.wing-col.un{border-style:dashed}
+.wing-col.mine{border-color:#ffcf6b;box-shadow:0 0 16px rgba(255,190,90,.2)}
+.wing-col-h{font-family:'Bruno Ace',sans-serif;font-size:12px;letter-spacing:1px;color:#9fcfe2;text-align:center;margin-bottom:8px;border-bottom:1px solid rgba(108,180,214,.2);padding-bottom:6px}
+.wing-lead{color:#c9a86a;font-size:13px;padding:6px 8px;border:1px solid rgba(201,168,106,.35);border-radius:8px;margin-bottom:8px;display:flex;flex-direction:column}
+.wing-lead span{font-size:9px;letter-spacing:1px;color:#8a7a4a}
+.wing-rk{font-size:9px;letter-spacing:2px;color:#5f8ba1;margin:8px 0 3px;text-transform:uppercase}
+.wing-p{font-size:13px;color:#dfeaf5;padding:5px 8px;border-radius:7px;background:rgba(16,23,33,.6);margin-bottom:4px;border:1px solid rgba(108,180,214,.12)}
+.wing-p.on{border-color:rgba(87,211,138,.35)}
+.wing-empty{color:var(--txt-dim);font-size:12px;text-align:center;padding:6px}
+.oc-howto-btn{background:linear-gradient(180deg,#1a2230,#141b26);border:1px solid var(--line2);color:var(--txt-mid);border-radius:9px;padding:6px 13px;cursor:pointer;font-family:'Bruno Ace',sans-serif;font-size:10px;letter-spacing:1px;margin-left:8px}
+.oc-howto-btn:hover{color:#eafaff;border-color:#7fc4de}
+#oc-howto .oc-card{max-width:760px;text-align:left}
+.oc-man{max-height:64vh;overflow:auto;text-align:left;padding-right:6px}
+.oc-man p{color:var(--txt-mid);font-size:13px;line-height:1.55;margin:6px 0}
+#oc-howto h3{font-family:'Bruno Ace',sans-serif;font-size:11px;letter-spacing:2px;color:#8fdcff;margin:12px 0 4px}
+#oc-howto ul{margin:4px 0 0;padding-left:18px}
+#oc-howto li{color:var(--txt-mid);font-size:13px;line-height:1.5;margin:3px 0}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="oc-top">
+    <div class="oc-brandwrap"><span class="oc-brand">CMDGLAS</span><span class="oc-sub">COMMS</span></div>
+    <div class="oc-modes">
+      <div class="oc-mode active" id="mode-chat" data-mode="chat">CHAT</div>
+      <div class="oc-mode" id="mode-org" data-mode="org">ORG</div>
+      <div class="oc-mode" id="mode-wing" data-mode="wing">WING</div>
+    </div>
+    <button id="oc-howto-btn" class="oc-howto-btn">HOW-TO</button>
+    <div class="oc-spacer"></div>
+    <div class="oc-pill"><span id="oc-conn" class="oc-dot" title="Realtime link"></span><span id="oc-conn-lbl">connecting…</span></div>
+    <div class="oc-pill"><span id="oc-who">—</span></div>
+  </header>
+
+  <!-- CHAT view -->
+  <div class="oc-view" id="view-chat">
+    <aside class="oc-side">
+      <div class="oc-ch-h">CHANNELS</div>
+      <div id="oc-channels"></div>
+    </aside>
+    <div class="oc-stream-wrap">
+      <div class="oc-ch-title"><span class="hash">#</span><span id="oc-ch-name">general</span></div>
+      <div id="oc-banner" class="oc-banner hidden"></div>
+      <div id="oc-stream" class="oc-stream"></div>
+      <div id="oc-err" class="oc-err"></div>
+      <div class="oc-compose">
+        <textarea id="oc-input" class="oc-input" rows="1" placeholder="Message #general …  (Enter to send · Shift+Enter = newline)" disabled></textarea>
+        <button id="oc-send" class="oc-send" disabled>SEND</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG view -->
+  <div class="oc-view hidden" id="view-org">
+    <div class="oc-org">
+      <div class="oc-org-h"><span class="t">ORG ROSTER</span><span class="c" id="oc-roster-count">—</span></div>
+      <div id="oc-roster" class="oc-roster"></div>
+    </div>
+  </div>
+
+  <!-- WING view -->
+  <div class="oc-view hidden" id="view-wing"><div id="wing-board" class="wing-board"></div></div>
+</div>
+
+<div id="oc-signin" class="oc-overlay hidden">
+  <div class="oc-card"><h2>SIGN IN REQUIRED</h2>
+    <p>COMMS shares your CmdGlas login. You're not signed in on this device yet.</p>
+    <p>Sign in on the <b>CmdGlas tablet</b> (top-right account pill), then reopen this window.</p>
+    <button class="oc-btn" onclick="try{if(window.opener&&!window.opener.closed)window.opener.focus();}catch(e){}">FOCUS TABLET</button>
+    <button class="oc-btn ghost" onclick="location.reload()">I'M SIGNED IN — RELOAD</button>
+  </div>
+</div>
+<div id="oc-nobackend" class="oc-overlay hidden">
+  <div class="oc-card"><h2>COMMS BACKEND NOT SET UP</h2>
+    <p>The comms tables aren't in Supabase yet. Run <code>cmdglas_org_phase0.sql</code> once in the Supabase SQL Editor, then reload.</p>
+    <p id="oc-nobackend-detail" style="font-size:12px;color:var(--txt-dim)"></p>
+    <button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>
+  </div>
+</div>
+
+<div id="oc-gate" class="oc-overlay hidden"><div class="oc-card">
+  <h2 id="oc-gate-h">JOIN THE WING</h2><p id="oc-gate-p"></p>
+  <div id="oc-gate-actions"></div>
+</div></div>
+<div id="oc-toast" class="oc-toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var ORG_BUILD=3, ORG_ID='cmdglas';
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
+  var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
+  var CHANNELS=[{id:'general',name:'general'},{id:'party',name:'party'},{id:'org',name:'org'},{id:'chan1',name:'orgchan 1'},{id:'chan2',name:'orgchan 2'},{id:'chan3',name:'orgchan 3'},{id:'chan4',name:'orgchan 4'},{id:'chan5',name:'orgchan 5'},{id:'chan6',name:'orgchan 6'}];
+  var RANKS=[{id:'wing-commander',n:'Wing Commander'},{id:'squadron-leader',n:'Squadron Leader'},{id:'flight-lead',n:'Flight Lead'},{id:'element-lead',n:'Element Lead'},{id:'wingman',n:'Wingman'},{id:'recruit',n:'Recruit'}];
+  var RANK_CMD=['wing-commander','squadron-leader'];
+  var sb=null, me=null, myRole=null, myStatus=null, mySquad=null;
+  var curChannel='general', rtChat=null, rtPresence=null, rtMembers=null, rendered={}, onlineIds={}, roster=[], squadrons=[], curMode='chat';
+  try{ var _chm=/[?&]ch=([a-z0-9]+)/i.exec(location.search||''); if(_chm){ var _cid=_chm[1].toLowerCase(); if(CHANNELS.some(function(c){return c.id===_cid;})) curChannel=_cid; } }catch(e){}
+  var $=function(id){return document.getElementById(id);};
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{}; return m.username||m.callsign||(u.email?String(u.email).split('@')[0]:'CMDR'); }
+  function initials(n){ n=(n||'?').trim(); var p=n.split(/[\s_.-]+/).filter(Boolean); return ((p[0]||'?')[0]+((p[1]||'')[0]||'')).toUpperCase(); }
+  function fmtTime(iso){ try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
+  function ago(iso){ try{var s=Math.floor((Date.now()-new Date(iso).getTime())/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago';}catch(e){return '';} }
+  function rankName(r){ for(var i=0;i<RANKS.length;i++) if(RANKS[i].id===r) return RANKS[i].n; return (r||'member'); }
+  function isCmd(){ return RANK_CMD.indexOf(myRole)>=0 && myStatus==='approved'; }
+  function sqnName(id){ if(!id) return 'Unassigned'; for(var i=0;i<squadrons.length;i++) if(squadrons[i].id===id) return squadrons[i].name; return id; }
+  function setConn(on,l){ $('oc-conn').classList.toggle('on',!!on); $('oc-conn-lbl').textContent=l||(on?'live':'offline'); }
+  function showErr(m){ $('oc-err').textContent=m||''; }
+  function banner(kind,msg){ var b=$('oc-banner'); if(!b)return; if(!msg){ b.className='oc-banner hidden'; b.textContent=''; return; } b.className='oc-banner '+kind; b.textContent=msg; }
+  var _tt=null;
+  function toast(msg){ var t=$('oc-toast'); if(!t)return; t.textContent=msg; t.classList.add('show'); if(_tt)clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},6000); }
+
+  // ---- modes: chat / org / wing ----
+  function setMode(mode){ curMode=mode;
+    ['chat','org','wing'].forEach(function(m){ var b=$('mode-'+m), v=$('view-'+m); if(b)b.classList.toggle('active',m===mode); if(v)v.classList.toggle('hidden',m!==mode); });
+    if(mode==='org'){ loadSquadrons(function(){loadRoster();}); }
+    if(mode==='wing'){ loadSquadrons(function(){loadRoster();}); }
+  }
+
+  // ---- channels ----
+  function buildChannels(){ var w=$('oc-channels'); w.innerHTML='';
+    CHANNELS.forEach(function(c){ var el=document.createElement('div'); el.className='oc-ch'+(c.id===curChannel?' active':''); el.dataset.ch=c.id;
+      el.innerHTML='<span class="hash">#</span><span>'+esc(c.name)+'</span>'; el.onclick=function(){selectChannel(c.id);}; w.appendChild(el); });
+    var cc=CHANNELS.filter(function(x){return x.id===curChannel;})[0]||CHANNELS[0];
+    $('oc-ch-name').textContent=cc.name; $('oc-input').placeholder='Message #'+cc.name+' …  (Enter to send · Shift+Enter = newline)';
+  }
+  function selectChannel(id){ if(id===curChannel)return; curChannel=id;
+    var c=CHANNELS.filter(function(x){return x.id===id;})[0]||CHANNELS[0];
+    $('oc-ch-name').textContent=c.name; $('oc-input').placeholder='Message #'+c.name+' …  (Enter to send · Shift+Enter = newline)';
+    Array.prototype.forEach.call(document.querySelectorAll('.oc-ch'),function(el){el.classList.toggle('active',el.dataset.ch===id);});
+    rendered={}; $('oc-stream').innerHTML=''; loadMessages();
+  }
+
+  // ---- chat ----
+  var lastDay=null;
+  function dayKey(iso){try{return new Date(iso).toDateString();}catch(e){return '';}}
+  function renderMsg(m){ if(m.id!=null&&rendered[m.id])return; if(m.id!=null)rendered[m.id]=1;
+    var st=$('oc-stream'); var dk=dayKey(m.created_at);
+    if(dk&&dk!==lastDay){ lastDay=dk; var d=document.createElement('div'); d.className='oc-day'; try{d.textContent=new Date(m.created_at).toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});}catch(e){} st.appendChild(d); }
+    var mine=me&&m.user_id===me.id; var el=document.createElement('div'); el.className='oc-msg'+(mine?' mine':'');
+    el.innerHTML='<div><span class="who">'+esc(m.callsign||'CMDR')+'</span><span class="ts">'+fmtTime(m.created_at)+'</span></div><div class="body">'+esc(m.body)+'</div>';
+    st.appendChild(el); st.scrollTop=st.scrollHeight;
+  }
+  function sysLine(t){ var el=document.createElement('div'); el.className='oc-msg sys'; el.textContent=t; $('oc-stream').appendChild(el); }
+  function handleDbError(err){ var msg=(err&&err.message)||String(err); var code=err&&err.code;
+    if(/relation .*(org_messages|org_members|org_squadrons).* does not exist/i.test(msg)||code==='42P01'){ $('oc-nobackend-detail').textContent=msg; $('oc-nobackend').classList.remove('hidden'); return; }
+    if(code==='42501'||/permission denied|row-level security|violates row-level/i.test(msg)){ banner('err','Permission denied — your account is not an approved member here. Ask a Wing Commander to approve you, then reload.'); return; }
+    if(/JWT|not authenticated|invalid.*(token|claim)|expired/i.test(msg)){ banner('err','Your sign-in expired. Reload the tablet and sign in again.'); return; }
+    banner('err','Comms error: '+msg);
+  }
+  function loadMessages(){ if(!sb||!me)return; showErr(''); lastDay=null;
+    sb.from('org_messages').select('*').eq('org_id',ORG_ID).eq('channel',curChannel).order('created_at',{ascending:true}).limit(200)
+      .then(function(res){ if(res.error){handleDbError(res.error);return;} $('oc-stream').innerHTML=''; rendered={};
+        var rows=res.data||[]; if(!rows.length) sysLine('No transmissions in #'+curChannel+' yet.'); rows.forEach(renderMsg); },
+        function(e){ showErr('Load failed: '+(e&&e.message||e)); });
+  }
+  function send(){ var ta=$('oc-input'); var body=ta.value.trim(); if(!body||!sb||!me)return; ta.value=''; autoGrow(); $('oc-send').disabled=true;
+    sb.from('org_messages').insert({org_id:ORG_ID,channel:curChannel,user_id:me.id,callsign:callsign(me),body:body}).select().then(function(res){
+      $('oc-send').disabled=false; if(res.error){handleDbError(res.error);ta.value=body;return;} if(res.data&&res.data[0])renderMsg(res.data[0]); },
+      function(e){ $('oc-send').disabled=false; banner('err','Message not sent — '+(e&&e.message||e)); ta.value=body; });
+  }
+  function subChat(){ if(!sb)return; try{if(rtChat)sb.removeChannel(rtChat);}catch(e){}
+    rtChat=sb.channel('org-chat-'+ORG_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'org_messages',filter:'org_id=eq.'+ORG_ID},function(p){ var m=p.new; if(m&&m.channel===curChannel)renderMsg(m); })
+      .subscribe(function(s){ if(s==='SUBSCRIBED'){ setConn(true,'live'); banner(''); }
+        else if(s==='CHANNEL_ERROR'||s==='TIMED_OUT'){ setConn(false,'reconnecting…'); banner('warn','Lost the live link — reconnecting. New messages may be delayed until it returns.'); }
+        else if(s==='CLOSED'){ setConn(false,'offline'); banner('err','Comms offline — not connected. Check your internet, then press Reload.'); } });
+  }
+  function autoGrow(){ var ta=$('oc-input'); ta.style.height='auto'; ta.style.height=Math.min(120,ta.scrollHeight)+'px'; }
+
+  // ---- membership gate ----
+  function onSession(user){ me=user||null;
+    if(!me){ $('oc-who').textContent='—'; $('oc-input').disabled=true; $('oc-send').disabled=true; setConn(false,'offline'); hideGate(); $('oc-signin').classList.remove('hidden'); return; }
+    $('oc-signin').classList.add('hidden'); $('oc-who').textContent=callsign(me); checkMembership();
+  }
+  function checkMembership(){ if(!sb||!me)return;
+    sb.from('org_members').select('*').eq('org_id',ORG_ID).eq('user_id',me.id).maybeSingle().then(function(res){
+      if(res.error){ handleDbError(res.error); return; }
+      var row=res.data;
+      if(!row){ myRole=null; myStatus=null; mySquad=null; showGate('apply'); return; }
+      myRole=row.role; myStatus=row.status; mySquad=row.squadron||null;
+      if(row.status!=='approved'){ showGate(row.status==='denied'?'denied':'pending'); return; }
+      hideGate(); startComms();
+    }, function(e){ showErr('Membership check failed: '+(e&&e.message||e)); });
+  }
+  function hideGate(){ $('oc-gate').classList.add('hidden'); }
+  function showGate(kind){ var h=$('oc-gate-h'), p=$('oc-gate-p'), a=$('oc-gate-actions');
+    $('oc-input').disabled=true; $('oc-send').disabled=true; setConn(false,'—');
+    if(kind==='apply'){ h.textContent='REQUEST TO JOIN';
+      p.innerHTML='Signed in as <b>'+esc(callsign(me))+'</b>. Fill this out — a Wing Commander reviews every request. Fields marked <span class="oc-req">*</span> are required. You will see nothing in COMMS until you are approved.';
+      a.innerHTML='<div class="oc-apply-form">'
+        +'<label class="oc-fl">RSI HANDLE <span class="oc-req">*</span><input id="oc-ap-handle" class="oc-fi" maxlength="40" autocomplete="off" spellcheck="false" placeholder="your Star Citizen handle"></label>'
+        +'<label class="oc-fl">CALLSIGN <span class="oc-req">*</span><input id="oc-ap-callsign" class="oc-fi" maxlength="40" autocomplete="off" value="'+esc(callsign(me))+'"></label>'
+        +'<label class="oc-fl">NOTE TO COMMAND <span class="oc-opt">(optional)</span><textarea id="oc-ap-note" class="oc-fi" maxlength="200" rows="2" placeholder="who you are / who referred you"></textarea></label>'
+        +'<div id="oc-ap-err" class="oc-ap-err"></div>'
+        +'<button class="oc-btn" id="oc-apply-btn" disabled>SEND REQUEST</button>'
+        +'</div>';
+      wireApplyForm(); }
+    else if(kind==='pending'){ h.textContent='APPLICATION PENDING'; p.innerHTML='Your request is in, <b>'+esc(callsign(me))+'</b>. A Wing Commander must approve you before COMMS unlocks.'; a.innerHTML='<button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>'; }
+    else { h.textContent='NOT APPROVED'; p.innerHTML='Your request was not approved. Speak to a Wing Commander if you believe this is a mistake.'; a.innerHTML='<button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>'; }
+    $('oc-gate').classList.remove('hidden');
+  }
+  function wireApplyForm(){
+    var hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), btn=$('oc-apply-btn');
+    if(!hn||!cs||!btn) return;
+    function val(){ btn.disabled = !(hn.value.trim() && cs.value.trim()); }
+    hn.addEventListener('input',val); cs.addEventListener('input',val);
+    hn.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!btn.disabled){ e.preventDefault(); applyToOrg(); } });
+    btn.onclick=applyToOrg; val(); try{ hn.focus(); }catch(e){}
+  }
+  function applyToOrg(){ if(!sb||!me)return;
+    var hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), nt=$('oc-ap-note'), err=$('oc-ap-err'), b=$('oc-apply-btn');
+    var handle=hn?hn.value.trim():'', call=(cs?cs.value.trim():'')||callsign(me), note=nt?nt.value.trim():'';
+    if(!handle || !call){ if(err) err.textContent='RSI Handle and Callsign are both required.'; return; } /* server-side guard too, but block the empty send here */
+    if(err) err.textContent='';
+    if(b){b.disabled=true;b.textContent='SENDING…';}
+    sb.from('org_members').insert({user_id:me.id,org_id:ORG_ID,callsign:call,handle:handle,note:note||null}).select().then(function(res){
+      if(res.error){ handleDbError(res.error); if(b){b.disabled=false;b.textContent='SEND REQUEST';} return; } myStatus='pending'; showGate('pending');
+    }, function(e){ showErr('Apply failed: '+(e&&e.message||e)); if(b){b.disabled=false;b.textContent='SEND REQUEST';} });
+  }
+  function startComms(){ $('oc-input').disabled=false; $('oc-send').disabled=false;
+    buildChannels(); loadMessages(); subChat(); heartbeat(); subPresence(); loadSquadrons(function(){loadRoster();}); subMembers();
+  }
+  function heartbeat(){ if(!sb||!me)return; sb.from('org_members').update({callsign:callsign(me),last_seen:new Date().toISOString()}).eq('user_id',me.id).then(function(){},function(){}); }
+
+  // ---- data ----
+  function loadSquadrons(cb){ if(!sb||!me){ if(cb)cb(); return; }
+    sb.from('org_squadrons').select('*').eq('org_id',ORG_ID).order('sort',{ascending:true}).then(function(res){
+      if(!res.error) squadrons=res.data||[]; if(cb)cb(); },function(){ if(cb)cb(); });
+  }
+  function loadRoster(){ if(!sb||!me)return;
+    sb.from('org_members').select('*').eq('org_id',ORG_ID).order('callsign',{ascending:true}).then(function(res){
+      if(res.error){handleDbError(res.error);return;} roster=res.data||[]; renderOrg(); renderWing(); },function(){});
+  }
+
+  // ---- ORG view: console for command, roster for members ----
+  function renderOrg(){ var box=$('oc-roster'); if(!box)return;
+    var approved=roster.filter(function(m){return m.status==='approved';});
+    var pending=roster.filter(function(m){return m.status==='pending';});
+    $('oc-roster-count').textContent=approved.filter(function(m){return onlineIds[m.user_id];}).length+' online · '+approved.length+' member'+(approved.length===1?'':'s');
+    if(isCmd()){ renderConsole(box,approved,pending); } else { renderMemberRoster(box,approved); }
+  }
+  function slotHTML(m,extra){ var on=!!onlineIds[m.user_id]; var mine=me&&m.user_id===me.id;
+    return '<div class="oc-slot'+(on?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div><span class="snm">'+esc(m.callsign||'CMDR')+(mine?' (you)':'')+' — '+esc(rankName(m.role))+'</span>'+(extra||'')+'</div>';
+  }
+  function renderMemberRoster(box,approved){ box.className='oc-roster'; box.innerHTML='';
+    RANKS.forEach(function(rk){ if(rk.id==='recruit')return; var grp=approved.filter(function(m){return (m.role||'wingman')===rk.id;}); if(!grp.length)return;
+      var g=document.createElement('div'); g.className='oc-grp'; g.textContent=rk.n.toUpperCase()+' — '+grp.length; box.appendChild(g);
+      grp.forEach(function(m){ var on=!!onlineIds[m.user_id]; var mine=me&&m.user_id===me.id;
+        var el=document.createElement('div'); el.className='oc-member '+(on?'on':'off');
+        el.innerHTML='<div class="oc-av">'+esc(initials(m.callsign))+'</div><div class="oc-mbody"><div class="oc-mname">'+esc(m.callsign||'CMDR')+(mine?'<span class="you">YOU</span>':'')+' <span class="oc-role">'+esc(rankName(m.role))+'</span></div><div class="oc-mmeta">'+(m.squadron?esc(sqnName(m.squadron))+' · ':'')+(on?'online now':('last seen '+ago(m.last_seen)))+'</div></div><div class="oc-status '+(on?'on':'off')+'"><span class="d"></span>'+(on?'ONLINE':'OFFLINE')+'</div>';
+        box.appendChild(el); }); });
+    if(!approved.length){ box.innerHTML='<div style="color:var(--txt-dim);text-align:center;padding:20px">No approved members yet.</div>'; }
+  }
+  function rankOpts(sel){ return RANKS.filter(function(r){return r.id!=='recruit';}).map(function(r){return '<option value="'+r.id+'"'+(r.id===sel?' selected':'')+'>'+esc(r.n)+'</option>';}).join(''); }
+  function sqnOpts(sel){ var o='<option value="">Unassigned</option>'; squadrons.forEach(function(s){ o+='<option value="'+esc(s.id)+'"'+(s.id===sel?' selected':'')+'>'+esc(s.name)+'</option>'; }); return o; }
+  function renderConsole(box,approved,pending){ box.className='oc-console'; var h='';
+    if(pending.length){ h+='<div class="oc-applicants"><h3>APPLICANTS — '+pending.length+'</h3>';
+      pending.forEach(function(m){ h+='<div class="oc-appl"><span class="nm">'+esc(m.callsign||'CMDR')+(m.handle?'<span class="oc-aph">RSI @'+esc(m.handle)+'</span>':'')+'</span>'
+        +(m.note?'<div class="oc-apnote">&ldquo;'+esc(m.note)+'&rdquo;</div>':'')
+        +'<select class="oc-ctl" data-rank="'+esc(m.user_id)+'">'+rankOpts('wingman')+'</select>'
+        +'<select class="oc-ctl" data-sqn="'+esc(m.user_id)+'">'+sqnOpts('')+'</select>'
+        +'<button class="oc-ap" data-approve="'+esc(m.user_id)+'">Approve</button>'
+        +'<button class="oc-dn" data-deny="'+esc(m.user_id)+'">Deny</button></div>'; });
+      h+='</div>'; }
+    h+='<div class="oc-board-h">SQUADRON BOARD — drag by dropdown to reassign</div><div class="oc-board">';
+    var cols=squadrons.slice(); cols.push({id:'',name:'Unassigned',_un:1});
+    cols.forEach(function(sq){ var mem=approved.filter(function(m){return (m.squadron||'')===sq.id;});
+      var leader=approved.filter(function(m){return m.user_id===sq.leader_id;})[0];
+      h+='<div class="oc-sqn'+(sq._un?' unassigned':'')+'"><div class="oc-sqn-h"><span class="sn">'+esc(sq.name)+'</span>';
+      if(!sq._un){ h+='<span class="sl">Leader: '+(leader?esc(leader.callsign):'—')+'</span>'; }
+      h+='</div>';
+      if(!mem.length){ h+='<div style="color:var(--txt-dim);font-size:11px;padding:4px 2px">empty</div>'; }
+      mem.forEach(function(m){ var on=!!onlineIds[m.user_id];
+        h+='<div class="oc-slot'+(on?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div><span class="snm">'+esc(m.callsign)+' — '+esc(rankName(m.role))+'</span>'
+          +'<select class="oc-ctl" data-setrank="'+esc(m.user_id)+'">'+rankOpts(m.role)+'</select>'
+          +'<select class="oc-ctl" data-move="'+esc(m.user_id)+'">'+sqnOpts(m.squadron||'')+'</select>';
+        if(!sq._un){ h+='<button class="oc-ap" data-leader="'+esc(m.user_id)+'" data-lsqn="'+esc(sq.id)+'"'+(leader&&leader.user_id===m.user_id?' style="opacity:.5" disabled':'')+'>Lead</button>'; }
+        h+='</div>'; });
+      h+='</div>'; });
+    h+='</div>';
+    box.innerHTML=h;
+  }
+
+  // ---- WING board (hierarchy) ----
+  function renderWing(){ var box=$('wing-board'); if(!box)return;
+    var approved=roster.filter(function(m){return m.status==='approved';});
+    var wc=approved.filter(function(m){return m.role==='wing-commander';});
+    var you='You are: '+(myStatus==='approved'?(rankName(myRole)+(mySquad?' · '+sqnName(mySquad):' · unassigned')):'not yet approved');
+    var h='<div class="wing-you">'+esc(you)+'</div>';
+    h+='<div class="wing-top"><div class="wing-node cmd'+(me&&wc.some(function(m){return m.user_id===me.id;})?' me':'')+'"><div class="wn-t">WING COMMAND</div>'+(wc.length?wc.map(function(m){return '<div class="wn-n'+(me&&m.user_id===me.id?' me':'')+'">'+esc(m.callsign)+(onlineIds[m.user_id]?' ●':'')+'</div>';}).join(''):'<div class="wn-n">—</div>')+'</div></div>';
+    h+='<div class="wing-branches">';
+    var cols=squadrons.slice(); cols.push({id:'',name:'Unassigned',_un:1});
+    cols.forEach(function(sq){ var mem=approved.filter(function(m){return (m.squadron||'')===sq.id && m.role!=='wing-commander';});
+      var leader=approved.filter(function(m){return m.user_id===sq.leader_id;})[0];
+      h+='<div class="wing-col'+(sq._un?' un':'')+(mySquad===sq.id?' mine':'')+'"><div class="wing-col-h">'+esc(sq.name)+'</div>';
+      if(!sq._un){ h+='<div class="wing-lead'+(leader&&me&&leader.user_id===me.id?' me':'')+'">◤ '+(leader?esc(leader.callsign):'no leader')+'<span>Squadron Leader</span></div>'; }
+      RANKS.forEach(function(rk){ if(rk.id==='wing-commander'||rk.id==='recruit'||rk.id==='squadron-leader')return; var g=mem.filter(function(m){return m.role===rk.id;}); if(!g.length)return;
+        h+='<div class="wing-rk">'+esc(rk.n)+'</div>'; g.forEach(function(m){ h+='<div class="wing-p'+(me&&m.user_id===me.id?' me':'')+(onlineIds[m.user_id]?' on':'')+'">'+esc(m.callsign)+'</div>'; }); });
+      var sls=mem.filter(function(m){return m.role==='squadron-leader' && (!leader||m.user_id!==leader.user_id);}); sls.forEach(function(m){ h+='<div class="wing-p'+(me&&m.user_id===me.id?' me':'')+'">'+esc(m.callsign)+' — SL</div>'; });
+      if(!mem.length && sq._un){ h+='<div class="wing-empty">—</div>'; }
+      h+='</div>'; });
+    h+='</div>';
+    box.innerHTML=h;
+  }
+
+  // ---- command actions ----
+  function afterAct(res){ if(res&&res.error){handleDbError(res.error);return;} loadRoster(); }
+  function approveMember(uid,rank,sqn){ sb.from('org_members').update({status:'approved',role:rank||'wingman',squadron:sqn||null}).eq('user_id',uid).then(afterAct,function(e){banner('err','Approve failed: '+(e&&e.message||e));}); }
+  function denyMember(uid){ sb.from('org_members').update({status:'denied'}).eq('user_id',uid).then(afterAct,function(){}); }
+  function moveMember(uid,sqn){ sb.from('org_members').update({squadron:sqn||null}).eq('user_id',uid).then(afterAct,function(){}); }
+  function setRank(uid,rank){ sb.from('org_members').update({role:rank}).eq('user_id',uid).then(afterAct,function(){}); }
+  function setLeader(uid,sqnId){ sb.from('org_squadrons').update({leader_id:uid}).eq('id',sqnId).then(function(res){ if(res&&res.error){handleDbError(res.error);return;} loadSquadrons(function(){loadRoster();}); },function(){}); }
+
+  function consoleClick(e){ var t=e.target;
+    var ap=t.closest?t.closest('[data-approve]'):null; if(ap){ var uid=ap.getAttribute('data-approve'); var rs=document.querySelector('[data-rank="'+uid+'"]'), ss=document.querySelector('[data-sqn="'+uid+'"]'); approveMember(uid, rs?rs.value:'wingman', ss?ss.value:''); return; }
+    var dn=t.closest?t.closest('[data-deny]'):null; if(dn){ if(confirm('Deny this applicant?')) denyMember(dn.getAttribute('data-deny')); return; }
+    var ld=t.closest?t.closest('[data-leader]'):null; if(ld){ setLeader(ld.getAttribute('data-leader'), ld.getAttribute('data-lsqn')); return; }
+  }
+  function consoleChange(e){ var t=e.target;
+    if(t.hasAttribute&&t.hasAttribute('data-move')){ moveMember(t.getAttribute('data-move'), t.value); return; }
+    if(t.hasAttribute&&t.hasAttribute('data-setrank')){ setRank(t.getAttribute('data-setrank'), t.value); return; }
+  }
+
+  // ---- presence + live members ----
+  function subPresence(){ if(!sb||!me)return; try{if(rtPresence)sb.removeChannel(rtPresence);}catch(e){}
+    rtPresence=sb.channel('org-presence-'+ORG_ID,{config:{presence:{key:me.id}}});
+    rtPresence.on('presence',{event:'sync'},function(){ var st=rtPresence.presenceState(); onlineIds={}; Object.keys(st).forEach(function(k){onlineIds[k]=1;}); renderOrg(); renderWing(); });
+    rtPresence.subscribe(function(status){ if(status==='SUBSCRIBED'){ rtPresence.track({user_id:me.id,callsign:callsign(me),online_at:new Date().toISOString()}); } });
+  }
+  var _rl=null;
+  function subMembers(){ if(!sb)return; try{if(rtMembers)sb.removeChannel(rtMembers);}catch(e){}
+    rtMembers=sb.channel('org-live-'+ORG_ID)
+      .on('postgres_changes',{event:'*',schema:'public',table:'org_members',filter:'org_id=eq.'+ORG_ID},function(p){ onMemberChange(p); })
+      .on('postgres_changes',{event:'*',schema:'public',table:'org_squadrons',filter:'org_id=eq.'+ORG_ID},function(){ loadSquadrons(function(){loadRoster();}); })
+      .subscribe();
+  }
+  function onMemberChange(p){ var n=p.new||{};
+    if(me && n.user_id===me.id){
+      var msgs=[];
+      if(n.status && n.status!==myStatus){ if(n.status==='approved'&&myStatus!=='approved'){ myStatus='approved'; myRole=n.role; mySquad=n.squadron||null; toast('You have been approved into the wing.'); checkMembership(); return; } if(n.status==='denied'){ toast('Your membership was revoked.'); myStatus='denied'; showGate('denied'); return; } }
+      if(n.role && n.role!==myRole){ msgs.push('You are now '+rankName(n.role)); myRole=n.role; }
+      if((n.squadron||null)!==mySquad){ msgs.push('Moved to '+sqnName(n.squadron||null)); mySquad=n.squadron||null; }
+      if(msgs.length) toast(msgs.join(' · '));
+    }
+    if(_rl)clearTimeout(_rl); _rl=setTimeout(loadRoster,300);
+  }
+
+  // ---- auth/session ----
+  function initSb(){ try{
+      if(!(window.supabase&&window.supabase.createClient)){ showErr('Comms library did not load (offline?).'); $('oc-signin').classList.remove('hidden'); return; }
+      sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+      sb.auth.getSession().then(function(r){ onSession(r&&r.data&&r.data.session&&r.data.session.user); });
+      sb.auth.onAuthStateChange(function(_e,s){ onSession(s&&s.user); });
+    }catch(e){ showErr('Init failed: '+(e&&e.message||e)); }
+  }
+
+  // wire static UI
+  ['chat','org','wing'].forEach(function(m){ var b=$('mode-'+m); if(b)b.onclick=function(){setMode(m);}; });
+  var ht=$('oc-howto-btn'); if(ht)ht.onclick=function(){ $('oc-howto').classList.remove('hidden'); };
+  var hx=$('oc-howto-x'); if(hx)hx.onclick=function(){ $('oc-howto').classList.add('hidden'); };
+  $('oc-input').addEventListener('input',autoGrow);
+  $('oc-input').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
+  $('oc-send').addEventListener('click',send);
+  var rb=$('oc-roster'); if(rb){ rb.addEventListener('click',consoleClick); rb.addEventListener('change',consoleChange); }
+
+  buildChannels(); setConn(false,'connecting…');
+  if(window.supabase&&window.supabase.createClient){ initSb(); }
+  else{ var sc=document.createElement('script'); sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'; sc.async=true; sc.onload=initSb;
+    sc.onerror=function(){ showErr('Comms library failed to load.'); $('oc-signin').classList.remove('hidden'); }; document.head.appendChild(sc); }
+  setInterval(function(){ if(sb&&me&&myStatus==='approved') heartbeat(); }, 60000);
+})();
+</script>
+<div id="oc-howto" class="oc-overlay hidden"><div class="oc-card">
+  <h2>COMMS — FIELD MANUAL</h2>
+  <div class="oc-man">
+    <p>COMMS is your wing's command net: live text channels, a member roster, a live who's-online map, and &mdash; for command &mdash; a squadron board to run the wing.</p>
+
+    <h3>1 &middot; THE THREE TABS</h3>
+    <ul>
+      <li><b>CHAT</b> &mdash; live text channels. Pick a channel on the left, type, press Enter (Shift+Enter = new line).</li>
+      <li><b>ORG</b> &mdash; the member roster grouped by rank, showing who's online. For command it becomes the Squadron Board (&sect;6).</li>
+      <li><b>WING</b> &mdash; the full hierarchy on one screen: Wing Command at the top, every squadron and its leader below, and <b>your own position highlighted</b>.</li>
+    </ul>
+
+    <h3>2 &middot; CHANNELS</h3>
+    <ul>
+      <li><b>General &middot; Party &middot; Org</b> &mdash; open to every approved member.</li>
+      <li><b>CHAN 1&ndash;6</b> &mdash; org-only working channels; they unlock once you are an approved member.</li>
+      <li>The channel you pick in the tablet's COMMS header opens straight to that channel here.</li>
+    </ul>
+
+    <h3>3 &middot; GETTING IN</h3>
+    <ul>
+      <li>Sign in on the tablet (top-right account pill) &mdash; COMMS shares that login.</li>
+      <li>Open COMMS and press <b>APPLY TO JOIN</b>. You land on a <b>PENDING</b> screen and see nothing else until a Wing Commander approves you.</li>
+      <li>The moment you are approved &mdash; or your rank or squadron changes &mdash; a banner tells you instantly. No reload needed.</li>
+    </ul>
+
+    <h3>4 &middot; THE FLIGHT-WING RANKS</h3>
+    <ul>
+      <li><b>Wing Commander</b> &mdash; commands the whole wing. Approves applicants, sets ranks and squadrons, appoints Squadron Leaders. Full control.</li>
+      <li><b>Squadron Leader</b> &mdash; commands one squadron. Command tier: can approve applicants and manage members.</li>
+      <li><b>Flight Lead</b> &mdash; leads a flight (about four ships) inside a squadron.</li>
+      <li><b>Element Lead</b> &mdash; leads a two-ship element (a lead and their wingman).</li>
+      <li><b>Wingman</b> &mdash; a full, approved pilot flying the line.</li>
+      <li><b>Recruit</b> &mdash; applied, not yet approved. No access until a commander clears them.</li>
+    </ul>
+
+    <h3>5 &middot; SQUADRONS</h3>
+    <ul>
+      <li>The wing is divided into <b>squadrons</b> (e.g. Alpha, Bravo), each with a <b>Squadron Leader</b>.</li>
+      <li>Every approved member sits in one squadron (or Unassigned). Your squadron shows on your roster line and on the WING board.</li>
+    </ul>
+
+    <h3>6 &middot; FOR COMMAND &mdash; THE SQUADRON BOARD</h3>
+    <p>If you are a Wing Commander or Squadron Leader, the ORG tab is a command console:</p>
+    <ul>
+      <li><b>Applicants</b> &mdash; each pending recruit has a rank picker + squadron picker. Press <b>Approve</b> to admit them, or <b>Deny</b> to reject.</li>
+      <li><b>Move members</b> &mdash; every member has a squadron dropdown; change it to move them between squadrons instantly.</li>
+      <li><b>Set ranks</b> &mdash; the rank dropdown on each member re-ranks them.</li>
+      <li><b>Set a squadron's Lead</b> &mdash; press <b>Lead</b> on a member inside a squadron to make them its Squadron Leader.</li>
+      <li>Every change appears in that member's window live, with a banner telling them what changed.</li>
+    </ul>
+
+    <h3>7 &middot; THE WING BOARD</h3>
+    <ul>
+      <li>The WING tab draws the whole chain of command: Wing Command &rarr; each Squadron and its Leader &rarr; the pilots under them.</li>
+      <li><b>Your node is highlighted</b> so you always know where you sit.</li>
+    </ul>
+
+    <h3>8 &middot; OPENING IT LARGE</h3>
+    <ul>
+      <li>Press the <b>expand</b> icon in the COMMS pill to open this whole console full-screen. Esc or CLOSE returns you.</li>
+    </ul>
+
+    <h3>9 &middot; CONNECTION &amp; TROUBLE</h3>
+    <ul>
+      <li>The dot up top: <b>green</b> = live, <b>amber</b> = reconnecting (messages may lag), <b>red</b> = offline.</li>
+      <li><b>&ldquo;BACKEND NOT SET UP&rdquo;</b> &mdash; the org owner has not run the setup SQL yet.</li>
+      <li><b>&ldquo;Permission denied&rdquo;</b> &mdash; you are not an approved member; ask a Wing Commander.</li>
+      <li><b>&ldquo;Sign-in expired&rdquo;</b> &mdash; reload the tablet and sign in again.</li>
+      <li>Still stuck? Use <b>Report an Issue</b> on the tablet &mdash; the Chat/COMMS section asks the exact questions to diagnose it.</li>
+    </ul>
+
+    <h3>10 &middot; PERSONAL vs ORG</h3>
+    <ul>
+      <li>These live channels and the roster are the <b>org</b> side. For a <b>personal</b> group (just friends), party up through Spectrum + in-game &mdash; set that up in the tablet's <b>COMMS &rarr; Set Up &rarr; Personal</b>.</li>
+    </ul>
+  </div>
+  <button class="oc-btn" id="oc-howto-x" style="margin-top:12px">GOT IT</button>
+</div></div>
+</body>
+</html>
