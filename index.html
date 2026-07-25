@@ -7921,7 +7921,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=480;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=483;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -23231,6 +23231,21 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Tap the FULLSCREEN button &mdash; top bar, right-side button cluster.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> &ldquo;Standalone&rdquo; means no address bar &mdash; not edge-to-edge fullscreen. That is deliberate. Use the Home Screen icon for a clean no-bar launch, and the FULLSCREEN button for true fullscreen.</div>',
 '<div class="um-note"><b>NOTE.</b> A browser other than Safari needs iPadOS 16.4 or newer to make the no-bar window. On older iPadOS, use Safari.</div></div>',
+  /* build 483 (user: how to use the tablet + run the control server + make a desktop shortcut) */
+'<div class="um-sec"><h2>Section 13 &mdash; Run the Control Server &amp; Make a Desktop Shortcut (PC)</h2><div class="um-purpose">The tablet works in any browser with nothing installed. The optional control server (a small program on your PC) unlocks the live extras: Twitch, live server &amp; mission readouts, and the local second screen. You need the tablet folder (the .py server + the .bat launchers).</div>',
+'<div class="um-proc">13-1. Make the desktop shortcuts (once)</div>',
+'<ol class="um-steps"><li>Open the tablet folder on your PC.</li>',
+'<li>Double-click <b>Create Desktop Shortcuts.bat</b>.</li>',
+'<li>Check your Desktop &mdash; you now have <b>SC Control Server</b> and <b>SC Tablet</b> shortcuts.</li></ol>',
+'<div class="um-proc">13-2. Start the server, open the tablet</div>',
+'<ol class="um-steps"><li>Double-click <b>SC Control Server</b>. A small black window opens &mdash; leave it open; it is serving the tablet.</li>',
+'<li>Double-click <b>SC Tablet</b>. The tablet opens in a clean full-screen window (no browser bars).</li>',
+'<li>The Twitch player, live readouts and second screen now work.</li></ol>',
+'<div class="um-proc">13-3. Close it down</div>',
+'<ol class="um-steps"><li>On the tablet window, press <b>Alt+F4</b> (or <b>Esc</b>).</li>',
+'<li>Close the black server window when you are done for the session.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> No control server needed for everyday use &mdash; everything except the live/PC-only features works by just opening the tablet in any browser at cmdglas.com.</div>',
+'<div class="um-note"><b>NO DANGER.</b> The control server runs only on your own PC and serves the tablet to your browser. It does not touch the game and is unrelated to anti-cheat.</div>',
 /* END-b390 */
 '<div class="um-end">END OF MANUAL &middot; TM-CMDGLAS-10</div>'
   ].join('');
@@ -26010,13 +26025,17 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     /* ---- SET UP ---- */
     +'<section data-sec="setup" hidden>'
       +'<h3>How to set up COMMS</h3>'
-      +'<p class="cgcp-sub">Three short steps. Do them once and you are ready to fly with friends and your org.</p>'
+      +'<p class="cgcp-sub">A few short steps. The first three set up COMMS; the last one turns on the tablet PC extras (Twitch, live readouts, second screen).</p>'
       +'<div class="cgcp-card"><h4>1 · Add your name</h4>'
         +'<ol class="cgcp-steps"><li>Go to the <b>Party</b> tab at the top.</li><li>Type your <b>RSI handle</b> in the box and it saves by itself.</li></ol></div>'
       +'<div class="cgcp-card"><h4>2 · Add a friend (on Spectrum)</h4>'
         +'<ol class="cgcp-steps"><li>In the <b>Party</b> tab, press <b>Open Spectrum</b>.</li><li>Sign in, search your friend’s handle, open their profile, press <b>Add Friend</b>. Do this on Spectrum — the in-game list is unreliable.</li><li>Once you are friends, press <span class="cgcp-key">F11</span> or <span class="cgcp-key">F1</span> in-game, right-click them, pick <b>Invite to Party</b>.</li></ol></div>'
       +'<div class="cgcp-card"><h4>3 · Join org chat</h4>'
         +'<ol class="cgcp-steps"><li>Go to the <b>Org Chat</b> tab.</li><li>Type your <b>org tag</b> and press <b>Open Spectrum chat</b> to talk with your org.</li><li>Press <b>Pick your role</b>, or choose <b>Undecided</b> to let the commander decide.</li></ol></div>'
+      /* build 483 (user: how to use the tablet + run the control server + make a desktop shortcut) */
+      +'<div class="cgcp-card"><h4>4 &middot; Unlock the full tablet (PC helper)</h4>'
+        +'<p class="cgcp-sub" style="margin:2px 0 8px">The tablet works in any browser with nothing to install. To turn on the live extras &mdash; Twitch, live server &amp; mission readouts, and the local second screen &mdash; run the small control server on your PC. You only need the tablet folder (the .py server + the .bat files).</p>'
+        +'<ol class="cgcp-steps"><li>In the tablet folder, double-click <b>Create Desktop Shortcuts.bat</b> once &mdash; it puts <b>SC Control Server</b> and <b>SC Tablet</b> shortcuts on your Desktop.</li><li>Double-click <b>SC Control Server</b> and leave its little window open &mdash; that is what serves the tablet.</li><li>Double-click <b>SC Tablet</b> to open the tablet in a clean full-screen window.</li><li>To close it, press <span class="cgcp-key">Alt</span>+<span class="cgcp-key">F4</span> on the tablet, then close the server window when you are done.</li><li>No control server? Everything except the live/PC-only features still works &mdash; just open the tablet in any browser.</li></ol></div>'
     +'</section>'
     +'</div></div>';
     document.body.appendChild(pg);
@@ -26318,13 +26337,25 @@ html.cmdglas-public #tab-system.active{display:flex !important}
   place();
 })();
 </script>
-<style id="sc-b480-rowfit-css">
-/* build 480 (user: keep the bottom row ONE line, no clipping or wrap after adding REPORT ISSUE + PILOTS ONLINE). */
-#cg-onebar{padding:0 18px !important;gap:8px !important;}
+<style id="sc-b481-rowfit-css">
+/* build 481 (user: bottom row STILL clipping NEW PLAYER ASSIST - shrink the centre control bar + tighten the side buttons so all fit one line with room to spare). */
+#cg-onebar{padding:0 10px !important;gap:6px !important;}
+/* free width by trimming the centre control bar */
+#cg-onebar #sc-appbar{padding:5px 7px !important;}
+#cg-onebar #sc-appbar .sc-acc-group{gap:4px !important;}
+#cg-onebar #sc-appbar .sc-acc-group > .scr-cat{height:40px !important;padding:0 8px !important;font-size:9px !important;letter-spacing:.4px !important;}
+/* tighten the six small side buttons */
+#cg-onebar .cg-ob-side{gap:5px !important;}
+#cg-onebar .cg-ob-side button,#cg-onebar #cg-report-wrap button{height:28px !important;min-height:28px !important;white-space:nowrap !important;padding:4px 7px !important;font-size:8px !important;letter-spacing:.2px !important;}
 #cg-onebar #cg-report-wrap,#cg-onebar #cg-pilots-wrap{margin:0 !important;}
-#cg-onebar #cg-report-wrap button{height:30px !important;min-height:30px !important;white-space:nowrap !important;padding:5px 9px !important;font-size:9px !important;letter-spacing:.4px !important;}
 #cg-onebar #cg-pilots,#cg-onebar #cg-pilots .cgp-lbl,#cg-onebar #cg-pilots .cgp-num{white-space:nowrap !important;}
-#cg-onebar .cg-ob-side{gap:6px !important;}
+#cg-onebar #cg-pilots{font-size:8px !important;gap:5px !important;}
+</style>
+<style id="sc-b482-ipadscroll-css">
+/* build 482 (user: on iPad the page cut off after INGAME TOOLS. CSS zoom on <html> does not reliably scale on iOS Safari, so the home content (~1180px) overflowed the viewport with overflow:hidden and the bottom (COMMS + nav row) was clipped with no scroll. Fix: on touch devices allow vertical scrolling so nothing is cut off. */
+@media (pointer:coarse){
+  html.sc-locked, html.sc-locked body{ overflow-y:auto !important; height:auto !important; min-height:100% !important; max-height:none !important; -webkit-overflow-scrolling:touch !important; }
+}
 </style>
 </body>
 </html>
