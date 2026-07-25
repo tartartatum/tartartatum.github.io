@@ -7925,7 +7925,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=494;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=495;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -21104,11 +21104,11 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
     var head=wrap.querySelector('.cd-head'), frame=wrap.querySelector('iframe'),
         mute=wrap.querySelector('.cd-mute'), tx=wrap.querySelector('.cd-tx');
     (function(){ /* build 491: COMMS channel picker */
-      var CH=[['general','General'],['party','Party'],['org','Org'],['chan1','CHAN 1'],['chan2','CHAN 2'],['chan3','CHAN 3'],['chan4','CHAN 4'],['chan5','CHAN 5'],['chan6','CHAN 6']];
+      var CH=[['general','General'],['party','Party'],['org','Org'],['chan1','ORGCHAN 1'],['chan2','ORGCHAN 2'],['chan3','ORGCHAN 3'],['chan4','ORGCHAN 4'],['chan5','ORGCHAN 5'],['chan6','ORGCHAN 6']];
       function g(k,d){try{var v=localStorage.getItem(k);return v==null?d:v;}catch(e){return d;}} function st(k,v){try{localStorage.setItem(k,v);}catch(e){}}
       var sel=wrap.querySelector('#cd-chsel'); if(!sel) return;
       var hasOrg=!!((g("cg_org_sid","")||"").trim()); /* build 491: CHAN 1-6 are org-only */
-      sel.innerHTML=CH.map(function(c,i){ var org=(c[0].indexOf("chan")===0); var dis=(org&&!hasOrg)?" disabled":""; var tag=org?" (org)":""; return "<option value=\""+c[0]+"\""+dis+">CH-0"+(i+1)+" \u00b7 "+c[1]+tag+"</option>"; }).join("");
+      sel.innerHTML=CH.map(function(c,i){ var org=(c[0].indexOf("chan")===0); var dis=(org&&!hasOrg)?" disabled":""; var tag=org?" (org)":""; return "<option value=\""+c[0]+"\""+dis+">"+c[1]+"</option>"; }).join("");
       var cur=g("cg_comms_channel","general"); if(cur.indexOf("chan")===0 && !hasOrg){ cur="general"; st("cg_comms_channel",cur); } sel.value=cur;
       frame.setAttribute('data-src','cmdglas_org.html?ch='+encodeURIComponent(sel.value));
       sel.addEventListener('mousedown',function(e){ e.stopPropagation(); });
@@ -23155,7 +23155,18 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   var H=[
 '<div class="um-cover"><h1>TABLET USER MANUAL</h1><div class="um-sub">CMD &middot; GLS Command Tablet</div><div class="um-tm">TM-CMDGLAS-10 &middot; Operator Card for the Tablet Interface &middot; Unofficial Star Citizen companion</div></div>',
 '<div class="um-note"><b>NOTE.</b> This manual covers the TABLET &mdash; how to move around the interface. For in-game subjects (flight, mining, hauling, combat) use LEARN &rarr; SPACE MANUALS, or SEARCH &rarr; BY TOPIC.</div>',
-'<div class="um-sec"><h2>Section 1 &mdash; Home Screen Layout</h2><div class="um-purpose">Orient to the home screen. Home is the base of operations; every page opens from here and returns here.</div>',
+'<div class="um-sec"><h2>Start Here &mdash; Open the Tablet the Right Way (read first)</h2><div class="um-purpose">There are two ways to open the tablet. Which one you use depends only on <b>who you are</b> and <b>where you are</b>. Do the exact steps for your case &mdash; nothing else.</div>',
+      '<div class="um-proc">CASE A &mdash; You, the owner, on your own PC</div>',
+      '<ol class="um-steps"><li>Go to your <b>Desktop</b>.</li><li>Double-click <b>Launch Tablet (No Chrome UI)</b>.</li><li>Wait for it to open. The <b>Server light is GREEN</b>. Every feature works (Twitch, live readouts, the iPad second screen).</li></ol>',
+      '<div class="um-note"><b>NOTE.</b> On your PC, do <b>NOT</b> type cmdglas.com, and do <b>NOT</b> double-click the .html file. Use <b>only</b> Launch Tablet (No Chrome UI). Anything else makes the Server light red.</div>',
+      '<div class="um-proc">CASE B &mdash; Everyone else (org members, your phone, an iPad)</div>',
+      '<ol class="um-steps"><li>Open a web browser (Safari or Chrome).</li><li>Type <b>cmdglas.com</b> and go.</li><li>Sign in &mdash; top-right.</li><li>Use it. The <b>Server light is RED</b> here. That is normal and correct off your PC. Chat and the wing console still work.</li></ol>',
+      '<div class="um-note"><b>NOTE.</b> The red Server light on cmdglas.com is not a fault. That light only turns green on the one PC running the control server (you, via Launch Tablet). Everyone else sees red &mdash; expected.</div>',
+      '<div class="um-proc">Why the two are different</div>',
+      '<div class="um-note"><b>Launch Tablet (No Chrome UI)</b> opens the tablet from the small server running on your PC (address localhost:8420). Live and PC-only features &mdash; Twitch, live server &amp; mission readouts, the iPad second screen &mdash; only work <b>through that server</b>, which is why the Server light is green and everything is on. <b>cmdglas.com</b> is the public copy on the internet with <b>no server behind it</b>, so those PC features are off and the Server light is red &mdash; but sign-in, chat and the wing console still work because those run in the cloud.</div>',
+      '<div class="um-proc">Do NOT do these (they cause the red-light / wrong-tablet problems)</div>',
+      '<ol class="um-steps"><li>Do <b>NOT</b> double-click <b>New_SC_CMD_TabletV2.html</b> to open the tablet &mdash; opening the raw file gives a red Server light and breaks the Twitch player.</li><li>Do <b>NOT</b> type <b>cmdglas.com</b> on your own PC &mdash; red light, no local features.</li><li>Do <b>NOT</b> use the old <b>Stream Deck &ldquo;Open SC CMD Tablet&rdquo;</b> button &mdash; it opens an outdated copy.</li><li>On your PC, the <b>only</b> thing you double-click to open the tablet is <b>Launch Tablet (No Chrome UI)</b>.</li></ol></div>',
+      '<div class="um-sec"><h2>Section 1 &mdash; Home Screen Layout</h2><div class="um-purpose">Orient to the home screen. Home is the base of operations; every page opens from here and returns here.</div>',
 '<div class="um-proc">1-1. Home zones</div>',
 '<div class="um-zone"><b>Top-left</b><span>STATUS window &mdash; local time, live patch, and server/rig lamps.</span>',
 '<b>Top-center</b><span>OPS panel &mdash; shows the CMD &middot; GLS mark; opens the OPS board.</span>',
@@ -26542,12 +26553,10 @@ body:not(.sc-home-mode) #cg-affil-note{display:none}
 </style>
 <script id="sc-b488-affil-js">
 (function(){ if(window.__affil488) return; window.__affil488=true;
-  function add(){ if(document.getElementById('cg-affil-note')) return; if(!document.body) return;
-    var d=document.createElement('div'); d.id='cg-affil-note';
-    d.textContent='Unofficial Star Citizen companion — not affiliated with Cloud Imperium Games.';
-    document.body.appendChild(d);
-  }
-  add(); var n=0, iv=setInterval(function(){ add(); if(++n>40) clearInterval(iv); }, 500);
+  function add(){ if(!document.getElementById('cg-affil-note') && document.body){ var d=document.createElement('div'); d.id='cg-affil-note'; d.textContent='Unofficial Star Citizen companion — not affiliated with Cloud Imperium Games.'; document.body.appendChild(d); } }
+  function coverUp(){ var c=document.getElementById('cover-screen'); if(!c) return false; try{ var cs=getComputedStyle(c); return cs.display!=='none' && cs.visibility!=='hidden' && parseFloat(cs.opacity||'1')>0.02 && !c.classList.contains('hide'); }catch(e){ return false; } }
+  function sync(){ add(); var n=document.getElementById('cg-affil-note'); if(n) n.style.visibility = coverUp() ? 'hidden' : ''; } /* build 495: don't overlap the start screen footer */
+  sync(); setInterval(sync, 500);
 })();
 </script>
 <style id="sc-b490-npa-css">/* 2026-07-25 build 490 (user: (1) the NEW PLAYER ASSIST button text in the theme orange, breathing slowly; (2) a prominent flashing button inside the Assist to move between the goals list and the walkthrough). Reversible: delete this block + revert the b490 render/JS tweaks. */
