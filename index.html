@@ -7921,7 +7921,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=485;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=486;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -25307,7 +25307,7 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
 <script id="sc-b421-onebar-js">
 (function(){ if(window.__cgOnebar421) return; window.__cgOnebar421=true;
   var LEFT=['cg-report-wrap','cg-usermanual-wrap','cg-npa-wrap'];  /* build 484 (user: REPORT ISSUE to far-left of the new below-pill row) */
-  var RIGHT=['cg-welcome-wrap','cg-sq42-wrap','cg-pilots-wrap'];   /* build 479 (user: pilots counter right of SQ42) */
+  var RIGHT=['cg-welcome-wrap','cg-sq42-wrap','cg-pilots-wrap','cg-server-wrap'];   /* build 486 (user: Server status light right after PILOTS ONLINE) */
   var REQ=['cg-usermanual-wrap','cg-npa-wrap','cg-welcome-wrap','cg-sq42-wrap','cg-theme-pick']; /* gate only on the original wraps; report + pilots are optional and collected in-order when present */
   function ready(){ return document.getElementById('sc-appbar') && REQ.every(function(id){return document.getElementById(id);}); }
   function setup(){
@@ -25794,13 +25794,10 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   function esc(s){ return (''+s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]; }); }
   function ch(){ try{ return (localStorage.getItem('cg_twitch_ch')||'').trim(); }catch(e){ return ''; } }
   var TW='<svg viewBox="0 0 24 24" width="34" height="34" fill="#a970ff" style="filter:drop-shadow(0 0 9px rgba(145,70,255,.65))"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>';
-  function fbHTML(){ var c=ch();
-    if(c){ var url='https://twitch.tv/'+encodeURIComponent(c.replace(/[^a-zA-Z0-9_]/g,''));
-      return '<div class="cg-tw-filenote" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:11px">'+TW
-        +'<a href="'+url+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;font:800 15px Rajdhani,sans-serif;letter-spacing:.8px;color:#fff;background:linear-gradient(180deg,#9146FF,#772ce8);border-radius:11px;padding:12px 24px;box-shadow:0 6px 18px rgba(120,60,240,.5)">Watch '+esc(c)+' on Twitch</a>'
-        +'<div style="font:600 10.5px Rajdhani,sans-serif;color:#8399ab;letter-spacing:.4px">Opens Twitch in your browser.</div></div>'; }
-    return '<div class="cg-tw-filenote" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:9px">'+TW
-      +'<div style="font:600 12.5px Rajdhani,sans-serif;color:#9fb6cc;line-height:1.6">Type a Twitch channel in the box above,<br>then tap <b style="color:#a6f2ff">WATCH</b>.</div></div>'; }
+  function fbHTML(){ /* build 486 (user: NEVER offer to open Twitch in another window). No external link. When the player can't embed (file://), point to the control server. */
+    return '<div class="cg-tw-filenote" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:9px">'
+      +'<div style="font:800 11px Rajdhani,sans-serif;letter-spacing:2px;color:#8fb0c8;text-transform:uppercase">Stream player offline</div>'
+      +'<div style="font:600 12px Rajdhani,sans-serif;color:#9fb6cc;line-height:1.6">The live Twitch player runs only when the tablet is opened through the control server.<br>Check the <b style="color:#a6f2ff">Server</b> light at the bottom &mdash; click it to get online.</div></div>'; }
   var shownCh=null;
   function render(frame){ frame.innerHTML=fbHTML(); shownCh=ch(); }
   function fix(){ var frame=document.querySelector('#cg-twitch .cg-tw-frame'); if(!frame) return;
@@ -26371,5 +26368,69 @@ body.sc-home-mode #cg-onebar .cg-ob-left{grid-area:left !important;justify-conte
 body.sc-home-mode #cg-onebar .cg-ob-right{grid-area:right !important;justify-content:center !important;}
 body.sc-home-mode #cg-onebar #cg-pilots-wrap{margin-left:12px !important;}
 </style>
+<style id="sc-b486-serverlight-css">/* 2026-07-25 build 486 (user: clickable Server status light on the bottom bar, right after PILOTS ONLINE; red=offline green=online; click shows how to get back online or download the server from GitHub). Reversible: delete this block + its JS and remove 'cg-server-wrap' from RIGHT[] in sc-b421-onebar-js. */
+#cg-server-wrap{position:relative;display:inline-flex;align-items:center}
+#cg-server{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#9fb6cc;text-transform:uppercase;user-select:none;padding:2px 4px;border-radius:6px}
+#cg-server:hover{color:#dfeaf2}
+#cg-server .cgs-dot{width:8px;height:8px;border-radius:50%;background:#ff6b6b;box-shadow:0 0 7px #ff6b6b;flex:0 0 auto}
+#cg-server.cgs-up .cgs-dot{background:#39d353;box-shadow:0 0 7px #39d353}
+#cg-server.cgs-degraded .cgs-dot{background:#ffb000;box-shadow:0 0 7px #ffb000}
+#cg-onebar #cg-server-wrap{margin:0 !important}
+#cg-onebar #cg-server,#cg-onebar #cg-server .cgs-lbl{white-space:nowrap !important}
+#cg-onebar #cg-server{font-size:8px !important;gap:5px !important}
+body.sc-home-mode #cg-onebar #cg-server-wrap{margin-left:12px !important}
+#cg-server-pop{display:none;position:absolute;bottom:calc(100% + 10px);right:0;width:322px;max-width:78vw;box-sizing:border-box;background:#0c1420;border:1px solid rgba(120,190,225,.42);border-radius:12px;padding:14px 15px;box-shadow:0 22px 55px rgba(0,0,0,.72);z-index:2147483600;text-align:left;font:500 12px 'Rajdhani','Segoe UI',sans-serif;color:#c3d3e0;letter-spacing:.2px;line-height:1.65;text-transform:none;cursor:default}
+#cg-server-pop.open{display:block}
+#cg-server-pop h4{margin:0 0 7px;font:800 12px 'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#a6f2ff}
+#cg-server-pop b{color:#ffd479}
+#cg-server-pop a{color:#8fe9ff;text-decoration:underline;text-underline-offset:2px}
+#cg-server-pop ol{margin:6px 0 0;padding-left:18px}
+#cg-server-pop li{margin:3px 0}
+</style>
+<script id="sc-b486-serverlight-js">
+(function(){ if(window.__cgServerLight486) return; window.__cgServerLight486=true;
+  var GH='https://github.com/tartartatum/tartartatum.github.io/releases';
+  var state='down';
+  function popHTML(){
+    var head, lead;
+    if(state==='up'){ head='Control server: ONLINE'; lead='The control server is running. Live extras &mdash; Twitch, your real keybinds, live server &amp; mission readouts, and the iPad second screen &mdash; are available.'; }
+    else if(state==='degraded'){ head='Control server: DEGRADED'; lead='The server is reachable but running reduced service. A restart usually clears it.'; }
+    else { head='Control server: OFFLINE'; lead='The live extras (Twitch player, your real keybinds, the iPad second screen) need the control server running on your PC.'; }
+    var steps='<h4 style="margin-top:12px">Get back online</h4><ol>'
+      +'<li>Open your tablet folder on your PC.</li>'
+      +'<li>Double-click <b>Restart SC Control Server.bat</b>.</li>'
+      +'<li>Wait about 5 seconds, then reload this tablet (<b>Ctrl+Shift+R</b>).</li></ol>'
+      +'<div style="margin-top:10px">Don&rsquo;t have the server yet? <a href="'+GH+'" target="_blank" rel="noopener">Download it from GitHub</a>.</div>';
+    return '<h4>'+head+'</h4><div>'+lead+'</div>'+steps;
+  }
+  function paint(){
+    var el=document.getElementById('cg-server'); if(!el) return;
+    el.classList.toggle('cgs-up', state==='up');
+    el.classList.toggle('cgs-degraded', state==='degraded');
+    el.title = state==='up'?'Control server online — click for details':(state==='degraded'?'Control server degraded — click for details':'Control server offline — click to get online');
+    var pop=document.getElementById('cg-server-pop'); if(pop && pop.classList.contains('open')) pop.innerHTML=popHTML();
+  }
+  function poll(){
+    fetch('/api/server_info',{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(j){
+      var st=((j&&j.status)||'').toString().toLowerCase();
+      state=(st.indexOf('degrad')>-1||(j&&j.degraded))?'degraded':'up'; paint();
+    }).catch(function(){ state='down'; paint(); });
+  }
+  function place(){ if(document.getElementById('cg-server-wrap')) return;
+    var home=document.getElementById('tab-home'); var right=document.querySelector('#cg-onebar .cg-ob-right'); if(!home&&!right) return;
+    var wrap=document.createElement('div'); wrap.id='cg-server-wrap';
+    var el=document.createElement('div'); el.id='cg-server'; el.innerHTML='<span class="cgs-lbl">Server</span><span class="cgs-dot"></span>';
+    var pop=document.createElement('div'); pop.id='cg-server-pop';
+    wrap.appendChild(el); wrap.appendChild(pop); (right||home).appendChild(wrap);
+    el.addEventListener('click', function(e){ e.stopPropagation(); if(pop.classList.contains('open')){ pop.classList.remove('open'); } else { pop.innerHTML=popHTML(); pop.classList.add('open'); } });
+    pop.addEventListener('click', function(e){ e.stopPropagation(); });
+    document.addEventListener('click', function(){ pop.classList.remove('open'); });
+    poll(); setInterval(poll, 15000);
+  }
+  try{ new MutationObserver(place).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+  var n=0, iv=setInterval(function(){ place(); if(++n>150) clearInterval(iv); }, 400);
+  place();
+})();
+</script>
 </body>
 </html>
