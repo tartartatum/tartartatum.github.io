@@ -26193,9 +26193,12 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
 .commsfill .wave i:nth-child(11){animation-duration:2.3s}
 </style>
 
-<style id="cg-hide-twchat-2026-07-25">/* TEMP: hide Twitch CHAT button + panel (delete this block to restore) */
+<style id="cg-fixes-2026-07-25">
+/* hide Twitch CHAT button only; video stream stays */
 .cg-tw-chat-btn{display:none !important}
-#cg-twitch{display:none !important}
+/* keep the SYSTEM tile reachable on the public site (server or not); page shows its needs-server fallback when opened */
+html.cmdglas-public .hm-cell:has([data-tab="system"]){display:flex !important}
+html.cmdglas-public #tab-system.active{display:flex !important}
 </style>
 </body>
 </html>
