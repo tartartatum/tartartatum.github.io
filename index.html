@@ -7921,7 +7921,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=471;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=480;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -13599,13 +13599,18 @@ their own rules) and COMPACT MODE (its layout is intentionally small). */
   function fit(){
     try{
       if(window.matchMedia&&matchMedia('(pointer:coarse)').matches)return;
-      if(document.body&&document.body.getAttribute('data-portable')==='1'){document.documentElement.style.zoom='';document.body.style.minWidth='';return;}
+      if(document.body&&document.body.getAttribute('data-portable')==='1'){document.documentElement.style.zoom='';document.body.style.minWidth='';document.body.style.maxWidth='';document.body.style.marginLeft='';document.body.style.marginRight='';return;}
       var z=Math.round(Math.min(1.8,Math.max(0.5,Math.min(window.innerWidth/DESIGN_W,window.innerHeight/DESIGN_H)))*1000)/1000;
       document.documentElement.style.zoom=z;
       /* Hold a floor: never let the laid-out width fall below MIN_W design px. When the window
          is smaller than MIN_W*z physical px, the body keeps MIN_W and a scrollbar appears — the
          layout stays intact instead of squishing/breaking. */
       document.body.style.minWidth=MIN_W+'px';
+      /* build 472 (user: top-center pill still resizes on window drag): also CAP the width at the design width and center it, so wide/short windows letterbox horizontally instead of stretching the fluid grid. Reversible: delete the next 4 lines. */
+      document.body.style.maxWidth=MIN_W+'px';
+      document.body.style.marginLeft='auto';
+      document.body.style.marginRight='auto';
+      document.documentElement.style.background='#0f1722';
     }catch(e){}
   }
   var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(fit,150);});
@@ -14588,7 +14593,7 @@ live list and the photo reference; choice persists (sc_kbview). */
   function setv(v){
     try{localStorage.setItem(LS,v);}catch(e){}
     var want=SRC[v]||SRC.list;
-    if(v==='deck'||(fr.getAttribute('src')||'').indexOf(want)<0) fr.setAttribute('src',want);
+    /* build 473 (user: show a clean CONTROL SERVER OFFLINE notice instead of GitHub raw 404 when the served keybind files are missing) */ var _host=fr.parentNode; try{ if(getComputedStyle(_host).position==='static') _host.style.position='relative'; }catch(e){} function _off(show){ var o=_host.querySelector('.kb-offline'); if(show){ if(!o){ o=document.createElement('div'); o.className='kb-offline'; o.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:24px;background:#0a0f16;z-index:4'; o.innerHTML='<div style="font:800 15px Rajdhani,sans-serif;letter-spacing:2px;color:#ffcf6b">CONTROL SERVER OFFLINE</div><div style="font:600 12.5px Rajdhani,sans-serif;line-height:1.6;max-width:460px;color:#9fb6cc">The live keybind list, photo reference and deck emulator are served by the <b>CmdGlas control server</b> on your PC. Run the control-server <b>.bat</b> once, then open the tablet from the address it prints - this view will load.</div>'; _host.appendChild(o); } o.style.display='flex'; fr.style.visibility='hidden'; } else { if(o) o.style.display='none'; fr.style.visibility=''; } } fr.onload=function(){ try{ var d=fr.contentDocument; var t=(d&&d.body)?(d.body.innerText||''):''; _off(/does not contain the requested file|File not found/i.test(t)); }catch(e){ _off(false); } }; if(v==='deck'||(fr.getAttribute('src')||'').indexOf(want)<0) fr.setAttribute('src',want); else if(fr.onload) fr.onload();
     bar.querySelectorAll('[data-kb]').forEach(function(b){
       var on=b.getAttribute('data-kb')===v;
       b.style.background=on?'#33210f':''; b.style.borderColor=on?'var(--amber,#ffb000)':''; b.style.color=on?'#ffd479':'';
@@ -16929,7 +16934,7 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
     if(p&&p.classList)p.classList.toggle('open');
   };
   function hidePop(){var b=document.getElementById('hm-pop-back'),p=document.getElementById('hm-pop');if(b){b.style.display='none';b.classList.remove('hm-hov');}if(p){p.style.left='';p.style.top='';}CUR=null;}
-  function go(id){hidePop();if(typeof setActiveTabById==='function')setActiveTabById(id);setTimeout(markActive,0);}
+  function go(id){hidePop();if(typeof setActiveTabById==='function')setActiveTabById(id);setTimeout(markActive,0);/* build 475: ensure the opened page shows from the top (was landing scrolled below the view on touch) */setTimeout(function(){try{window.scrollTo(0,0);var ap=document.getElementById('tab-'+id);if(ap){if(ap.scrollTop)ap.scrollTop=0;var sb=ap.querySelector('.scrollbox');if(sb)sb.scrollTop=0;}}catch(e){}},60);}
   function popFor(id,label,tileEl){
     var pop=document.getElementById('hm-pop'),back=document.getElementById('hm-pop-back');
     if(!pop||!back)return;
@@ -16998,7 +17003,7 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
   document.addEventListener('click',function(e){
     if(!e.target)return;
     var t=e.target.closest?e.target.closest('#tab-home .hm-tile'):null;
-    if(t){var id=t.getAttribute('data-tab');if(HOV||CUR===id){go(id);}else{popFor(id,tileLab(t)||id);}return;}
+    if(t){var id=t.getAttribute('data-tab');/* build 475 (user: on iPad/touch tapping a tile only showed the description and never opened the tool - navigate directly on any tile tap) */go(id);return;}
     if(e.target.id==='hm-pop-back'){hidePop();return;}
     if(e.target.id==='hm-close'||(e.target.closest&&e.target.closest('#hm-close'))){hidePop();return;}
     /* HOMEPAGE DETAIL 2026-07-15 (user order): click ANYWHERE inside the popout opens the page */
@@ -22181,6 +22186,8 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
     var host=document.createElement('div'); host.className='mp-pillhost';
     b.innerHTML=''; b.appendChild(host);
     np.classList.add('mp-in-pill'); host.appendChild(np);
+    /* build 473 (user: small RADIO button next to the Media Player dropdown — a copy of the Mission-Controls radio button) */
+    try{ var _card=b.closest('.wg'); var _head=_card&&_card.querySelector('.pill-head'); if(_head && !_head.querySelector('.mp-radio-hdr')){ var _rb=document.createElement('button'); _rb.type='button'; _rb.className='mp-radio-hdr'; _rb.title='RADIO - media controls'; _rb.textContent='RADIO'; _rb.style.cssText='font:800 8px Rajdhani,sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:4px 8px;margin-right:6px;cursor:pointer'; _rb.onclick=function(ev){ ev.stopPropagation(); try{ if(window.scRadioToggle) scRadioToggle(); }catch(e){} }; var _sel=_head.querySelector('.pill-sel'); if(_sel) _head.insertBefore(_rb,_sel); else _head.appendChild(_rb); } }catch(e){}
     function refresh(){
       var hasUI=!!np.querySelector('.mp-banner'); var setup=host.querySelector('.mp-setup');
       if(!hasUI && !setup){ setup=document.createElement('button'); setup.type='button'; setup.className='pill-go mp-setup'; setup.style.alignSelf='center'; setup.textContent='CONNECT MUSIC';
@@ -22188,7 +22195,7 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
       else if(hasUI && setup){ setup.remove(); }
     }
     refresh();
-    b.__cleanup=function(){ try{ np.classList.remove('mp-in-pill'); document.body.appendChild(np); }catch(e){} };
+    b.__cleanup=function(){ try{ np.classList.remove('mp-in-pill'); document.body.appendChild(np); var _c=b.closest('.wg'); var _h=_c&&_c.querySelector('.pill-head'); var _x=_h&&_h.querySelector('.mp-radio-hdr'); if(_x) _x.remove(); }catch(e){} };
     return setInterval(refresh,1500);
   }
   var MODS={
@@ -22235,7 +22242,7 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
       +'<div class="cg-cs-cell"><div class="cg-cs-frame"><div class="cg-cs-pic">'+(CS.avatar||'')+'</div></div><div class="cg-cs-lbl cg-handle-link" id="cg-cs-handle" role="button" tabindex="0" title="Open COMMS — add friends &amp; party up" onclick="window.cgOpenComms&&cgOpenComms(\'party\')">Guest</div></div>'/* build 455: gamertag links into COMMS Party (RSI Spectrum add-friend) */
       +'</div>'
       +'<div class="lg-state" id="lg-state">Signed out</div>'
-      +'<div class="lg-msg">Live preview &mdash; lights up with your real status once CIG Link connects.</div>'
+      +'<div class="lg-msg">Live preview &mdash; lights up with your real status IF CIG Link connects.</div>'
       +'<button type="button" class="lg-btn" id="lg-btn">SIGN IN</button>'
       +'</div>';
     var btn=card.querySelector('#lg-btn'); if(btn) btn.onclick=function(){ var p=document.getElementById('sca-pill'); if(p) p.click(); };
@@ -24068,6 +24075,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
       h:'Your <b>sealed flight suit + helmet is your life support</b> — keep the helmet on if a hull is breached. Carry a couple of <b>MedPens</b> for injuries. This is the SM-3 survival kit. Your <b>undersuit + armor</b> also set your protection and your <b>heat / radiation</b> resistance &mdash; see <b>SM-15 FPS Armor</b> once you start fighting or head into caves.'},
      {t:'Claim your ship at an ASOP terminal.', w:'In game: any ASOP / ship-retrieval terminal at a station or spaceport.',
       h:'Find an <b>ASOP terminal</b>, select your ship, and Retrieve it. Then take the elevator or transit to the assigned hangar/pad. <span class="npa-cau">CAUTION: filing a Claim on a stuck ship destroys any cargo inside it — empty it first.</span>'},
+     {go:'spacemanuals', t:'Get into your ship and take off.', w:'In game: board, sit (F), Flight Ready (R), request takeoff (Left Alt+N). Tablet: LEARN > SPACE MANUALS > SM-1 FLIGHT OPERATIONS.', h:'Once your ship is on the pad: 1) Board and walk to the pilot seat, press <b>F</b> to sit. 2) Press <b>Flight Ready</b> (<b>R</b>) &mdash; one press powers the ship and spools the engines (press again to power down). 3) In an enclosed hangar or station pad, request clearance with <b>Left Alt + N</b> so the doors open (open outdoor pads need none). 4) Ease the throttle up to lift off and climb away before you quantum. The full walkthrough &mdash; including landing &mdash; is <b>SM-1 Flight Operations</b>.'},
      {go:'starmap', t:'Plot a course and quantum travel.', w:'In game: open the Starmap — press F2. Tablet: STARMAP tool to plan first.',
       h:'Press <b>F2</b> to open the Starmap, pick your destination, and <b>Set Route</b>. In your pilot seat, switch to <b>NAV mode</b> (travel), then <b>hold B</b> to spool up and jump. To cancel a route, open the Starmap (F2) and clear it. More in SM-1 Flight Operations.'},
      {t:'Pick how you will earn.', w:'Tablet: this Assist (back to Goals) or SR-4 > Making Money, ranked for a new player.',
@@ -25183,7 +25191,7 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-tw-on #cg-twitch{display:flex;}
 #cg-twitch .cg-tw-bar{display:flex;gap:5px;align-items:center;flex:0 0 auto;}
 #cg-twitch .cg-tw-in{flex:1 1 auto;min-width:0;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;color:#dfeaf2;font:600 11px 'Rajdhani','Segoe UI',sans-serif;padding:5px 8px;}
-#cg-twitch .cg-tw-go{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:6px 11px;cursor:pointer;text-transform:uppercase;}
+#cg-twitch .cg-tw-go{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:6px 11px;cursor:pointer;text-transform:uppercase;}.cg-tw-clear{flex:0 0 auto;font:800 11px 'Rajdhani','Segoe UI',sans-serif;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;padding:5px 9px;cursor:pointer;line-height:1;}.cg-tw-clear:hover{color:#ff8080;border-color:rgba(255,128,128,.5);}
 #cg-twitch .cg-tw-frame{flex:1 1 auto;min-height:70px;position:relative;border-radius:8px;overflow:hidden;background:#0a0f16;border:1px solid rgba(108,180,214,.2);}
 #cg-twitch .cg-tw-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
 #cg-twitch .cg-tw-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8ba0b5;font-size:11px;padding:10px;line-height:1.4;}
@@ -25203,9 +25211,9 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
     if(!tw){
       var ob=body.querySelector('.ops4-body'); if(!ob) return null;
       tw=document.createElement('div'); tw.id='cg-twitch';
-      tw.innerHTML='<div class="cg-tw-bar"><input class="cg-tw-in" placeholder="twitch channel…" spellcheck="false" autocapitalize="off"><button type="button" class="cg-tw-go">WATCH</button></div><div class="cg-tw-frame"><div class="cg-tw-ph">Enter a Twitch channel to watch the stream (no chat).</div></div>';
+      tw.innerHTML='<div class="cg-tw-bar"><input class="cg-tw-in" placeholder="twitch channel…" spellcheck="false" autocapitalize="off"><button type="button" class="cg-tw-go">WATCH</button><button type="button" class="cg-tw-clear" title="Clear channel — back to banner">✕</button></div><div class="cg-tw-frame"><div class="cg-tw-ph" style="flex-direction:column;gap:7px"><div style="font-family:Iceland,Rajdhani,sans-serif;font-size:30px;line-height:1;letter-spacing:1px;color:#dfeaf2">Command <b style="color:#a6f2ff;font-weight:700">Glass</b></div><div style="font:700 9px Rajdhani,sans-serif;letter-spacing:3px;color:#6f8ba0;text-transform:uppercase">Stream · standing by</div></div></div>';
       ob.parentNode.insertBefore(tw, ob.nextSibling);
-      var inp=tw.querySelector('.cg-tw-in'), go=tw.querySelector('.cg-tw-go');
+      var inp=tw.querySelector('.cg-tw-in'), go=tw.querySelector('.cg-tw-go'); var clr=tw.querySelector('.cg-tw-clear'); if(clr){ clr.addEventListener('click',function(e){ e.stopPropagation(); inp.value=''; setCh(''); render(); }); }
       inp.value=getCh();
       function load(){ var c=(inp.value||'').trim().replace(/^https?:\/\/(www\.)?twitch\.tv\//i,'').replace(/[^a-zA-Z0-9_]/g,''); if(!c){ setCh(''); inp.value=''; render(); return; }/* build 457: empty box + WATCH clears the channel back to the placeholder */ inp.value=c; setCh(c); render(); }
       go.addEventListener('click',function(e){ e.stopPropagation(); load(); });
@@ -25224,7 +25232,7 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
         frame.innerHTML='<iframe data-ch="'+c.replace(/[^a-zA-Z0-9_]/g,'')+'" src="'+src+'" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>';
       }
     } else if(!frame.querySelector('.cg-tw-ph')){
-      frame.innerHTML='<div class="cg-tw-ph">Enter a Twitch channel to watch the stream (no chat).</div>';
+      frame.innerHTML='<div class="cg-tw-ph" style="flex-direction:column;gap:7px"><div style="font-family:Iceland,Rajdhani,sans-serif;font-size:30px;line-height:1;letter-spacing:1px;color:#dfeaf2">Command <b style="color:#a6f2ff;font-weight:700">Glass</b></div><div style="font:700 9px Rajdhani,sans-serif;letter-spacing:3px;color:#6f8ba0;text-transform:uppercase">Stream · standing by</div></div>';
     }
   }
   function pruneLeft(){
@@ -25283,10 +25291,10 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
 </style>
 <script id="sc-b421-onebar-js">
 (function(){ if(window.__cgOnebar421) return; window.__cgOnebar421=true;
-  var LEFT=['cg-usermanual-wrap','cg-npa-wrap'];  /* build 453 (user: remove MORE INFO — no valuable info, and X/Discord links are moving to the bottom). Left flank is now USER MANUAL + NEW PLAYER ASSIST. */
-  var RIGHT=['cg-welcome-wrap','cg-sq42-wrap'];        /* build 458 (user: add the Welcome/Setup launcher; also squares the footer to 2-vs-2) */
-  /* cg-theme-pick is pinned to the corner by CSS (position:fixed) and kept out of the flow groups */
-  function ready(){ return document.getElementById('sc-appbar') && LEFT.concat(RIGHT,['cg-theme-pick']).every(function(id){return document.getElementById(id);}); }
+  var LEFT=['cg-usermanual-wrap','cg-report-wrap','cg-npa-wrap'];  /* build 479 (user: REPORT ISSUE next to USER MANUAL) */
+  var RIGHT=['cg-welcome-wrap','cg-sq42-wrap','cg-pilots-wrap'];   /* build 479 (user: pilots counter right of SQ42) */
+  var REQ=['cg-usermanual-wrap','cg-npa-wrap','cg-welcome-wrap','cg-sq42-wrap','cg-theme-pick']; /* gate only on the original wraps; report + pilots are optional and collected in-order when present */
+  function ready(){ return document.getElementById('sc-appbar') && REQ.every(function(id){return document.getElementById(id);}); }
   function setup(){
     if(!ready()) return;
     var appbar=document.getElementById('sc-appbar');
@@ -25299,8 +25307,8 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
       bar.appendChild(lg); bar.appendChild(appbar); bar.appendChild(rg);
     }
     var lg=bar.querySelector('.cg-ob-left'), rg=bar.querySelector('.cg-ob-right');
-    LEFT.forEach(function(id){ var el=document.getElementById(id); if(el && el.parentElement!==lg) lg.appendChild(el); });
-    RIGHT.forEach(function(id){ var el=document.getElementById(id); if(el && el.parentElement!==rg) rg.appendChild(el); });
+    LEFT.forEach(function(id){ var el=document.getElementById(id); if(el) lg.appendChild(el); });   /* build 479: enforce full order every cycle so items can't drift */
+    RIGHT.forEach(function(id){ var el=document.getElementById(id); if(el) rg.appendChild(el); });
     /* keep DOM order lg, appbar, rg so grid columns map 1,2,3 */
     if(appbar.parentElement!==bar || bar.children[1]!==appbar){ bar.insertBefore(appbar, rg); }
     var tp=document.getElementById('cg-theme-pick'); if(tp && tp.parentElement!==bar) bar.appendChild(tp);
@@ -26202,5 +26210,121 @@ html.cmdglas-public .hm-cell:has([data-tab="system"]){display:flex !important}
 html.cmdglas-public #tab-system.active{display:flex !important}
 </style>
 <div id="cg-rotate-lock" style="display:none;position:fixed;inset:0;z-index:2147483647;background:#0a0f16;color:#dbeeff;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Rajdhani,Segoe UI,sans-serif;padding:40px"><div style="font-size:56px;margin-bottom:14px;line-height:1">⟳</div><div style="font-size:22px;font-weight:800;letter-spacing:2px">ROTATE TO LANDSCAPE</div><div style="font-size:14px;opacity:.72;margin-top:12px;max-width:360px;line-height:1.5">CmdGlas is built for landscape. Turn your device sideways to use the tablet.</div></div><style id="cg-rotate-lock-css">@media (orientation:portrait) and (max-width:1024px){#cg-rotate-lock{display:flex !important}}</style>
+<style id="sc-b474-avatar-css">.cg-cs-pic{position:relative;overflow:hidden}.cg-userpic-img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}.cg-userpic-x{position:absolute;top:2px;right:2px;width:16px;height:16px;padding:0;line-height:14px;text-align:center;font-size:10px;border:none;border-radius:50%;background:rgba(8,14,20,.8);color:#ff8a8a;cursor:pointer;display:none;z-index:2}.cg-cs-pic:hover .cg-userpic-x{display:block}.cg-userpic-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:100%;height:100%;background:transparent;border:1px dashed rgba(120,200,235,.55);border-radius:inherit;color:#9fd0ea;cursor:pointer;padding:2px}.cg-userpic-add:hover{border-color:#7fc4de;color:#eaf7ff;background:rgba(90,180,220,.08)}.cg-userpic-plus{font:800 16px Rajdhani,sans-serif;line-height:1}.cg-userpic-lbl{font:800 6.5px Rajdhani,sans-serif;letter-spacing:.6px;text-align:center;line-height:1.15}</style><script id="sc-b474-avatar-js">/* build 474 (user: let people upload their OWN gamer picture instead of any RSI pull. PNG/JPG/GIF (gifs animate), max 2 MB, stored in localStorage because the site is static. Reversible: delete this block + sc-b474-avatar-css. */(function(){  if(window.__cgAvatar474) return; window.__cgAvatar474=true;  var LS='sc_user_avatar', MAX=2*1024*1024;  function saved(){ try{ return localStorage.getItem(LS)||''; }catch(e){ return ''; } }  function render(pic){ if(!pic) return; var img=saved();    if(img){ pic.innerHTML='<img class="cg-userpic-img" src="'+img+'" alt="Your picture"><button type="button" class="cg-userpic-x" title="Remove picture">\u2715</button>';      var x=pic.querySelector('.cg-userpic-x'); if(x) x.onclick=function(e){ e.stopPropagation(); try{localStorage.removeItem(LS);}catch(err){} render(pic); };    } else { pic.innerHTML='<button type="button" class="cg-userpic-add" title="Add your picture - PNG, JPG or GIF, max 2 MB"><span class="cg-userpic-plus">+</span><span class="cg-userpic-lbl">ADD PHOTO<br>MAX 2MB</span></button>';      var a=pic.querySelector('.cg-userpic-add'); if(a) a.onclick=function(e){ e.stopPropagation(); pick(pic); };    } }  function pick(pic){ var inp=document.createElement("input"); inp.type="file"; inp.accept="image/png,image/jpeg,image/gif"; inp.style.display="none";    inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(!f) return;      if(!/^image\/(png|jpe?g|gif)$/i.test(f.type)){ alert("Please choose a PNG, JPG or GIF image."); return; }      if(f.size>MAX){ alert("That image is "+(f.size/1048576).toFixed(1)+" MB. Please pick one under 2 MB."); return; }      var rd=new FileReader(); rd.onload=function(){ try{ localStorage.setItem(LS, rd.result); render(pic); }catch(err){ alert("Could not save the picture - it may be too large for local storage. Try a smaller file."); } };      rd.readAsDataURL(f); };    document.body.appendChild(inp); inp.click(); setTimeout(function(){ try{inp.remove();}catch(e){} }, 60000); }  function enhance(){ var pic=document.querySelector('#sc-home-widgets .login-pill .cg-cs-pic'); if(pic && pic.dataset.avwired!=='1'){ pic.dataset.avwired='1'; render(pic); } }  try{ new MutationObserver(enhance).observe(document.body,{childList:true,subtree:true}); }catch(e){}  enhance(); setInterval(enhance,1500);})();</script>
+<style id="sc-b476-report-css">
+#cg-report-btn{display:inline-flex;align-items:center;gap:6px;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#ffb0b0;background:rgba(40,12,12,.35);border:1px solid rgba(220,120,120,.42);border-radius:8px;padding:6px 12px;cursor:pointer;margin:0;text-transform:uppercase}
+#cg-report-btn:hover{color:#fff;border-color:#e88;background:rgba(120,40,40,.35)}
+#cg-report-ov{position:fixed;inset:0;background:rgba(2,6,10,.72);z-index:99998;display:none;align-items:center;justify-content:center;padding:20px}
+#cg-report-ov.open{display:flex}
+#cg-report-box{width:min(560px,94vw);max-height:90vh;overflow:auto;background:#0c141d;border:1px solid rgba(108,180,214,.35);border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.6);color:#cfe0ec;padding:18px 20px}
+#cg-report-box h3{font:800 15px 'Rajdhani',sans-serif;letter-spacing:2px;color:#ffcf6b;margin:0 0 4px;text-transform:uppercase}
+#cg-report-box .rp-sub{font:600 11px 'Rajdhani',sans-serif;color:#8fb3c8;margin:0 0 8px;line-height:1.5}
+#cg-report-box label{display:block;font:700 10px 'Rajdhani',sans-serif;letter-spacing:1px;color:#9fc4d8;text-transform:uppercase;margin:12px 0 5px}
+#cg-report-box select,#cg-report-box input[type=text],#cg-report-box textarea{width:100%;box-sizing:border-box;background:rgba(4,10,18,.6);border:1px solid rgba(108,180,214,.3);border-radius:7px;color:#eaf4fb;font:500 13px 'Rajdhani',sans-serif;padding:8px 10px}
+#cg-report-box textarea{min-height:90px;resize:vertical}
+#cg-report-box .rp-checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+#cg-report-box .rp-chk{display:flex;align-items:flex-start;gap:7px;font:600 12px 'Rajdhani',sans-serif;color:#dbe9f5;cursor:pointer;text-transform:none;letter-spacing:0;margin:0}
+#cg-report-box .rp-chk input{margin-top:2px;flex:0 0 auto}
+#cg-report-cc{display:none;margin-top:8px;padding:10px;border:1px dashed rgba(255,207,107,.4);border-radius:8px;background:rgba(255,207,107,.05)}
+#cg-report-cc.show{display:block}
+#cg-report-box .rp-row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+#cg-report-box .rp-send{font:800 11px 'Rajdhani',sans-serif;letter-spacing:1.5px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:8px;padding:10px 18px;cursor:pointer;text-transform:uppercase}
+#cg-report-box .rp-cancel{font:800 11px 'Rajdhani',sans-serif;letter-spacing:1.5px;color:#9fb6cc;background:transparent;border:1px solid rgba(108,180,214,.3);border-radius:8px;padding:10px 16px;cursor:pointer;text-transform:uppercase}
+#cg-report-box .rp-note{font:600 10px 'Rajdhani',sans-serif;color:#7f97ab;margin-top:10px;line-height:1.5}
+</style>
+<script id="sc-b476-report-js">
+/* build 476 (user: a Report an Error/Issue button on the main page that emails support@cmdglas.com. Platform dropdown + common-issue checkboxes + a content-correction path that asks which manual/page (SR/TM/etc). Static site, so it composes a mailto - nothing is sent automatically. Reversible: delete this block + sc-b476-report-css. */
+(function(){
+  if(window.__cgReport476) return; window.__cgReport476=true;
+  var SUPPORT='support@cmdglas.com';
+  var ISSUES=['A button or link does not work','Layout or display problem','A feature is missing or broken','Wrong or outdated info','Sign-in / account issue','Twitch / stream issue','Performance / slowness'];
+  function ver(){ try{ return 'v'+(window.CMDGLAS_VERSION||'?')+'.'+(window.CMDGLAS_BUILD||0); }catch(e){ return '?'; } }
+  function build(){
+    if(document.getElementById('cg-report-ov')) return true;
+    var ov=document.createElement('div'); ov.id='cg-report-ov';
+    var checks=ISSUES.map(function(t){ return '<label class="rp-chk"><input type="checkbox" class="rp-issue" value="'+t+'"> '+t+'</label>'; }).join('');
+    ov.innerHTML='<div id="cg-report-box" role="dialog" aria-modal="true">'
+      +'<h3>Report an Issue</h3>'
+      +'<div class="rp-sub">Found a bug or a mistake? Tell me and I will fix it. This goes to '+SUPPORT+'.</div>'
+      +'<label>Where are you using the tablet?</label>'
+      +'<select id="rp-platform"><option>Tablet on PC (Windows)</option><option>Tablet on iPad / Android</option><option>Tablet on MacBook / Mac</option></select>'
+      +'<label>What is the problem? (check any that apply)</label>'
+      +'<div class="rp-checks">'+checks
+        +'<label class="rp-chk"><input type="checkbox" id="rp-cc-toggle"> Content / manual correction</label>'
+      +'</div>'
+      +'<div id="cg-report-cc">'
+        +'<label>Which manual or page? (e.g. SR-5, a TM section, or the page name)</label>'
+        +'<input type="text" id="rp-cc-where" placeholder="e.g. SR-5 Chat Etiquette, or the Mining page">'
+      +'</div>'
+      +'<label>Describe the issue or the correction</label>'
+      +'<textarea id="rp-details" placeholder="What happened, what you expected, or the correct info..."></textarea>'
+      +'<div class="rp-note">Your email app opens with everything filled in - just hit send. Nothing is submitted automatically.</div>'
+      +'<div class="rp-row"><button type="button" class="rp-cancel" id="rp-cancel">Cancel</button><button type="button" class="rp-send" id="rp-send">Open Email</button></div>'
+      +'</div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click',function(e){ if(e.target===ov) close(); });
+    ov.querySelector('#rp-cancel').onclick=close;
+    ov.querySelector('#rp-cc-toggle').onchange=function(){ document.getElementById('cg-report-cc').classList.toggle('show', this.checked); };
+    ov.querySelector('#rp-send').onclick=send;
+    return true;
+  }
+  function open(){ if(build()){ document.getElementById('cg-report-ov').classList.add('open'); } }
+  function close(){ var o=document.getElementById('cg-report-ov'); if(o) o.classList.remove('open'); }
+  function send(){
+    var plat=(document.getElementById('rp-platform')||{}).value||'';
+    var checked=[].slice.call(document.querySelectorAll('.rp-issue:checked')).map(function(c){ return c.value; });
+    var ccOn=document.getElementById('rp-cc-toggle')&&document.getElementById('rp-cc-toggle').checked;
+    var where=(document.getElementById('rp-cc-where')||{}).value||'';
+    var details=(document.getElementById('rp-details')||{}).value||'';
+    if(ccOn) checked.push('Content / manual correction');
+    var subj = ccOn ? ('CmdGlas content correction'+(where?(' - '+where):'')) : ('CmdGlas issue report'+(checked.length?(' - '+checked[0]):''));
+    var lines=['Platform: '+plat,'','Issue type(s): '+(checked.length?checked.join(', '):'(none selected)')];
+    if(ccOn) lines.push('Manual / page: '+(where||'(not specified)'));
+    lines.push('','Details:',(details||'(none)'),'','---','Sent from CmdGlas '+ver(),(navigator.userAgent||''));
+    var href='mailto:'+SUPPORT+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join('\n'));
+    try{ window.location.href=href; }catch(e){ try{ window.open(href,'_blank'); }catch(_){} }
+    setTimeout(close, 400);
+  }
+  function placeBtn(){
+    if(document.getElementById('cg-report-wrap')) return;
+    /* build 479 (user: REPORT ISSUE up next to USER MANUAL) - a wrap the onebar row-builder collects into the left flank */
+    var home=document.getElementById('tab-home'); var left=document.querySelector('#cg-onebar .cg-ob-left'); if(!home&&!left) return;
+    var wrap=document.createElement('div'); wrap.id='cg-report-wrap';
+    var btn=document.createElement('button'); btn.type='button'; btn.id='cg-report-btn'; btn.innerHTML='&#9873; REPORT ISSUE'; btn.title='Report a bug or a content correction'; btn.onclick=open;
+    wrap.appendChild(btn); (left||home).appendChild(wrap);
+  }
+  try{ new MutationObserver(placeBtn).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+  var n=0, iv=setInterval(function(){ placeBtn(); if(++n>150) clearInterval(iv); }, 400);
+  placeBtn();
+  window.cgReportOpen=open;
+})();
+</script>
+<style id="sc-b478-pilots-css">
+#cg-pilots{display:none;align-items:center;gap:7px;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#8fe0b0;margin:0;text-transform:uppercase}
+#cg-pilots .cgp-dot{width:7px;height:7px;border-radius:50%;background:#39d353;box-shadow:0 0 7px #39d353;flex:0 0 auto;animation:cgpPulse 2.2s ease-in-out infinite}
+@keyframes cgpPulse{0%,100%{opacity:.5}50%{opacity:1}}
+</style>
+<script id="sc-b478-pilots-js">
+/* build 478 (user: live PILOTS ONLINE counter). Heartbeats to the CmdGlas Cloudflare worker and shows how many tablets are active in the last 2 minutes. No login / no personal data - just a random per-browser id. Reversible: delete this block + sc-b478-pilots-css. */
+(function(){
+  if(window.__cgPilots478) return; window.__cgPilots478=true;
+  var API='https://cmdglas-pilots.razvyn.workers.dev';
+  var id; try{ id=localStorage.getItem('cg_sid'); if(!id){ id=Date.now().toString(36)+Math.random().toString(36).slice(2,8); localStorage.setItem('cg_sid',id);} }catch(e){ id='anon'+Math.random().toString(36).slice(2,8); }
+  function show(n){ var el=document.getElementById('cg-pilots'); if(!el||typeof n!=='number') return; var num=el.querySelector('.cgp-num'), lbl=el.querySelector('.cgp-lbl'); if(num) num.textContent=n.toLocaleString(); if(lbl) lbl.textContent=(n===1?'PILOT ONLINE':'PILOTS ONLINE'); el.style.display='inline-flex'; var w=document.getElementById('cg-pilots-wrap'); if(w) w.style.display=''; }
+  function beat(){ fetch(API+'/beat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){return r.json();}).then(function(d){ if(d&&typeof d.online==='number') show(d.online); }).catch(function(){}); }
+  function place(){ if(document.getElementById('cg-pilots-wrap')) return; /* build 479 (user: counter right of SQ42) - a wrap the onebar collects into the right flank; stays hidden until a count arrives */ var home=document.getElementById('tab-home'); var right=document.querySelector('#cg-onebar .cg-ob-right'); if(!home&&!right) return; var wrap=document.createElement('div'); wrap.id='cg-pilots-wrap'; wrap.style.display='none'; var el=document.createElement('div'); el.id='cg-pilots'; el.title='Tablets active in the last 2 minutes'; el.innerHTML='<span class="cgp-dot"></span><span class="cgp-num">0</span>&nbsp;<span class="cgp-lbl">PILOTS ONLINE</span>'; wrap.appendChild(el); (right||home).appendChild(wrap); beat(); setInterval(beat, 45000); }
+  try{ new MutationObserver(place).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+  var n=0, iv=setInterval(function(){ place(); if(++n>150) clearInterval(iv); }, 400);
+  place();
+})();
+</script>
+<style id="sc-b480-rowfit-css">
+/* build 480 (user: keep the bottom row ONE line, no clipping or wrap after adding REPORT ISSUE + PILOTS ONLINE). */
+#cg-onebar{padding:0 18px !important;gap:8px !important;}
+#cg-onebar #cg-report-wrap,#cg-onebar #cg-pilots-wrap{margin:0 !important;}
+#cg-onebar #cg-report-wrap button{height:30px !important;min-height:30px !important;white-space:nowrap !important;padding:5px 9px !important;font-size:9px !important;letter-spacing:.4px !important;}
+#cg-onebar #cg-pilots,#cg-onebar #cg-pilots .cgp-lbl,#cg-onebar #cg-pilots .cgp-num{white-space:nowrap !important;}
+#cg-onebar .cg-ob-side{gap:6px !important;}
+</style>
 </body>
 </html>
