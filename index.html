@@ -83,7 +83,7 @@ html #hm-pop .hm-pop-head{font-weight:400 !important} /* 2026-07-15: homepage he
    ~1700px desktop layout ALWAYS fits the window. PC keeps desktop formatting
    at every window size; touch styling is gated to real touch devices only. */
 html{zoom:1.5}
-html,body{min-height:100%;background:#070d16;color:var(--text);font-family:'Courier New','Lucida Console',monospace;font-size:12px;overflow:auto}/* build 498: page bg matches tablet body so the letterbox side bars blend (was #0f1722) */
+html,body{min-height:100%;background:#0f1722;color:var(--text);font-family:'Courier New','Lucida Console',monospace;font-size:12px;overflow:auto}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
   background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,var(--scan) 3px,var(--scan) 4px)}
 #topbar{display:flex;align-items:center;gap:8px;padding:0 14px;height:44px;
@@ -7925,7 +7925,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=498;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=495;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -13614,7 +13614,7 @@ their own rules) and COMPACT MODE (its layout is intentionally small). */
       document.body.style.maxWidth=MIN_W+'px';
       document.body.style.marginLeft='auto';
       document.body.style.marginRight='auto';
-      document.documentElement.style.background='#070d16';/* build 498 (user chose Option A: make the letterbox side bars blend). Was #0f1722 (a lighter blue that read as "odd bars"); now matches the tablet body background (#070d16) so the letterbox reads as an extension of the tablet edge, not a separate bar. */
+      document.documentElement.style.background='#0f1722';
     }catch(e){}
   }
   var t;window.addEventListener('resize',function(){clearTimeout(t);t=setTimeout(fit,150);});
@@ -22497,19 +22497,19 @@ body.sc-home-mode #sc-home-widgets .st-chip{min-width:0}
   }
   function apply(){
     var pr=document.getElementById('sc-home-widgets'); if(!pr) return false;
-    /* build 496 (user: "the middle top pill still resizes itself. you failed again to lock it down").
-       DESKTOP HARD LOCK: stop mirroring the tools-row entirely. The mirror re-read the top row's
-       center-segment width on every resize, and on the real machine that segment (NAV/RIG/LEARN…)
-       changes width as its content/fonts settle, dragging the center pill with it. We now strip any
-       inline grid-template-columns and let the fixed CSS ratio in sc-b496 govern
-       (minmax(0,1fr) minmax(0,1.9fr) minmax(0,1fr) == the measured 455:868:455). Nothing can move it
-       relative to the side pills again. Touch already uses the fixed CSS ratio (sc-b487). */
-    pr.style.removeProperty('grid-template-columns');
+    if(isTouchDev()){ pr.style.removeProperty('grid-template-columns'); return true; } /* build 487: touch uses the balanced CSS ratio (sc-b487), not the tools-row mirror - outer pills were tiny on iPad */
+    var g=seg(); if(!g) return false;
+    // mirror the three tools-row segment widths as fr ratios onto the pill grid (zoom-invariant)
+    // build 421 (user: "size locked, all of them"): wrap each track in minmax(0,…fr) so the mirrored
+    // proportions hold no matter what's inside — a long now-playing title (or any wide content) can no
+    // longer force a pill past its column and shove the others. Plain fr had an implicit min-content
+    // floor that let exactly that happen.
+    pr.style.setProperty('grid-template-columns', 'minmax(0,'+g.s.toFixed(2)+'fr) minmax(0,'+g.c.toFixed(2)+'fr) minmax(0,'+g.m.toFixed(2)+'fr)','important');
     return true;
   }
   var n=0, iv=setInterval(function(){ if(apply()){ clearInterval(iv); setTimeout(apply,400); } else if(++n>60) clearInterval(iv); },400);
-  /* build 496: re-strip on resize/orientation so nothing else can re-add an inline width; the fixed CSS ratio always wins. */
-  window.addEventListener('resize', function(){ setTimeout(apply,150); });
+  var frozen=false; setTimeout(function(){ frozen=true; }, 2500); /* build 487 (user: the center Twitch pill kept resizing while the others stayed locked). Pill widths mirror the top tools-row and were re-mirrored on every resize / whenever the NAV tray changed width. After ~2.5s the layout is settled - freeze it so the center pill can't shift again. */
+  window.addEventListener('resize', function(){ setTimeout(function(){ if(isTouchDev() || !frozen) apply(); },150); });
   window.addEventListener('orientationchange', function(){ setTimeout(apply,200); });
 })();
 </script>
@@ -26645,29 +26645,5 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
   var n=0, iv=setInterval(function(){ if(addBtn()||++n>80) clearInterval(iv); }, 300); addBtn();
 })();
 </script>
-<style id="sc-b496-pilllock-css">/* 2026-07-25 build 496.
-   (1) LOCK THE TOP-CENTER PILL (user: "the middle top pill still resizes itself. you failed again to lock it down").
-       The old balancer (sc-b345-pillcols-js) mirrored the top tools-row's three segment widths onto this grid and
-       re-read them on every resize; on the real machine the center tools-row segment (NAV/RIG/LEARN/MISSION/TABLET)
-       shifts width as content/fonts settle, so the center pill followed it. The balancer now only STRIPS any inline
-       width (see b496 edit in sc-b345), and this fixed ratio governs. 1 : 1.9 : 1 == the measured 455:868:455px.
-       minmax(0,…) means no pill's content can ever push its column wider. Highest source order -> wins over b21786.
-   (2) RECLAIM THE TOP/BOTTOM VERTICAL GAPS (user: "big gaps on the bottom and top... make the pills a little larger.
-       do it for all settings"). Modest, bounded height bump so the home fills the letterbox slack on taller windows
-       without overflowing wide ones. Reversible: delete this whole block. */
-#sc-home-widgets{grid-template-columns:minmax(0,1fr) minmax(0,1.9fr) minmax(0,1fr) !important}
-</style>
-<style id="sc-b497-vfill-css">/* 2026-07-25 build 497 (user: "the very bottom row (report issue) is too close to the pill above it. why can't you make the pills and content fit perfectly into that window?").
-   ROOT CAUSE (measured, not guessed): .hm-wrap is display:block, so its two children (.hm-cols = top pills + ingame tools; #cg-onebar = NAV pill + Report Issue bar) stack from the TOP. On a window taller than the 1700:1130 design, the whole page scales to fit, and the leftover vertical space (~148px on the user's 2478x1490 window) all pools as ONE dead band at the BOTTOM, below the Report Issue bar — while the top gap stays ~31px. Lopsided: void below, cramped above.
-   FIX: make .hm-wrap a flex column and CENTER its content, so the leftover height splits evenly top/bottom instead of dumping at the bottom. `safe center` = center when there's room, but fall back to top-anchored (flex-start) if content ever exceeds the window, so nothing clips off the top on short screens. padding-bottom keeps the centered stack clear of the fixed "not affiliated" line pinned at the very bottom. Also open up the gap between the NAV pill and the Report Issue row so it isn't jammed.
-   Desktop only (pointer:fine); touch keeps its own fill (b389). Reversible: delete this block. */
-@media (pointer:fine){
-  /* .hm-wrap already fills #home-scroll; its two visible children (.hm-cols, #cg-onebar) block-stack from the top, pooling all slack as a void below the Report Issue bar. Flex column + auto margins on the first/last child split that slack evenly above and below the pair (centering it). Auto margins only consume POSITIVE free space and collapse to 0 when content fills/exceeds the wrap, so nothing ever clips off the top on short windows. */
-  body.sc-home-mode #home-scroll > .hm-wrap{display:flex !important;flex-direction:column !important}
-  body.sc-home-mode #home-scroll > .hm-wrap > .hm-cols{margin-top:auto !important}
-  body.sc-home-mode #home-scroll > .hm-wrap > #cg-onebar{margin-bottom:auto !important}
-  body.sc-home-mode #cg-onebar{row-gap:22px !important} /* was 14px (sc-b484): give Report Issue room to breathe under the NAV pill */
-}
-</style>
 </body>
 </html>
