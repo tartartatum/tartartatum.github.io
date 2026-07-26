@@ -7925,7 +7925,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=504;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=505;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -25277,8 +25277,8 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
 #cg-twitch .cg-tw-bar{display:flex;gap:5px;align-items:center;flex:0 0 auto;}
 #cg-twitch .cg-tw-in{flex:1 1 auto;min-width:0;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;color:#dfeaf2;font:600 11px 'Rajdhani','Segoe UI',sans-serif;padding:5px 8px;}
 #cg-twitch .cg-tw-go{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:6px 11px;cursor:pointer;text-transform:uppercase;}.cg-tw-clear{flex:0 0 auto;font:800 11px 'Rajdhani','Segoe UI',sans-serif;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;padding:5px 9px;cursor:pointer;line-height:1;}.cg-tw-clear:hover{color:#ff8080;border-color:rgba(255,128,128,.5);}
-#cg-twitch .cg-tw-frame{flex:1 1 auto;min-height:70px;position:relative;border-radius:8px;overflow:hidden;background:#0a0f16;border:1px solid rgba(108,180,214,.2);}
-#cg-twitch .cg-tw-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+#cg-twitch .cg-tw-frame{flex:1 1 auto;min-height:70px;position:relative;border-radius:8px;overflow:hidden;background:#000;border:1px solid rgba(108,180,214,.2);}/* build 505: was #0a0f16 — pure black so any letterbox around the video matches the player, not a lighter ring */
+#cg-twitch .cg-tw-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;color-scheme:light;}/* build 505 (user: white border around the streamed content on iPad). An iframe with no background paints the browser's default WHITE canvas until/around the player's video area — visible as a white rim on iOS. Force black; color-scheme:light stops dark-mode double-inversion white flashes on WebKit. */
 #cg-twitch .cg-tw-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8ba0b5;font-size:11px;padding:10px;line-height:1.4;}
 </style>
 <script id="sc-b418-twitch-js">
@@ -26703,7 +26703,9 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
    (2) RECLAIM THE TOP/BOTTOM VERTICAL GAPS (user: "big gaps on the bottom and top... make the pills a little larger.
        do it for all settings"). Modest, bounded height bump so the home fills the letterbox slack on taller windows
        without overflowing wide ones. Reversible: delete this whole block. */
+@media (pointer:fine){ /* build 505: DESKTOP ONLY. This lock shipped ungated in 496 and, being later in source order, overrode the iPad's balanced 1:1.2:1 touch ratio (sc-b487) — that's what made the iPad top row lopsided vs the ingame-tools pills. Touch now falls back to b487 again. */
 #sc-home-widgets{grid-template-columns:minmax(0,1fr) minmax(0,1.9fr) minmax(0,1fr) !important}
+}
 </style>
 <style id="sc-b499-seam-css">/* 2026-07-25 build 499 (user on 498: "still blue bars on the left and right and the gap on the bottom and top").
    ROOT CAUSE (pixel-sampled from the user's screenshot): the letterbox margins are NOT the page background I recolored in 498 — they're the fixed #sc-spacebg starfield (base #070d16) showing beside the width-capped content. The content area (#tab-home) paints its OWN radial gradient out to a solid #0f1722 edge, which is a different, lighter blue than the starfield. Where the capped content meets the starfield you get a visible seam on all four sides — that's the "bars" and the "top/bottom gap."
