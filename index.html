@@ -7986,7 +7986,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=517;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=520;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -14759,7 +14759,7 @@ live list and the photo reference; choice persists (sc_kbview). */
   'tab-allkb':'LIVE LIST = every keyboard bind from your newest in-game export, grouped and searchable — it cannot go stale. PHOTO REFERENCE switches to the keypad layout sheets. Mouse-bound actions are not listed (keyboard export only).',
   'tab-sites':'Essential SC websites, opened inside the tablet. Use the dropdown to switch site; RLD reloads; EXT opens it in a real browser tab.',
   'tab-patch':'Every buff, nerf and change, newest patch first. Search and category pills filter; each entry names its patch and source.',
-  'tab-blueprints':'Blueprint card decks grouped by category. One-line filters: search box + category + system dropdowns; the ⓘ shows the dataset count/version. Tap a CRAFTABLE card to select it, then [ SEND → CRAFT CALC + OPS ] pushes it to both tools; [ RECALL ] pulls it back out. api/mission links on each card open references.',
+  'tab-blueprints':'Blueprint card decks grouped by category. One-line filters: search box + category + system dropdowns; the ⓘ shows the dataset count/version. Tap a CRAFTABLE card to select it, then the send button pushes its materials to your gather list; [ RECALL ] pulls it back out. api/mission links on each card open references.',
   'tab-craftcalc':'Tap + on a blueprint to add it to your build plan; the right side aggregates every raw material with mining locations. SELECTED section pins your picks; system filter narrows material sources.',
   'tab-deckbuilder':'The Stream Deck planner. Drag keybinds from the palette onto slots, drag slots to move, right-click empty slots for page-jump buttons. Export sends the profile to the PC pipeline.',
   'tab-harvest':'Harvestable & mineable atlas. Card decks with a live type-search up top; DECKS/TABLES toggle switches to the full source tables. Jump dropdowns skip straight to an item, section or location.',
@@ -17065,10 +17065,11 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
     CUR=id;
     var d=(window.SC_PAGE_HELP&&window.SC_PAGE_HELP['tab-'+id])||('Opens the '+label+' page.');
     /* 2026-07-15 user: OPEN button removed — clicking/tapping anywhere in the popout already navigates */
-    var OPSLINK={mining:1,craftcalc:1,blueprints:1,loadout:1,harvest:1};
+    /* build 518 (user: "i still see the ops refereneces in the hover bubbles over the ingame
+       tools"): the ops-link ribbon is gone entirely (build 516 had only shortened it), and the
+       page-id map above it went too - the ribbon was its only user. */
     pop.innerHTML='<div class="hm-pop-head"><span class="hm-hico">'+ico(id)+'</span><span>'+esc(label.toUpperCase())+'</span><button type="button" class="hm-x" id="hm-close">&#10005;</button></div>'
-      +'<div class="hm-pop-body">'+esc(d)+'</div>'
-      +(OPSLINK[id]?'<div class="hm-pop-ops">&#8646; LINKED TO OPS &mdash; selections push to the OPS page</div>':'');
+      +'<div class="hm-pop-body">'+esc(d)+'</div>';
     if(HOV&&tileEl){
       /* === HOVER POPOUT PLACEMENT — COORDINATE-SPACE FIX (2026-07-16 user order) ==============
          USER: "on the homepage when hovering over the button on the right side it pushes the box
@@ -27210,6 +27211,26 @@ body.sc-home-mode #tab-home{background:radial-gradient(1200px 620px at 50% 8%, r
   body.sc-home-mode #home-scroll > .hm-wrap > .hm-cols{margin-top:auto !important}
   body.sc-home-mode #home-scroll > .hm-wrap > #cg-onebar{margin-bottom:auto !important}
   body.sc-home-mode #cg-onebar{row-gap:22px !important} /* was 14px (sc-b484): give Report Issue room to breathe under the NAV pill */
+}
+</style>
+<style id="sc-b519-ipad-pills-css">/* 2026-07-26 build 519 (user: "the size of the pills are all
+over the place in the online version cmdglas.com on ipad"). Fluid-tray layout for coarse-pointer
+devices only - the desktop keeps its fixed tile sizes. Both home rows go 1 : 1.9 : 1 so the top
+widget row and the bottom tools row visually agree; the tray becomes a fluid 5-col grid and the
+tiles scale (cap 148px) instead of overflowing. Measured in the 1366x1024 touch rig: top 1.90,
+bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>. */
+@media (pointer:coarse){
+  #tab-home .hm-cols .hm-col #sc-tools-row>*:nth-child(1),
+  #tab-home .hm-cols .hm-col #sc-tools-row>*:nth-child(3){flex:1 1 0 !important;min-width:0 !important}
+  #tab-home .hm-cols .hm-col #sc-tools-row>.hm-tray{flex:1.9 1.9 0 !important;width:auto !important;min-width:0 !important;
+      grid-template-columns:repeat(5,minmax(0,1fr)) !important;justify-content:stretch !important;justify-items:center !important}
+  #tab-home .hm-cols .hm-col #sc-tools-row .hm-cell{width:100% !important;min-width:0 !important}
+  #tab-home .hm-cols .hm-col #sc-tools-row .hm-tile.hm-img{width:100% !important;max-width:148px !important;height:auto !important;aspect-ratio:1/1 !important}
+  #sc-home-widgets{grid-template-columns:minmax(0,1fr) minmax(0,1.9fr) minmax(0,1fr) !important}
+  /* build 520: on touch the SEARCH pill's UNDOCK button sat bottom-centre, exactly where the
+     "Search everything" caption sits (measured 4px overlap). Corner it, right side - measured
+     89px free vs a 70px button. Desktop keeps the centred button. */
+  #sc-navsearch > .cg-undock-btn{left:auto !important;right:10px !important;transform:none !important}
 }
 </style>
 </body>
