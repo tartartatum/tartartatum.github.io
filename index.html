@@ -7986,7 +7986,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=524;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=525;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -22647,8 +22647,8 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
     f.innerHTML='<div class="logostage"><span class="oring2"><span class="dot"></span></span><span class="oring"><span class="dot"></span></span><span class="crest"></span></div><div class="cap">Search everything</div>'; return f; }
   function commsFillerEl(){ var f=document.createElement('div'); f.className='commsfill'; var bars=''; for(var i=0;i<11;i++) bars+='<i></i>';
     f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Org Comms</div><div class="hlog">CH-01 · GENERAL\nawaiting signal…\nsign in to connect</div>'
-      +'<div class="cg-comms-btns"><button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN COMMS</button>'
-      +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">HOW TO SET UP</button></div>'; return f; }/* build 455 (user): OPEN COMMS + HOW TO SET UP buttons in the COMMS pill (setup sits above UNDOCK) */
+      +'<div class="cg-comms-btns"><button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN</button>'
+      +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'; return f; }/* build 455 (user): OPEN COMMS + HOW TO SET UP buttons in the COMMS pill (setup sits above UNDOCK) */
   function buildSearch(){
     var frame=document.querySelector('#sc-tools-row > #sc-navsearch .ns-frame')||document.querySelector('#sc-navsearch .ns-frame');
     if(!frame) return false;
@@ -26046,10 +26046,13 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     Object.keys(PILLS).forEach(function(key){
       if(state[key]) return;
       var node=q(key); if(!node) return;
-      if(node.querySelector(':scope > .cg-undock-btn[data-pop="'+key+'"]')) return;
+      if(node.querySelector('.cg-undock-btn[data-pop="'+key+'"]')) return; /* build 525: comms hosts its button INSIDE .cg-comms-btns - a :scope> check would re-add it every 900ms tick */
       var b=document.createElement('button'); b.type='button'; b.className='cg-undock-btn'; b.setAttribute('data-pop',key); b.textContent='UNDOCK';
       b.addEventListener('click',function(e){ e.stopPropagation(); undock(key); });
-      node.appendChild(b);
+      /* build 525: the COMMS pill shows one row - [ OPEN ] [ SET UP ] [ UNDOCK ] - so its
+         undock goes into that row when it exists. Every other pill is unchanged. */
+      var host=(key==='comms'&&node.querySelector('.cg-comms-btns'))||node;
+      host.appendChild(b);
     });
   }
   setInterval(function(){ addBtns(); updateBtns(); }, 900); addBtns();
@@ -26282,8 +26285,12 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
 #cg-comms-page .cgcp-meet-res b{font-size:15px;color:#eafaff;font-weight:800}
 #cg-comms-page .cgcp-meet-sub{font-size:11.5px;color:#9fc4d8;flex:1 1 auto}
 #cg-comms-page .cgcp-meet-res .cgcp-btn{padding:7px 12px;font-size:10px}
-/* pill buttons (OPEN COMMS / HOW TO SET UP), stacked above the absolute UNDOCK */
-.cg-comms-btns{display:flex;flex-direction:column;gap:7px;align-items:center;margin-top:6px;margin-bottom:34px}
+/* build 525 (user: "move the entire line of buttons inside comms into a single row ... it
+   looks lobsided"): ONE centred row - [ OPEN ] [ SET UP ] [ UNDOCK ]. The undock script
+   drops the comms undock button into this row (see sc-b430 script), where the rules below
+   strip its absolute positioning. Bottom margin no longer reserves space under the row. */
+.cg-comms-btns{display:flex;flex-direction:row;flex-wrap:nowrap;gap:7px;align-items:center;justify-content:center;margin-top:6px;margin-bottom:12px}
+.cg-comms-btns .cg-undock-btn{position:static !important;left:auto !important;right:auto !important;top:auto !important;bottom:auto !important;transform:none !important;margin:0 !important;width:auto !important}
 .cg-comms-btns button{font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;border-radius:7px;padding:7px 16px;white-space:nowrap}
 .cg-comms-btns .cg-comms-open{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:1px solid rgba(170,242,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .cg-comms-btns .cg-comms-open:hover{filter:brightness(1.08)}
@@ -27232,9 +27239,9 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      "Search everything" caption sits (measured 4px overlap). Corner it, right side - measured
      89px free vs a 70px button. Desktop keeps the centred button. */
   #sc-navsearch > .cg-undock-btn{left:auto !important;right:10px !important;transform:none !important}
-  /* build 524: same overlap on the COMMS pill - its undock sat dead-centre on top of the
-     HOW TO SET UP button (measured 1145,838 vs 1126,830 on the touch rig). Corner it too. */
-  #sc-chatdock > .cg-undock-btn{left:auto !important;right:10px !important;transform:none !important}
+  /* build 524's comms corner rule removed in build 525: the comms undock now lives INSIDE
+     .cg-comms-btns (one row with OPEN / SET UP), so the direct-child selector it used can
+     never match again and the overlap it fixed cannot recur by construction. */
 }
 </style>
 </body>
