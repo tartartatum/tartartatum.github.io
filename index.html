@@ -1912,7 +1912,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
       <!-- HAUL ROUTE & LOADOUT PLANNER (2026-07-20 user) -->
       <div class="haul-plan-wrap" style="margin:8px 10px 12px">
         <div class="hp-head">
-          <div class="hp-title">HAUL ROUTE &amp; LOADOUT PLANNER<span class="info-wrap"><span class="info-i" onclick="scInfoToggle(this,event)" title="What this planner does">i</span><div class="info-body" style="white-space:normal">Plan a multi-stop haul without living in mobiGlas. Set how many stops the run has; for each stop, name the station / planet / outpost and list the cargo stored for it &mdash; commodity, SCU, which contract it belongs to, and whether you pick it up or drop it off there. It saves as you type. The same stop list rides in the OPS pop-out (ROUTE tab) as a tick-off checklist, so you can glance at your next drop and check it off as you leave.</div></span></div>
+          <div class="hp-title">HAUL ROUTE &amp; LOADOUT PLANNER<span class="info-wrap"><span class="info-i" onclick="scInfoToggle(this,event)" title="What this planner does">i</span><div class="info-body" style="white-space:normal">Plan a multi-stop haul without living in mobiGlas. Set how many stops the run has; for each stop, name the station / planet / outpost and list the cargo stored for it &mdash; commodity, SCU, which contract it belongs to, and whether you pick it up or drop it off there. It saves as you type.</div></span></div>
           <div class="hp-ctrls">
             <span class="hp-stops-lab">STOPS</span>
             <button type="button" class="hp-step" onclick="scHaulStep(-1)" title="Remove the last stop">&minus;</button>
@@ -7986,7 +7986,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=515;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=517;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -17068,7 +17068,7 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
     var OPSLINK={mining:1,craftcalc:1,blueprints:1,loadout:1,harvest:1};
     pop.innerHTML='<div class="hm-pop-head"><span class="hm-hico">'+ico(id)+'</span><span>'+esc(label.toUpperCase())+'</span><button type="button" class="hm-x" id="hm-close">&#10005;</button></div>'
       +'<div class="hm-pop-body">'+esc(d)+'</div>'
-      +(OPSLINK[id]?'<div class="hm-pop-ops">&#8646; LINKED TO OPS &mdash; selections push to the OPS page &amp; pop-out overlay</div>':'');
+      +(OPSLINK[id]?'<div class="hm-pop-ops">&#8646; LINKED TO OPS &mdash; selections push to the OPS page</div>':'');
     if(HOV&&tileEl){
       /* === HOVER POPOUT PLACEMENT — COORDINATE-SPACE FIX (2026-07-16 user order) ==============
          USER: "on the homepage when hovering over the button on the right side it pushes the box
@@ -17604,9 +17604,9 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
          That asymmetry is deliberate and is said out loud below rather than left as a missing button
          someone re-requests in a month. */
       +"<div id='be-mn-chipwrap' class='be-chipwrap'><div class='be-chiplab'>SELECTED</div><div id='be-mn-chips' class='be-chips'></div>"
-      +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to the OPS gather list (also shown in the pop-out overlay), grouped by verified mining location'>&#8594; PUSH TO OPS</button>"
+      +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to the OPS gather list, grouped by verified mining location'>&#8594; PUSH TO OPS</button>"
       +"<span id='be-mn-sendmsg' class='be-mn-sendmsg'></span></div>"
-      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO OPS does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own &mdash; it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>OPS gather list</b> &mdash; they also appear in the always-on-top <b>pop-out overlay</b> (its OPS panel reads the same list). No quantity is invented; it just lists what you are after, grouped by verified location. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you &mdash; raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
+      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO OPS does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own &mdash; it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>OPS gather list</b>. No quantity is invented; it just lists what you are after, grouped by verified location. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you &mdash; raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
       +"<div id='be-mn-out'></div>";
     row.parentNode.insertBefore(bp,row.nextSibling);
     /* datalist = MAT_LOC keys + atlas item names, deduped, ALPHABETICAL (user rule) */
@@ -18656,14 +18656,14 @@ unchecked === false, default all on. The overlay reads both keys when it is OPEN
     h.style.cssText='font-weight:700;font-size:13px;letter-spacing:2px;color:var(--amber2,#ffd070);margin-bottom:2px';
     box.appendChild(h);
     var sub=document.createElement('div');
-    sub.textContent='Check which panels show on the OPS page and the pop-out. Changes apply instantly.';
+    sub.textContent='Check which panels show on the OPS page. Changes apply instantly.';
     sub.style.cssText='font-size:9.5px;color:var(--text-dim);margin-bottom:10px';
     box.appendChild(sub);
     function sec(t){ var d=document.createElement('div'); d.textContent=t; d.style.cssText='font-size:10px;letter-spacing:1.5px;color:var(--amber,#ffb000);border-top:1px solid var(--border2,#39414d);margin-top:9px;padding-top:8px;margin-bottom:2px'; box.appendChild(d); }
     /* 2026-07-18 user: "remove the pop-out pages section, leave only the selectable ops panels."
        POP-OUT PAGES chose which overlay TABS to carry (Inventory/Craft/Mining/Notepad/Troubleshoot);
        with the pop-out now an OPS carbon copy the user doesn't use them, so the control is gone. */
-    sec('OPS PANELS (shown on the OPS page + pop-out)');
+    sec('OPS PANELS (shown on the OPS page)');
     var pans=[].slice.call(document.querySelectorAll('#ops-grid .ops-panel[data-ops]'));
     if(!pans.length){
       var m=document.createElement('div'); m.textContent='Open the OPS page once, then reopen this window.'; m.style.cssText='font-size:10px;color:var(--text-dim);padding:4px 0'; box.appendChild(m);
@@ -18693,7 +18693,7 @@ unchecked === false, default all on. The overlay reads both keys when it is OPEN
     var host=document.getElementById('ov-cfg'); if(!host||host.getAttribute('data-armed2')) return; host.setAttribute('data-armed2','1');
     host.innerHTML='';
     var b=document.createElement('button'); b.type='button'; b.className='panel-btn';
-    b.textContent='ADD PANEL'; b.title='Choose which OPS panels show on the OPS page (and pop-out), plus which pages the pop-out carries';
+    b.textContent='ADD PANEL'; b.title='Choose which OPS panels show on the OPS page';
     b.style.cssText='font-size:9px;padding:4px 10px;letter-spacing:1px';
     b.addEventListener('click',openModal);
     host.appendChild(b);
@@ -19352,7 +19352,7 @@ html,body{overflow:auto;height:auto}
 <script>/* USER GUIDE build + search + nav (2026-07-18 user). */
 (function(){
   function go(id){ return function(){ if(typeof setActiveTabById==='function') setActiveTabById(id); }; }
-  function popout(){ if(window.openSatelliteOverlay) openSatelliteOverlay(); }
+  function popout(){ if(window.openSatelliteOverlay) openSatelliteOverlay(); } /* build 517: uncalled since its guide card was deleted; kept to avoid breaking anything that names it */
   /* 2026-07-18 user: "place the entire 'you need' and steps into a dropdown." Native <details> so
      the iPad topic opens to a short intro and the full checklist + steps stay tucked until asked for. */
   var IPAD='<details class="ug-drop"><summary>WHAT YOU NEED &amp; STEPS</summary><div class="ug-steps">'
@@ -19370,13 +19370,14 @@ html,body{overflow:auto;height:auto}
     {id:'ipad',t:'DISPLAY ON iPAD / ANDROID',d:'CmdGlas runs on your PC and serves itself over your network. Run the .bat once, then open the address it shows from your tablet browser.'+IPAD},
     {id:'start',t:'GETTING STARTED',d:'CmdGlas is a second-screen companion for Star Citizen. It reads files the game writes on your PC plus community data &mdash; it never writes to the game. Start the control server for live data and snips.',go:go('home'),goL:'HOME SCREEN'},
     {id:'ops',t:'GATHER &amp; BUY LISTS',d:'Your workspace lives in the top-centre pill. The <b>gather list</b> and <b>buy list</b> collect what you need as you use the tools; the other pills show server status and keybinds.'},
-    {id:'medical',t:'MEDICAL SPACE MANUAL',d:'Full 4.9 medical reference (also in the pop-out): MedPens and drug pens, the ParaMed MedGun and LifeGuard multitool attachment, MedBed tiers and respawn range, blood drug level and how to lower it, refills (incl. the new lootable MedGel), prices and where to buy. Every figure is sourced; unconfirmed items are flagged.'},
-    {id:'mining',t:'MINING',d:'<b>BASIC</b> = pick a material, get where and how. <b>EXPERT</b> = the full rig builder and reference tables. The <b>Yield Estimator</b> values a rock before you crack it. <b>PUSH</b> adds your picks to the gather list (and the pop-out).',go:go('mining'),goL:'GO TO MINING'},
+    {id:'medical',t:'MEDICAL SPACE MANUAL',d:'Full 4.9 medical reference: MedPens and drug pens, the ParaMed MedGun and LifeGuard multitool attachment, MedBed tiers and respawn range, blood drug level and how to lower it, refills (incl. the new lootable MedGel), prices and where to buy. Every figure is sourced; unconfirmed items are flagged.'},
+    {id:'mining',t:'MINING',d:'<b>BASIC</b> = pick a material, get where and how. <b>EXPERT</b> = the full rig builder and reference tables. The <b>Yield Estimator</b> values a rock before you crack it. <b>PUSH</b> adds your picks to the gather list.',go:go('mining'),goL:'GO TO MINING'},
     {id:'craft',t:'CRAFT CALCULATOR',d:'Tick the blueprints you want to build; it sums every material they need and drops the totals into the gather list, grouped by where to find them.',go:go('craftcalc'),goL:'GO TO CRAFT CALC'},
     {id:'blueprints',t:'BLUEPRINTS',d:'Browse craftable sets and items. SEND pushes a blueprint materials to the Craft Calculator and gather list in one tap.',go:go('blueprints'),goL:'GO TO BLUEPRINTS'},
     {id:'gather',t:'GATHER LIST + SYNC',d:'Everything is mirrored. Remove an item with its &times; and it clears on its source page too; <b>CLEAR</b> empties the whole list (mining picks and craft selections included).'},
     {id:'harvest',t:'HARVEST / SALVAGE / HAULING',d:'Field manuals with top locations, methods and reference tables for each activity, tagged VERIFIED / COMMUNITY / UNCONFIRMED.',go:go('harvest'),goL:'GO TO HARVEST'},
-    {id:'popout',t:'POP-OUT OVERLAY',d:'A small always-on-top window you keep over the game (borderless/windowed fullscreen). Tabs for Inventory, Craft, Mining, Notepad and Troubleshoot. Zoom and dim it to taste.',go:popout,goL:'OPEN POP-OUT'},
+    /* build 517: pop-out overlay guide card deleted — the pop-out itself was removed in build 502,
+       but this card (and its working open button) survived and kept advertising it. */
     /* build 511: Night Light removed; this card kept for THEMES, which still exist. */
     {id:'night',t:'THEMES',d:'The colour swatch in the top bar picks a theme that matches your Stream Deck skin.'},
     {id:'trouble',t:'TROUBLESHOOTING',d:'Community-verified fixes by activity. One vote per user, and a standing reminder: never submit or promote glitches, cheats or exploits.',go:go('trouble'),goL:'GO TO TROUBLESHOOT'},
@@ -19484,7 +19485,7 @@ table tbody tr:nth-child(even) td{background:rgba(120,180,255,.06)}
    Reusable: add an entry to HOWTO + a button onclick="scHowto('key')" on any section. */
 (function(){
   var HOWTO={
-    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE card to select it. Pick as many as you like, then hit PUSH TO OPS to send their materials to your OPS gather list (mirrored in the pop-out). RECALL removes those materials from OPS. CLEAR SELECTION clears your current picks.'},
+    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE card to select it. Pick as many as you like, then hit PUSH TO OPS to send their materials to your OPS gather list. RECALL removes those materials from OPS. CLEAR SELECTION clears your current picks.'},
     harvest:{t:'HARVESTABLES',b:'TABLES and DECKS show the same data two ways - TABLES is the compact list, DECKS is the card view. Type in the search box to filter live by name, method, location, sell price or confidence. Each entry gives the top locations, how to harvest it, and a VERIFIED / COMMUNITY / UNCONFIRMED tag on the data.'}
   };
   var bub=null;
@@ -24097,7 +24098,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   var OM=P([
    '<div class="sm-doc" id="sm-doc-om"><div class="sm-doc-top"><div class="sm-doc-h" id="man-om">OM &middot; OPERATIONS MANUAL</div><div class="sm-doc-sub">Curated index of MrKraken&rsquo;s one-page field guides</div></div>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p"><b>MrKraken</b> makes excellent one-page visual field guides for Star Citizen activities. This is a <b>curated index</b> that points you to them. The guides are <b>his copyrighted work</b> &mdash; this manual credits him and <b>links out</b>; it does not rehost his images.</div>',
-   '<div class="sm-note"><b>NOTE &mdash; shell only.</b> Full in-tablet display and <b>send-to-OPS-pop-out</b> for each guide is <b>pending</b> two things: MrKraken&rsquo;s explicit permission to embed, and the guide image files supplied into the server&rsquo;s guides folder. Until both are in hand, each entry links to his public channel.</div></div></details>',
+   '<div class="sm-note"><b>NOTE &mdash; shell only.</b> Full in-tablet display for each guide is <b>pending</b> two things: MrKraken&rsquo;s explicit permission to embed, and the guide image files supplied into the server&rsquo;s guides folder. Until both are in hand, each entry links to his public channel.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. THE GUIDES</summary><div class="sm-ch-body"><div class="sm-p">Known one-page guides (partial &mdash; his full catalog is larger). Each opens on his channel for now:</div><ul class="sm-gloss">',
    '<li><b>Storm Breaker</b> &mdash; the Apex Valakkar / Irradiated Pearl chain.</li>',
    '<li><b>Hathor Laser</b> &mdash; the orbital-laser platform that opens Carinite caves.</li>',
