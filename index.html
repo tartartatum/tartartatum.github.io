@@ -1371,8 +1371,10 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
               knows (#cover-srv-dot).
          MAPPING enabled -> path is deliberate and lives in one place below.
          ============================================================================ -->
-    <button type="button" id="cover-start" onclick="scStartHere()" title="Set up the tablet">START HERE</button>
-    <div id="cover-start-why"></div>
+    <!-- build 528 (user: "remove the start here button ... just leave the enter tablet.
+         check for dependencies first."): the START HERE button and its readiness line are
+         gone. Dependency check in patch528.py: the gate script exits at boot when this
+         element is absent; nothing else consumed SC_START / SC_SERVER_DOWN / scStartHere. -->
     <button type="button" id="cover-cap" onclick="try{document.getElementById('cover-screen').classList.add('hide');}catch(e){};if(typeof setActiveTabById==='function')setActiveTabById('cap');" title="Everything this tablet can do">&#9670; TABLET CAPABILITIES</button>
     <!-- 2026-07-16 user: "on the start page we have the patch version listed 3 times. only keep the
          one with the green dot." The three were: the .cover-chip (green pulse dot, #ver-chip), this
@@ -7986,7 +7988,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=525;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=528;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -8465,6 +8467,10 @@ document.addEventListener('click',function(e){
    ========================================================================================== */
 window.SC_START={ready:false,missing:[]};
 (function(){
+  /* build 528: the START HERE button was removed from the cover. Without it this gate has
+     nothing to paint and nobody reads its flags (dependency check in patch528.py), so it
+     exits instead of polling /api/config every 30 s for a button that does not exist. */
+  if(!document.getElementById('cover-start')) return;
   var NEEDS={deck:'deck_load_dir', voice:'va_dir', azeron:'azeron_dir'};
   var ALWAYS=['mappings','tools'];
   var LABEL={mappings:'GAME EXPORT FOLDER',tools:'TOOLS FOLDER',azeron_dir:'AZERON FOLDER',va_dir:'VOICEATTACK FOLDER',deck_load_dir:'DECK PROFILE FOLDER'};
@@ -22596,9 +22602,9 @@ body.sc-home-mode #sc-navsearch .ns-tres .row.pend:hover{border-color:rgba(120,1
 body.sc-home-mode #sc-navsearch .searchfill{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden}
 .searchfill .logostage{position:relative;flex:0 0 auto;width:236px;max-width:92%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
 .searchfill .crest{width:82%;height:82%;background:var(--sc-emblem) center/contain no-repeat;filter:drop-shadow(0 0 15px rgba(90,190,255,.6));position:relative;z-index:2}
-.searchfill .oring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(111,208,255,.42);animation:cgSpin 9s linear infinite}
+.searchfill .oring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(111,208,255,.16);animation:cgSpin 6.5s linear infinite}/* build 526 (user): outer ring/dot now the inner pair’s exact look and period - same speed, opposite directions (inner spins reverse) */
 .searchfill .oring2{position:absolute;inset:16px;border-radius:50%;border:1px solid rgba(111,208,255,.16);animation:cgSpin 6.5s linear infinite reverse}
-.searchfill .oring .dot{position:absolute;top:-5px;left:50%;margin-left:-5px;width:10px;height:10px;border-radius:50%;background:#8fe4ff;box-shadow:0 0 13px #8fe4ff}
+.searchfill .oring .dot{position:absolute;top:-4px;left:50%;margin-left:-4px;width:8px;height:8px;border-radius:50%;background:#bff0ff;box-shadow:0 0 10px #8fe4ff}
 /* build 387 (user): inner ring gets its own circling dot too (counter-rotating vs the outer dot) */
 .searchfill .oring2 .dot{position:absolute;top:-4px;left:50%;margin-left:-4px;width:8px;height:8px;border-radius:50%;background:#bff0ff;box-shadow:0 0 10px #8fe4ff}
 .searchfill .cap{font:800 10px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2.6px;color:#5f89a3;text-transform:uppercase}
@@ -25711,7 +25717,7 @@ body.sc-home-mode #cg-onebar #cg-sq42-wrap #cg-sq42-btn > *{position:relative !i
 body.sc-home-mode #cg-onebar #cg-moreinfo-wrap button{clip-path:none !important;-webkit-clip-path:none !important;}
 </style>
 <style id="sc-b425-searchdot-css">/* 2026-07-24 build 425 (user: make the innermost rotating point on the SEARCH emblem a solid, visible colour — it was muted). The inner ring's dot (.oring2 .dot) was a pale #bff0ff at 8px with a soft glow; give it a solid saturated cyan core, larger, with a crisp double glow so it reads clearly. Also a defensive round on the loadout ADD SHIPS button (#hangar-btn) in case a theme chamfers it. Reversible: delete this block. */
-.searchfill .oring2 .dot{width:11px !important;height:11px !important;margin-left:-5.5px !important;top:-5.5px !important;background:#3fd2ff !important;box-shadow:0 0 4px #ffffff,0 0 13px #4fd2ff,0 0 22px rgba(79,210,255,.7) !important;}
+.searchfill .oring2 .dot,.searchfill .oring .dot{width:11px !important;height:11px !important;margin-left:-5.5px !important;top:-5.5px !important;background:#3fd2ff !important;box-shadow:0 0 4px #ffffff,0 0 13px #4fd2ff,0 0 22px rgba(79,210,255,.7) !important;}/* build 527: outer dot joined - the two dots are pixel-identical twins */
 #hangar-btn{clip-path:none !important;-webkit-clip-path:none !important;border-radius:8px !important;}
 </style>
 <style id="sc-b427-tweaks-css">/* 2026-07-24 build 427 (user: centre the Buy me a coffee link; remove the Remember-me sub-note; the ingame-tool tile labels drifted off-centre at some zooms). */
@@ -26800,8 +26806,10 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
 </script>
 
 <style id="sc-b463-slowanim-css">/* 2026-07-25 build 463 (user: the ORG COMMS waveform bars and the dots orbiting the Star Citizen logo are too fast — slow both by 50%). Same selectors, placed last in source order so these durations win (no !important needed). Reversible: delete this block to restore the original speeds. */
-/* orbiting dots around the SC logo (SEARCH filler): 9s -> 18s, 6.5s -> 13s */
-.searchfill .oring{animation-duration:18s}
+/* orbiting dots around the SC logo (SEARCH filler), slowed 50% per build 463. Build 527
+   (user: outer ring+dot must LOOK THE SAME as the inner, opposite direction): both rings now
+   share ONE 13s period - equal speed, mirrored spin. */
+.searchfill .oring{animation-duration:13s}
 .searchfill .oring2{animation-duration:13s}
 /* ORG COMMS waveform bars: every duration doubled */
 .commsfill .wave i{animation-duration:2.3s}
