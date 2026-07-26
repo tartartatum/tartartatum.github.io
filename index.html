@@ -7925,7 +7925,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=505;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=507;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-24';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -14626,7 +14626,26 @@ live list and the photo reference; choice persists (sc_kbview). */
   function setv(v){
     try{localStorage.setItem(LS,v);}catch(e){}
     var want=SRC[v]||SRC.list;
-    /* build 473 (user: show a clean CONTROL SERVER OFFLINE notice instead of GitHub raw 404 when the served keybind files are missing) */ var _host=fr.parentNode; try{ if(getComputedStyle(_host).position==='static') _host.style.position='relative'; }catch(e){} function _off(show){ var o=_host.querySelector('.kb-offline'); if(show){ if(!o){ o=document.createElement('div'); o.className='kb-offline'; o.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:24px;background:#0a0f16;z-index:4'; o.innerHTML='<div style="font:800 15px Rajdhani,sans-serif;letter-spacing:2px;color:#ffcf6b">CONTROL SERVER OFFLINE</div><div style="font:600 12.5px Rajdhani,sans-serif;line-height:1.6;max-width:460px;color:#9fb6cc">The live keybind list, photo reference and deck emulator are served by the <b>CmdGlas control server</b> on your PC. Run the control-server <b>.bat</b> once, then open the tablet from the address it prints - this view will load.</div>'; _host.appendChild(o); } o.style.display='flex'; fr.style.visibility='hidden'; } else { if(o) o.style.display='none'; fr.style.visibility=''; } } fr.onload=function(){ try{ var d=fr.contentDocument; var t=(d&&d.body)?(d.body.innerText||''):''; _off(/does not contain the requested file|File not found/i.test(t)); }catch(e){ _off(false); } }; if(v==='deck'||(fr.getAttribute('src')||'').indexOf(want)<0) fr.setAttribute('src',want); else if(fr.onload) fr.onload();
+    /* build 473 (user: show a clean CONTROL SERVER OFFLINE notice instead of GitHub raw 404 when the served keybind files are missing) */ var _host=fr.parentNode; try{ if(getComputedStyle(_host).position==='static') _host.style.position='relative'; }catch(e){} /* build 507 (user: "going to keybinds list in my pc to set up streamdeck i get a control server offline message").
+       IT WAS LYING. The server was up; /planner/SC_Deck_Emulator.html was simply not in the planner
+       folder, and the server's 404 body ("File not found") tripped the same regex as a GitHub Pages
+       404. Two different faults were being reported with one message, and the one it chose sent the
+       user to restart a server that was already running.
+       507 asks the server directly before blaming it: if /api/server_info answers, the server is UP
+       and the real fault is a missing file - so name the file. Only a server that does not answer
+       gets the OFFLINE notice. Reversible: restore the single-message _off() above this comment. */
+    function _paint(o,title,body){ o.innerHTML='<div style="font:800 15px Rajdhani,sans-serif;letter-spacing:2px;color:#ffcf6b">'+title+'</div><div style="font:600 12.5px Rajdhani,sans-serif;line-height:1.6;max-width:460px;color:#9fb6cc">'+body+'</div>'; }
+    var OFFLINE_T='CONTROL SERVER OFFLINE', OFFLINE_B='The live keybind list, photo reference and deck emulator are served by the <b>CmdGlas control server</b> on your PC. Run the control-server <b>.bat</b> once, then open the tablet from the address it prints - this view will load.';
+    function _off(show){ var o=_host.querySelector('.kb-offline'); if(show){ if(!o){ o=document.createElement('div'); o.className='kb-offline'; o.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:24px;background:#0a0f16;z-index:4'; _paint(o,OFFLINE_T,OFFLINE_B); _host.appendChild(o); } o.style.display='flex'; fr.style.visibility='hidden';
+        var _o=o, _f=(SRC[v]||'').split('?')[0];
+        _paint(_o,'CHECKING\u2026','Asking the control server whether it is running\u2026');
+        try{
+          fetch('/api/server_info',{cache:'no-store'})
+            .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+            .then(function(){ _paint(_o,'FILE NOT FOUND','The control server is <b style="color:#39d353">running</b>, but it could not serve:<br><b style="color:#ffcf6b">'+_f+'</b><br><br>That file is missing from the folder the server publishes. Put it there, then reload this view. The server itself is fine - nothing needs restarting.'); })
+            .catch(function(){ _paint(_o,OFFLINE_T,OFFLINE_B); });
+        }catch(e){ _paint(_o,OFFLINE_T,OFFLINE_B); }
+      } else { if(o) o.style.display='none'; fr.style.visibility=''; } } fr.onload=function(){ try{ var d=fr.contentDocument; var t=(d&&d.body)?(d.body.innerText||''):''; _off(/does not contain the requested file|File not found/i.test(t)); }catch(e){ _off(false); } }; if(v==='deck'||(fr.getAttribute('src')||'').indexOf(want)<0) fr.setAttribute('src',want); else if(fr.onload) fr.onload();
     bar.querySelectorAll('[data-kb]').forEach(function(b){
       var on=b.getAttribute('data-kb')===v;
       b.style.background=on?'#33210f':''; b.style.borderColor=on?'var(--amber,#ffb000)':''; b.style.color=on?'#ffd479':'';
@@ -20220,12 +20239,33 @@ body.scrail-on #sc-zoom-bar::after, body.scrail-on #sc-right-bar::after{ width:1
 </script>
 <style id="sc-radio-pill-css">/* 2026-07-19 T #16C: media control is now a RIGHT-pill "Radio" popout; panel shows only when Radio is open */
 #sc-nowplaying{display:none !important}
-#sc-nowplaying.radio-shown{display:flex !important}</style>
+#sc-nowplaying.radio-shown{display:flex !important;
+  /* build 506 (user: RADIO never appears on PC). The panel was anchored to #sc-right-bar, which is display:none !important in the current layout — anchor() bailed, so the popout was never positioned (and z-index 9001 sat below the bezel). Pin it to a fixed, always-visible spot instead; !important beats the stale inline top/left from anchor(). */
+  left:auto !important;right:44px !important;top:auto !important;bottom:150px !important;transform:none !important;z-index:2147483601 !important}</style>
 <script id="sc-radio-js">
 (function(){
   if(window.__scRadio) return; window.__scRadio=true;
   window.scRadioToggle=function(){
-    var np=document.getElementById('sc-nowplaying'); if(!np) return;
+    /* ================= build 507 (user: "radio button on pc ver.506 still not working —
+       nothing appears at all") =================================================================
+       REPRODUCED in a clean browser: with the left pill set to Media Player, #sc-nowplaying
+       carries class .mp-in-pill, and build-347 CSS pins that with
+         #sc-nowplaying.mp-in-pill{position:static !important;display:flex !important;...}
+       Toggling .radio-shown on a panel that is already docked inside the pill changes NOTHING
+       on screen (measured rect stayed 0x0, position stayed 'static'). Build 506's escape hatch
+       only fired when the panel was EMPTY, so once the player had content the button was dead.
+       507: when the player is docked in the pill / hidden by the cg-mp player / missing / empty,
+       there is no popout to show, so RADIO opens the MUSIC STREAMER setup instead. RADIO now
+       always does something visible. ======================================================== */
+    var np=document.getElementById('sc-nowplaying');
+    var docked = !np
+              || np.classList.contains('mp-in-pill')
+              || document.body.classList.contains('cg-mp-on')
+              || !np.querySelector('.mp-banner');
+    if(docked){
+      try{ if(window.scMediaSetup){ window.scMediaSetup(); return; } }catch(e){}
+      if(!np) return;
+    }
     var open=np.classList.toggle('radio-shown');
     if(open){ try{ if(window.scPlaceCrestWidgets) scPlaceCrestWidgets(); }catch(e){}
       /* 2026-07-20 T: first-run reach — if the panel has nothing playing, open the Music setup
@@ -25281,6 +25321,55 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
 #cg-twitch .cg-tw-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;color-scheme:light;}/* build 505 (user: white border around the streamed content on iPad). An iframe with no background paints the browser's default WHITE canvas until/around the player's video area — visible as a white rim on iOS. Force black; color-scheme:light stops dark-mode double-inversion white flashes on WebKit. */
 #cg-twitch .cg-tw-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8ba0b5;font-size:11px;padding:10px;line-height:1.4;}
 </style>
+<script id="sc-b507-twparent-js">/* 2026-07-26 build 507 (user on iPad: "Whoops this embed is misconfigured ... check your browser console" when playing a Twitch stream).
+   The iPad opens the tablet at http://192.168.1.192:8420/, so location.hostname is an IP LITERAL and
+   that is what was being sent as Twitch's ?parent=. Twitch validates parent against the embedding
+   page's hostname; an IP literal is the one difference between the iPad (broken) and the PC at
+   localhost (not reported broken).
+   NOT VERIFIED: Twitch's docs say only "Domain(s) that will be embedding Twitch" and do not state
+   whether IP literals are rejected. A sandbox test could not load the Twitch iframe at all, so this
+   is the best-fitting explanation, not a proven one.
+   WHAT THIS BLOCK DOES, and why it is safe either way:
+     1. Sends EVERY plausible parent, not just one. Twitch accepts repeated &parent= params, so
+        adding localhost / 127.0.0.1 / cmdglas.com costs nothing and covers the case where the
+        IP-literal theory is wrong in one direction.
+     2. On an IP-literal host ONLY, drops a one-line dismissible strip under the player explaining
+        what to do if it still refuses.
+   NO EXTERNAL LINK, by standing order from build 486: "NEVER offer to open Twitch in another window."
+   Reversible: delete this block and revert the two src builders that call cgTwParents(). */
+(function(){
+  if(window.cgTwParents) return;
+  window.cgTwIsIP=function(h){ h=(h||'').trim(); if(!h) return false;
+    if(/^\d{1,3}(\.\d{1,3}){3}$/.test(h)) return true;      /* IPv4 literal */
+    if(h.indexOf(':')>=0) return true;                        /* IPv6 literal */
+    return false; };
+  window.cgTwHost=function(){ return location.hostname||'localhost'; };
+  window.cgTwParents=function(){
+    var out=[], h=window.cgTwHost();
+    if(h) out.push(h);
+    ['localhost','127.0.0.1','cmdglas.com','www.cmdglas.com'].forEach(function(x){ if(out.indexOf(x)<0) out.push(x); });
+    return out.map(function(x){ return '&parent='+encodeURIComponent(x); }).join('');
+  };
+  /* one-line hint, IP hosts only, dismissible forever */
+  var DK='cg_tw_ipnote_off';
+  function dismissed(){ try{ return localStorage.getItem(DK)==='1'; }catch(e){ return false; } }
+  function tick(){
+    var frame=document.querySelector('#cg-twitch .cg-tw-frame'); if(!frame) return;
+    var want = window.cgTwIsIP(window.cgTwHost()) && !dismissed() && !!frame.querySelector('iframe[src*="twitch"]');
+    var note=frame.querySelector('.cg-tw-ipnote');
+    if(want){
+      if(!note){
+        note=document.createElement('div'); note.className='cg-tw-ipnote';
+        note.style.cssText='position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;align-items:center;gap:8px;padding:5px 8px;background:rgba(4,10,18,.86);border-top:1px solid rgba(108,180,214,.25);font:600 10px Rajdhani,sans-serif;color:#9fb6cc;line-height:1.35';
+        note.innerHTML='<span style="flex:1 1 auto">If the player says <b style="color:#ffcf6b">embed is misconfigured</b>, Twitch is refusing this address ('+String(window.cgTwHost()).replace(/[<>&"]/g,'')+'). Open the tablet at <b style="color:#a6f2ff">cmdglas.com</b> to watch here.</span><button type="button" class="cg-tw-ipx" style="flex:0 0 auto;font:800 10px Rajdhani,sans-serif;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:5px;padding:3px 7px;cursor:pointer">OK</button>';
+        note.querySelector('.cg-tw-ipx').addEventListener('click',function(e){ e.stopPropagation(); try{ localStorage.setItem(DK,'1'); }catch(_){ } if(note.parentNode) note.parentNode.removeChild(note); });
+        frame.appendChild(note);
+      }
+    } else if(note && note.parentNode){ note.parentNode.removeChild(note); }
+  }
+  setInterval(tick, 900); tick();
+})();
+</script>
 <script id="sc-b418-twitch-js">
 (function(){ if(window.__cgTwitch418) return; window.__cgTwitch418=true;
   var KEY='cg_twitch_ch';
@@ -25313,7 +25402,7 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
     if(c){
       var ifr=frame.querySelector('iframe');
       if(!ifr || ifr.getAttribute('data-ch')!==c){
-        var src='https://player.twitch.tv/?channel='+encodeURIComponent(c)+'&parent='+encodeURIComponent(host())+'&autoplay=true&muted=false';
+        var src='https://player.twitch.tv/?channel='+encodeURIComponent(c)+(window.cgTwParents?cgTwParents():('&parent='+encodeURIComponent(host())))+'&autoplay=true&muted=false';/* build 507: send every plausible parent, not just this host - see sc-b507-twparent-js */
         frame.innerHTML='<iframe data-ch="'+c.replace(/[^a-zA-Z0-9_]/g,'')+'" src="'+src+'" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>';
       }
     } else if(!frame.querySelector('.cg-tw-ph')){
@@ -25831,7 +25920,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     var chat=frame.querySelector('.cg-tw-chat');
     if(on){
       if(!chat){ chat=document.createElement('div'); chat.className='cg-tw-chat'; frame.appendChild(chat); }
-      var want='https://www.twitch.tv/embed/'+encodeURIComponent(c)+'/chat?parent='+encodeURIComponent(host())+'&darkpopout';
+      var want='https://www.twitch.tv/embed/'+encodeURIComponent(c)+'/chat?'+(window.cgTwParents?cgTwParents().replace(/^&/,''):('parent='+encodeURIComponent(host())))+'&darkpopout';/* build 507: same multi-parent fix as the player - see sc-b507-twparent-js */
       var ifr=chat.querySelector('iframe');
       if(!ifr || ifr.getAttribute('data-ch')!==c){ chat.innerHTML='<iframe data-ch="'+c.replace(/[^a-zA-Z0-9_]/g,'')+'" src="'+want+'"></iframe>'; }
     } else if(chat){ chat.parentNode.removeChild(chat); }
