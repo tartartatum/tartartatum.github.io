@@ -13,7 +13,7 @@ window.HM_ICON_DATA={"mining":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPA
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CmdGlas">
-<title>Command Glass · 4.9 LIVE</title>
+<title>Command Glass</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@600;700&family=Bruno+Ace&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Bruno+Ace added 2026-07-17 (user picked #19 from the font sampler) for the HOME PAGE TRIAL
      below. NOTE: Bruno Ace ships ONE weight (400) only - there is no 700 cut. Any font-weight
@@ -1505,12 +1505,9 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
     <button type="button" class="thdot" data-th="mars" style="--c:#ff5757" title="Mars"></button>
   </span>
   </span>
-  <!-- NIGHT LIGHT (2026-07-18 user): "a built in nightshift feature for all colors. a little switch
-       label night light that has a eye instead of a color as it's symbol" + "put the eye button
-       between the color picker and the zoom slider". Standalone topbar toggle, sized like
-       #theme-swatch, sits right after the picker (the flex1 spacer keeps the zoom slider group to
-       its right). Drives the #sc-nightshift dark-gold multiply overlay tablet-wide + pop-out. -->
-  <button type="button" id="nl-btn" title="NIGHT LIGHT — warm dark-gold tint over the whole tablet (and pop-out). Click to toggle."><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg></button>
+  <!-- build 511 (2026-07-26 user: "the nightlight button is none functional and should have been
+       removed"): the topbar NIGHT LIGHT eye toggle (#nl-btn) is deleted. It sat between the colour
+       picker and the flex1 spacer. Its CSS in five later style blocks is now inert. -->
   <div class="flex1"></div>
   <button type="button" class="tb-btn amber" id="home-topbtn" onclick="if(typeof setActiveTabById==='function')setActiveTabById('home')" title="Back to the homepage">HOME</button><!-- HOMEPAGE 2026-07-15. 2026-07-16 user: "remove the little house out of any and all buttons" - the &#8962; glyph is gone. The word carries it; the .tb-btn.on state now shows which page you are on, so the icon was doing no work. -->
   <!-- build 467 (user): the OPS top-bar button removed with the rest of OPS. -->
@@ -3050,7 +3047,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
         <details class="sm-chapter">
           <summary class="sm-ch-sum">READ FIRST</summary>
           <div class="sm-ch-body">
-            <div class="sm-p"><b>READ FIRST &mdash; how to trust this manual.</b> Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). Keys shown are CIG engine defaults &mdash; confirm any single bind in <b>Options &rarr; Keybindings &rarr; Flight</b>. This manual covers <b>operating</b> a standard ship: start, take off, switch Master Modes, quantum, and land. Per-ship danger numbers (the exact descent rate that collapses the gear, each ship&rsquo;s SCM speed cap) belong in the Operator&rsquo;s Manual <b>TM 18-1810-099-10</b> when it is issued.</div>
+            <div class="sm-p"><b>READ FIRST &mdash; how to trust this manual.</b> This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. Keys shown are CIG engine defaults &mdash; confirm any single bind in <b>Options &rarr; Keybindings &rarr; Flight</b>. This manual covers <b>operating</b> a standard ship: start, take off, switch Master Modes, quantum, and land. Per-ship danger numbers (the exact descent rate that collapses the gear, each ship&rsquo;s SCM speed cap) belong in the Operator&rsquo;s Manual <b>TM 18-1810-099-10</b> when it is issued.</div>
             <div class="sm-note"><b>NOTE.</b> Cross-references &mdash; brand-new-pilot basics are in <b>SR-4 New Player Orientation</b>; landing-zone light &amp; speed rules will be in <b>SR-3 Landing Zone Safety</b>; combat maneuver in <b>SM-4 PVE Space Combat</b>.</div>
           </div>
         </details>
@@ -3196,7 +3193,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
           <summary class="sm-ch-sum">READ FIRST</summary>
           <div class="sm-ch-body">
           <b>READ FIRST &mdash; how to trust this manual.</b>
-          Current live patch is <b>Alpha 4.9</b> (verified live, July 2026). Keybinds are engine defaults that hold across patches &mdash; confirm any single bind in <b>Options &rarr; Keybindings</b>. Items are tagged:
+          This doc was last verified against <b>Alpha 4.9</b> in July 2026 &mdash; the LIVE chip on the tablet shows the current patch. Keybinds are engine defaults that hold across patches &mdash; confirm any single bind in <b>Options &rarr; Keybindings</b>. Items are tagged:
            stated by a 4.9 source &middot;
            patch-stable, current sources &middot;
            best data is older, check in-game.
@@ -7186,10 +7183,74 @@ function applyVersion(gv){
     if(bv && typeof bpVersionLine==='function') bv.textContent=' • '+bpVersionLine();
   }catch(e){}
 }
+/* === b509  LIVE PATCH READOUT WITHOUT THE CONTROL SERVER =====================================
+   2026-07-26 user: "the start page says game patch unknown fix it".
+   CAUSE (verified, not guessed): both writers of that string fetched ONLY '/api/game_versions' -
+   loadVersion()/applyVersion(), which paints the start-page green-dot chip #ver-chip, and
+   paintPatch(), which paints the home Patch tile. '/api/game_versions' exists ONLY on the local
+   control server (SC Control Server.py, routed at "if self.path.startswith('/api/game_versions')").
+   On https://cmdglas.com there is no control server, so the fetch fails and both fall through to
+   verHeadline()'s last-resort branch. Identical outcome on the PC or the iPad any time the control
+   server is not running. Nothing was ever wrong with the feed or with verHeadline().
+   FIX: one shared resolver, used by both writers.
+     1. control server first - it is the only source that carries the manual override block.
+     2. if it is unreachable OR returns no usable live row, go straight to the same upstream the
+        control server itself calls: https://api.star-citizen.wiki/api/v2/game-versions
+        HYPHEN, v2. Every underscore spelling and every v3 spelling 404s - do not "tidy" this URL.
+   Verified 2026-07-26 03:30 UTC: HTTP 200, first row 4.9.0-LIVE.12232306, channel live,
+   is_default true. CORS verified open for a direct browser fetch - access-control-allow-origin: *
+   on the GET and on the OPTIONS preflight - so this works from cmdglas.com with no proxy.
+   The raw feed is {data:[{code,channel,released_at,is_default}]}. cgGVNormalize() reshapes it into
+   the exact {ok,versions[],newest_live,newest_ptu,error} object verHeadline() already consumes, so
+   there is no second parser to keep in sync and no downstream change anywhere.
+   STANDING ORDER HONOURED: this introduces no version literal. Every digit on screen still comes
+   from a live feed. If BOTH sources fail the readout still says 'game patch unknown' - empty beats
+   fabricated, which is the whole point of that branch. */
+function cgGVNormalize(j){
+  var src=(j&&j.data&&typeof j.data.length==='number')?j.data:null;
+  if(!src) return null;
+  var rows=[],i,v;
+  for(i=0;i<src.length;i++){
+    v=src[i]||{};
+    if(!v.code) continue;
+    rows.push({code:v.code, channel:String(v.channel||'').toLowerCase(),
+               released_at:v.released_at||null, is_default:!!v.is_default});
+  }
+  if(!rows.length) return null;
+  var pick=function(ch){
+    var xs=rows.filter(function(r){return r.channel===ch;});
+    var d=xs.filter(function(r){return r.is_default;});
+    return d[0]||xs[0]||null;
+  };
+  return {ok:true, versions:rows, newest_live:pick('live'), newest_ptu:pick('ptu'),
+          error:null, source:'wiki-direct'};
+}
+function cgGVUsable(j){
+  if(!j) return false;
+  var rows=j.versions||[],i;
+  for(i=0;i<rows.length;i++){ if(rows[i]&&rows[i].code&&rows[i].channel==='live') return true; }
+  return !!(j.newest_live&&j.newest_live.code);
+}
+function cgGVWiki(){
+  return fetch('https://api.star-citizen.wiki/api/v2/game-versions',{cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('wiki http '+r.status); return r.json(); })
+    .then(function(j){ var n=cgGVNormalize(j); if(!n) throw new Error('wiki returned no versions'); return n; });
+}
+function cgGameVersions(){
+  var local;
+  try{
+    local=fetch('/api/game_versions',{cache:'no-store'}).then(function(r){
+      if(!r.ok) throw new Error('control server http '+r.status); return r.json(); });
+  }catch(e){ local=Promise.reject(e); }
+  return local.then(function(j){
+    if(cgGVUsable(j)){ if(!j.source) j.source='control-server'; return j; }
+    /* server answered but had nothing live - keep its manual override, take the wiki's numbers */
+    return cgGVWiki().then(function(w){ if(j&&j.override) w.override=j.override; return w; });
+  },function(){ return cgGVWiki(); });
+}
 function loadVersion(){
   try{
-    fetch('/api/game_versions').then(function(r){return r.json();}).then(applyVersion)
-      .catch(function(){ applyVersion(null); });
+    cgGameVersions().then(applyVersion).catch(function(){ applyVersion(null); });
   }catch(e){ applyVersion(null); }
 }
 function chGoPatch(){ var b=document.querySelector('.tab[data-tab="patch"]'); if(b) b.click(); }
@@ -7925,9 +7986,9 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=508;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=515;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
-window.CMDGLAS_BUILD_DATE='2026-07-24';
+window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
    on top should indicate that it's on that page") ============================================
    The topbar buttons were all identical at all times - ⌂ HOME looked the same whether you were on
@@ -8263,8 +8324,13 @@ function scBuildZoomBar(){
       + B('zb-win','onclick="window.scWindowMode&&scWindowMode()" title="Reopen the tablet in a clean window with no address bar"',window.SCRI.win,'NO URL BAR')
       /* build 502 (user: remove the pop-out from the tablet completely): POP-OUT PANEL button removed from the right rail. */
       + B('scr-nav-rfr','onclick="window.location.reload()" title="Reload the whole tablet"',window.SCRI.rfr,'REFRESH')
-      + B('zb-reset','onclick="window.zbResetAll?zbResetAll(scActivePanelId()):setTabZoom(scActivePanelId(), 100, true)" title="Reset this page to 100%"',window.SCRI.reset,'RESET')
-      + B('scr-nl','onclick="window.scSetNightlight&&window.scSetNightlight(!window.scNightlightOn())" title="NIGHT LIGHT - warm dark-gold tint over the whole tablet"',I('<path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/>'),'NIGHT LIGHT');
+      + B('zb-reset','onclick="window.zbResetAll?zbResetAll(scActivePanelId()):setTabZoom(scActivePanelId(), 100, true)" title="Reset this page to 100%"',window.SCRI.reset,'RESET');
+      /* build 511 (2026-07-26 user: "the nightlight button is none functional and should have been
+         removed"): the NIGHT LIGHT rail button is deleted here. It was the last entry in this
+         chain and carried the ';' terminator, which now sits on the RESET line above.
+         Note for anyone re-adding a hide rule: B()'s first argument becomes the CLASS, not the id,
+         so '#scr-nl' never matched anything — that is exactly why builds 416 and 434 failed to
+         remove this button. Use '.scr-nl' if you ever need a selector for it. */
     document.body.appendChild(rb);
     if(ro) document.body.classList.add('scrail-right-open');
   })();
@@ -16901,7 +16967,13 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
      which chopped mid-number). */
   function paintPatch(){
     var el=document.querySelector('#tab-home .hm-patch');if(!el)return;
-    fetch('/api/game_versions',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
+    /* b509: was fetch('/api/game_versions') direct, which is control-server-only and therefore
+       always failed on cmdglas.com. cgGameVersions() tries that first and falls back to the live
+       wiki feed. Guarded by typeof so a load-order change can never blank the tile. */
+    (typeof cgGameVersions==='function'
+       ? cgGameVersions()
+       : fetch('/api/game_versions',{cache:'no-store'}).then(function(r){return r.json();})
+    ).then(function(j){
       var head=(typeof verHeadline==='function')?verHeadline(j):null;
       var tl=el.closest('.hm-tile');
       if(head && head!=='game patch unknown'){
@@ -16909,8 +16981,8 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
         el.title=head+' — live build per api.star-citizen.wiki; confirm against the RSI Launcher';
         if(tl) tl.title='Patch '+head+' — live game build';
       }
-      else{el.textContent='game patch unknown';el.title='No live default returned by /api/game_versions';if(tl) tl.title='Patch — game patch unknown (start the control server)';}
-    }).catch(function(){el.textContent='game patch unknown';el.title='/api/game_versions unreachable';});
+      else{el.textContent='game patch unknown';el.title='No live row from the control server OR api.star-citizen.wiki';if(tl) tl.title='Patch — game patch unknown (both version sources returned nothing)';}
+    }).catch(function(){el.textContent='game patch unknown';el.title='Control server and api.star-citizen.wiki both unreachable';});
   }
   /* === PATCH READOUT AUTO-UPDATE (2026-07-16 user: "make sure that patch number updates as the game
      updates") === paintPatch() alone only ran at dock build, so the number would sit stale until a
@@ -17093,14 +17165,30 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
      because of the `if(!b)return;` guard - no error, just a dead button.
      Now: sync the ONE button against the ACTIVE panel's real .pgfit. */
   function syncAll(){
-    var b=document.querySelector('#sc-right-bar .zb-fit')||document.querySelector('#sc-zoom-bar .zb-fit'); if(!b) return;
+    /* build 514 (2026-07-26): this used to repaint ONE button —
+         querySelector('#sc-right-bar .zb-fit')||querySelector('#sc-zoom-bar .zb-fit')
+       The bottom accordion pill is a cloneNode copy of the rail group and has its OWN .zb-fit, which
+       that query cannot reach. Measured: pressing FIT in the pill moved the page 100->115->130->150
+       and the rail label followed, while the pill label sat frozen at "FIT 100%". The button worked;
+       its readout lied. Same fault hid the pill copy from the no-.pgfit rule below.
+       Sweep all of them from one query.
+       CAUTION: the pill copy cannot be hidden with a plain inline display. The accordion CSS at
+       ~line 22063 uses  #sc-appbar .sc-acc-group > .scr-flyout > *{display:flex !important}  and a
+       stylesheet !important beats a plain inline style — only inline !important wins. Hence
+       setProperty(...,'important') / removeProperty below. Do not "simplify" that back. */
+    var all=[].slice.call(document.querySelectorAll('#sc-right-bar .zb-fit, #sc-zoom-bar .zb-fit, #sc-appbar .zb-fit'));
+    if(!all.length) return;
     var id=(typeof scActivePanelId==='function')?scActivePanelId():null;
     var p=id?document.getElementById(id):null;
     var r=p?p.querySelector('.pgfit'):null;
-    var lbl=b.querySelector('.scr-lbl');
     var txt=r?r.textContent:'FIT 100%';
-    if(lbl){ var m=txt.match(/(\d+)%/); lbl.textContent='FIT '+(m?m[1]+'%':''); } else { b.textContent=txt; }
-    b.style.display=r?'':'none';   /* pages with no .pgfit have nothing to proxy to */
+    var m=txt.match(/(\d+)%/);
+    all.forEach(function(b){
+      var lbl=b.querySelector('.scr-lbl');
+      if(lbl){ lbl.textContent='FIT '+(m?m[1]+'%':''); } else { b.textContent=txt; }
+      if(r) b.style.removeProperty('display');                       /* pages with a .pgfit: show */
+      else  b.style.setProperty('display','none','important');       /* nothing to proxy to: hide */
+    });
   }
   /* scZoomBarPaint() calls this on every tab switch - the FIT label belongs to the page, not the bar */
   window.zbFitPaint=syncAll;
@@ -17114,6 +17202,9 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(syncAll,700);});
   else setTimeout(syncAll,700);
   setTimeout(syncAll,2000);
+  /* build 514: the bottom pill is cloned on a 400 ms x 60 retry and can land after the 2 s pass on a
+     slow first paint. One more sweep so its FIT label is never left stale from the start. */
+  setTimeout(syncAll,5000);
 })();
 </script>
 <style id="topbar-blue-css">
@@ -19286,7 +19377,8 @@ html,body{overflow:auto;height:auto}
     {id:'gather',t:'GATHER LIST + SYNC',d:'Everything is mirrored. Remove an item with its &times; and it clears on its source page too; <b>CLEAR</b> empties the whole list (mining picks and craft selections included).'},
     {id:'harvest',t:'HARVEST / SALVAGE / HAULING',d:'Field manuals with top locations, methods and reference tables for each activity, tagged VERIFIED / COMMUNITY / UNCONFIRMED.',go:go('harvest'),goL:'GO TO HARVEST'},
     {id:'popout',t:'POP-OUT OVERLAY',d:'A small always-on-top window you keep over the game (borderless/windowed fullscreen). Tabs for Inventory, Craft, Mining, Notepad and Troubleshoot. Zoom and dim it to taste.',go:popout,goL:'OPEN POP-OUT'},
-    {id:'night',t:'NIGHT LIGHT + THEMES',d:'The <b>eye</b> button (top bar) warms the whole tablet with a dark-gold night tint. The colour swatch beside it picks a theme that matches your Stream Deck skin.'},
+    /* build 511: Night Light removed; this card kept for THEMES, which still exist. */
+    {id:'night',t:'THEMES',d:'The colour swatch in the top bar picks a theme that matches your Stream Deck skin.'},
     {id:'trouble',t:'TROUBLESHOOTING',d:'Community-verified fixes by activity. One vote per user, and a standing reminder: never submit or promote glitches, cheats or exploits.',go:go('trouble'),goL:'GO TO TROUBLESHOOT'},
     {id:'keybinds',t:'KEYBINDS / PERIPHERALS',d:'Your keybind catalog, Stream Deck layout and VoiceAttack status. Export your keybinds from the game and the tablet reads the newest file.',go:go('allkb'),goL:'GO TO KEYBINDS'},
     {id:'backup',t:'SAVING + BACKUP',d:'Your notes, lists and picks save automatically in this browser and survive reloads and patches. The .bat can also back the whole tablet up.'}
@@ -21728,7 +21820,7 @@ body.sc-home-mode #sc-chatdock{top:44px !important}
     sb.innerHTML=''
       +'<span class="sb-clock" id="sb-clock">--:--</span>'
       +'<span class="sb-live" id="sb-live"><span class="d"></span>LIVE</span>'
-      +'<span class="sb-patch" id="sb-patch">STAR CITIZEN 4.9</span>'
+      +'<span class="sb-patch" id="sb-patch">STAR CITIZEN · PATCH ?</span>'
       +'<span class="sb-sp"></span>'
       +'<span class="sb-right">'
         +'<span class="sb-srv" id="sb-srv">SERVERS<span class="dots"><i></i><i></i><i></i></span></span>'
@@ -21744,7 +21836,7 @@ body.sc-home-mode #sc-chatdock{top:44px !important}
     var m=t.match(/\d{1,2}:\d{2}/); if(m) setTxt(document.getElementById('sb-clock'), m[0]);
     var vt=txt(document.getElementById('ver-chip'));
     var pm=vt.match(/(\d+\.\d+(?:\.\d+)?)/);
-    setTxt(document.getElementById('sb-patch'),'STAR CITIZEN '+(pm?pm[1]:'4.9'));
+    setTxt(document.getElementById('sb-patch'), pm?('STAR CITIZEN '+pm[1]):'STAR CITIZEN · PATCH ?'); /* build 515: never invent a patch number - if the live feed is absent, say so */
     setCls(document.getElementById('sb-live'),'off', /down|offline|error/i.test(vt));
     var srvc=document.getElementById('srv-chip');
     setCls(document.getElementById('sb-srv'),'down', !!(srvc && srvc.classList.contains('alert')));
@@ -21755,7 +21847,7 @@ body.sc-home-mode #sc-chatdock{top:44px !important}
     var card=document.querySelector('#sc-home-widgets .wg:nth-child(2)');
     if(card && !card.dataset.b327){ card.dataset.b327='1';
       card.innerHTML='<div class="wg-h">STATUS</div>'
-        +'<div class="stat"><span>Patch</span><b id="wg-patch2">Alpha 4.9 LIVE</b></div>'
+        +'<div class="stat"><span>Patch</span><b id="wg-patch2">PATCH ?</b></div>'
         +'<div class="stat"><span>Control server</span><b class="ok" id="wg-srv2">ONLINE</b></div>'
         +'<div class="stat"><span>Shard health</span><b class="ok" id="wg-shard2">GOOD</b></div>'
         +'<div class="stat"><span>Your rig</span><b id="wg-sync2">SYNCED</b></div>'; }
@@ -22013,12 +22105,88 @@ body.sc-home-mode #home-scroll{overflow:hidden !important}
       var cl=g.cloneNode(true);
       cl.querySelectorAll('[id]').forEach(function(e){ e.removeAttribute('id'); });
       cl.classList.add('sc-acc-group');
+      /* build 513: hold a reference back to the LIVE group this was copied from. repair() needs it
+         to forward clicks, because cloneNode did not bring the handlers across. */
+      cl.__accSrc=g;
       pill.appendChild(cl);
     });
     pill.dataset.acc='1';
+    repair();
     return true;
   }
+
+  /* ================================ build 513 =====================================================
+     2026-07-26 user: "please check all athe butttons inside the accordions of the bottom pill.
+     some are unresponsive".
+
+     cloneNode(true) copies ATTRIBUTES but NOT JS-assigned .onclick properties or addEventListener
+     handlers. 17 of the 18 buttons in this pill are emitted by B() with an onclick ATTRIBUTE, so they
+     clone intact. Q&A LOG is built at runtime with  b.onclick=function(){...}  - a PROPERTY - so its
+     clone had no handler at all and did nothing when pressed. Measured, not guessed:
+       Q&A LOG  clone attr/prop = n/n , source attr/prop = n/Y
+       pill click -> panel stayed shut ; rail click -> panel opened
+
+     General repair rather than a Q&A LOG special case: a clone with NEITHER an onclick attribute NOR
+     an href cannot be carrying a handler, so forward its click to the source button of the same
+     label. That gate is what stops the other 17 firing twice. Anything property-wired added to these
+     rails in future is repaired automatically.
+     Re-runnable on purpose: sweepQA() moves late buttons into TABLET CONTROLS on its own 500 ms
+     timer, which can land after this pill was built - the same pass then clones the straggler in.
+
+     PAIRED BY CLASS, NOT BY LABEL. syncAll() (~line 17167) rewrites the FIT button's label at
+     runtime to "FIT 115%" / "FIT 130%" / "FIT 150%" as the page is scaled, and it only ever touched
+     the rail copy - so a label match could see rail "FIT 115%" vs pill "FIT 100%", decide the pill
+     was missing a button, and insert a duplicate. Every button here carries a unique stable class
+     from B(cls,...): zb-fit, scr-nav-home, scr-qa. Use that. Label is only a fallback.
+     ============================================================================================= */
+  function keyOf(el){
+    if(!el||!el.className) return '';
+    var k=String(el.className.baseVal!==undefined?el.className.baseVal:el.className)
+            .split(/\s+/).filter(function(c){ return c && c!=='scr-btn' && c!=='sc-acc-group'; })
+            .sort().join('.');
+    if(k) return 'c:'+k;
+    var l=el.querySelector?el.querySelector('.scr-lbl'):null;   /* fallback only */
+    return 'l:'+clean(l?l.textContent:(el.textContent||''));
+  }
+  function hasAttrHandler(el){
+    return !!(el.getAttribute('onclick')||el.getAttribute('href'));
+  }
+  function repair(){
+    var pill=document.getElementById('sc-appbar'); if(!pill||pill.dataset.acc!=='1') return 0;
+    var fixed=0;
+    [].slice.call(pill.querySelectorAll('.sc-acc-group')).forEach(function(cg){
+      var sg=cg.__accSrc; if(!sg) return;
+      var cf=cg.querySelector('.scr-flyout'), sf=sg.querySelector('.scr-flyout');
+      if(!cf||!sf) return;
+      var srcBtns=[].slice.call(sf.querySelectorAll('.scr-btn'));
+      var have={};
+      [].slice.call(cf.querySelectorAll('.scr-btn')).forEach(function(c){ var k=keyOf(c); if(k) have[k]=c; });
+      /* a) a source button that arrived after this pill was built is cloned in now */
+      srcBtns.forEach(function(s){
+        var k=keyOf(s); if(!k||have[k]) return;
+        var c=s.cloneNode(true);
+        c.removeAttribute('id');
+        c.querySelectorAll('[id]').forEach(function(e){ e.removeAttribute('id'); });
+        cf.appendChild(c); have[k]=c;
+      });
+      /* b) every clone with no attribute handler is pointed at its source */
+      srcBtns.forEach(function(s){
+        var k=keyOf(s); if(!k) return;
+        var c=have[k]; if(!c||c===s) return;
+        if(hasAttrHandler(c)) return;          /* onclick / href survived the clone - leave it alone */
+        if(c.__accFwd) return;                 /* already forwarded - never double-wire */
+        c.__accFwd=1;
+        c.addEventListener('click',function(){ try{ s.click(); }catch(e){} });
+        fixed++;
+      });
+    });
+    return fixed;
+  }
+  window.scAccPillRepair=repair;   /* callable by hand if a rail button is ever added late */
   var n=0, iv=setInterval(function(){ if(build()||++n>60) clearInterval(iv); },400);
+  /* build 513: build() only ever runs once. sweepQA() keeps moving buttons for 5 s after that, so
+     re-run the repair pass on its own timer. It is idempotent - __accFwd guards every button. */
+  var m=0, iv2=setInterval(function(){ try{ repair(); }catch(e){} if(++m>20) clearInterval(iv2); },500);
 })();
 </script>
 
@@ -22187,7 +22355,7 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
     function u(){
       var clk=gv('sb-clock')||gv('zb-clock'); if(!clk){ var d=new Date(); clk=pad2(d.getHours())+':'+pad2(d.getMinutes()); }
       var m=clk.match(/\d{1,2}:\d{2}/); set('ps-clk', m?m[0]:clk);
-      var vt=gv('ver-chip')||'STAR CITIZEN 4.9'; var pm=vt.match(/(\d+\.\d+(?:\.\d+)?)/); set('ps-patch','SC '+(pm?pm[1]:'4.9'));
+      var vt=gv('ver-chip')||''; var pm=vt.match(/(\d+\.\d+(?:\.\d+)?)/); set('ps-patch', pm?('SC '+pm[1]):'PATCH ?'); /* build 515: no invented patch number */
       var live=!/down|offline|error/i.test(vt); ledSet('ps-live', live?'ok':'bad','Live — '+(live?'LIVE':'DOWN'));
       var srvc=document.getElementById('srv-chip'); var down=!!(srvc&&srvc.classList.contains('alert'));
       ledSet('ps-srv', down?'bad':'ok', 'Servers — '+(down?'OFFLINE':'ONLINE'));
@@ -23296,7 +23464,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div><b>MY RIG</b> &mdash; Devices, My PC, Ship Loadouts.</div>',
 '<div><b>LEARN</b> &mdash; Space Manuals, Console, Help, Troubleshoot.</div>',
 '<div><b>MISSION CONTROLS</b> &mdash; Comms, Radio, Share.</div>',
-'<div><b>TABLET CONTROLS</b> &mdash; Fit 100%, Fullscreen, No URL Bar, Refresh, Reset, Night Light, Q&amp;A Log.</div></div>',
+'<div><b>TABLET CONTROLS</b> &mdash; Fit 100%, Fullscreen, No URL Bar, Refresh, Reset, Q&amp;A Log.</div></div>',
 '<div class="um-caution"><b>CAUTION.</b> TABLET CONTROLS &rarr; REFRESH reloads the whole tablet. Any unsaved entry on the current page is lost. Save before you refresh.</div></div>',
 '<div class="um-sec"><h2>Section 9 &mdash; Reading Sheets &amp; Getting Back</h2><div class="um-purpose">Every page opens as a sheet on top of Home. Home stays underneath &mdash; you never lose your place.</div>',
 '<div class="um-proc">9-1. The four ways back</div>',
@@ -23650,7 +23818,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   ]);
   var SR3=P([
    '<div class="sm-doc" id="sm-doc-sr3"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sr3">SR-3 &middot; LANDING ZONE SAFETY</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; approach discipline, lights &amp; calling for help</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). This is the <b>safety-regulation</b> companion to <b>SM-1 Flight Operations, Chapter 6</b> (the full landing how-to). Keys are engine defaults &mdash; confirm any bind in <b>Options &rarr; Keybindings &rarr; Flight</b>.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. This is the <b>safety-regulation</b> companion to <b>SM-1 Flight Operations, Chapter 6</b> (the full landing how-to). Keys are engine defaults &mdash; confirm any bind in <b>Options &rarr; Keybindings &rarr; Flight</b>.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. APPROACH DISCIPLINE</summary><div class="sm-ch-body"><ol class="sm-steps">',
    '<li>Within about <b>5&ndash;7 km</b> of a monitored port, <b>request landing</b> &mdash; Comms MFD, mobiGlas <b>Landing Services</b>, or <b>Left&nbsp;Alt&nbsp;+&nbsp;N</b>. ATC assigns you a pad, docking port, or hangar.</li>',
    '<li>Lower your <b>speed limiter</b> (<b>Left&nbsp;Alt</b> + mouse wheel) to just above 0 m/s for fine control on the pad.</li>',
@@ -23705,7 +23873,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function P(a){ return a.join(''); }
   var SM3=P([
    '<div class="sm-doc" id="sm-doc-sm3"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm3">SM-3 &middot; ON-FOOT COMBAT (BASICS)</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; the survival kit: heal, grenade, reload, lights</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). This covers the basics that keep you breathing on foot &mdash; not tactics. Keys are engine defaults; confirm any bind in <b>Options &rarr; Keybindings &rarr; On Foot</b>.</div><div class="sm-note"><b>NOTE.</b> PVE technique is <b>SM-5</b>; PVP is <b>SM-6</b>; getting in and out of bunkers is <b>SM-2 Ground Vehicle Operations</b>.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. This covers the basics that keep you breathing on foot &mdash; not tactics. Keys are engine defaults; confirm any bind in <b>Options &rarr; Keybindings &rarr; On Foot</b>.</div><div class="sm-note"><b>NOTE.</b> PVE technique is <b>SM-5</b>; PVP is <b>SM-6</b>; getting in and out of bunkers is <b>SM-2 Ground Vehicle Operations</b>.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. WEAPON HANDLING</summary><div class="sm-ch-body"><table class="sm-kb"><thead><tr><th>Action</th><th>Default key</th></tr></thead><tbody>',
    '<tr><td>Fire / Aim down sights</td><td>LMB / RMB</td></tr>',
    '<tr><td>Reload</td><td>R</td></tr>',
@@ -23771,7 +23939,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function P(a){ return a.join(''); }
   var SM2=P([
    '<div class="sm-doc" id="sm-doc-sm2"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm2">SM-2 &middot; GROUND VEHICLE OPERATIONS</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; ROC &amp; ATLS mining, hoverbikes &amp; bunkers</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). Ground vehicles ride out inside a <b>carrier ship</b> (a Cutlass Black or larger) or spawn at a <b>ground garage</b>. Keys are engine defaults &mdash; confirm in <b>Options &rarr; Keybindings &rarr; Vehicles</b>.</div><div class="sm-note"><b>NOTE.</b> Ship mining is in <b>SM-10 Mining</b>; the on-foot survival kit for bunkers is in <b>SM-3</b>.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. Ground vehicles ride out inside a <b>carrier ship</b> (a Cutlass Black or larger) or spawn at a <b>ground garage</b>. Keys are engine defaults &mdash; confirm in <b>Options &rarr; Keybindings &rarr; Vehicles</b>.</div><div class="sm-note"><b>NOTE.</b> Ship mining is in <b>SM-10 Mining</b>; the on-foot survival kit for bunkers is in <b>SM-3</b>.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. DRIVING</summary><div class="sm-ch-body"><ul class="sm-gloss">',
    '<li><b>W / S</b> throttle, <b>A / D</b> steer. Most ground vehicles have a <b>boost</b> and a <b>handbrake</b> &mdash; <span class="sm-inl-verify">set/verify in Keybindings &rarr; Vehicles.</span></li>',
    '<li><b>Hoverbikes</b> (Nox, X1) are fast, fragile recon &mdash; great for scouting and racing, no protection. <b>Ground cars</b> (Cyclone, Ursa) trade speed for durability and seats.</li>',
@@ -23792,7 +23960,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   ]);
   var SM5=P([
    '<div class="sm-doc" id="sm-doc-sm5"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm5">SM-5 &middot; PVE ON-FOOT COMBAT</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; beating NPCs, and beating the server</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). This is fighting <b>NPCs</b> on foot &mdash; bunkers, bounties, derelicts. It assumes the survival kit in <b>SM-3</b>. Player-vs-player is <b>SM-6</b>.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. This is fighting <b>NPCs</b> on foot &mdash; bunkers, bounties, derelicts. It assumes the survival kit in <b>SM-3</b>. Player-vs-player is <b>SM-6</b>.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. FUNDAMENTALS</summary><div class="sm-ch-body"><ul class="sm-gloss">',
    '<li><b>Use cover and corners.</b> Peek, fire, break contact &mdash; do not stand in the open reloading.</li>',
    '<li><b>Aim for the head.</b> Body armour soaks a lot of rounds; a headshot ends it.</li>',
@@ -23835,7 +24003,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function P(a){ return a.join(''); }
   var SM4=P([
    '<div class="sm-doc" id="sm-doc-sm4"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm4">SM-4 &middot; PVE SPACE COMBAT</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; fighting NPC ships and living to sell the loot</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). You fight in <b>SCM (Standard Control Mode)</b> &mdash; weapons and shields online, speed capped. Flight basics and Master Modes are in <b>SM-1</b>. Keys are engine defaults; confirm in <b>Options &rarr; Keybindings &rarr; Flight</b>.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. You fight in <b>SCM (Standard Control Mode)</b> &mdash; weapons and shields online, speed capped. Flight basics and Master Modes are in <b>SM-1</b>. Keys are engine defaults; confirm in <b>Options &rarr; Keybindings &rarr; Flight</b>.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. SET UP THE FIGHT</summary><div class="sm-ch-body"><ul class="sm-gloss">',
    '<li><b>Be in SCM.</b> If you are in NAV you have no weapons or shields &mdash; switch to SCM before you engage.</li>',
    '<li><b>Weapon types:</b> <b>ballistic</b> = physical rounds, no heat, no power draw, hard-hitting &mdash; but you run out of ammo. <b>Energy</b> = unlimited fire, but draws power and builds heat (it can overheat). Most pilots mix the two.</li>',
@@ -23857,7 +24025,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   ]);
   var SM14=P([
    '<div class="sm-doc" id="sm-doc-sm14"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm14">SM-14 &middot; PVP SPACE COMBAT</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; when the other pilot fights back</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). This assumes the fundamentals in <b>SM-4 PVE Space Combat</b>. The difference in PVP is simple and brutal: the target thinks, jukes, manages power, and brought a meta loadout. FPS player fights are in <b>SM-6</b>.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. This assumes the fundamentals in <b>SM-4 PVE Space Combat</b>. The difference in PVP is simple and brutal: the target thinks, jukes, manages power, and brought a meta loadout. FPS player fights are in <b>SM-6</b>.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. WHAT CHANGES</summary><div class="sm-ch-body"><ul class="sm-gloss">',
    '<li>Players <b>fly decoupled</b>, break your pip on purpose, and reverse into you. Your lead pip is a suggestion, not a promise.</li>',
    '<li>They <b>manage power live</b> &mdash; shields up when you are on them, weapons up when they are on you.</li>',
@@ -23907,7 +24075,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function P(a){ return a.join(''); }
   var SM6=P([
    '<div class="sm-doc" id="sm-doc-sm6"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm6">SM-6 &middot; PVP FPS COMBAT</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; on-foot fights against players</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). This is fighting <b>players</b> on foot. It assumes the survival kit in <b>SM-3</b> and the fundamentals in <b>SM-5</b>. Against a human the fight is decided by movement and positioning as much as aim.</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. This is fighting <b>players</b> on foot. It assumes the survival kit in <b>SM-3</b> and the fundamentals in <b>SM-5</b>. Against a human the fight is decided by movement and positioning as much as aim.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. WHAT CHANGES vs NPCs</summary><div class="sm-ch-body"><ul class="sm-gloss">',
    '<li>Players <b>pre-aim</b> the angle you are about to peek and <b>hold their crosshair at head height</b>.</li>',
    '<li>They <b>listen</b> (SM-5) and read your footsteps &mdash; walk when you want to be quiet.</li>',
@@ -23965,7 +24133,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function P(a){ return a.join(''); }
   var TM=P([
    '<div class="sm-doc" id="sm-doc-tm"><div class="sm-doc-top"><div class="sm-doc-h" id="man-tm">TM 18-1810-099-10 &middot; OPERATOR&rsquo;S MANUAL</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; technical ship &amp; vehicle procedures</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). This is the <b>technical operator&rsquo;s manual</b> &mdash; the ship <b>procedures</b> that apply to any hull (service, loadout, emergencies) plus the <b>per-ship flight-safety numbers</b>. Structure: <b>one</b> TM with a <b>section per ship</b>. Keys are engine defaults; confirm in <b>Options &rarr; Keybindings</b>.</div>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. This is the <b>technical operator&rsquo;s manual</b> &mdash; the ship <b>procedures</b> that apply to any hull (service, loadout, emergencies) plus the <b>per-ship flight-safety numbers</b>. Structure: <b>one</b> TM with a <b>section per ship</b>. Keys are engine defaults; confirm in <b>Options &rarr; Keybindings</b>.</div>',
    '<div class="sm-note"><b>NOTE.</b> How to <i>fly</i> is in <b>SM-1 Flight Operations</b>; this manual is the <i>technical</i> side &mdash; keeping the ship fuelled, fitted, and off the crash report. The per-ship danger tables in Chapter 4 are a <b>living section</b>, compiled and verified over time.</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. REFUEL, REPAIR, REARM &amp; RESTOCK</summary><div class="sm-ch-body">',
    '<div class="sm-sec">1-1. AT A PORT</div><ol class="sm-steps">',
@@ -24378,7 +24546,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   function P(a){ return a.join(''); }
   var SM15=P([
    '<div class="sm-doc" id="sm-doc-sm15"><div class="sm-doc-top"><div class="sm-doc-h" id="man-sm15">SM-15 &middot; FPS ARMOR &amp; PROTECTIVE GEAR</div><div class="sm-doc-sub">Star Citizen Alpha 4.9 &mdash; what you wear decides how you move, what you survive, and where you can go</div></div>',
-   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">Current live patch is <b>Alpha 4.9</b> (verified live, 17 Jul 2026). 4.9&rsquo;s <b>FPS Combat Overhaul</b> made armor matter, and added a new <b>super-heavy</b> class. Every set is a trade between <b>three</b> things: <b>mobility</b>, <b>protection</b>, and <b>environmental (temperature / hazard) resistance</b>. Assumes the survival kit in <b>SM-3</b>; the fights themselves are <b>SM-5</b> (vs NPCs) and <b>SM-6</b> (vs players).</div></div></details>',
+   '<details class="sm-chapter"><summary class="sm-ch-sum">READ FIRST</summary><div class="sm-ch-body"><div class="sm-p">This doc was last verified against <b>Alpha 4.9</b> on 17 Jul 2026 &mdash; the LIVE chip on the tablet shows the current patch. 4.9&rsquo;s <b>FPS Combat Overhaul</b> made armor matter, and added a new <b>super-heavy</b> class. Every set is a trade between <b>three</b> things: <b>mobility</b>, <b>protection</b>, and <b>environmental (temperature / hazard) resistance</b>. Assumes the survival kit in <b>SM-3</b>; the fights themselves are <b>SM-5</b> (vs NPCs) and <b>SM-6</b> (vs players).</div></div></details>',
    '<details class="sm-chapter"><summary class="sm-ch-sum">1. THE THREE TRADE-OFFS</summary><div class="sm-ch-body"><ul class="sm-gloss">',
    '<li><b>Mobility</b> &mdash; heavier armor slows your walk and sprint and <b>drains stamina faster</b>. Lighter armor keeps you quick and lets you win the movement fight (SM-6).</li>',
    '<li><b>Protection</b> &mdash; heavier armor <b>soaks more incoming damage</b> before you are downed.</li>',
@@ -24594,13 +24762,13 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   function renderStatus(){
     var d=new Date(); var clk=pad2(d.getHours())+':'+pad2(d.getMinutes());
     var dateStr=d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
-    var vt=gv('ver-chip')||'STAR CITIZEN 4.9'; var pm=vt.match(/(\d+\.\d+(?:\.\d+)?)/); var patch=pm?pm[1]:'4.9';
+    var vt=gv('ver-chip')||''; var pm=vt.match(/(\d+\.\d+(?:\.\d+)?)/); var patch=pm?pm[1]:''; /* build 515: empty = unknown, render shows PATCH ? */
     var live=!/down|offline|error/i.test(vt);
     var srvc=document.getElementById('srv-chip'); var down=!!(srvc&&srvc.classList.contains('alert'));
     var syncl=document.getElementById('sc-sync-light'); var netbad=!!(syncl&&syncl.classList.contains('alert'));
     var items=[['Live',live?'LIVE':'DOWN',live?'ok':'bad'],['Servers',down?'OFFLINE':'ONLINE',down?'bad':'ok'],['Control',down?'OFFLINE':'ONLINE',down?'bad':'ok'],['Net',netbad?'CHECK':'OK',netbad?'warn':'ok'],['Shard','GOOD','ok'],['Rig',netbad?'CHECK':'SYNCED',netbad?'warn':'ok']];
     var grid=items.map(function(it){ return '<div class="ops4-scell '+it[2]+'"><span class="l"><i></i>'+esc(it[0])+'</span><span class="v">'+esc(it[1])+'</span></div>'; }).join('');
-    return '<div class="ops4-status"><div class="ops4-srow"><span class="ops4-clk">'+clk+'</span><span class="ops4-patch">SC '+esc(patch)+' · '+esc(dateStr)+'</span></div><div class="ops4-sgrid">'+grid+'</div></div>';
+    return '<div class="ops4-status"><div class="ops4-srow"><span class="ops4-clk">'+clk+'</span><span class="ops4-patch">'+(patch?('SC '+esc(patch)):'PATCH ?')+' · '+esc(dateStr)+'</span></div><div class="ops4-sgrid">'+grid+'</div></div>';
   }
   var LSK='sc_ops_pill_view';
   var VIEWS=[{k:'gather',label:'Gather'},{k:'buy',label:'Buy'},{k:'notes',label:'Notes'},{k:'status',label:'Status'}];
@@ -25885,7 +26053,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
 })();
 </script>
 <style id="sc-b434-nightlight-css">/* 2026-07-24 build 434 (user: remove the Night Light function — it doesn't work well). Hide every Night Light control + overlay (topbar eye #nl-btn, rail button #scr-nl, the tablet-wide #sc-nightshift multiply layer and the pop-out #sc-nightshift-ov). The JS below forces it off and neutralises the toggle so nothing can re-enable it. Reversible: delete this block + its script. */
-#nl-btn, #scr-nl, #sc-nightshift, #sc-nightshift-ov, [id^="sc-nightshift"]{display:none !important;}
+#nl-btn, .scr-nl, #sc-nightshift, #sc-nightshift-ov, [id^="sc-nightshift"]{display:none !important;}  /* build 511: was "#scr-nl", which never matched — B() puts that string in the CLASS. */
 </style>
 <script id="sc-b434-nightlight-js">
 (function(){
@@ -25895,7 +26063,10 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   /* neutralise so no rail button, pop-out, or stray call turns it back on */
   window.scNightlightOn=function(){ return false; };
   window.scSetNightlight=function(){ /* Night Light removed — build 434 */ };
-  function strip(){ ['sc-nightshift','sc-nightshift-ov','nl-btn','scr-nl'].forEach(function(id){ var e=document.getElementById(id); if(e){ e.style.display='none'; } }); }
+  /* build 511: getElementById('scr-nl') always returned null — the rail button has class scr-nl,
+     not that id. Query both so this net actually catches something if either is re-added. */
+  function strip(){ try{ document.querySelectorAll('#sc-nightshift,#sc-nightshift-ov,#nl-btn,.scr-nl,[id^="sc-nightshift"]')
+      .forEach(function(e){ if(e) e.style.display='none'; }); }catch(e){} }
   setInterval(strip, 1200); strip();
 })();
 </script>
@@ -26118,10 +26289,34 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
 .cg-handle-link{cursor:pointer;text-decoration:underline dotted rgba(150,220,255,.5);text-underline-offset:3px}
 .cg-handle-link:hover{color:#eafaff;text-decoration-color:#8fe9ff}
 </style>
+<style id="sc-b510-dcvoice-css">/* 2026-07-26 build 510 (user: "party needs a place to add link to discord address as well
+   as org members. any user should be able to display his her discord chat channel linked via hotlink button", and
+   "add note to set up instructions in ref to discord functionality and limitations").
+   Blurple #5865F2 is Discord's own brand colour and is already used by the JOIN THE DISCORD button elsewhere in the
+   tablet, so these read as Discord controls at a glance and never get mistaken for the cyan tablet buttons.
+   Reversible: delete this block + the b510 markup and the b510 wiring. */
+#cg-comms-page .cgcp-dcgo{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:10px;padding:13px 16px;font:800 13px/1 'Rajdhani',sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:#fff;background:linear-gradient(180deg,#7079f5,#5865F2);border:1px solid rgba(140,150,255,.85);border-radius:9px;cursor:pointer}
+#cg-comms-page .cgcp-dcgo:hover{filter:brightness(1.1)}
+#cg-comms-page .cgcp-dcgo svg{width:19px;height:19px;flex:0 0 auto;fill:currentColor}
+#cg-comms-page .cgcp-dcgo.off{color:#8fa0b0;background:rgba(88,101,242,.12);border-color:rgba(120,135,200,.35);cursor:not-allowed}
+#cg-comms-page .cgcp-dcstate{margin-top:8px;font-size:12px;letter-spacing:.3px;color:#8fb0c4;min-height:15px}
+#cg-comms-page .cgcp-dcstate.good{color:#9fe6b8}
+#cg-comms-page .cgcp-dcstate.bad{color:#ff9b9b}
+#cg-comms-page .cgcp-dcmini{display:inline-flex;align-items:center;gap:6px;font:800 10px/1 'Rajdhani',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#fff;background:linear-gradient(180deg,#7079f5,#5865F2);border:1px solid rgba(140,150,255,.8);border-radius:6px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+#cg-comms-page .cgcp-dcmini:hover{filter:brightness(1.12)}
+/* build 512: a stored link that fails dcClean() renders disabled instead of looking armed. */
+#cg-comms-page .cgcp-dcmini.off{color:#c9a3a3;background:rgba(120,60,60,.18);border-color:rgba(190,110,110,.45);cursor:not-allowed}
+#cg-comms-page .cgcp-dcmini.off:hover{filter:none}
+#cg-comms-page .cgcp-dcmini svg{width:13px;height:13px;flex:0 0 auto;fill:currentColor}
+#cg-comms-page .cgcp-dcli{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 11px;background:rgba(88,101,242,.10);border:1px solid rgba(120,135,235,.32);border-radius:8px}
+#cg-comms-page .cgcp-dcwho{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#dff0ff;font-weight:700;font-size:13px}
+#cg-comms-page .cgcp-dcacts{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+</style>
 <script id="sc-b455-comms-js">
 (function(){
   if(window.__cgComms455) return; window.__cgComms455=true;
   var RSI='https://robertsspaceindustries.com';
+  var DC_IC='<svg viewBox="0 0 127.14 96.36" aria-hidden="true" focusable="false"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>';
   var ROLES=['Pilot','Gunner','Marine / Ground','Engineer','Medic','Trader / Logistics','Miner','Salvager','Scout / Recon','Multi-crew'];
   function LS(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
   function save(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
@@ -26164,6 +26359,28 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
           +'<li>In-game, press <span class="cgcp-key">F11</span> (Comm-Link → <b>Friends</b>) <b>or</b> <span class="cgcp-key">F1</span> (mobiGlas → <b>Contacts</b>).</li>'
           +'<li><b>Right-click</b> your friend and choose <b>Invite to Party</b>. When they accept, the <b>party leader gets in-game first</b>, then the other members <b>join on the leader by name</b> so everyone is on the same shard.</li>'
         +'</ol></div>'
+      /* ---- b510 Discord voice, party ---- */
+      +'<div class="cgcp-card" id="cgcp-dc-partycard"><h4>Voice chat &middot; Discord</h4>'
+        +'<p class="cgcp-sub" style="margin:0 0 12px">One button to reach the voice channel. Discord has <b>no link that puts you into a call by itself</b> &mdash; this opens the channel and <b>you press Join</b>.</p>'
+        +'<label class="cgcp-fld" for="cgcp-dc-party">Party leader / commander voice channel</label>'
+        +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-dc-party" placeholder="https://discord.gg/… or https://discord.com/channels/…" autocomplete="off" spellcheck="false">'
+          +'<button type="button" class="cgcp-btn" id="cgcp-dc-party-save">Save</button>'
+          +'<button type="button" class="cgcp-btn ghost" id="cgcp-dc-party-copy">Copy</button>'
+          +'<button type="button" class="cgcp-btn ghost" id="cgcp-dc-party-clear">Clear</button></div>'
+        +'<div class="cgcp-dcstate" id="cgcp-dc-party-state"></div>'
+        +'<button type="button" class="cgcp-dcgo off" id="cgcp-dc-party-go">'+DC_IC+'<span>Join party voice</span></button>'
+      +'</div>'
+      +'<div class="cgcp-card" id="cgcp-dc-minecard"><h4>My Discord</h4>'
+        +'<p class="cgcp-sub" style="margin:0 0 12px">Your own channel or invite, so anyone flying with you can reach you on voice.</p>'
+        +'<label class="cgcp-fld" for="cgcp-dc-mine">My Discord channel or invite</label>'
+        +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-dc-mine" placeholder="https://discord.gg/…" autocomplete="off" spellcheck="false">'
+          +'<button type="button" class="cgcp-btn" id="cgcp-dc-mine-save">Save</button>'
+          +'<button type="button" class="cgcp-btn ghost" id="cgcp-dc-mine-copy">Copy</button>'
+          +'<button type="button" class="cgcp-btn ghost" id="cgcp-dc-mine-clear">Clear</button></div>'
+        +'<div class="cgcp-dcstate" id="cgcp-dc-mine-state"></div>'
+        +'<button type="button" class="cgcp-dcgo off" id="cgcp-dc-mine-go">'+DC_IC+'<span>Open my Discord</span></button>'
+        +'<div class="cgcp-hint">Accepts <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> only. Anything else is refused, so a bad paste cannot send your group somewhere else.</div>'
+      +'</div>'
     +'</section>'
     /* ---- ORG CHAT ---- */
     +'<section data-sec="org" hidden>'
@@ -26176,6 +26393,26 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
         +'<div class="cgcp-roles" id="cgcp-roles">'+roleBtns+'</div>'
         +'<div class="cgcp-rolestate" id="cgcp-rolestate"></div>'
         +'<div class="cgcp-note">New here? Choose <b>Undecided</b> and your commander will set your role. You can change this any time.</div></div>'
+      /* ---- b510 Discord voice, org ---- */
+      +'<div class="cgcp-card" id="cgcp-dc-orgcard"><h4>Org voice chat &middot; Discord</h4>'
+        +'<p class="cgcp-sub" style="margin:0 0 12px">The org leader&rsquo;s voice channel, one tap from here. The button opens the channel &mdash; <b>you press Join</b>.</p>'
+        +'<label class="cgcp-fld" for="cgcp-dc-org">Org leader voice channel</label>'
+        +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-dc-org" placeholder="https://discord.gg/… or https://discord.com/channels/…" autocomplete="off" spellcheck="false">'
+          +'<button type="button" class="cgcp-btn" id="cgcp-dc-org-save">Save</button>'
+          +'<button type="button" class="cgcp-btn ghost" id="cgcp-dc-org-copy">Copy</button>'
+          +'<button type="button" class="cgcp-btn ghost" id="cgcp-dc-org-clear">Clear</button></div>'
+        +'<div class="cgcp-dcstate" id="cgcp-dc-org-state"></div>'
+        +'<button type="button" class="cgcp-dcgo off" id="cgcp-dc-org-go">'+DC_IC+'<span>Join org voice</span></button>'
+      +'</div>'
+      +'<div class="cgcp-card" id="cgcp-dcdircard"><h4>Member Discord directory</h4>'
+        +'<p class="cgcp-sub" style="margin:0 0 12px">Add a member and their Discord link. Each one gets its own hotlink button. Adding a handle that is already listed overwrites that entry.</p>'
+        +'<div class="cgcp-row"><input class="cgcp-in" id="cgcp-dcdir-h" style="flex:1 1 130px" placeholder="RSI handle" autocomplete="off" spellcheck="false">'
+          +'<input class="cgcp-in" id="cgcp-dcdir-u" style="flex:2 1 230px" placeholder="https://discord.gg/…" autocomplete="off" spellcheck="false">'
+          +'<button type="button" class="cgcp-btn" id="cgcp-dcdir-add">Add</button></div>'
+        +'<div class="cgcp-dcstate" id="cgcp-dcdir-state"></div>'
+        +'<div class="cgcp-list" id="cgcp-dcdir-list"></div>'
+        +'<div class="cgcp-hint">Stored on this device only. It is a convenience list, not an org-wide sync.</div>'
+      +'</div>'
     +'</section>'
     /* ---- MEET UP ---- */
     +'<section data-sec="meet" hidden>'
@@ -26201,6 +26438,8 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
         +'<div class="cgcp-card"><h4>3 &middot; Party up in-game</h4><ol class="cgcp-steps"><li>Once you are friends on Spectrum, in-game press <span class="cgcp-key">F11</span> (Friends) or <span class="cgcp-key">F1</span> (Contacts).</li><li><b>Right-click</b> a friend &rarr; <b>Invite to Party</b>.</li><li>The <b>leader loads in first</b>; everyone else <b>joins on the leader by name</b> so you share a shard.</li></ol></div>'
         +'<div class="cgcp-card"><h4>4 &middot; Keep a party roster</h4><ol class="cgcp-steps"><li>In <b>Party</b>, use <b>Party roster</b> to note who is flying with you, so you see the group at a glance.</li></ol></div>'
         +'<div class="cgcp-note">Live text <b>channels</b> in the tablet are an <b>org</b> feature. For personal groups, chat runs on <b>Spectrum</b> and in-game party voice/text.</div>'
+        /* ---- b510 Discord setup note, personal ---- */
+        +'<div class="cgcp-card"><h4>5 &middot; Discord voice link &mdash; optional</h4>'+'<p class="cgcp-sub" style="margin:0 0 10px">COMMS can hold the party leader&rsquo;s Discord link and your own, each behind a one-tap button in the <b>Party</b> tab.</p>'+'<ol class="cgcp-steps">'+'<li>In <b>Discord</b>, find the <b>voice channel</b> in the left-hand channel list.</li>'+'<li>Hover the <b>right-hand side of the channel name</b> and choose <b>Create Invite</b>.</li>'+'<li>Open the invite settings and set <b>Expire after: Never</b> and <b>Max number of uses: No limit</b>.</li>'+'<li>Press <b>Copy</b>.</li>'+'<li>Back in <b>COMMS &rarr; Party</b>, paste it into <b>Party leader / commander voice channel</b> and press <b>Save</b>.</li>'+'<li>Paste your own link into <b>My Discord</b> and press <b>Save</b>, so your group can reach you.</li>'+'</ol>'+'<div class="cgcp-note"><b>What it will not do.</b> Discord has <b>no link that connects you to a voice call by itself</b>. Discord&rsquo;s own support article <i>Invites 101</i> describes an instant invite as bringing people to the server or channel, and the request for a link that would &ldquo;instantly join the voice channel&rdquo; is still an <b>open feature request on Discord&rsquo;s community board with no reply from Discord</b> (checked 26 Jul 2026). So the button opens the channel and <b>you press Join</b> yourself.<br><br><b>Two link types, and they behave differently.</b> A <b>discord.gg</b> invite is the one to use &mdash; it is meant for handing to people, including people not in the server yet. A <b>discord.com/channels/…</b> link is a jump-to-channel link and is best given only to people already in that server.<br><br><b>Invites can die.</b> Discord lets you set an expiry time and a maximum number of uses when you create one. A default invite can therefore stop working and the button goes dead. Set it to <b>never expire</b> with <b>no use limit</b>.<br><br><b>What COMMS refuses.</b> Only <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> are accepted. Any other address is rejected on purpose with the reason shown, so a mistyped or hostile paste cannot send your group to some other site from inside the tablet.</div>'+'</div>'
       +'</div>'
       +'<div class="cgcp-walk cgcp-walk-org" id="cgcp-setup-org" hidden>'
         +'<div class="cgcp-walk-head"><button type="button" class="cgcp-btn ghost" data-setup="back">&lsaquo; Back</button><span class="cgcp-path-badge org">ORG</span><h4>Org chat &mdash; full setup</h4></div>'
@@ -26210,6 +26449,8 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
         +'<div class="cgcp-card"><h4>4 &middot; Use the channels</h4><ol class="cgcp-steps"><li>Open <b>COMMS</b> and pick a channel from the header dropdown: <b>General</b>, <b>Party</b>, <b>Org</b>, and the org-only <b>CHAN 1&ndash;6</b>.</li><li>Type in the box and send. You will see who is online and the member roster.</li></ol></div>'
         +'<div class="cgcp-card"><h4>5 &middot; Meet up</h4><ol class="cgcp-steps"><li>Use the <b>Meet Up</b> tab: everyone sets the <b>same</b> rally point, then quantum-travels there.</li></ol></div>'
         +'<div class="cgcp-note">Not signed in, or the owner has not run the SQL yet? The chat window will say <b>COMMS BACKEND NOT SET UP</b> until both are done.</div>'
+        /* ---- b510 Discord setup note, org ---- */
+        +'<div class="cgcp-card"><h4>6 &middot; Discord voice link &mdash; optional</h4>'+'<p class="cgcp-sub" style="margin:0 0 10px">COMMS can hold the <b>org leader&rsquo;s</b> voice channel plus a <b>member directory</b>, each behind its own hotlink button in the <b>Org Chat</b> tab.</p>'+'<ol class="cgcp-steps">'+'<li>In <b>Discord</b>, find the org <b>voice channel</b> in the left-hand channel list.</li>'+'<li>Hover the <b>right-hand side of the channel name</b> and choose <b>Create Invite</b>.</li>'+'<li>Open the invite settings and set <b>Expire after: Never</b> and <b>Max number of uses: No limit</b>.</li>'+'<li>Press <b>Copy</b>.</li>'+'<li>Back in <b>COMMS &rarr; Org Chat</b>, paste it into <b>Org leader voice channel</b> and press <b>Save</b>.</li>'+'<li>Under <b>Member Discord directory</b>, type a member <b>RSI handle</b>, paste <b>their</b> Discord link, press <b>Add</b>. Repeat per member.</li>'+'<li>Each member also sets their own link in <b>Party &rarr; My Discord</b> on their own tablet.</li>'+'</ol>'+'<div class="cgcp-note"><b>What it will not do.</b> Discord has <b>no link that connects you to a voice call by itself</b>. Discord&rsquo;s own support article <i>Invites 101</i> describes an instant invite as bringing people to the server or channel, and the request for a link that would &ldquo;instantly join the voice channel&rdquo; is still an <b>open feature request on Discord&rsquo;s community board with no reply from Discord</b> (checked 26 Jul 2026). So the button opens the channel and <b>you press Join</b> yourself.<br><br><b>Two link types, and they behave differently.</b> A <b>discord.gg</b> invite is the one to use &mdash; it is meant for handing to people, including people not in the server yet. A <b>discord.com/channels/…</b> link is a jump-to-channel link and is best given only to people already in that server.<br><br><b>Invites can die.</b> Discord lets you set an expiry time and a maximum number of uses when you create one. A default invite can therefore stop working and the button goes dead. Set it to <b>never expire</b> with <b>no use limit</b>.<br><br><b>What COMMS refuses.</b> Only <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> are accepted. Any other address is rejected on purpose with the reason shown, so a mistyped or hostile paste cannot send your group to some other site from inside the tablet.</div>'+'</div>'
       +'</div>'
       +'<div class="cgcp-card" id="cgcp-setup-extras" style="margin-top:12px" hidden><h4>Optional &middot; Unlock the tablet PC extras</h4><ol class="cgcp-steps"><li>In the tablet folder, double-click <b>Create Desktop Shortcuts.bat</b> once.</li><li>Double-click <b>SC Control Server</b> and leave its window open.</li><li>Double-click <b>SC Tablet</b> to open the tablet full-screen.</li><li>No server? Everything except the live/PC-only features still works in any browser.</li></ol></div>'
     +'</section>'
@@ -26260,6 +26501,162 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     }
     [].forEach.call(pg.querySelectorAll('.cgcp-role'),function(b){ b.addEventListener('click',function(){ save('cg_org_role',b.getAttribute('data-role')); paintRole(); }); });
     paintRole();
+    /* ==== b510  DISCORD VOICE HOTLINKS =========================================================
+       2026-07-26 user: "party needs a place to add link to discord address as well as org members.
+       any user should be able to display his her discord chat channel linked via hotlink button",
+       then "add note to set up instructions in ref to discord functionality and limitations".
+
+       VERIFIED BEFORE THE UI COPY WAS WRITTEN, because the obvious wording would have been a lie:
+       Discord has NO link that connects you into a voice call. Discord's own support article
+       "Invites 101" describes an instant invite as bringing people to the server/channel, and the
+       community request "Invite to join current voice channel" - which asks for exactly the
+       auto-join behaviour - was still open with no staff reply when checked on 26 Jul 2026.
+       Every string in this feature therefore says the button OPENS the channel and YOU PRESS JOIN.
+       Do not "tighten" that copy into a promise the platform does not keep.
+
+       SECURITY - dcClean() is not cosmetic and must not be relaxed. These links are pasted by other
+       people (a party leader, an org officer) and then handed to the whole group as a button inside
+       the tablet. Without an allowlist, one hostile or fat-fingered paste sends the org to an
+       arbitrary URL from a control they trust. Rules: https only (http is upgraded, never accepted
+       as-is), exact host match against DC_HOSTS - not a suffix test, so discord.gg.evil.com fails -
+       and every refusal is shown on screen with its reason instead of failing silently.
+       Re-validated again at click time, so nothing in localStorage is trusted blindly. */
+    var DC_HOSTS={'discord.gg':1,'discord.com':1,'www.discord.com':1,'discordapp.com':1,
+                  'www.discordapp.com':1,'ptb.discord.com':1,'canary.discord.com':1,'discord.media':1};
+    function dcClean(raw){
+      var t=String(raw==null?'':raw).trim().replace(/^[<(\s]+/,'').replace(/[>)\s]+$/,'');
+      if(!t) return {ok:false,why:''};
+      if(/^discord:\/\//i.test(t)) return {ok:false,why:'That is a desktop-app link. Use the https:// link instead.'};
+      if(!/^[a-z][a-z0-9+.\-]*:\/\//i.test(t)) t='https://'+t;
+      var u; try{ u=new URL(t); }catch(e){ return {ok:false,why:'That is not a link.'}; }
+      if(u.protocol==='http:'){ try{ u.protocol='https:'; }catch(e){} }
+      if(u.protocol!=='https:') return {ok:false,why:'Only https links are accepted.'};
+      var h=String(u.hostname||'').toLowerCase();
+      if(DC_HOSTS[h]!==1) return {ok:false,why:'Not a Discord address ('+(h||'no host')+'). Only discord.gg and discord.com links are accepted.'};
+      return {ok:true,url:u.href,host:h,path:String(u.pathname||'/')};
+    }
+    function dcKind(c){
+      if(c.host==='discord.gg') return 'invite';
+      if(/^\/invite\//i.test(c.path)) return 'invite';
+      if(/^\/channels\//i.test(c.path)) return 'channel';
+      return 'other';
+    }
+    function dcWord(c){
+      var k=dcKind(c);
+      if(k==='invite')  return 'Saved — server invite. Anyone can use it while the invite is still valid.';
+      if(k==='channel') return 'Saved — jump-to-channel link. Best for people already in that server.';
+      return 'Saved — Discord link.';
+    }
+    /* self-contained: copyText() is defined further down, inside the MEET UP wiring, so it is not
+       in scope yet at this point in build(). */
+    function dcCopy(txt,btn){
+      var done=function(){ if(!btn) return; var o=btn.textContent; btn.textContent='Copied';
+                           setTimeout(function(){ btn.textContent=o; },1100); };
+      try{ if(navigator.clipboard&&navigator.clipboard.writeText){
+             navigator.clipboard.writeText(txt).then(done,function(){}); return; } }catch(e){}
+      try{ var ta=document.createElement('textarea'); ta.value=txt; ta.setAttribute('readonly','');
+           ta.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(ta);
+           ta.select(); document.execCommand('copy'); document.body.removeChild(ta); done(); }catch(e){}
+    }
+    function dcSlot(id,key,label){
+      var inp=pg.querySelector('#cgcp-dc-'+id),        st=pg.querySelector('#cgcp-dc-'+id+'-state'),
+          go =pg.querySelector('#cgcp-dc-'+id+'-go'),  bs=pg.querySelector('#cgcp-dc-'+id+'-save'),
+          bc =pg.querySelector('#cgcp-dc-'+id+'-copy'),bx=pg.querySelector('#cgcp-dc-'+id+'-clear');
+      if(!inp||!go) return;
+      function msg(t,cls){ if(!st) return; st.textContent=t||''; st.className='cgcp-dcstate'+(cls?(' '+cls):''); }
+      /* build 512: never trust what is in localStorage. Run the SAME dcClean() the click handler
+         runs, so a stored value that would be refused on click is refused on screen first — the
+         button greys out and never carries the raw value in a DOM attribute. The raw text is still
+         put in the input box on purpose, so a bad link can be seen and corrected rather than
+         vanishing. Storage is not rewritten here; only Save and Clear write. */
+      function paint(){
+        var raw=LS(key,'')||'', c=raw?dcClean(raw):{ok:false};
+        inp.value=raw;
+        if(c.ok){ go.setAttribute('data-dcopen',c.url); go.classList.remove('off'); go.title=label+' — '+c.url; }
+        else { go.removeAttribute('data-dcopen'); go.classList.add('off');
+               go.title=raw?('Saved link refused — '+(c.why||'not a Discord address')):'No Discord link saved yet'; }
+        return c.ok?c.url:'';
+      }
+      function commit(){
+        var typed=String(inp.value||'').trim();
+        if(!typed){ save(key,''); paint(); msg('Cleared.',''); return; }
+        var r=dcClean(typed);
+        if(!r.ok){ msg(r.why||'That link was refused.','bad'); return; }
+        save(key,r.url); paint(); msg(dcWord(r),'good');
+      }
+      if(bs) bs.addEventListener('click',commit);
+      inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); commit(); } });
+      inp.addEventListener('blur',function(){ var v=String(inp.value||'').trim();
+        if(v && v!==(LS(key,'')||'')) commit(); });
+      if(bc) bc.addEventListener('click',function(){ var v=LS(key,'')||'';
+        if(v) dcCopy(v,bc); else msg('Nothing saved to copy yet.','bad'); });
+      if(bx) bx.addEventListener('click',function(){ save(key,''); inp.value=''; paint(); msg('Cleared.',''); });
+      /* build 512: report a refused stored link on load, not silently. */
+      var rawBoot=LS(key,'')||'';
+      paint();
+      if(rawBoot){ var cb=dcClean(rawBoot);
+        if(cb.ok) msg(dcWord(cb),'good');
+        else msg((cb.why||'That saved link was refused.')+' Fix it and press Save.','bad'); }
+    }
+    dcSlot('party','cg_dc_party','Party voice');
+    dcSlot('mine' ,'cg_dc_mine' ,'My Discord');
+    dcSlot('org'  ,'cg_dc_org'  ,'Org voice');
+
+    function dcDirGet(){ try{ var a=JSON.parse(LS('cg_dc_dir','[]'));
+                              return (a && typeof a.length==='number') ? a : []; }catch(e){ return []; } }
+    function dcDirSet(a){ try{ save('cg_dc_dir',JSON.stringify(a)); }catch(e){} }
+    function dcDirDraw(){
+      var box=pg.querySelector('#cgcp-dcdir-list'); if(!box) return;
+      var a=dcDirGet();
+      if(!a.length){ box.innerHTML='<div class="cgcp-empty">No member links yet.</div>'; return; }
+      /* build 512: every stored row is re-checked with dcClean() before it is drawn. A row that
+         fails renders as REFUSED with the reason and carries no data-dcopen at all, so a bad value
+         that reached storage by any route never becomes a live-looking hotlink. */
+      box.innerHTML=a.map(function(r,i){
+        r=r||{};
+        var c=dcClean(r.u), okU=c.ok?c.url:'';
+        return '<div class="cgcp-dcli"><span class="cgcp-dcwho" title="'+esc(okU||('Refused — '+(c.why||'not a Discord address')))+'">'+esc(r.h)+'</span>'
+          +'<span class="cgcp-dcacts">'
+          +(okU
+            ? '<button type="button" class="cgcp-dcmini" data-dcopen="'+esc(okU)+'" title="Open '+esc(r.h)+' on Discord">'+DC_IC+'<span>Discord</span></button>'
+            : '<button type="button" class="cgcp-dcmini off" title="Refused — '+esc(c.why||'not a Discord address')+'">'+DC_IC+'<span>Refused</span></button>')
+          +'<button type="button" class="cgcp-lidel" data-dcdel="'+i+'" aria-label="Remove '+esc(r.h)+'">✕</button>'
+          +'</span></div>';
+      }).join('');
+    }
+    function dcDirAdd(){
+      var hi=pg.querySelector('#cgcp-dcdir-h'), ui=pg.querySelector('#cgcp-dcdir-u'),
+          st=pg.querySelector('#cgcp-dcdir-state');
+      var m=function(t,cls){ if(st){ st.textContent=t||''; st.className='cgcp-dcstate'+(cls?(' '+cls):''); } };
+      if(!hi||!ui) return;
+      var h=handleClean(hi.value);
+      if(!h){ m('Type the member RSI handle first.','bad'); hi.focus(); return; }
+      var r=dcClean(ui.value);
+      if(!r.ok){ m(r.why||'Paste that member Discord link.','bad'); ui.focus(); return; }
+      var a=dcDirGet(), i, hit=-1;
+      for(i=0;i<a.length;i++){ if(a[i]&&String(a[i].h||'').toLowerCase()===h.toLowerCase()){ hit=i; break; } }
+      if(hit>=0) a[hit]={h:h,u:r.url}; else a.push({h:h,u:r.url});
+      dcDirSet(a); hi.value=''; ui.value=''; dcDirDraw();
+      m((hit>=0?'Updated ':'Added ')+h+'.','good');
+    }
+    var _dcAdd=pg.querySelector('#cgcp-dcdir-add');
+    if(_dcAdd) _dcAdd.addEventListener('click',dcDirAdd);
+    (function(){ var ids=['cgcp-dcdir-h','cgcp-dcdir-u'],i,e;
+      for(i=0;i<ids.length;i++){ e=pg.querySelector('#'+ids[i]); if(!e) continue;
+        e.addEventListener('keydown',function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); dcDirAdd(); } }); } })();
+    dcDirDraw();
+
+    /* data-dcopen / data-dcdel are deliberately NOT data-open / data-del: the existing delegated
+       handlers match closest('[data-open]') and closest('[data-del]'), and attribute selectors are
+       exact-name, so these cannot collide with the RSI-handle list or its delete buttons. */
+    pg.addEventListener('click',function(e){
+      var t=(e.target&&e.target.closest)?e.target.closest('[data-dcopen]'):null;
+      if(t){ var c=dcClean(t.getAttribute('data-dcopen')||''); if(c.ok) openURL(c.url); return; }
+      var d=(e.target&&e.target.closest)?e.target.closest('[data-dcdel]'):null;
+      if(d){ var i=parseInt(d.getAttribute('data-dcdel'),10), a=dcDirGet();
+             if(i>=0 && i<a.length){ a.splice(i,1); dcDirSet(a); dcDirDraw(); } }
+    });
+
     /* MEET UP wiring — searchable rally-point picker (build 461, user). Verified Stanton locations. */
     var MEET=[
       {n:'Lorville',b:'Hurston',k:'City'},{n:'Area18',b:'ArcCorp',k:'City'},{n:'New Babbage',b:'microTech',k:'City'},{n:'Orison',b:'Crusader',k:'City'},
