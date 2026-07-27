@@ -8032,7 +8032,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=545;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=546;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-27';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -24907,6 +24907,12 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
           cgr.pillCache={hash:cgr.gatherHash(gl), html:cgr.planHTML(gl, true)};
           contentEl.__last=null; refresh(); return;
         }
+        /* build 546: gather pin taps inside the pill itinerary */
+        if(window.cgGatherRoute && window.cgGatherRoute.handlePinClick(e.target)){
+          var cgr2=window.cgGatherRoute, gl2=gatherList();
+          cgr2.pillCache={hash:cgr2.gatherHash(gl2), html:cgr2.planHTML(gl2, true)};
+          contentEl.__last=null; refresh(); return;
+        }
       });
       /* build 542: pill BUY-tab route planner controls (delegated - survive every repaint) */
       body.addEventListener('click',function(e){
@@ -25645,10 +25651,31 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
 #cg-twitch .cg-tw-in{flex:1 1 auto;min-width:0;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;color:#dfeaf2;font:600 11px 'Rajdhani','Segoe UI',sans-serif;padding:5px 8px;}
 #cg-twitch .cg-tw-go{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:6px 11px;cursor:pointer;text-transform:uppercase;}.cg-tw-clear{flex:0 0 auto;font:800 11px 'Rajdhani','Segoe UI',sans-serif;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;padding:5px 9px;cursor:pointer;line-height:1;}.cg-tw-clear:hover{color:#ff8080;border-color:rgba(255,128,128,.5);}
 #cg-twitch .cg-tw-frame{flex:1 1 auto;min-height:70px;position:relative;border-radius:8px;overflow:hidden;background:#000;border:1px solid rgba(108,180,214,.2);clip-path:inset(0 round 8px);}/* build 521: WebKit does not reliably clip composited iframes with overflow+radius alone - clip-path does *//* build 505: was #0a0f16 — pure black so any letterbox around the video matches the player, not a lighter ring */
-#cg-twitch .cg-tw-frame iframe{position:absolute;top:-2px;left:-2px;width:calc(100% + 4px);height:calc(100% + 4px);border:0;background:#000;color-scheme:light;}/* build 521 (user: white rim on iPad STILL there after 505): the iframe edge now always sits OUTSIDE the visible clip, so no half-pixel seam can show. 2px of player edge is cropped - invisible. *//* build 505 (user: white border around the streamed content on iPad). An iframe with no background paints the browser's default WHITE canvas until/around the player's video area — visible as a white rim on iOS. Force black; color-scheme:light stops dark-mode double-inversion white flashes on WebKit. */
+#cg-twitch .cg-tw-frame iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.012);border:0;background:#000;color-scheme:light;}/* build 546 (T: "the white outline is on the left and right side of a shrunken display area inside the pill"). ROOT CAUSE: the iframe filled the whole (non-16:9) frame, so the PLAYER drew pillarbox bars beside the video - and on iPad WebKit those bars paint the iframe's white canvas before/around the player skin. FIX: sc-b546-twfit-js sizes the iframe to an EXACT 16:9 contain-fit of the frame (ResizeObserver), centered - there is no bar area left for anything to paint. The 1.2% scale swallows hairline seams; the frame's own #000 fills the leftover pill space. *//* build 521 (user: white rim on iPad STILL there after 505): the iframe edge now always sits OUTSIDE the visible clip, so no half-pixel seam can show. 2px of player edge is cropped - invisible. *//* build 505 (user: white border around the streamed content on iPad). An iframe with no background paints the browser's default WHITE canvas until/around the player's video area — visible as a white rim on iOS. Force black; color-scheme:light stops dark-mode double-inversion white flashes on WebKit. */
 @media (pointer:coarse){#cg-twitch .cg-tw-frame{border-color:#000;}}/* build 521: the faint cyan 1px border reads as a white hairline on a bright iPad panel - black on touch, desktop keeps the accent */
 #cg-twitch .cg-tw-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8ba0b5;font-size:11px;padding:10px;line-height:1.4;}
 </style>
+<script id="sc-b546-twfit-js">
+/* build 546: keep the Twitch iframe at an exact 16:9 contain-fit inside .cg-tw-frame (see the
+   CSS note above). Write-guarded: only touches style when the computed size actually changed. */
+(function(){
+  if(window.__cgTwFit546) return; window.__cgTwFit546=true;
+  function fit(){
+    var fr=document.querySelector('#cg-twitch .cg-tw-frame'); if(!fr) return;
+    var f=fr.querySelector('iframe'); if(!f) return;
+    var W=fr.clientWidth, H=fr.clientHeight; if(!W||!H) return;
+    var w=W, h=Math.round(W*9/16);
+    if(h>H){ h=H; w=Math.round(H*16/9); }
+    var key=w+'x'+h;
+    if(f.dataset.fit546===key) return;
+    f.dataset.fit546=key;
+    f.style.width=w+'px'; f.style.height=h+'px';
+  }
+  try{ new ResizeObserver(fit).observe(document.body); }catch(e){}
+  var mo; try{ mo=new MutationObserver(function(){ fit(); }); mo.observe(document.body,{childList:true,subtree:true}); }catch(e){}
+  setInterval(fit,1200);
+})();
+</script>
 <script id="sc-b507-twparent-js">/* 2026-07-26 build 507 (user on iPad: "Whoops this embed is misconfigured ... check your browser console" when playing a Twitch stream).
    The iPad opens the tablet at http://192.168.1.192:8420/, so location.hostname is an IP LITERAL and
    that is what was being sent as Twitch's ?parent=. Twitch validates parent against the embedding
@@ -27999,6 +28026,14 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       return b.items.length-a.items.length;
     });
     var fs=compact?'10.5px':'11px';
+    /* build 546 (T picked idea #5): if this item is LISTED cheaper somewhere else, say so - the
+       cost of fewest-stops convenience, visible. Tap the item to pin the cheap shop if you care. */
+    function cheapNote(name,here){
+      var opts=itemShops[name]||[]; if(!opts.length||here==null) return '';
+      var min=null; opts.forEach(function(o){ if(o.price!=null&&(min==null||o.price<min)) min=o.price; });
+      if(min==null||min>=here) return '';
+      return ' <span style="color:#8ba0b5;font-size:8.5px;white-space:nowrap">&middot; cheapest '+esc(aUEC(min))+' elsewhere</span>';
+    }
     function pickerHTML(name){
       var opts=itemShops[name]||[]; if(!opts.length) return '';
       var cur=P[name]||'';
@@ -28023,7 +28058,7 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
           +'<span style="color:#dbe9f5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(it.pinned?'&#128204; ':'')+esc(it.name)+gradeChip(it.name)
           +(norm(it.name)!==norm(it.info.csName)?' <span style="color:#8ba0b5;font-size:9px">(as "'+esc(it.info.csName)+'")</span>':'')
           +' <span style="color:#5f7b91;font-size:9px">'+(open?'&#9652;':'&#9662;')+'</span></span>'
-          +'<span style="color:#ffcf6b;white-space:nowrap">'+esc(aUEC(it.info.price))+'</span></div>'
+          +'<span style="color:#ffcf6b;white-space:nowrap">'+esc(aUEC(it.info.price))+cheapNote(it.name,it.info.price)+'</span></div>'
           +(open?pickerHTML(it.name):'');
       }).join('');
       total+=sub;
@@ -28185,6 +28220,11 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     if(!out.length) String(md.all_locs||'').split(';').slice(0,5).forEach(function(t){ if(t.trim()) out.push({loc:t.trim(), pct:null}); });
     return out;
   }
+  /* build 546 (T picked idea #5): per-material location pins, mirroring the buy planner's.
+     {material: location} - a pinned material is mined THERE; AUTO returns it to the optimizer. */
+  function gpins(){ try{ return JSON.parse(localStorage.getItem('sc_gatherroute_pins')||'{}'); }catch(e){ return {}; } }
+  function setGPin(name,loc){ var p=gpins(); if(loc) p[name]=loc; else delete p[name]; try{ localStorage.setItem('sc_gatherroute_pins',JSON.stringify(p)); }catch(e){} }
+  var G_OPEN=null;
   function planHTML(mats, compact){
     var fs=compact?'10.5px':'11px';
     if(!mats||!mats.length) return '<div style="font-size:'+fs+';color:#8ba0b5;padding:4px 0">Gather list is empty - push materials from Mining, Blueprints or the Craft Calculator first.</div>';
@@ -28195,42 +28235,67 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       if(cs.length) matched.push({ name:m.material, qty:m.qty, md:md, cands:cs });
       else unknown.push(m.material);
     });
-    var byLoc={};
+    var byLoc={}, itemCands={};
     matched.forEach(function(m){
+      itemCands[m.name]=m.cands;
       m.cands.forEach(function(c){
         (byLoc[c.loc]=byLoc[c.loc]||{}).items=byLoc[c.loc].items||{};
         byLoc[c.loc].items[m.name]={ pct:c.pct, qty:m.qty, md:m.md };
       });
     });
     var remaining={}; matched.forEach(function(m){ remaining[m.name]=1; });
-    var stops=[];
+    var P=gpins();
+    var stopMap={}, order=[];
+    function addTo(loc,name,pinned){
+      if(!byLoc[loc]||!byLoc[loc].items[name]) return;
+      if(!stopMap[loc]){ stopMap[loc]={loc:loc, items:[], pinned:false}; order.push(loc); }
+      stopMap[loc].items.push({name:name, info:byLoc[loc].items[name], pinned:!!pinned});
+      if(pinned) stopMap[loc].pinned=true;
+      delete remaining[name];
+    }
+    matched.forEach(function(m){ var pl=P[m.name]; if(pl && byLoc[pl] && byLoc[pl].items[m.name]) addTo(pl, m.name, true); });
     while(Object.keys(remaining).length){
       var best=null;
       Object.keys(byLoc).forEach(function(loc){
         var its=byLoc[loc].items, cover=0, pct=0;
         Object.keys(its).forEach(function(n){ if(remaining[n]){ cover++; pct+=(its[n].pct||0); } });
         if(!cover) return;
-        if(!best || cover>best.cover || (cover===best.cover && pct>best.pct)){ best={loc:loc,cover:cover,pct:pct}; }
+        var reuse=stopMap[loc]?1:0; /* riding along at a pinned stop is free */
+        if(!best || (cover+reuse)>(best.cover+best.reuse) || ((cover+reuse)===(best.cover+best.reuse) && pct>best.pct)){ best={loc:loc,cover:cover,pct:pct,reuse:reuse}; }
       });
       if(!best) break;
-      var got=[];
-      Object.keys(byLoc[best.loc].items).forEach(function(n){
-        if(remaining[n]){ got.push({name:n, info:byLoc[best.loc].items[n]}); delete remaining[n]; }
-      });
-      got.sort(function(a,b){ return (b.info.pct||0)-(a.info.pct||0); });
-      stops.push({loc:best.loc, items:got});
+      Object.keys(byLoc[best.loc].items).forEach(function(n){ if(remaining[n]) addTo(best.loc, n, false); });
+    }
+    var stops=order.map(function(l){ var st=stopMap[l]; st.items.sort(function(a,b){ return (b.info.pct||0)-(a.info.pct||0); }); return st; });
+    var P2=gpins();
+    function gPickerHTML(name){
+      var opts=itemCands[name]||[]; if(!opts.length) return '';
+      var cur=P2[name]||'';
+      var rows=opts.slice(0,8).map(function(o){
+        var on=o.loc===cur;
+        return '<div data-grpinset="'+encodeURIComponent(name)+'|'+encodeURIComponent(o.loc)+'" style="display:flex;gap:8px;justify-content:space-between;font-size:9.5px;padding:2px 4px;cursor:pointer;border-radius:4px;'+(on?'background:rgba(57,211,83,.15);color:#7fffb0':'color:#9fc0d5')+'">'
+          +'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(on?'&#128204; ':'')+esc(o.loc)+'</span>'
+          +'<span style="white-space:nowrap;color:#39d353">'+(o.pct!=null?o.pct+'%':'')+'</span></div>';
+      }).join('');
+      var more=opts.length>8?'<div style="font-size:8.5px;color:#5f7b91;padding:1px 4px">+'+(opts.length-8)+' more on file</div>':'';
+      return '<div style="border:1px dashed rgba(108,180,214,.3);border-radius:6px;padding:4px 5px;margin:3px 0 4px">'
+        +'<div style="font-size:8.5px;letter-spacing:1px;color:#8fb3c8;margin-bottom:2px">MINE '+esc(name).toUpperCase()+' AT: <span data-grpinclear="'+encodeURIComponent(name)+'" style="cursor:pointer;color:'+(cur?'#9fc0d5':'#7fffb0')+';text-decoration:underline">AUTO (fewest stops)</span></div>'
+        +rows+more+'</div>';
     }
     var html='';
     stops.forEach(function(s,i){
       var rows=s.items.map(function(it){
         var meth=(it.info.md&&it.info.md.methods||[]).join('/');
-        return '<div style="display:flex;gap:8px;justify-content:space-between;font-size:'+fs+';padding:2px 0">'
-          +'<span style="color:#dbe9f5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(it.name)
-          +(meth?' <span style="font-size:8.5px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 4px;color:#9fc0d5">'+esc(meth.toUpperCase())+'</span>':'')+'</span>'
-          +'<span style="white-space:nowrap;color:#8fd0ea">'+(it.info.pct!=null?('<b style="color:#39d353">'+it.info.pct+'%</b> &middot; '):'')+esc(fmtQ(it.info.qty))+'</span></div>';
+        var open=G_OPEN===it.name;
+        return '<div data-grpick="'+encodeURIComponent(it.name)+'" title="Tap to choose a different location for this material" style="display:flex;gap:8px;justify-content:space-between;font-size:'+fs+';padding:2px 0;cursor:pointer">'
+          +'<span style="color:#dbe9f5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(it.pinned?'&#128204; ':'')+esc(it.name)
+          +(meth?' <span style="font-size:8.5px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 4px;color:#9fc0d5">'+esc(meth.toUpperCase())+'</span>':'')
+          +' <span style="color:#5f7b91;font-size:9px">'+(open?'&#9652;':'&#9662;')+'</span></span>'
+          +'<span style="white-space:nowrap;color:#8fd0ea">'+(it.info.pct!=null?('<b style="color:#39d353">'+it.info.pct+'%</b> &middot; '):'')+esc(fmtQ(it.info.qty))+'</span></div>'
+          +(open?gPickerHTML(it.name):'');
       }).join('');
-      html+='<div style="border:1px solid rgba(108,180,214,.25);border-left:3px solid #8fd0ea;border-radius:8px;padding:6px 9px;margin-bottom:6px;background:rgba(10,22,34,.5)">'
-        +'<div style="font-size:'+fs+';letter-spacing:.5px;margin-bottom:2px"><b style="color:#8fd0ea">STOP '+(i+1)+' &middot; '+esc(s.loc)+'</b></div>'
+      html+='<div style="border:1px solid rgba(108,180,214,.25);border-left:3px solid '+(s.pinned?'#ffcf6b':'#8fd0ea')+';border-radius:8px;padding:6px 9px;margin-bottom:6px;background:rgba(10,22,34,.5)">'
+        +'<div style="font-size:'+fs+';letter-spacing:.5px;margin-bottom:2px"><b style="color:'+(s.pinned?'#ffcf6b':'#8fd0ea')+'">STOP '+(i+1)+' &middot; '+esc(s.loc)+(s.pinned?' &middot; &#128204; PINNED':'')+'</b></div>'
         +rows+'</div>';
     });
     if(stops.length){
@@ -28249,7 +28314,21 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
   /* ORDER-INSENSITIVE: the pill sorts its list by qty before rendering, the click handler hashes
      it unsorted - caught in test: same list, two orders, cache never matched. Sort by name here. */
   function gatherHash(mats){ return JSON.stringify((mats||[]).map(function(m){ return [m.material,m.qty]; }).sort(function(a,b){ return a[0]<b[0]?-1:1; })); }
-  window.cgGatherRoute={ planHTML:planHTML, gatherHash:gatherHash, pillCache:null };
+  window.cgGatherRoute={ planHTML:planHTML, gatherHash:gatherHash, pillCache:null,
+    handlePinClick:function(t){
+      var el=t.closest&&(t.closest('[data-grpinset]')||t.closest('[data-grpinclear]')||t.closest('[data-grpick]'));
+      if(!el) return false;
+      if(el.hasAttribute('data-grpinset')){
+        var kv=el.getAttribute('data-grpinset').split('|');
+        setGPin(decodeURIComponent(kv[0]), decodeURIComponent(kv[1])); G_OPEN=null;
+      }else if(el.hasAttribute('data-grpinclear')){
+        setGPin(decodeURIComponent(el.getAttribute('data-grpinclear')), null); G_OPEN=null;
+      }else{
+        var n=decodeURIComponent(el.getAttribute('data-grpick'));
+        G_OPEN=(G_OPEN===n)?null:n;
+      }
+      return true;
+    } };
   /* big-page surface */
   function pageList(){ return window.__cgGatherMerged||[]; }
   function boot(){
@@ -28260,6 +28339,12 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       if(window.opsRender) try{ opsRender(); }catch(e){}  /* refresh __cgGatherMerged first */
       out.innerHTML=planHTML(pageList(), false);
       out.__hash=gatherHash(pageList());
+    });
+    var out0=document.getElementById('gr-out');
+    if(out0) out0.addEventListener('click',function(e){
+      if(window.cgGatherRoute.handlePinClick(e.target)){
+        out0.innerHTML=planHTML(pageList(), false); out0.__hash=gatherHash(pageList());
+      }
     });
     /* live refresh - same rule as the buy planner: visible plan + changed list = replan */
     setInterval(function(){
