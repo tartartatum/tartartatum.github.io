@@ -2569,6 +2569,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
           <div style="color:var(--text-dim);font-size:10px;margin-bottom:9px">
             1. Fly to a mining area - asteroid cluster, planet/moon surface, or a cave for hand mining.<br>
             2. Use <b>Scanning Mode</b> (default <b>[ V ]</b>) to locate deposits, or just approach visible rocks.<br>
+            2a. 4.9 tightened scanning: narrow the scan angle (down to ~2&deg;) for long-range cluster pings, and <b>re-scan the fragments after a fracture</b> before extracting - composition can differ per fragment. <span style="color:var(--amber2)">[COMMUNITY - GGWTB 4.9 mining guide]</span><br>
             3. Look at a rock to read its <b>MASS (kg)</b> and, up close, its <b>mineral composition %</b>.<br>
             NOTE: Mass class sets the tool - see the MASS REFERENCE table below.
         </div>
@@ -4172,7 +4173,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
            harvestables." Same control shape as the Harvestables hv-toggle - copied, not reinvented. -->
       <span id="bp-view-wrap" style="display:inline-flex;gap:6px;align-items:center">
         <button type="button" class="panel-btn" id="bp-view-tables" style="font-size:9px;padding:3px 10px">TABLES</button>
-        <button type="button" class="panel-btn" id="bp-view-decks" style="font-size:9px;padding:3px 10px">DECKS</button><button type="button" class="panel-btn" id="bp-craftonly" onclick="bpToggleCraftOnly()" style="font-size:9px;padding:3px 10px" title="Show only blueprints the tablet has a crafting recipe on file for (computable materials + sendable to OPS). The rest are still real blueprints - just missing recipe data.">CRAFTABLE ONLY</button>
+        <button type="button" class="panel-btn" id="bp-view-decks" style="font-size:9px;padding:3px 10px">DECKS</button><button type="button" class="panel-btn" id="bp-craftonly" onclick="bpToggleCraftOnly()" style="font-size:9px;padding:3px 10px" title="Show only blueprints the tablet has a crafting recipe on file for (computable materials + sendable to the Gather list). The rest are still real blueprints - just missing recipe data.">CRAFTABLE ONLY</button>
       </span>
       <!-- 2026-07-17 user: SCMDB.net + Wikelo migrated here from the removed WEB Tools page -->
   </div>
@@ -4181,7 +4182,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
            The arrow read as a direction/next-step glyph; "TO" reads as a sentence and matches the
            instruction text below it ("...then hit PUSH TO OPS"), so the label and the
            annotation now say the same words. -->
-      <button type="button" class="panel-btn" id="bp-send" style="font-size:9px;color:var(--green2);border-color:var(--green2)">[ PUSH TO OPS ]</button>
+      <button type="button" class="panel-btn" id="bp-send" style="font-size:9px;color:var(--green2);border-color:var(--green2)">[ PUSH TO GATHER LIST ]</button>
       <button type="button" class="panel-btn" id="bp-recall" style="font-size:9px;color:var(--red2)">[ RECALL ]</button>
       <button type="button" class="panel-btn" id="bp-desel" style="font-size:9px">[ CLEAR SELECTION ]</button><a class="panel-btn" href="https://scmdb.net/" target="_blank" rel="noopener" title="SCMDB - blueprints, materials, recipe data (opens scmdb.net)" style="font-size:9px;padding:3px 10px;text-decoration:none">SCMDB.NET &#8599;</a><a class="panel-btn" href="https://seeknd.github.io/Wikelo/" target="_blank" rel="noopener" title="Wikelo - Banu Emporium token costs, available items, rotation (opens Wikelo)" style="font-size:9px;padding:3px 10px;text-decoration:none">WIKELO &#8599;</a>
       <span id="bp-selstat" style="font-size:9px;color:var(--text-dim);letter-spacing:1px"></span>
@@ -4867,7 +4868,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
       var g=mergeGather(get(GK), ccMats()),b=get(BK);
       var gd=document.getElementById("ops-gather");
       if(gd){
-        if(!g.length)gd.innerHTML="<div style='font-size:11px;color:var(--text-dim)'>Empty. Select blueprints in the <b style='color:var(--amber2)'>Craft Calculator</b> (they land here automatically), or tap a Blueprints card's <b style='color:var(--amber2)'>&rarr; PUSH TO OPS</b>.</div>";
+        if(!g.length)gd.innerHTML="<div style='font-size:11px;color:var(--text-dim)'>Empty. Select blueprints in the <b style='color:var(--amber2)'>Craft Calculator</b> (they land here automatically), or tap a Blueprints card's <b style='color:var(--amber2)'>&rarr; PUSH TO GATHER</b>.</div>";
         else{
           var froms=uniq([].concat.apply([],g.map(function(x){return x.from;})));
           var byLoc={};
@@ -7995,7 +7996,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=532;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=533;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -10107,16 +10108,19 @@ async function loadTradingLive(manual){
 })();
 
 /* ===== MINING TAB ===== Argo MOLE — 3 turrets, S2 laser + 2 S1 modules each.
-   Lasers + modules confirmed via api.star-citizen.wiki (4.8.0-LIVE.11875683).
+   Lasers + modules re-verified via api.star-citizen.wiki (4.9.0-LIVE.12232306, checked 2026-07-27).
+   4.9 raised every S2 head's max power ~20%; every S2 head also datamines Inert Materials -40%
+   and All Charge Rates +40% in 4.9. Impact II datamines inconsistently (2-2000, no modifiers) -
+   its 4.8 values are kept on purpose until someone verifies it in game.
    Rock thresholds NOT CIG-published — user enters values from regolith.rocks. */
 const MN_LASERS = [
   {n:'— none —',  mfr:'—',                  opt:0,    max:0,    res:0,   inst:0,  wmin:0,  wmax:0,  slots:0, note:'empty slot'},
-  {n:'Arbor MH2', mfr:'Greycat Industrial', opt:2590, max:2400, res:25,  inst:-35,wmin:90, wmax:270,slots:2, note:'Window Size +40%'},
-  {n:'Helix II',  mfr:'Thermyte Concern',   opt:2590, max:4080, res:-30, inst:0,  wmin:30, wmax:90, slots:3, note:'Instability UNCONFIRMED; Window Size -40%'},
-  {n:'Hofstede-S2',mfr:'Shubin Interstellar',opt:1295,max:3360, res:-30, inst:10, wmin:60, wmax:180,slots:2, note:'Window Rate +20%'},
-  {n:'Impact II', mfr:'Thermyte Concern',   opt:3145, max:3360, res:10,  inst:-10,wmin:60, wmax:180,slots:3, note:'Window Rate -40%, Size +20%'},
-  {n:'Klein-S2',  mfr:'Shubin Interstellar',opt:2775, max:3600, res:-45, inst:35, wmin:60, wmax:180,slots:1, note:'Window Size +20%'},
-  {n:'Lancet MH2',mfr:'Greycat Industrial', opt:2590, max:3600, res:0,   inst:-10,wmin:45, wmax:135,slots:2, note:'Resistance UNCONFIRMED; Window Rate +40%, Size -60%'}
+  {n:'Arbor MH2', mfr:'Greycat Industrial', opt:2590, max:2900, res:25,  inst:-35,wmin:90, wmax:270,slots:2, note:'Window Size +40% [4.9 VERIFIED]'},
+  {n:'Helix II',  mfr:'Thermyte Concern',   opt:2590, max:4930, res:-30, inst:0,  wmin:30, wmax:90, slots:3, note:'Window Size -40% [4.9 VERIFIED; instability 0 confirmed]'},
+  {n:'Hofstede-S2',mfr:'Shubin Interstellar',opt:1295,max:4060, res:-30, inst:10, wmin:60, wmax:180,slots:2, note:'Window Rate +20%, Size +60% [4.9 VERIFIED]'},
+  {n:'Impact II', mfr:'Thermyte Concern',   opt:3145, max:3360, res:10,  inst:-10,wmin:60, wmax:180,slots:3, note:'Window Rate -40%, Size +20% [4.9 DATAMINE INCONSISTENT - 4.8 values kept, verify in game]'},
+  {n:'Klein-S2',  mfr:'Shubin Interstellar',opt:2775, max:4350, res:-45, inst:35, wmin:60, wmax:180,slots:1, note:'Window Size +20% [4.9 VERIFIED]'},
+  {n:'Lancet MH2',mfr:'Greycat Industrial', opt:2590, max:4350, res:0,   inst:-10,wmin:45, wmax:135,slots:2, note:'Window Rate +40%, Size -60% [4.9 VERIFIED; resistance 0 confirmed]'}
 ];
 const MN_MODULES = [
   {n:'— none —',  t:'—',      pwr:100,res:0,  inst:0,  mfr:'—',                  o:'no effect'},
@@ -10138,10 +10142,10 @@ const MN_MODULES = [
   {n:'FLTR',      t:'Passive',pwr:85, res:0,  inst:0,  mfr:'Greycat Industrial', o:'Reduces inert material'},
   {n:'FLTR-L',    t:'Passive',pwr:90, res:0,  inst:0,  mfr:'Greycat Industrial', o:'Reduces inert material'},
   {n:'FLTR-XL',   t:'Passive',pwr:95, res:0,  inst:0,  mfr:'Greycat Industrial', o:'Reduces inert material'},
-  {n:'Brandt',    t:'Active', pwr:135,res:15, inst:0,  mfr:'Shubin Interstellar',o:'Inert -30%; 60s, 5 uses (Brandt-Mining Inert Materials)'},
+  {n:'Brandt',    t:'Active', pwr:135,res:15, inst:0,  mfr:'Shubin Interstellar',o:'Shatter damage -30%; 60s, 5 uses [4.9 API - was labeled Inert pre-4.9]'},
   {n:'Forel',     t:'Active', pwr:150,res:15, inst:0,  mfr:'Shubin Interstellar',o:'Catastrophic Rate -60%; 60s, 6 uses'},
   {n:'Lifeline',  t:'Active', pwr:100,res:-15,inst:-20,mfr:'Greycat Industrial', o:'Catastrophic Rate +60%; 15s, 3 uses'},
-  {n:'Optimum',   t:'Active', pwr:85, res:0,  inst:-10,mfr:'Greycat Industrial', o:'Catastrophic Rate -80%; 60s, 5 uses'},
+  {n:'Optimum',   t:'Active', pwr:85, res:0,  inst:-10,mfr:'Greycat Industrial', o:'Overcharge Rate -80%; 60s, 5 uses'},
   {n:'Rime',      t:'Active', pwr:85, res:-25,inst:0,  mfr:'Greycat Industrial', o:'Inert -10%; 20s, 10 uses'},
   {n:'Stampede',  t:'Active', pwr:135,res:0,  inst:-10,mfr:'Thermyte Concern',   o:'Inert -10%; 30s, 6 uses'},
   {n:'Surge',     t:'Active', pwr:150,res:-15,inst:10, mfr:'Thermyte Concern',   o:'15s, 7 uses'},
@@ -10376,7 +10380,7 @@ function bpCCKeys(){ if(!window.__bpCCK){ window.__bpCCK=new Set((typeof RECIPE_
 function bpCClink(r){ if(typeof bpEsc!=='function') return ''; var k=((r.set_or_item||'')+' | '+(r.variant||'')+' | '+(r.parts_included||'')); if(!bpCCKeys().has(k)) return ''; return '<a href="#" class="bp-cc" data-k="'+bpEsc(k).replace(/"/g,'&quot;')+'" style="color:var(--green2);font-weight:700">&#43; Craft Calc</a>'; }
 function bpAddCC(k){ try{ if(typeof ccToggle==='function') ccToggle(k,1); if(typeof setActiveTabById==='function') setActiveTabById('craftcalc'); }catch(e){} }
 document.addEventListener('click',function(e){ var b=(e.target&&e.target.closest)?e.target.closest('.bp-cc'):null; if(b){ e.preventDefault(); bpAddCC(b.getAttribute('data-k')); } });
-function bpOpsLink(r){ if(typeof bpEsc!=='function') return ''; var k=((r.set_or_item||'')+' | '+(r.variant||'')+' | '+(r.parts_included||'')); if(!bpCCKeys().has(k)) return ''; return '<a href="#" class="bp-ops" data-k="'+bpEsc(k).replace(/"/g,'&quot;')+'" data-n="'+bpEsc(r.set_or_item||'').replace(/"/g,'&quot;')+'" style="color:#7fb3ff;font-weight:700">&rarr; PUSH TO OPS</a>'; }
+function bpOpsLink(r){ if(typeof bpEsc!=='function') return ''; var k=((r.set_or_item||'')+' | '+(r.variant||'')+' | '+(r.parts_included||'')); if(!bpCCKeys().has(k)) return ''; return '<a href="#" class="bp-ops" data-k="'+bpEsc(k).replace(/"/g,'&quot;')+'" data-n="'+bpEsc(r.set_or_item||'').replace(/"/g,'&quot;')+'" style="color:#7fb3ff;font-weight:700">&rarr; PUSH TO GATHER</a>'; }
 document.addEventListener('click',function(e){ var b=(e.target&&e.target.closest)?e.target.closest('.bp-ops'):null; if(b){ e.preventDefault(); if(typeof opsPushBP==='function') opsPushBP(b.getAttribute('data-k'), b.getAttribute('data-n')); } });
 /* 2026-07-15 user: cards are SELECTABLE (tap toggles) and pushed/pulled via the SEND/RECALL bar —
    the per-card +CraftCalc/→OPS links were removed as clutter. api/mission reference links kept. */
@@ -17618,9 +17622,9 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
          That asymmetry is deliberate and is said out loud below rather than left as a missing button
          someone re-requests in a month. */
       +"<div id='be-mn-chipwrap' class='be-chipwrap'><div class='be-chiplab'>SELECTED</div><div id='be-mn-chips' class='be-chips'></div>"
-      +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to the OPS gather list, grouped by verified mining location'>&#8594; PUSH TO OPS</button>"
+      +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to your GATHER list, grouped by verified mining location'>&#8594; PUSH TO GATHER LIST</button>"
       +"<span id='be-mn-sendmsg' class='be-mn-sendmsg'></span></div>"
-      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO OPS does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>OPS gather list</b>. No quantity is invented; it just lists what you are after, grouped by verified location. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
+      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO GATHER does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>OPS gather list</b>. No quantity is invented; it just lists what you are after, grouped by verified location. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
       +"<div id='be-mn-out'></div>";
     row.parentNode.insertBefore(bp,row.nextSibling);
     /* datalist = MAT_LOC keys + atlas item names, deduped, ALPHABETICAL (user rule) */
@@ -19499,7 +19503,7 @@ table tbody tr:nth-child(even) td{background:rgba(120,180,255,.06)}
    Reusable: add an entry to HOWTO + a button onclick="scHowto('key')" on any section. */
 (function(){
   var HOWTO={
-    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE card to select it. Pick as many as you like, then hit PUSH TO OPS to send their materials to your OPS gather list. RECALL removes those materials from OPS. CLEAR SELECTION clears your current picks.'},
+    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE card to select it. Pick as many as you like, then hit PUSH TO GATHER LIST to send their materials to your Gather list. RECALL removes those materials from the Gather list. CLEAR SELECTION clears your current picks.'},
     harvest:{t:'HARVESTABLES',b:'TABLES and DECKS show the same data two ways - TABLES is the compact list, DECKS is the card view. Type in the search box to filter live by name, method, location, sell price or confidence. Each entry gives the top locations, how to harvest it, and a VERIFIED / COMMUNITY / UNCONFIRMED tag on the data.'}
   };
   var bub=null;
@@ -21634,7 +21638,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;ba
       ['home','HOME','<path d="M4 4h6.5v6.5H4z"/><path d="M13.5 4H20v6.5h-6.5z"/><path d="M4 13.5h6.5V20H4z"/><path d="M13.5 13.5H20V20h-6.5z"/>'],
       ['spacemanuals','MANUALS','<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/>'],
       ['guide','USER GUIDE','<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>'],
-      ['myops','OPS','<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 8h4M8 12h8"/>'],
+      ['myops','GATHER & BUY','<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 8h4M8 12h8"/>'],
       ['__comms','COMMS','<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>','acc'],
       ['__radio','RADIO','<circle cx="12" cy="13" r="2"/><path d="M8 9a5 5 0 0 0 0 8M16 9a5 5 0 0 1 0 8"/>'],
       ['system','SETTINGS','<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>']
@@ -21926,7 +21930,7 @@ body.sc-home-mode #sc-chatdock{top:44px !important}
     ['home','HOME','<path d="M4 4h6.5v6.5H4z"/><path d="M13.5 4H20v6.5h-6.5z"/><path d="M4 13.5h6.5V20H4z"/><path d="M13.5 13.5H20V20h-6.5z"/>'],
     ['spacemanuals','MANUALS','<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/>'],
     ['guide','USER GUIDE','<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>'],
-    ['myops','OPS','<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 8h4M8 12h8"/>'],
+    ['myops','GATHER & BUY','<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 8h4M8 12h8"/>'],
     ['__comms','COMMS','<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>','acc'],
     ['__radio','RADIO','<circle cx="12" cy="13" r="2"/><path d="M8 9a5 5 0 0 0 0 8M16 9a5 5 0 0 1 0 8"/>'],
     ['system','SETTINGS','<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>']
@@ -22442,9 +22446,9 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
   function linkMod(desc,tab){ return function(b){ b.innerHTML='<div class="pill-msg">'+esc(desc)+'</div><span class="pill-go">OPEN</span>'; var g=b.querySelector('.pill-go'); if(g) g.onclick=function(){ nav(tab); }; }; }
   function renderOps(b){
     function u(){ var notes=''; var nEl=document.getElementById('ops-notes'); if(nEl) notes=(nEl.value||nEl.textContent||'').replace(/\s+/g,' ').trim();
-      var html='<div class="ops-lead">CURRENT OPERATION</div>';
-      html+= notes ? '<div class="ops-notes">'+esc(notes).slice(0,180)+'</div>' : '<div class="ops-empty">No operation set - build one in OPS</div>';
-      html+='<span class="pill-go" style="align-self:center;margin-top:4px">OPEN OPS</span>';
+      var html='<div class="ops-lead">GATHER &amp; BUY</div>';
+      html+= notes ? '<div class="ops-notes">'+esc(notes).slice(0,180)+'</div>' : '<div class="ops-empty">Nothing pushed yet - push from Blueprints, Mining or Trading</div>';
+      html+='<span class="pill-go" style="align-self:center;margin-top:4px">OPEN GATHER &amp; BUY</span>';
       b.innerHTML=html; var g=b.querySelector('.pill-go'); if(g) g.onclick=function(){ nav('myops'); }; }
     u(); return setInterval(u,1500);
   }
@@ -23187,8 +23191,8 @@ body.sc-home-mode #cg-hometitle{ display:none !important; }
     if(body.__iv){ clearInterval(body.__iv); body.__iv=null; } /* stop the built-in renderOps */
     if(!pill.__brand){ pill.__brand=1;
       body.innerHTML='<div class="cg-op-content"></div>'
-        +'<div class="cg-op-actions"><button type="button" class="cg-op-go">GO TO OPS</button>'
-        +'<button type="button" class="cg-op-i" title="How the OPS push works" aria-label="How the OPS push works">ⓘ</button></div>'
+        +'<div class="cg-op-actions"><button type="button" class="cg-op-go">OPEN GATHER &amp; BUY</button>'
+        +'<button type="button" class="cg-op-i" title="How the push lists work" aria-label="How the push lists work">ⓘ</button></div>'
         +'<div class="cg-op-help">'+esc(HELP)+'</div>';
       var content=body.querySelector('.cg-op-content'), help=body.querySelector('.cg-op-help');
       body.querySelector('.cg-op-go').addEventListener('click',function(e){ e.stopPropagation(); try{ if(window.setActiveTabById) setActiveTabById('myops'); }catch(_){} });
@@ -24751,7 +24755,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   /* build 441 (user: pushed blueprints must show for quick reference in the pill, by NAME — not just
      folded into the material totals). Reads sc_bp_sent (key->name), written by Blueprints PUSH TO OPS. */
   function pushedBPs(){ try{ var s=JSON.parse(localStorage.getItem('sc_bp_sent')||'{}'); var names=[]; Object.keys(s).forEach(function(k){ var n=(s[k]||String(k).split(' | ')[0]||'').trim(); if(n&&names.indexOf(n)<0)names.push(n); }); return names; }catch(e){ return []; } }
-  function bpsChips(){ var bps=pushedBPs(); if(!bps.length) return ''; return '<div class="ops4-bps"><span class="ops4-bps-l">PUSHED</span>'+bps.map(function(n){ return '<span class="ops4-bp" title="pushed to OPS from Blueprints">'+esc(n)+'</span>'; }).join('')+'</div>'; }
+  function bpsChips(){ var bps=pushedBPs(); if(!bps.length) return ''; return '<div class="ops4-bps"><span class="ops4-bps-l">PUSHED</span>'+bps.map(function(n){ return '<span class="ops4-bp" title="pushed from Blueprints">'+esc(n)+'</span>'; }).join('')+'</div>'; }
   function renderGather(){
     var bph=bpsChips();
     var g=gatherList(); if(!g.length) return bph || '<div class="ops4-empty">No crafting materials yet - pick blueprints in the Craft Calculator (they land here) or push from a Blueprints card.</div>';
@@ -27363,6 +27367,56 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   try{ new MutationObserver(attach).observe(document.body,{childList:true,subtree:true}); }catch(e){}
   var k=0, iv=setInterval(function(){ attach(); if(++k>150) clearInterval(iv); }, 500);
   pull(); setInterval(pull, 300000);
+})();
+</script>
+<style id="sc-b533-devlog-css">
+/* 2026-07-27 user: "a little scrolling message at the very top... small banner that's not flashy,
+   lives in the background". 14px strip, overlay only - it reserves NO layout space, so no page
+   can shift or clip (body is overflow:hidden; a padding shove would eat 14px off the bottom).
+   pointer-events:none - it can never block a tap. Sits UNDER the chatdock z-order. */
+#cg-devlog{position:fixed;top:0;left:0;right:0;height:14px;z-index:2147482300;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,10,18,.88),rgba(4,10,18,.66));
+  border-bottom:1px solid rgba(108,180,214,.16);overflow:hidden;display:none}
+#cg-devlog .dl-track{position:absolute;top:0;left:0;height:14px;display:flex;align-items:center;
+  white-space:nowrap;will-change:transform;animation:cgdlScroll linear infinite;
+  font:600 9px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#5f8ba1}
+#cg-devlog .dl-track b{color:#8fdcff;font-weight:700}
+#cg-devlog .dl-track .dl-sep{color:#2b4a5e;margin:0 14px}
+@keyframes cgdlScroll{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+@media(prefers-reduced-motion:reduce){#cg-devlog .dl-track{animation:none;left:12px}}
+</style>
+<script id="sc-b533-devlog-js">
+/* DEV LOG ticker. Text = baked notes below (updated each build) + the build stamp.
+   If public.site_news exists in Supabase (optional cmdglas_news.sql), its newest row
+   REPLACES the baked notes - so the operator can change the message without republishing.
+   HONESTY RULE: on any fetch failure it silently keeps the baked text. */
+(function(){
+  if(window.__cgDevlog533) return; window.__cgDevlog533=true;
+  var BUILD_STAMP='TABLET UPDATED 27 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
+  var NOTES='WORKING ON: multi-org comms - founders apply, org command vets its own pilots'
+    +' &middot; NEW: searchable REGISTERED PILOTS list in COMMS'
+    +' &middot; NEW: registered-pilots counter on the home bar'
+    +' &middot; Mining rig builder re-verified against 4.9 data';
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
+  var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
+  function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function paint(notesHtml){
+    var el=document.getElementById('cg-devlog');
+    if(!el){ el=document.createElement('div'); el.id='cg-devlog';
+      el.innerHTML='<div class="dl-track"></div>'; document.body.appendChild(el); }
+    var tr=el.querySelector('.dl-track');
+    tr.innerHTML='<b>DEV LOG</b><span class="dl-sep">//</span>'+notesHtml
+      +'<span class="dl-sep">//</span><b>'+esc(BUILD_STAMP)+'</b><span class="dl-sep">//</span>';
+    el.style.display='block';
+    /* speed scales with length: ~70 px/s, never faster than 18s per pass */
+    var w=tr.scrollWidth||1200; tr.style.animationDuration=Math.max(18, Math.round(w/70))+'s';
+  }
+  paint(NOTES);
+  fetch(SB_URL+'/rest/v1/site_news?select=body,created_at&order=created_at.desc&limit=1',
+    {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(d){ if(d&&d[0]&&d[0].body){ paint(esc(d[0].body)); } })
+    .catch(function(){});
 })();
 </script>
 </body>

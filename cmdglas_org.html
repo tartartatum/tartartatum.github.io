@@ -287,9 +287,10 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 <script>
 (function(){
   "use strict";
-  var ORG_BUILD=4, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
+  var ORG_BUILD=5, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
   var GAMERPOOL='gamerpool';
   var isAdmin=false, approvedOrgs=[], pendingOrgs=[], myPendingOrg=null, myFoundedOrg=null, subOrgId=null, rtOrgs=null;
+  var poolRoster=[], poolQ='';   /* ORG_BUILD 5: the registered-pilots list + its search text */
   /* general + party belong to the whole gamer pool; everything else is org-scoped */
   function orgFor(ch){ return (ch==='general'||ch==='party') ? GAMERPOOL : ORG_ID; }
   function chLocked(ch){ return !orgFor(ch); }
@@ -320,7 +321,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
   // ---- modes: chat / org / wing ----
   function setMode(mode){ curMode=mode;
     ['chat','org','wing'].forEach(function(m){ var b=$('mode-'+m), v=$('view-'+m); if(b)b.classList.toggle('active',m===mode); if(v)v.classList.toggle('hidden',m!==mode); });
-    if(mode==='org'){ loadSquadrons(function(){loadRoster();}); }
+    if(mode==='org'){ loadSquadrons(function(){loadRoster();}); loadPool(); }
     if(mode==='wing'){ loadSquadrons(function(){loadRoster();}); }
   }
 
@@ -447,6 +448,42 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
       +'<button class="oc-btn" id="oc-found-btn" disabled>SUBMIT TO SYSTEM ADMIN</button></div></div>';
     box.innerHTML=h; wireJoinForms();
   }
+  /* ---- ORG_BUILD 5: REGISTERED PILOTS - searchable, online-first, for everyone ---- */
+  function appendPool(box){
+    var sec=document.createElement('div'); sec.className='oc-applicants'; sec.id='oc-pool-sec';
+    sec.style.borderColor='rgba(108,180,214,.35)'; sec.style.background='rgba(108,180,214,.05)'; sec.style.marginTop='14px';
+    sec.innerHTML='<h3 style="color:#8fdcff">REGISTERED PILOTS <span id="oc-pool-n" style="color:#5f8ba1"></span></h3>'
+      +'<input id="oc-pool-q" class="oc-fi" placeholder="Search callsign or RSI handle..." autocomplete="off" spellcheck="false" style="margin:2px 0 8px">'
+      +'<div id="oc-pool-list"></div>';
+    box.appendChild(sec);
+    var q=sec.querySelector('#oc-pool-q'); q.value=poolQ;
+    q.addEventListener('input',function(){ poolQ=q.value; renderPoolList(); });
+    renderPoolList();
+  }
+  function renderPoolList(){
+    var el=document.getElementById('oc-pool-list'); if(!el) return;
+    var f=poolQ.trim().toLowerCase();
+    var rows=poolRoster.filter(function(m){ if(!f) return true;
+      return String(m.callsign||'').toLowerCase().indexOf(f)>=0 || String(m.handle||'').toLowerCase().indexOf(f)>=0; });
+    rows.sort(function(a,b){ var oa=onlineIds[a.user_id]?0:1, ob=onlineIds[b.user_id]?0:1;
+      if(oa!==ob) return oa-ob; return String(a.callsign||'').localeCompare(String(b.callsign||'')); });
+    var on=poolRoster.filter(function(m){return onlineIds[m.user_id];}).length;
+    var n=document.getElementById('oc-pool-n'); if(n) n.textContent='- '+on+' online / '+poolRoster.length+' registered';
+    var CAP=150, over=rows.length>CAP; if(over) rows=rows.slice(0,CAP);
+    el.innerHTML = rows.length ? rows.map(function(m){ var o=!!onlineIds[m.user_id];
+        return '<div class="oc-slot'+(o?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div>'
+          +'<span class="snm">'+esc(m.callsign||'CMDR')+(me&&m.user_id===me.id?' (you)':'')+(m.handle?' <span style="font-size:10px;color:#5f8ba1">@'+esc(m.handle)+'</span>':'')+'</span>'
+          +'<span style="font-size:10px;letter-spacing:1px;flex:none;color:'+(o?'var(--good)':'var(--txt-dim)')+'">'+(o?'ONLINE':('seen '+ago(m.last_seen)))+'</span></div>'; }).join('')
+      : '<div style="color:var(--txt-dim);font-size:12px;padding:4px">No pilots match.</div>';
+    if(over) el.innerHTML+='<div style="color:var(--txt-dim);font-size:11px;padding:4px">Showing the first '+CAP+' - refine the search.</div>';
+  }
+  function loadPool(){ if(!sb||!me) return;
+    sb.from('org_members').select('*').eq('org_id',GAMERPOOL).order('callsign',{ascending:true}).limit(1000).then(function(res){
+      if(res.error) return; poolRoster=res.data||[];
+      var sec=document.getElementById('oc-pool-sec');
+      if(sec){ var b=sec.parentNode; sec.remove(); appendPool(b); }
+    },function(){});
+  }
   function wireJoinForms(){
     var hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), ab=$('oc-apply-btn');
     if(hn&&cs&&ab){ var v=function(){ ab.disabled=!(hn.value.trim()&&cs.value.trim()); };
@@ -487,7 +524,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
       if(_ol)clearTimeout(_ol); _ol=setTimeout(checkMembership,400); }).subscribe();
   }
   function startComms(){ $('oc-input').disabled=false; $('oc-send').disabled=false;
-    buildChannels(); loadMessages(); subChat(); heartbeat(); subPresence();
+    buildChannels(); loadMessages(); subChat(); heartbeat(); subPresence(); loadPool();
     if(ORG_ID){ loadSquadrons(function(){loadRoster();}); } else { squadrons=[]; roster=[]; renderOrg(); renderWing(); }
     subMembers(); if(isAdmin) subOrgs();
   }
@@ -508,6 +545,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
     if(!ORG_ID){
       if(isAdmin){ box.className='oc-console'; box.innerHTML=adminHTML(); $('oc-roster-count').textContent=pendingOrgs.length+' org application'+(pendingOrgs.length===1?'':'s')+' · '+approvedOrgs.length+' active org'+(approvedOrgs.length===1?'':'s'); }
       else { renderJoin(box); $('oc-roster-count').textContent=approvedOrgs.length?approvedOrgs.length+' org'+(approvedOrgs.length===1?'':'s')+' recruiting':'no orgs recruiting yet'; }
+      appendPool(box);
       return;
     }
     var approved=roster.filter(function(m){return m.status==='approved';});
@@ -515,6 +553,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
     $('oc-roster-count').textContent=approved.filter(function(m){return onlineIds[m.user_id];}).length+' online · '+approved.length+' member'+(approved.length===1?'':'s');
     if(isCmd()){ renderConsole(box,approved,pending); } else { renderMemberRoster(box,approved); }
     if(isAdmin) box.insertAdjacentHTML('afterbegin', adminHTML());
+    appendPool(box);
   }
   function slotHTML(m,extra){ var on=!!onlineIds[m.user_id]; var mine=me&&m.user_id===me.id;
     return '<div class="oc-slot'+(on?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div><span class="snm">'+esc(m.callsign||'CMDR')+(mine?' (you)':'')+' — '+esc(rankName(m.role))+'</span>'+(extra||'')+'</div>';
@@ -607,7 +646,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 
   // ---- presence + live members ----
   function subPresence(){ if(!sb||!me)return; try{if(rtPresence)sb.removeChannel(rtPresence);}catch(e){}
-    rtPresence=sb.channel('org-presence-'+(ORG_ID||GAMERPOOL),{config:{presence:{key:me.id}}});
+    rtPresence=sb.channel('org-presence-'+GAMERPOOL,{config:{presence:{key:me.id}}}); /* ORG_BUILD 5: one pool-wide presence channel - org members must be visible in the REGISTERED PILOTS list too */
     rtPresence.on('presence',{event:'sync'},function(){ var st=rtPresence.presenceState(); onlineIds={}; Object.keys(st).forEach(function(k){onlineIds[k]=1;}); renderOrg(); renderWing(); });
     rtPresence.subscribe(function(status){ if(status==='SUBSCRIBED'){ rtPresence.track({user_id:me.id,callsign:callsign(me),online_at:new Date().toISOString()}); } });
   }
