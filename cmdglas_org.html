@@ -212,6 +212,9 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 #oc-howto h3{font-family:'Bruno Ace',sans-serif;font-size:11px;letter-spacing:2px;color:#8fdcff;margin:12px 0 4px}
 #oc-howto ul{margin:4px 0 0;padding-left:18px}
 #oc-howto li{color:var(--txt-mid);font-size:13px;line-height:1.5;margin:3px 0}
+/* ORG_BUILD 4: org channels lock until you belong to an org */
+.oc-ch.locked{opacity:.5}
+.oc-ch.locked .lk{margin-left:auto;font-size:8px;letter-spacing:1px;color:#c9a86a;border:1px solid #4a3d18;border-radius:4px;padding:1px 4px;flex:none}
 </style>
 </head>
 <body>
@@ -269,7 +272,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 </div>
 <div id="oc-nobackend" class="oc-overlay hidden">
   <div class="oc-card"><h2>COMMS BACKEND NOT SET UP</h2>
-    <p>The comms tables aren't in Supabase yet. Run <code>cmdglas_org_phase0.sql</code> once in the Supabase SQL Editor, then reload.</p>
+    <p>The comms backend isn't current. Run <code>cmdglas_org_phase0.sql</code>, <code>phase1</code> and <code>phase2</code> once each, in order, in the Supabase SQL Editor, then reload.</p>
     <p id="oc-nobackend-detail" style="font-size:12px;color:var(--txt-dim)"></p>
     <button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>
   </div>
@@ -284,7 +287,13 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 <script>
 (function(){
   "use strict";
-  var ORG_BUILD=3, ORG_ID='cmdglas';
+  var ORG_BUILD=4, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
+  var GAMERPOOL='gamerpool';
+  var isAdmin=false, approvedOrgs=[], pendingOrgs=[], myPendingOrg=null, myFoundedOrg=null, subOrgId=null, rtOrgs=null;
+  /* general + party belong to the whole gamer pool; everything else is org-scoped */
+  function orgFor(ch){ return (ch==='general'||ch==='party') ? GAMERPOOL : ORG_ID; }
+  function chLocked(ch){ return !orgFor(ch); }
+  function orgName(id){ for(var i=0;i<approvedOrgs.length;i++) if(approvedOrgs[i].id===id) return approvedOrgs[i].name; return id; }
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   var CHANNELS=[{id:'general',name:'general'},{id:'party',name:'party'},{id:'org',name:'org'},{id:'chan1',name:'orgchan 1'},{id:'chan2',name:'orgchan 2'},{id:'chan3',name:'orgchan 3'},{id:'chan4',name:'orgchan 4'},{id:'chan5',name:'orgchan 5'},{id:'chan6',name:'orgchan 6'}];
@@ -317,16 +326,18 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 
   // ---- channels ----
   function buildChannels(){ var w=$('oc-channels'); w.innerHTML='';
-    CHANNELS.forEach(function(c){ var el=document.createElement('div'); el.className='oc-ch'+(c.id===curChannel?' active':''); el.dataset.ch=c.id;
-      el.innerHTML='<span class="hash">#</span><span>'+esc(c.name)+'</span>'; el.onclick=function(){selectChannel(c.id);}; w.appendChild(el); });
+    if(chLocked(curChannel)) curChannel='general';
+    CHANNELS.forEach(function(c){ var lk=chLocked(c.id); var el=document.createElement('div'); el.className='oc-ch'+(c.id===curChannel?' active':'')+(lk?' locked':''); el.dataset.ch=c.id;
+      el.innerHTML='<span class="hash">#</span><span>'+esc(c.name)+'</span>'+(lk?'<span class="lk">ORG</span>':'');
+      el.onclick=lk?function(){ setMode('org'); }:function(){selectChannel(c.id);}; w.appendChild(el); });
     var cc=CHANNELS.filter(function(x){return x.id===curChannel;})[0]||CHANNELS[0];
     $('oc-ch-name').textContent=cc.name; $('oc-input').placeholder='Message #'+cc.name+' …  (Enter to send · Shift+Enter = newline)';
   }
-  function selectChannel(id){ if(id===curChannel)return; curChannel=id;
+  function selectChannel(id){ if(id===curChannel)return; if(chLocked(id)){ setMode('org'); return; } curChannel=id;
     var c=CHANNELS.filter(function(x){return x.id===id;})[0]||CHANNELS[0];
     $('oc-ch-name').textContent=c.name; $('oc-input').placeholder='Message #'+c.name+' …  (Enter to send · Shift+Enter = newline)';
     Array.prototype.forEach.call(document.querySelectorAll('.oc-ch'),function(el){el.classList.toggle('active',el.dataset.ch===id);});
-    rendered={}; $('oc-stream').innerHTML=''; loadMessages();
+    rendered={}; $('oc-stream').innerHTML=''; loadMessages(); if(orgFor(id)!==subOrgId) subChat();
   }
 
   // ---- chat ----
@@ -346,19 +357,19 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
     if(/JWT|not authenticated|invalid.*(token|claim)|expired/i.test(msg)){ banner('err','Your sign-in expired. Reload the tablet and sign in again.'); return; }
     banner('err','Comms error: '+msg);
   }
-  function loadMessages(){ if(!sb||!me)return; showErr(''); lastDay=null;
-    sb.from('org_messages').select('*').eq('org_id',ORG_ID).eq('channel',curChannel).order('created_at',{ascending:true}).limit(200)
+  function loadMessages(){ if(!sb||!me)return; var oid=orgFor(curChannel); if(!oid)return; showErr(''); lastDay=null;
+    sb.from('org_messages').select('*').eq('org_id',oid).eq('channel',curChannel).order('created_at',{ascending:true}).limit(200)
       .then(function(res){ if(res.error){handleDbError(res.error);return;} $('oc-stream').innerHTML=''; rendered={};
         var rows=res.data||[]; if(!rows.length) sysLine('No transmissions in #'+curChannel+' yet.'); rows.forEach(renderMsg); },
         function(e){ showErr('Load failed: '+(e&&e.message||e)); });
   }
   function send(){ var ta=$('oc-input'); var body=ta.value.trim(); if(!body||!sb||!me)return; ta.value=''; autoGrow(); $('oc-send').disabled=true;
-    sb.from('org_messages').insert({org_id:ORG_ID,channel:curChannel,user_id:me.id,callsign:callsign(me),body:body}).select().then(function(res){
+    sb.from('org_messages').insert({org_id:orgFor(curChannel),channel:curChannel,user_id:me.id,callsign:callsign(me),body:body}).select().then(function(res){
       $('oc-send').disabled=false; if(res.error){handleDbError(res.error);ta.value=body;return;} if(res.data&&res.data[0])renderMsg(res.data[0]); },
       function(e){ $('oc-send').disabled=false; banner('err','Message not sent — '+(e&&e.message||e)); ta.value=body; });
   }
-  function subChat(){ if(!sb)return; try{if(rtChat)sb.removeChannel(rtChat);}catch(e){}
-    rtChat=sb.channel('org-chat-'+ORG_ID).on('postgres_changes',{event:'INSERT',schema:'public',table:'org_messages',filter:'org_id=eq.'+ORG_ID},function(p){ var m=p.new; if(m&&m.channel===curChannel)renderMsg(m); })
+  function subChat(){ if(!sb)return; var oid=orgFor(curChannel); if(!oid)return; subOrgId=oid; try{if(rtChat)sb.removeChannel(rtChat);}catch(e){}
+    rtChat=sb.channel('org-chat-'+oid).on('postgres_changes',{event:'INSERT',schema:'public',table:'org_messages',filter:'org_id=eq.'+oid},function(p){ var m=p.new; if(m&&m.channel===curChannel)renderMsg(m); })
       .subscribe(function(s){ if(s==='SUBSCRIBED'){ setConn(true,'live'); banner(''); }
         else if(s==='CHANNEL_ERROR'||s==='TIMED_OUT'){ setConn(false,'reconnecting…'); banner('warn','Lost the live link — reconnecting. New messages may be delayed until it returns.'); }
         else if(s==='CLOSED'){ setConn(false,'offline'); banner('err','Comms offline — not connected. Check your internet, then press Reload.'); } });
@@ -371,71 +382,139 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
     $('oc-signin').classList.add('hidden'); $('oc-who').textContent=callsign(me); checkMembership();
   }
   function checkMembership(){ if(!sb||!me)return;
-    sb.from('org_members').select('*').eq('org_id',ORG_ID).eq('user_id',me.id).maybeSingle().then(function(res){
-      if(res.error){ handleDbError(res.error); return; }
-      var row=res.data;
-      if(!row){ myRole=null; myStatus=null; mySquad=null; showGate('apply'); return; }
-      myRole=row.role; myStatus=row.status; mySquad=row.squadron||null;
-      if(row.status!=='approved'){ showGate(row.status==='denied'?'denied':'pending'); return; }
-      hideGate(); startComms();
-    }, function(e){ showErr('Membership check failed: '+(e&&e.message||e)); });
+    /* context load, in order: am I the system admin -> my memberships -> the org list.
+       Nothing here blocks chat: everyone lands in the gamer pool. */
+    sb.from('site_admins').select('user_id').eq('user_id',me.id).maybeSingle().then(function(ar){
+      if(ar.error){ handleDbError(ar.error); return; }
+      isAdmin=!!ar.data;
+      sb.from('org_members').select('*').eq('user_id',me.id).then(function(mr){
+        if(mr.error){ handleDbError(mr.error); return; }
+        var rows=mr.data||[];
+        var pool=null, ap=null, pd=null;
+        rows.forEach(function(r){ if(r.org_id===GAMERPOOL){pool=r;return;}
+          if(r.status==='approved'&&!ap)ap=r; else if(r.status==='pending'&&!pd)pd=r; });
+        ORG_ID=ap?ap.org_id:null; myRole=ap?ap.role:null; myStatus=ap?ap.status:null; mySquad=ap?(ap.squadron||null):null;
+        myPendingOrg=pd?pd.org_id:null;
+        sb.from('orgs').select('*').then(function(orr){
+          if(orr.error){ handleDbError(orr.error); return; }
+          var os=orr.data||[];
+          approvedOrgs=os.filter(function(o){return o.status==='approved'&&o.id!==GAMERPOOL;});
+          pendingOrgs=os.filter(function(o){return o.status==='pending';});
+          myFoundedOrg=null; os.forEach(function(o){ if(o.owner_id===me.id&&o.status!=='approved') myFoundedOrg=o; });
+          function go(){ hideGate(); startComms(); }
+          if(!pool){ /* first visit: auto-join the general gamer pool */
+            sb.from('org_members').insert({user_id:me.id,org_id:GAMERPOOL,callsign:callsign(me)}).then(function(res){
+              if(res.error&&res.error.code!=='23505'){ handleDbError(res.error); return; } go(); },function(){ go(); });
+          } else go();
+        },function(e){ showErr('Org list failed: '+(e&&e.message||e)); });
+      },function(e){ showErr('Membership check failed: '+(e&&e.message||e)); });
+    },function(e){ showErr('Admin check failed: '+(e&&e.message||e)); });
   }
   function hideGate(){ $('oc-gate').classList.add('hidden'); }
-  function showGate(kind){ var h=$('oc-gate-h'), p=$('oc-gate-p'), a=$('oc-gate-actions');
-    $('oc-input').disabled=true; $('oc-send').disabled=true; setConn(false,'—');
-    if(kind==='apply'){ h.textContent='REQUEST TO JOIN';
-      p.innerHTML='Signed in as <b>'+esc(callsign(me))+'</b>. Fill this out — a Wing Commander reviews every request. Fields marked <span class="oc-req">*</span> are required. You will see nothing in COMMS until you are approved.';
-      a.innerHTML='<div class="oc-apply-form">'
+  /* ---- ORG tab panels: system admin console / join an org / found an org ---- */
+  function adminHTML(){ var h='<div class="oc-applicants"><h3>SYSTEM — ORG APPLICATIONS'+(pendingOrgs.length?(' — '+pendingOrgs.length):'')+'</h3>';
+    if(!pendingOrgs.length) h+='<div style="font-size:12px;color:#8ba0b5">No org applications waiting. Founders apply from this tab; you approve the org, its command vets its own pilots.</div>';
+    pendingOrgs.forEach(function(o){ h+='<div class="oc-appl"><span class="nm">'+esc(o.name)+(o.tag?'<span class="oc-aph">['+esc(o.tag)+']</span>':'')+'<span class="oc-aph">id: '+esc(o.id)+'</span></span>'
+      +'<button class="oc-ap" data-orgapprove="'+esc(o.id)+'">Approve org</button>'
+      +'<button class="oc-dn" data-orgdeny="'+esc(o.id)+'">Deny</button></div>'; });
+    h+='</div><div class="oc-board-h">ACTIVE ORGS — '+approvedOrgs.length+'</div>';
+    if(approvedOrgs.length){ h+='<div class="oc-board">';
+      approvedOrgs.forEach(function(o){ h+='<div class="oc-sqn"><div class="oc-sqn-h"><span class="sn">'+esc(o.name)+(o.tag?' ['+esc(o.tag)+']':'')+'</span><span class="sl">'+esc(o.id)+'</span></div><div style="font-size:11px;color:#8ba0b5">Run by its own command — they vet their applicants.</div></div>'; });
+      h+='</div>'; }
+    return h;
+  }
+  function renderJoin(box){ box.className='oc-console'; var h='';
+    if(myPendingOrg) h+='<div class="oc-applicants"><h3>APPLICATION PENDING</h3><div style="font-size:13px;color:#c9d7e4">Your request to join <b>'+esc(orgName(myPendingOrg))+'</b> sits with that org\'s command — not the system admin. General + Party stay open while you wait.</div></div>';
+    if(myFoundedOrg) h+='<div class="oc-applicants"><h3>YOUR ORG — '+esc(String(myFoundedOrg.status||'').toUpperCase())+'</h3><div style="font-size:13px;color:#c9d7e4">'+(myFoundedOrg.status==='pending'?('<b>'+esc(myFoundedOrg.name)+'</b> is waiting on the system admin. The moment it\'s approved you are its Wing Commander.'):('<b>'+esc(myFoundedOrg.name)+'</b> was not approved. You can found a different org below.'))+'</div></div>';
+    h+='<div class="oc-sqn" style="max-width:430px"><div class="oc-sqn-h"><span class="sn">JOIN AN ORG</span></div>';
+    if(approvedOrgs.length){
+      h+='<div class="oc-apply-form" style="max-width:none;margin:0">'
+        +'<label class="oc-fl">ORG <span class="oc-req">*</span><select id="oc-ap-org" class="oc-fi">'+approvedOrgs.map(function(o){return '<option value="'+esc(o.id)+'">'+esc(o.name)+(o.tag?' ['+esc(o.tag)+']':'')+'</option>';}).join('')+'</select></label>'
         +'<label class="oc-fl">RSI HANDLE <span class="oc-req">*</span><input id="oc-ap-handle" class="oc-fi" maxlength="40" autocomplete="off" spellcheck="false" placeholder="your Star Citizen handle"></label>'
         +'<label class="oc-fl">CALLSIGN <span class="oc-req">*</span><input id="oc-ap-callsign" class="oc-fi" maxlength="40" autocomplete="off" value="'+esc(callsign(me))+'"></label>'
         +'<label class="oc-fl">NOTE TO COMMAND <span class="oc-opt">(optional)</span><textarea id="oc-ap-note" class="oc-fi" maxlength="200" rows="2" placeholder="who you are / who referred you"></textarea></label>'
         +'<div id="oc-ap-err" class="oc-ap-err"></div>'
-        +'<button class="oc-btn" id="oc-apply-btn" disabled>SEND REQUEST</button>'
-        +'</div>';
-      wireApplyForm(); }
-    else if(kind==='pending'){ h.textContent='APPLICATION PENDING'; p.innerHTML='Your request is in, <b>'+esc(callsign(me))+'</b>. A Wing Commander must approve you before COMMS unlocks.'; a.innerHTML='<button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>'; }
-    else { h.textContent='NOT APPROVED'; p.innerHTML='Your request was not approved. Speak to a Wing Commander if you believe this is a mistake.'; a.innerHTML='<button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>'; }
-    $('oc-gate').classList.remove('hidden');
+        +'<button class="oc-btn" id="oc-apply-btn" disabled>SEND REQUEST</button></div>';
+    } else {
+      h+='<div style="font-size:13px;color:#c9d7e4;line-height:1.5">No orgs are recruiting yet. An org opens the day a commander founds one and the system admin approves it. Until then everyone flies in the General Gamer Pool — #general and #party are open now.</div>';
+    }
+    h+='</div><div class="oc-sqn" style="max-width:430px;margin-top:12px"><div class="oc-sqn-h"><span class="sn">FOUND AN ORG</span><span class="sl">you become its Wing Commander</span></div>'
+      +'<div class="oc-apply-form" style="max-width:none;margin:0">'
+      +'<label class="oc-fl">ORG NAME <span class="oc-req">*</span><input id="oc-fo-name" class="oc-fi" maxlength="48" placeholder="e.g. Ghost Squadron"></label>'
+      +'<label class="oc-fl">ORG ID <span class="oc-req">*</span><input id="oc-fo-id" class="oc-fi" maxlength="24" spellcheck="false" autocomplete="off" placeholder="lowercase-slug-3-24-chars"></label>'
+      +'<label class="oc-fl">TAG <span class="oc-opt">(2-6 chars, optional)</span><input id="oc-fo-tag" class="oc-fi" maxlength="6" autocomplete="off"></label>'
+      +'<div id="oc-fo-err" class="oc-ap-err"></div>'
+      +'<button class="oc-btn" id="oc-found-btn" disabled>SUBMIT TO SYSTEM ADMIN</button></div></div>';
+    box.innerHTML=h; wireJoinForms();
   }
-  function wireApplyForm(){
-    var hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), btn=$('oc-apply-btn');
-    if(!hn||!cs||!btn) return;
-    function val(){ btn.disabled = !(hn.value.trim() && cs.value.trim()); }
-    hn.addEventListener('input',val); cs.addEventListener('input',val);
-    hn.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!btn.disabled){ e.preventDefault(); applyToOrg(); } });
-    btn.onclick=applyToOrg; val(); try{ hn.focus(); }catch(e){}
+  function wireJoinForms(){
+    var hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), ab=$('oc-apply-btn');
+    if(hn&&cs&&ab){ var v=function(){ ab.disabled=!(hn.value.trim()&&cs.value.trim()); };
+      hn.addEventListener('input',v); cs.addEventListener('input',v); ab.onclick=applyToOrg; v(); }
+    var fn=$('oc-fo-name'), fi=$('oc-fo-id'), fb=$('oc-found-btn');
+    if(fn&&fi&&fb){ var touched=false;
+      var slug=function(t){ return String(t||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,24); };
+      var w=function(){ fb.disabled=!(fn.value.trim().length>=3 && /^[a-z0-9][a-z0-9-]{2,23}$/.test(fi.value)); };
+      fi.addEventListener('input',function(){ touched=true; w(); });
+      fn.addEventListener('input',function(){ if(!touched) fi.value=slug(fn.value); w(); });
+      var ft=$('oc-fo-tag'); if(ft) ft.addEventListener('input',w);
+      fb.onclick=foundOrg; w(); }
   }
   function applyToOrg(){ if(!sb||!me)return;
-    var hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), nt=$('oc-ap-note'), err=$('oc-ap-err'), b=$('oc-apply-btn');
-    var handle=hn?hn.value.trim():'', call=(cs?cs.value.trim():'')||callsign(me), note=nt?nt.value.trim():'';
-    if(!handle || !call){ if(err) err.textContent='RSI Handle and Callsign are both required.'; return; } /* server-side guard too, but block the empty send here */
+    var os=$('oc-ap-org'), hn=$('oc-ap-handle'), cs=$('oc-ap-callsign'), nt=$('oc-ap-note'), err=$('oc-ap-err'), b=$('oc-apply-btn');
+    var oid=os?os.value:'', handle=hn?hn.value.trim():'', call=(cs?cs.value.trim():'')||callsign(me), note=nt?nt.value.trim():'';
+    if(!oid||!handle||!call){ if(err) err.textContent='Org, RSI Handle and Callsign are all required.'; return; }
     if(err) err.textContent='';
     if(b){b.disabled=true;b.textContent='SENDING…';}
-    sb.from('org_members').insert({user_id:me.id,org_id:ORG_ID,callsign:call,handle:handle,note:note||null}).select().then(function(res){
-      if(res.error){ handleDbError(res.error); if(b){b.disabled=false;b.textContent='SEND REQUEST';} return; } myStatus='pending'; showGate('pending');
-    }, function(e){ showErr('Apply failed: '+(e&&e.message||e)); if(b){b.disabled=false;b.textContent='SEND REQUEST';} });
+    sb.from('org_members').insert({user_id:me.id,org_id:oid,callsign:call,handle:handle,note:note||null}).then(function(res){
+      if(res.error){ if(err) err.textContent=res.error.message||'refused'; if(b){b.disabled=false;b.textContent='SEND REQUEST';} return; }
+      myPendingOrg=oid; toast('Request sent. '+orgName(oid)+' command will review it.'); renderOrg();
+    }, function(e){ if(err) err.textContent=(e&&e.message||e); if(b){b.disabled=false;b.textContent='SEND REQUEST';} });
+  }
+  function foundOrg(){ if(!sb||!me)return;
+    var fn=$('oc-fo-name'), fi=$('oc-fo-id'), ft=$('oc-fo-tag'), err=$('oc-fo-err'), b=$('oc-found-btn');
+    var name=fn?fn.value.trim():'', id=fi?fi.value.trim().toLowerCase():'', tag=ft?(ft.value.trim()||null):null;
+    if(err) err.textContent='';
+    if(b){b.disabled=true;b.textContent='SUBMITTING…';}
+    sb.from('orgs').insert({id:id,name:name,tag:tag,owner_id:me.id}).then(function(res){
+      if(res.error){ if(err) err.textContent=res.error.message||'refused'; if(b){b.disabled=false;b.textContent='SUBMIT TO SYSTEM ADMIN';} return; }
+      toast('Org application submitted — the system admin has it.'); checkMembership();
+    }, function(e){ if(err) err.textContent=(e&&e.message||e); if(b){b.disabled=false;b.textContent='SUBMIT TO SYSTEM ADMIN';} });
+  }
+  function subOrgs(){ if(!sb)return; try{if(rtOrgs)sb.removeChannel(rtOrgs);}catch(e){}
+    var _ol=null;
+    rtOrgs=sb.channel('cg-orgs').on('postgres_changes',{event:'*',schema:'public',table:'orgs'},function(){
+      if(_ol)clearTimeout(_ol); _ol=setTimeout(checkMembership,400); }).subscribe();
   }
   function startComms(){ $('oc-input').disabled=false; $('oc-send').disabled=false;
-    buildChannels(); loadMessages(); subChat(); heartbeat(); subPresence(); loadSquadrons(function(){loadRoster();}); subMembers();
+    buildChannels(); loadMessages(); subChat(); heartbeat(); subPresence();
+    if(ORG_ID){ loadSquadrons(function(){loadRoster();}); } else { squadrons=[]; roster=[]; renderOrg(); renderWing(); }
+    subMembers(); if(isAdmin) subOrgs();
   }
   function heartbeat(){ if(!sb||!me)return; sb.from('org_members').update({callsign:callsign(me),last_seen:new Date().toISOString()}).eq('user_id',me.id).then(function(){},function(){}); }
 
   // ---- data ----
-  function loadSquadrons(cb){ if(!sb||!me){ if(cb)cb(); return; }
+  function loadSquadrons(cb){ if(!sb||!me||!ORG_ID){ if(cb)cb(); return; }
     sb.from('org_squadrons').select('*').eq('org_id',ORG_ID).order('sort',{ascending:true}).then(function(res){
       if(!res.error) squadrons=res.data||[]; if(cb)cb(); },function(){ if(cb)cb(); });
   }
-  function loadRoster(){ if(!sb||!me)return;
+  function loadRoster(){ if(!sb||!me)return; if(!ORG_ID){ renderOrg(); renderWing(); return; }
     sb.from('org_members').select('*').eq('org_id',ORG_ID).order('callsign',{ascending:true}).then(function(res){
       if(res.error){handleDbError(res.error);return;} roster=res.data||[]; renderOrg(); renderWing(); },function(){});
   }
 
   // ---- ORG view: console for command, roster for members ----
   function renderOrg(){ var box=$('oc-roster'); if(!box)return;
+    if(!ORG_ID){
+      if(isAdmin){ box.className='oc-console'; box.innerHTML=adminHTML(); $('oc-roster-count').textContent=pendingOrgs.length+' org application'+(pendingOrgs.length===1?'':'s')+' · '+approvedOrgs.length+' active org'+(approvedOrgs.length===1?'':'s'); }
+      else { renderJoin(box); $('oc-roster-count').textContent=approvedOrgs.length?approvedOrgs.length+' org'+(approvedOrgs.length===1?'':'s')+' recruiting':'no orgs recruiting yet'; }
+      return;
+    }
     var approved=roster.filter(function(m){return m.status==='approved';});
     var pending=roster.filter(function(m){return m.status==='pending';});
     $('oc-roster-count').textContent=approved.filter(function(m){return onlineIds[m.user_id];}).length+' online · '+approved.length+' member'+(approved.length===1?'':'s');
     if(isCmd()){ renderConsole(box,approved,pending); } else { renderMemberRoster(box,approved); }
+    if(isAdmin) box.insertAdjacentHTML('afterbegin', adminHTML());
   }
   function slotHTML(m,extra){ var on=!!onlineIds[m.user_id]; var mine=me&&m.user_id===me.id;
     return '<div class="oc-slot'+(on?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div><span class="snm">'+esc(m.callsign||'CMDR')+(mine?' (you)':'')+' — '+esc(rankName(m.role))+'</span>'+(extra||'')+'</div>';
@@ -481,6 +560,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 
   // ---- WING board (hierarchy) ----
   function renderWing(){ var box=$('wing-board'); if(!box)return;
+    if(!ORG_ID){ box.innerHTML='<div class="wing-you">You are in the General Gamer Pool. Join an org (ORG tab) to fly in a wing.</div>'; return; }
     var approved=roster.filter(function(m){return m.status==='approved';});
     var wc=approved.filter(function(m){return m.role==='wing-commander';});
     var you='You are: '+(myStatus==='approved'?(rankName(myRole)+(mySquad?' · '+sqnName(mySquad):' · unassigned')):'not yet approved');
@@ -510,6 +590,12 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
   function setLeader(uid,sqnId){ sb.from('org_squadrons').update({leader_id:uid}).eq('id',sqnId).then(function(res){ if(res&&res.error){handleDbError(res.error);return;} loadSquadrons(function(){loadRoster();}); },function(){}); }
 
   function consoleClick(e){ var t=e.target;
+    var oa=t.closest?t.closest('[data-orgapprove]'):null;
+    if(oa){ sb.from('orgs').update({status:'approved'}).eq('id',oa.getAttribute('data-orgapprove')).then(function(res){
+        if(res&&res.error){handleDbError(res.error);return;} toast('Org approved — its founder is now Wing Commander there.'); checkMembership(); },function(){}); return; }
+    var od=t.closest?t.closest('[data-orgdeny]'):null;
+    if(od){ if(confirm('Deny this org application?')) sb.from('orgs').update({status:'denied'}).eq('id',od.getAttribute('data-orgdeny')).then(function(res){
+        if(res&&res.error){handleDbError(res.error);return;} checkMembership(); },function(){}); return; }
     var ap=t.closest?t.closest('[data-approve]'):null; if(ap){ var uid=ap.getAttribute('data-approve'); var rs=document.querySelector('[data-rank="'+uid+'"]'), ss=document.querySelector('[data-sqn="'+uid+'"]'); approveMember(uid, rs?rs.value:'wingman', ss?ss.value:''); return; }
     var dn=t.closest?t.closest('[data-deny]'):null; if(dn){ if(confirm('Deny this applicant?')) denyMember(dn.getAttribute('data-deny')); return; }
     var ld=t.closest?t.closest('[data-leader]'):null; if(ld){ setLeader(ld.getAttribute('data-leader'), ld.getAttribute('data-lsqn')); return; }
@@ -521,24 +607,30 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 
   // ---- presence + live members ----
   function subPresence(){ if(!sb||!me)return; try{if(rtPresence)sb.removeChannel(rtPresence);}catch(e){}
-    rtPresence=sb.channel('org-presence-'+ORG_ID,{config:{presence:{key:me.id}}});
+    rtPresence=sb.channel('org-presence-'+(ORG_ID||GAMERPOOL),{config:{presence:{key:me.id}}});
     rtPresence.on('presence',{event:'sync'},function(){ var st=rtPresence.presenceState(); onlineIds={}; Object.keys(st).forEach(function(k){onlineIds[k]=1;}); renderOrg(); renderWing(); });
     rtPresence.subscribe(function(status){ if(status==='SUBSCRIBED'){ rtPresence.track({user_id:me.id,callsign:callsign(me),online_at:new Date().toISOString()}); } });
   }
   var _rl=null;
-  function subMembers(){ if(!sb)return; try{if(rtMembers)sb.removeChannel(rtMembers);}catch(e){}
-    rtMembers=sb.channel('org-live-'+ORG_ID)
-      .on('postgres_changes',{event:'*',schema:'public',table:'org_members',filter:'org_id=eq.'+ORG_ID},function(p){ onMemberChange(p); })
-      .on('postgres_changes',{event:'*',schema:'public',table:'org_squadrons',filter:'org_id=eq.'+ORG_ID},function(){ loadSquadrons(function(){loadRoster();}); })
-      .subscribe();
+  function subMembers(){ if(!sb||!me)return; try{if(rtMembers)sb.removeChannel(rtMembers);}catch(e){}
+    var ch=sb.channel('org-live-'+(ORG_ID||('me-'+me.id)));
+    if(ORG_ID){
+      ch.on('postgres_changes',{event:'*',schema:'public',table:'org_members',filter:'org_id=eq.'+ORG_ID},function(p){ onMemberChange(p); })
+        .on('postgres_changes',{event:'*',schema:'public',table:'org_squadrons',filter:'org_id=eq.'+ORG_ID},function(){ loadSquadrons(function(){loadRoster();}); });
+    } else {
+      /* no org yet: listen to MY rows so an approval flips this window live */
+      ch.on('postgres_changes',{event:'*',schema:'public',table:'org_members',filter:'user_id=eq.'+me.id},function(p){ onMemberChange(p); });
+    }
+    rtMembers=ch.subscribe();
   }
   function onMemberChange(p){ var n=p.new||{};
-    if(me && n.user_id===me.id){
-      var msgs=[];
-      if(n.status && n.status!==myStatus){ if(n.status==='approved'&&myStatus!=='approved'){ myStatus='approved'; myRole=n.role; mySquad=n.squadron||null; toast('You have been approved into the wing.'); checkMembership(); return; } if(n.status==='denied'){ toast('Your membership was revoked.'); myStatus='denied'; showGate('denied'); return; } }
-      if(n.role && n.role!==myRole){ msgs.push('You are now '+rankName(n.role)); myRole=n.role; }
-      if((n.squadron||null)!==mySquad){ msgs.push('Moved to '+sqnName(n.squadron||null)); mySquad=n.squadron||null; }
-      if(msgs.length) toast(msgs.join(' · '));
+    if(me && n.user_id===me.id && n.org_id!==GAMERPOOL){
+      if(n.status==='approved' && ORG_ID!==n.org_id){ toast('You have been approved into '+orgName(n.org_id)+'.'); checkMembership(); return; }
+      if(n.status==='denied' && n.org_id===ORG_ID){ toast('Your membership was revoked.'); checkMembership(); return; }
+      if(n.org_id===ORG_ID){ var msgs=[];
+        if(n.role && n.role!==myRole){ msgs.push('You are now '+rankName(n.role)); myRole=n.role; }
+        if((n.squadron||null)!==mySquad){ msgs.push('Moved to '+sqnName(n.squadron||null)); mySquad=n.squadron||null; }
+        if(msgs.length) toast(msgs.join(' · ')); }
     }
     if(_rl)clearTimeout(_rl); _rl=setTimeout(loadRoster,300);
   }
@@ -565,7 +657,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
   if(window.supabase&&window.supabase.createClient){ initSb(); }
   else{ var sc=document.createElement('script'); sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'; sc.async=true; sc.onload=initSb;
     sc.onerror=function(){ showErr('Comms library failed to load.'); $('oc-signin').classList.remove('hidden'); }; document.head.appendChild(sc); }
-  setInterval(function(){ if(sb&&me&&myStatus==='approved') heartbeat(); }, 60000);
+  setInterval(function(){ if(sb&&me) heartbeat(); }, 60000);
 })();
 </script>
 <div id="oc-howto" class="oc-overlay hidden"><div class="oc-card">
@@ -582,15 +674,16 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 
     <h3>2 &middot; CHANNELS</h3>
     <ul>
-      <li><b>General &middot; Party &middot; Org</b> &mdash; open to every approved member.</li>
-      <li><b>CHAN 1&ndash;6</b> &mdash; org-only working channels; they unlock once you are an approved member.</li>
+      <li><b>General &middot; Party</b> &mdash; the General Gamer Pool. Open to every signed-in pilot, no approval needed.</li>
+      <li><b>Org &middot; CHAN 1&ndash;6</b> &mdash; your org's private channels; they unlock once an org's command approves you.</li>
       <li>The channel you pick in the tablet's COMMS header opens straight to that channel here.</li>
     </ul>
 
     <h3>3 &middot; GETTING IN</h3>
     <ul>
-      <li>Sign in on the tablet (top-right account pill) &mdash; COMMS shares that login.</li>
-      <li>Open COMMS and press <b>APPLY TO JOIN</b>. You land on a <b>PENDING</b> screen and see nothing else until a Wing Commander approves you.</li>
+      <li>Sign in on the tablet (top-right account pill) &mdash; COMMS shares that login. You land in the <b>General Gamer Pool</b> immediately; #general and #party are open.</li>
+      <li>To join an org: <b>ORG tab &rarr; JOIN AN ORG</b>. That org's own command reviews you &mdash; the system admin is not involved.</li>
+      <li>No org fits? <b>FOUND AN ORG</b> on the same tab. The system admin approves the org itself, and from that moment you are its Wing Commander and vet your own pilots.</li>
       <li>The moment you are approved &mdash; or your rank or squadron changes &mdash; a banner tells you instantly. No reload needed.</li>
     </ul>
 

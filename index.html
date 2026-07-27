@@ -7995,7 +7995,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=530;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=531;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -27291,6 +27291,32 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
     will-change:auto !important;
     transition:transform .16s ease, box-shadow .16s ease, border-color .12s !important;
   }
+}
+</style>
+<style id="sc-b531-comms-pill">
+/* 2026-07-27 user: "the chat channel pill housing 'general' is being cut off by Comms >>".
+   Measured, not guessed: the .cd-head row asks for ~395px of content but the dock is
+   ~298px wide at tablet width (a later layout block makes the dock flex with the header,
+   so its width varies). Nothing in the row was allowed to shrink, so the overflow shears
+   whatever lands past the edge. Rule of this fix: decorations give way, the channel pill
+   and the controls never do. Uses a container query on the glass so it reacts to the
+   DOCK's real width, not the screen's. */
+#sc-chatdock .cd-glass{container-type:inline-size}
+#sc-chatdock .cd-head{min-width:0}
+#sc-chatdock .cd-ch{flex:0 0 auto !important;max-width:118px;overflow:hidden;text-overflow:ellipsis}
+#sc-chatdock .cd-title{flex:0 0 auto}
+#sc-chatdock .cd-acc{flex:0 0 auto}
+@container (max-width:344px){
+  #sc-chatdock .cd-acc{display:none !important}     /* the ">>" accent - decorative */
+  #sc-chatdock .cd-bcast{display:none !important}   /* broadcast arc - decorative */
+  #sc-chatdock .cd-head{gap:6px !important;padding:0 10px !important}
+  #sc-chatdock .cd-title{letter-spacing:2px !important}
+  #sc-chatdock .cd-ch{padding:3px 8px !important;max-width:104px}
+  #sc-chatdock .cd-tx{padding:0 9px !important}
+}
+@container (max-width:302px){
+  #sc-chatdock .cd-mic{display:none !important}     /* pulse mic - decorative */
+  #sc-chatdock .cd-title{letter-spacing:1px !important}
 }
 </style>
 </body>
