@@ -7996,9 +7996,9 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=534;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=537;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
-window.CMDGLAS_BUILD_DATE='2026-07-26';
+window.CMDGLAS_BUILD_DATE='2026-07-27';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
    on top should indicate that it's on that page") ============================================
    The topbar buttons were all identical at all times - ⌂ HOME looked the same whether you were on
@@ -15605,7 +15605,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('.info-wrap')
                     ids, handlers and applyView() are untouched. */
                  +"<button type='button' class='panel-btn' id='hv-view-tables' style='font-size:9px;padding:3px 10px'>TABLES</button>"
                  +"<button type='button' class='panel-btn' id='hv-view-decks' style='font-size:9px;padding:3px 10px'>DECKS</button>"+"<button type='button' class='panel-btn' id='harvest-howto' style='font-size:9px;padding:3px 10px;color:var(--blue,#9fd8ff);border-color:var(--blue,#9fd8ff)' onclick=\"scHowto('harvest')\">HOW-TO</button>"
-                 +"<span id='hv-count' style='font-size:9px;color:var(--text-dim);letter-spacing:1px'>same data, two views &middot; hover a card to read it all</span>";
+                 +"<span id='hv-count' style='font-size:9px;color:var(--text-dim);letter-spacing:1px'>type to filter the tables</span>";
     if(anchor&&anchor.nextSibling) host.insertBefore(bar,anchor.nextSibling); else host.insertBefore(bar,host.firstChild);
     function setView(v){
       var decks=(v==="decks");
@@ -15640,9 +15640,13 @@ document.addEventListener('click',function(e){if(!e.target.closest('.info-wrap')
         /* hide a whole deck row if the filter emptied it */
         w.style.display=any?"":"none";
       });
-      if(cnt) cnt.textContent = s ? (shown+" of "+total+" match") : "same data, two views · hover a card to read it all";
-      /* a filter only makes sense against the decks — snap back to them */
-      if(s) setView("decks");
+      if(cnt) cnt.textContent = s ? (shown+" of "+total+" match") : "type to filter the tables";
+      /* build 537 (user: tables only - card decks retired). The old line here snapped the view to
+         DECKS on every keystroke because the filter only worked on cards. Decks are gone, so the
+         filter now works the SOURCE TABLES directly - same match rule, row by row. */
+      Array.prototype.forEach.call(p.querySelectorAll("table.hv-src-table tbody tr"),function(row){
+        row.style.display=(!s||(row.textContent||"").toLowerCase().indexOf(s)>-1)?"":"none";
+      });
     }
     if(q) q.addEventListener("input",filter);
 
@@ -15969,7 +15973,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('.info-wrap')
      Wording is deliberately the two gestures in the order you meet them: hover (already true),
      then click, then click again. It states the RETURN behaviour explicitly, because a toggle whose
      second press is undiscoverable is a trap. */
-  var HINT="hover a card to lift it · click to pin it to the front · click again to send it back";
+  var HINT="click a row to pin it to the front · click again to send it back"; /* build 537: card wording retired with the decks; row-pinning already worked on the table (see .tr-pinned row CSS) */
   function updateHint(){
     var cnt=document.getElementById("tr-count"); if(!cnt) return;
     var q=document.getElementById("tr-q");
@@ -16011,7 +16015,11 @@ document.addEventListener('click',function(e){if(!e.target.closest('.info-wrap')
         c.style.display=hit?"":"none"; if(hit)shown++;
       });
       if(cnt) cnt.textContent = s ? (shown+" of "+total+" match") : HINT;
-      if(s&&VIEW!=="decks"){VIEW="decks";applyView();}
+      /* build 537 (user: tables only - card decks retired). Was: snap to DECKS on any search text.
+         Decks are gone - filter the live SOURCE TABLE rows directly instead. */
+      Array.prototype.forEach.call(P.querySelectorAll("table.tr-src tbody tr"),function(row){
+        row.style.display=(!s||(row.textContent||"").toLowerCase().indexOf(s)>-1)?"":"none";
+      });
     });
   }
 
@@ -25673,7 +25681,7 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
     RIGHT.forEach(function(id){ var el=document.getElementById(id); if(el) rg.appendChild(el); });
     /* keep DOM order lg, appbar, rg so grid columns map 1,2,3 */
     if(appbar.parentElement!==bar || bar.children[1]!==appbar){ bar.insertBefore(appbar, rg); }
-    var tp=document.getElementById('cg-theme-pick'); if(tp && tp.parentElement!==bar) bar.appendChild(tp);
+    var tp=document.getElementById('cg-theme-pick'); var tr536=document.getElementById('cg-theme-row536'); if(tp && !tr536 && tp.parentElement!==bar) bar.appendChild(tp); /* build 536 (user: ticker covered the corner-pinned picker): the centered theme row below this bar owns the picker when present - do NOT steal it back */
     var old=document.getElementById('cg-bottom-row'); if(old && old!==bar) old.style.display='none';
   }
   setInterval(setup, 700); setup();
@@ -27401,9 +27409,9 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   if(window.__cgDevlog533) return; window.__cgDevlog533=true;
   var BUILD_STAMP='TABLET UPDATED 27 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
   var NOTES='WORKING ON: multi-org comms - founders apply, org command vets its own pilots'
-    +' &middot; NEW: searchable REGISTERED PILOTS list in COMMS'
-    +' &middot; NEW: registered-pilots counter on the home bar'
-    +' &middot; Mining rig builder re-verified against 4.9 data';
+    +' &middot; NEW: BLUEPRINTS, HARVESTABLES and HAULING are table-only now - the laggy card decks are retired'
+    +' &middot; NEW: COMMS rosters - online pilots glow bright with a green edge, offline names dimmed'
+    +' &middot; NEW: theme selector moved to its own centered row below REPORT ISSUE (news bar was covering it)';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -27434,6 +27442,102 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){ if(d&&d[0]&&d[0].body){ paint(esc(d[0].body)); } })
     .catch(function(){});
+})();
+</script>
+<style id="sc-b535-deck-drag-css">
+@media (hover:none), (pointer:coarse){
+  /* while .cg-dragging is on the row: nothing animates, nothing pops, nothing shifts */
+  #tab-blueprints .bp-deck-row.cg-dragging .bp-card,
+  #tab-harvest .hv-deck-row.cg-dragging .hv-card{ transition:none !important; }
+  #tab-blueprints .bp-deck-row.cg-dragging .bp-card:hover,
+  #tab-harvest .hv-deck-row.cg-dragging .hv-card:hover,
+  #tab-blueprints .bp-deck-row.cg-dragging .bp-card:hover ~ .bp-card,
+  #tab-harvest .hv-deck-row.cg-dragging .hv-card:hover ~ .hv-card{
+    transform:none !important; z-index:1 !important; }
+}
+</style>
+<script id="sc-b535-deck-drag-js">
+(function(){
+  if(window.__cgDeckDrag535) return; window.__cgDeckDrag535=true;
+  var row=null, sx=0, sy=0, undo=null;
+  function findRow(t){ return t && t.closest ? t.closest('#tab-blueprints .bp-deck-row, #tab-harvest .hv-deck-row') : null; }
+  document.addEventListener('touchstart',function(e){
+    var r=findRow(e.target); if(!r) return;
+    row=r; sx=e.touches[0].clientX; sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!row) return;
+    var dx=Math.abs(e.touches[0].clientX-sx), dy=Math.abs(e.touches[0].clientY-sy);
+    if(dx>10 && dx>dy){ row.classList.add('cg-dragging'); }
+  },{passive:true});
+  function end(){
+    if(!row) return; var r=row; row=null;
+    if(undo) clearTimeout(undo);
+    /* keep the guard up briefly so the momentum glide doesn't pop cards under the finger's last spot */
+    undo=setTimeout(function(){ r.classList.remove('cg-dragging'); }, 350);
+  }
+  document.addEventListener('touchend',end,{passive:true});
+  document.addEventListener('touchcancel',end,{passive:true});
+})();
+</script>
+<style id="sc-b536-themerow-css">/* 2026-07-27 build 536 (user: "the new scrolling bar covers the theme button. please move the theme button centered below the report issue line"). The b533 dev-log ticker (fixed bottom strip, z 2147483620) sat OVER the corner-pinned theme picker (fixed right:26px bottom:24px, z 2147483601). Fix: un-pin the picker and give it its own centered row in normal flow, inserted directly AFTER #cg-onebar (the row whose far-left item is REPORT ISSUE). The old sc-b445 corner-pin selector (body.sc-home-mode #cg-onebar #cg-theme-pick) stops matching by itself once the picker leaves the bar - no !important war needed. sc-b421-onebar-js was taught (one guarded line) not to steal the picker back while this row exists. Reversible: delete this block + the b536 script + restore the b421 line. */
+#cg-theme-row536{display:flex;justify-content:center;align-items:center;width:100%;margin:8px auto 2px;pointer-events:auto}
+#cg-theme-row536 #cg-theme-pick{position:static !important;margin:0 !important}
+body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-row536 #cg-theme-pick span{font-size:10px !important}
+</style>
+<script id="sc-b536-themerow-js">
+(function(){
+  if(window.__cgThemeRow536) return; window.__cgThemeRow536=true;
+  function setup(){
+    var bar=document.getElementById('cg-onebar'), tp=document.getElementById('cg-theme-pick');
+    if(!bar||!tp||!bar.parentNode) return;
+    var row=document.getElementById('cg-theme-row536');
+    if(!row){ row=document.createElement('div'); row.id='cg-theme-row536'; }
+    /* keep the row parked directly after the onebar even if other builders reflow around it */
+    if(row.previousElementSibling!==bar || row.parentNode!==bar.parentNode){ bar.parentNode.insertBefore(row, bar.nextSibling); }
+    if(tp.parentElement!==row){ row.appendChild(tp); } /* guarded write - no unconditional DOM churn */
+  }
+  setInterval(setup, 700); setup();
+})();
+</script>
+<style id="sc-b537-tablesonly-css">/* 2026-07-27 build 537 (user, after testing the b535 drag guard on the physical iPad: "it's still choppy and unresponsive... get rid of the cards and keep tables only"). All three deck/table pages - Blueprints, Harvestables, Hauling - become TABLE-ONLY. The card DOM still renders, hidden: bpBuildTable() derives the blueprints table FROM the .bp-card nodes, the harvest/hauling search counters read the cards, and bpSelLabel() reads card titles - so the cards stay as a hidden data layer and only their DISPLAY is retired. DECKS buttons hidden, not removed: the tour selector (#hv-view-tables,#hv-view-decks) and the click handlers still resolve. The b535 drag guard upstream is now dormant (its rows never show) - left in place, harmless, and it protects anyone who reverts this block. Reversible: delete this block + the sc-b537 script, restore the two filter snap-to-decks lines and the HINT/hv-count wording. */
+#bp-view-decks,#hv-view-decks,#tr-view-decks{display:none !important}
+#tab-blueprints #bp-cards{display:none !important}
+#bp-table-wrap{display:block !important}
+#tab-harvest .hv-deck-wrap{display:none !important}
+#tab-harvest table.hv-src-table.hv-hidden{display:table !important}/* beats .hv-hidden so tables paint even before the view-boot clicks land */
+#tab-trading .tr-deck-wrap{display:none !important}
+#tab-trading table.tr-src.tr-hidden{display:table !important}
+</style>
+<script id="sc-b537-tablesonly-js">
+(function(){
+  if(window.__cgTablesOnly537) return; window.__cgTablesOnly537=true;
+  /* stored view choice can no longer be 'decks' - there is nothing to click that sets it */
+  try{ localStorage.setItem('sc_bp_view','tables'); localStorage.setItem('sc_harv_view','tables'); localStorage.setItem('sc_haul_view','tables'); }catch(e){}
+  /* The blueprints table is BUILT FROM the cards (bpBuildTable reads #bp-cards) but was only rebuilt
+     on a view switch - search/pills/craft-only re-rendered the hidden cards and left the visible
+     table stale. With tables the ONLY view, rebuild it after every bpRender. Classic-script global:
+     reassigning window.bpRender rebinds the name every caller resolves, including oninput="bpRender()". */
+  function wrapRender(){
+    if(window.__cg537wrapped) return true;
+    if(typeof window.bpRender!=='function'||typeof window.bpBuildTable!=='function') return false;
+    var _r=window.bpRender;
+    window.bpRender=function(){ _r.apply(this,arguments); try{ window.bpBuildTable(); }catch(e){} };
+    window.__cg537wrapped=true; return true;
+  }
+  /* Force each page onto tables through its own switch (bpSetView is global; harvest/hauling
+     setters live in closures, so their TABLES buttons are the supported entry point). */
+  var done={bp:false,hv:false,tr:false};
+  function tick(){
+    wrapRender();
+    if(!done.bp && typeof window.bpSetView==='function' && document.getElementById('bp-view-tables')){ try{ window.bpSetView('tables'); done.bp=true; }catch(e){} }
+    if(!done.hv){ var h=document.getElementById('hv-view-tables'); if(h){ h.click(); done.hv=true; } }
+    if(!done.tr){ var t=document.getElementById('tr-view-tables'); if(t){ t.click(); done.tr=true; } }
+    if(done.bp&&done.hv&&done.tr&&window.__cg537wrapped) clearInterval(iv);
+  }
+  var iv=setInterval(tick,600); tick();
+  /* hauling's bar only mounts when the live UEX table lands - if it never does, stop trying */
+  setTimeout(function(){ clearInterval(iv); },60000);
 })();
 </script>
 </body>
