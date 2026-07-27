@@ -7996,7 +7996,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=533;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=534;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -27370,18 +27370,25 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
 })();
 </script>
 <style id="sc-b533-devlog-css">
-/* 2026-07-27 user: "a little scrolling message at the very top... small banner that's not flashy,
+/* 2026-07-27 user: dev-log ticker. Started at the very top; MOVED TO THE BOTTOM EDGE on user order
+   (tablet OS battery/wifi readouts covered the top corners). Not flashy,
    lives in the background". 14px strip, overlay only - it reserves NO layout space, so no page
    can shift or clip (body is overflow:hidden; a padding shove would eat 14px off the bottom).
    pointer-events:none - it can never block a tap. Sits UNDER the chatdock z-order. */
-#cg-devlog{position:fixed;top:0;left:0;right:0;height:14px;z-index:2147482300;pointer-events:none;
-  background:linear-gradient(180deg,rgba(4,10,18,.88),rgba(4,10,18,.66));
-  border-bottom:1px solid rgba(108,180,214,.16);overflow:hidden;display:none}
+#cg-devlog{position:fixed;bottom:env(safe-area-inset-bottom,0px);left:0;right:0;height:14px;z-index:2147483620;pointer-events:none;
+  background:linear-gradient(180deg,rgba(3,8,14,.72),rgba(3,8,14,.5));
+  border-top:1px solid rgba(108,180,214,.10);overflow:hidden;display:none}
 #cg-devlog .dl-track{position:absolute;top:0;left:0;height:14px;display:flex;align-items:center;
   white-space:nowrap;will-change:transform;animation:cgdlScroll linear infinite;
-  font:600 9px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#5f8ba1}
-#cg-devlog .dl-track b{color:#8fdcff;font-weight:700}
-#cg-devlog .dl-track .dl-sep{color:#2b4a5e;margin:0 14px}
+  font:600 9px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#41586c}
+#cg-devlog .dl-track b{color:#6a92ab;font-weight:700}
+#cg-devlog .dl-track .dl-sep{color:#22394a;margin:0 14px}
+#cg-devlog .dl-btn{position:absolute;bottom:0;right:0;height:14px;display:flex;align-items:center;
+  padding:0 9px;pointer-events:auto;cursor:pointer;font:700 8px/1 'Rajdhani','Segoe UI',sans-serif;
+  letter-spacing:1.5px;color:#4f6a80;background:rgba(3,8,14,.85);border-left:1px solid rgba(108,180,214,.12);user-select:none}
+#cg-devlog .dl-btn:hover{color:#8fdcff}
+#cg-devlog.dl-hidden .dl-track{display:none}
+#cg-devlog.dl-hidden{background:transparent;border-top:none}
 @keyframes cgdlScroll{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
 @media(prefers-reduced-motion:reduce){#cg-devlog .dl-track{animation:none;left:12px}}
 </style>
@@ -27408,8 +27415,18 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
     tr.innerHTML='<b>DEV LOG</b><span class="dl-sep">//</span>'+notesHtml
       +'<span class="dl-sep">//</span><b>'+esc(BUILD_STAMP)+'</b><span class="dl-sep">//</span>';
     el.style.display='block';
+    /* HIDE NEWS / SHOW NEWS (2026-07-27 user order). Choice sticks via localStorage.
+       The button is the ONLY part of the strip that takes clicks. */
+    if(!el.querySelector('.dl-btn')){
+      var bt=document.createElement('span'); bt.className='dl-btn'; el.appendChild(bt);
+      var hid=false; try{ hid=localStorage.getItem('cg_devlog_hidden')==='1'; }catch(e){}
+      function apply(){ el.classList.toggle('dl-hidden',hid); bt.textContent=hid?'SHOW NEWS':'HIDE NEWS'; }
+      bt.addEventListener('click',function(ev){ ev.stopPropagation(); hid=!hid;
+        try{ localStorage.setItem('cg_devlog_hidden',hid?'1':'0'); }catch(e){} apply(); });
+      apply();
+    }
     /* speed scales with length: ~70 px/s, never faster than 18s per pass */
-    var w=tr.scrollWidth||1200; tr.style.animationDuration=Math.max(18, Math.round(w/70))+'s';
+    var w=tr.scrollWidth||1200; tr.style.animationDuration=Math.max(45, Math.round(w/32))+'s';
   }
   paint(NOTES);
   fetch(SB_URL+'/rest/v1/site_news?select=body,created_at&order=created_at.desc&limit=1',
