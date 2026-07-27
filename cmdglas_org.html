@@ -179,7 +179,10 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 .oc-sqn-h .sl{font-size:10px;color:#c9a86a;letter-spacing:.4px;text-align:right}
 .oc-slot{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;background:rgba(16,23,33,.6);border:1px solid rgba(108,180,214,.15);margin-bottom:5px;flex-wrap:wrap}
 .oc-slot .sav{width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Bruno Ace',sans-serif;font-size:10px;color:#04121a;background:radial-gradient(circle at 50% 28%,#7fcbe0,#356f88 60%,#1a4a5e)}
-.oc-slot .snm{font-size:13px;color:#eafaff;flex:1;min-width:80px}
+.oc-slot .snm{font-size:13px;color:var(--txt-dim);flex:1;min-width:80px}
+/* ORG_BUILD 6: online vs offline unmistakable by NAME color, not just the dot - online bright + green-tinted border, offline dimmed */
+.oc-slot.on .snm{color:#eafaff;text-shadow:0 0 8px rgba(87,211,138,.25)}
+.oc-slot.on{border-color:rgba(87,211,138,.30)}
 .oc-slot .sdot{width:8px;height:8px;border-radius:50%;background:#4a5563;flex:none}
 .oc-slot.on .sdot{background:var(--good);box-shadow:0 0 6px var(--good)}
 .oc-ctl{background:#0e141d;border:1px solid var(--line2);color:var(--txt);border-radius:7px;padding:4px 6px;font-family:inherit;font-size:11px}
@@ -287,7 +290,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 <script>
 (function(){
   "use strict";
-  var ORG_BUILD=5, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
+  var ORG_BUILD=6, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
   var GAMERPOOL='gamerpool';
   var isAdmin=false, approvedOrgs=[], pendingOrgs=[], myPendingOrg=null, myFoundedOrg=null, subOrgId=null, rtOrgs=null;
   var poolRoster=[], poolQ='';   /* ORG_BUILD 5: the registered-pilots list + its search text */
