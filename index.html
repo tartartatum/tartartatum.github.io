@@ -1719,8 +1719,8 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
           <span style="display:flex;gap:6px;align-items:center;width:100%">
             <input id="inva-filter" class="scinput" placeholder="filter..." autocomplete="off" style="flex:0 0 120px" title="Optional - narrows the list below. Leave empty to see every item in the category.">
             <select id="inva-item" class="wep-select" style="flex:1 1 auto;min-width:0"></select>
-          </span>
-          <span id="inva-count" style="font-size:14px;color:var(--text-dim);letter-spacing:1px"></span></label>
+          </span></label><!-- build 538 (user): the "N items in <category>" readout under the select made this label taller than its neighbours and wrapped the button row - removed; the same text now lives in the select's hover tooltip -->
+
         <button type="button" class="panel-btn" id="inva-add" style="font-weight:700;color:var(--amber2)">[ + ADD TO INVENTORY ]</button><!-- 2026-07-15 user: moved next to the ITEM field (was at the row end, could wrap out of view) -->
         <label style="display:flex;flex-direction:column;gap:3px;font-size:9px;letter-spacing:1px;color:var(--text-dim)">QTY
           <select id="inva-qty" class="wep-select"></select></label>
@@ -4615,6 +4615,16 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
     <div class="ld-section ops-panel" data-ops="buy" style="flex:1 1 300px;min-width:300px">
       <div class="ld-section-title" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">BUY LIST - ship loadout <button type="button" class="panel-btn" onclick="opsClear('buy')" style="font-size:9px;padding:4px 8px;font-weight:400">CLEAR</button></div>
       <div id="ops-buy" style="margin-top:6px"></div>
+      <!-- build 539 (T): BUY ROUTE PLANNER - see sc-b539-buyroute-js at the end of the file -->
+      <div id="buyroute" style="margin-top:10px;border-top:1px dashed var(--border2);padding-top:8px">
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+          <label style="font-size:9px;letter-spacing:1px;color:var(--amber2);display:flex;flex-direction:column;gap:3px;font-weight:700">I AM STARTING FROM:
+            <select id="br-start" class="wep-select" title="Your starting location - the route is built outward from here" style="min-width:180px"></select></label>
+          <button type="button" class="panel-btn" id="br-plan" style="font-weight:700;color:var(--green2);border-color:var(--green2)">[ PLAN ROUTE ]</button>
+          <span id="br-status" style="font-size:10px;color:var(--text-dim);letter-spacing:1px"></span>
+        </div>
+        <div id="br-out" style="margin-top:8px"></div>
+      </div>
   </div>
 
     <div class="ld-section ops-panel" data-ops="binds" id="ops-binds" style="flex:1 1 300px;min-width:280px">
@@ -4780,6 +4790,25 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
       setL(GK,list); opsRender(); return removed;
     };
     window.opsPushBuy=function(items,from){var list=get(BK);(items||[]).forEach(function(it){if(!list.find(function(x){return x.name===it.name;}))list.push({name:it.name,kind:it.kind||"",from:from||""});});setL(BK,list);if(typeof setActiveTabById==="function")setActiveTabById("myops");opsRender();};
+    /* build 541 (T: "need a way to recall items from the gather and buy list from the ship
+       builder page and gather/mining page as well"). The buy-side reverses that never existed: */
+    window.opsHasBuy=function(name){ return !!get(BK).find(function(x){return x.name===name;}); };
+    window.opsRecallBuy=function(name){ var list=get(BK).filter(function(x){return x.name!==name;}); setL(BK,list); opsRender(); };
+    /* selection-aware reverse of opsPushMaterials: strips ONE source label from the named
+       entries; an entry with no sources left goes home entirely (same rule as opsClearFrom). */
+    window.opsRecallMaterials=function(names,label){
+      var list=get(GK), removed=0;
+      (names||[]).forEach(function(n){
+        n=String(n||"").trim(); if(!n) return;
+        for(var i=list.length-1;i>=0;i--){
+          if(list[i].material!==n) continue;
+          var f=list[i].from||[], fi=f.indexOf(label);
+          if(fi>-1){ f.splice(fi,1); removed++; }
+          if(!f.length) list.splice(i,1);
+        }
+      });
+      setL(GK,list); opsRender(); return removed;
+    };
     /* Verified material locations (researched 2026-07-14; api.star-citizen.wiki / SC Wiki /
        cryon.rocks / UEX). [method, where, source]. method: ship=ship-mining, fps=hand/ROC gem. */
     var MAT_LOC={
@@ -4894,7 +4923,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
       var bd=document.getElementById("ops-buy");
       if(bd){
         if(!b.length)bd.innerHTML="<div style='font-size:11px;color:var(--text-dim)'>Empty. From Ship Loadouts, push weapons/components here to build a purchase route.</div>";
-        else bd.innerHTML=b.map(function(it){return "<div style='font-size:12px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)'><b style='color:var(--amber2)'>"+it.name+"</b> <span style='color:var(--text-dim);font-size:10px'>"+(it.kind||"")+(it.from?(" &middot; "+it.from):"")+"</span></div>";}).join("")+"<div style='font-size:9px;color:var(--text-dim);margin-top:6px'>Purchase locations + total cost + quickest route: wiring UEX / component-vendor data next.</div>";
+        else bd.innerHTML=b.map(function(it){var ne=String(it.name).replace(/&/g,"&amp;").replace(/'/g,"\\'").replace(/"/g,"&quot;");return "<div style='display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)'><b style='color:var(--amber2)'>"+it.name+"</b>"+((window.cgBuyRoute&&window.cgBuyRoute.gradeChip)?window.cgBuyRoute.gradeChip(it.name):"")+" <span style='color:var(--text-dim);font-size:10px'>"+(it.kind||"")+(it.from?(" &middot; "+it.from):"")+"</span><button type=\"button\" onclick=\"opsRecallBuy('"+ne+"')\" title=\"Remove from the buy list\" style=\"margin-left:auto;background:none;border:1px solid var(--border2);color:var(--red2,#ff6b6b);border-radius:4px;padding:1px 7px;font-size:11px;cursor:pointer\">&times;</button></div>";}).join("")+"<div style='font-size:9px;color:var(--text-dim);margin-top:6px'>Pick a START AT below and hit PLAN ROUTE for purchase locations, listed aUEC prices and the fewest-stops run.</div>";/* build 539: the old 'wiring UEX data next' promise note - replaced by the planner actually existing */
       }
     }
     window.opsRender=opsRender;
@@ -7996,7 +8025,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=537;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=544;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-27';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -9640,6 +9669,12 @@ function npParseAndPush(){
     // Always preserve blank lines and pure comment lines verbatim
     if(!trim){ outLines.push(ln); continue; }
     if(/^\/\//.test(trim) && !/^\/\/\s*ERROR:/i.test(trim)){ outLines.push(ln); continue; }
+    /* build 538 (user: "SERVER-ONLY NOTE ... keeps populating on its own"). Machine-written merge
+       markers are NOT inventory: the b407 notes migration wrote "— quick notes —" into the pad,
+       and a 2026-07-16 cross-device sync merge wrote "SERVER-ONLY NOTE <epoch-ms>". In a
+       headerless pad every line parses as inventory, so both markers kept turning into phantom
+       items after every parse/sync. Preserve the lines as plain notes, never itemize them. */
+    if(/^[—–-]+\s*quick notes\s*[—–-]+$/i.test(trim) || /^SERVER-ONLY NOTE\b/i.test(trim)){ outLines.push(ln); continue; }
     // --- INVENTORY QUERY: "where is my X", "find X", "locate X", "do i have X"
     //     Answers from DB.inventory instead of adding a row. Works from the overlay too.
     var _qm=trim.match(/^(?:where(?:'?s| is| are)?|find|locate|do i have|got any|how much)\b\s*(?:my |the |any |some |a )?(?:crafted |mined |bought )?(.+?)\s*\??$/i);
@@ -12835,9 +12870,10 @@ window._buildOverlayBody = function(opts){
       ? list.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join("")
       : '<option value="">— no match in '+esc(cat)+' —</option>';
     if(prev && list.indexOf(prev)>-1) sel.value=prev;    /* keep the pick if it survived the filter */
-    var c=el("inva-count");
-    if(c) c.textContent = q
-      ? (list.length+" of "+all.length+" match \""+q+"”")
+    /* build 538 (user): the on-screen count span made the ITEM label taller than its neighbours
+       and wrapped the button row - removed from the DOM. Same info now rides the select tooltip. */
+    sel.title = q
+      ? (list.length+" of "+all.length+" match \""+q+"\"")
       : (all.length+" item"+(all.length===1?"":"s")+" in "+cat);
     /* An empty select with no explanation reads as a broken control - say so out loud, the same
        reason the troubleshooting categories are "honestly empty" rather than padded. */
@@ -13521,7 +13557,7 @@ window._buildOverlayBody = function(opts){
     return '<span class="ld-val" style="display:inline-flex;gap:5px;align-items:center"><input type="text" value="'+String(v).replace(/"/g,"&quot;")+'" placeholder="'+String(slot||"—").replace(/"/g,"&quot;")+'" onchange="ldSetComp(\''+se+'\',\''+kind+'\',this.value)" style="background:var(--bg2);border:1px solid var(--border2);color:var(--amber2);padding:2px 6px;font-family:inherit;font-size:12px;width:150px"><button type="button" title="Add this component to the BUY list (top-centre OPS pill)" onclick="ldBuyComp(this,\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:#7fd0a0;border-radius:4px;padding:2px 7px;font-size:12px;line-height:1;cursor:pointer">&#128722;</button><button type="button" title="Remove component" onclick="ldClearComp(this,\''+se+'\',\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:var(--text-mid);border-radius:4px;padding:2px 8px;font-size:12px;line-height:1;cursor:pointer">&#10006;</button></span>';
   };
   /* build 451 (user: unowned components added in the ship builder never reached the BUY tab). ROOT CAUSE: opsPushBuy existed but was never called anywhere. This button wires each component to it. */
-  window.ldBuyComp=function(btn,kind){ try{ var inp=btn.parentNode.querySelector('input'); var name=inp?(inp.value||'').trim():''; if(!name){ if(inp) inp.focus(); return; } if(typeof opsPushBuy==='function'){ opsPushBuy([{name:name,kind:(kind||'component')}], 'Ship Loadout'); } var t=btn.textContent; btn.textContent='✓'; setTimeout(function(){ btn.innerHTML='&#128722;'; },1200); }catch(e){} };
+  window.ldBuyComp=function(btn,kind){ try{ var inp=btn.parentNode.querySelector('input'); var name=inp?(inp.value||'').trim():''; if(!name){ if(inp) inp.focus(); var t0=btn.textContent; btn.textContent='name?'; btn.style.color='#ff8a7a'; setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1400); return; } /* build 540: an empty box used to fail SILENTLY - the exact "hit cart, nothing happened" report */ /* build 541 (T): toggle - on the list already = tap RECALLS */ if(typeof opsHasBuy==='function'&&opsHasBuy(name)){ opsRecallBuy(name); btn.textContent='−'; btn.style.color='#ff8a7a'; } else { if(typeof opsPushBuy==='function'){ opsPushBuy([{name:name,kind:(kind||'component')}], 'Ship Loadout'); } btn.textContent='✓'; btn.style.color='#39d353'; } setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1200); }catch(e){} };
   window.ldClearComp=function(btn,ship,kind){ try{ var inp=btn.parentNode.querySelector("input"); if(inp){ inp.value=""; inp.style.borderColor=""; inp.title=""; } }catch(e){} if(window.ldSetComp) window.ldSetComp(ship,kind,""); };
   window.ldSetComp=function(ship,kind,val){
     var o={}; try{o=JSON.parse(localStorage.getItem("sc_ld_comps")||"{}");}catch(e){}
@@ -17631,6 +17667,7 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
          someone re-requests in a month. */
       +"<div id='be-mn-chipwrap' class='be-chipwrap'><div class='be-chiplab'>SELECTED</div><div id='be-mn-chips' class='be-chips'></div>"
       +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to your GATHER list, grouped by verified mining location'>&#8594; PUSH TO GATHER LIST</button>"
+      +"<button type='button' id='be-mn-recall' class='panel-btn' style='border:1px solid var(--red2,#ff6b6b);color:var(--red2,#ff6b6b);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;margin-left:6px' title='build 541: removes the selected materials from the GATHER list (only the Basic Mining tag - a material a blueprint also needs stays)'>&#8592; RECALL</button>"
       +"<span id='be-mn-sendmsg' class='be-mn-sendmsg'></span></div>"
       +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO GATHER does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>OPS gather list</b>. No quantity is invented; it just lists what you are after, grouped by verified location. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
       +"<div id='be-mn-out'></div>";
@@ -17675,6 +17712,22 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
         say(n ? ("✓ sent "+n+" of "+SEL.length+" to the OPS gather list")
               : ("already on the gather list ("+SEL.length+")"),
             n ? "var(--green2)" : "var(--text-dim)");
+      });
+    }
+    /* build 541 (T: "need a way to recall items from the gather list from the mining page").
+       Mirror of the push above: strips the Basic Mining tag from the SELECTED materials;
+       a material a blueprint also pushed keeps its other source and stays on the list. */
+    var recallBtn=document.getElementById("be-mn-recall");
+    if(recallBtn){
+      recallBtn.addEventListener("click",function(){
+        var msg=document.getElementById("be-mn-sendmsg");
+        function say(t,c){ if(msg){ msg.textContent=t; msg.style.color=c; } }
+        if(!SEL.length){ say("nothing selected yet","var(--text-dim)"); return; }
+        if(typeof window.opsRecallMaterials!=="function"){ say("OPS gather list not loaded - open the OPS page once, then retry","var(--red2)"); return; }
+        var n=window.opsRecallMaterials(SEL.slice(),"Basic Mining");
+        say(n ? ("&#8592; recalled "+n+" from the gather list").replace("&#8592;","←")
+              : "none of the selected are on the gather list from Basic Mining",
+            n ? "var(--red2)" : "var(--text-dim)");
       });
     }
     bB.addEventListener("click",function(){setMode(page,"basic",bB,bE,det);});
@@ -24777,8 +24830,26 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   function renderBuy(){
     var b=getArr('sc_ops_buy'); if(!b.length) return '<div class="ops4-empty">No buy items - push weapons/components from Ship Loadouts to build a purchase route.</div>';
     var top=b.slice(0,120), more=b.length>120?'<div class="ops4-more">+'+(b.length-120)+' more</div>':'';  /* build 444: fill the expanded view */
-    var rows=top.map(function(it){ return '<div class="ops4-row"><span class="ops4-mat">'+esc(it.name||it.material||'?')+'</span><span class="ops4-qty">'+esc(it.kind||'')+'</span></div>'; }).join('');
-    return '<div class="ops4-head">'+b.length+' item'+(b.length===1?'':'s')+' to buy</div>'+rows+more;
+    var rows=top.map(function(it){ var gc=(window.cgBuyRoute&&cgBuyRoute.gradeChip)?cgBuyRoute.gradeChip(it.name||''):''; return '<div class="ops4-row"><span class="ops4-mat">'+esc(it.name||it.material||'?')+gc+'</span><span class="ops4-qty">'+esc(it.kind||'')+'</span></div>'; }).join('');
+    /* build 542 (T's screenshots): THIS pill tab is where the buy list lives day-to-day, so the
+       ROUTE PLANNER renders HERE too - same engine as the GATHER & BUY page (window.cgBuyRoute).
+       The 1.5s refresh repaints from strings, so all state (chosen start, planned route) lives in
+       localStorage / cgBuyRoute.pillCache and is baked back into the string each pass. */
+    var plan='';
+    if(window.cgBuyRoute){
+      var cbr=window.cgBuyRoute;
+      /* build 543 (T: "how would the user know that he's picking a starting location. redo that
+         and give it a label") - the dropdown gets a NAME and a one-line explanation. */
+      plan='<div style="font-size:8.5px;letter-spacing:1.5px;color:#ffcf6b;font-weight:800;text-transform:uppercase;margin:8px 0 3px">ROUTE PLANNER &middot; I AM STARTING FROM:</div>'
+        +'<div style="display:flex;gap:6px;align-items:center;margin:0 0 3px;flex-wrap:wrap">'
+        +'<select id="ops4-br-start" title="Your starting location - the route is built outward from here" style="flex:1 1 130px;min-width:120px;background:#0a1622;color:#dbe9f5;border:1px solid rgba(108,180,214,.35);border-radius:6px;font-size:10px;padding:4px 5px">'+cbr.startOptionsHTML()+'</select>'
+        +'<button type="button" class="ops4-go" id="ops4-br-plan" style="padding:6px 12px;flex:0 0 auto" title="Build the fewest-stops shopping run for every item above, with listed aUEC prices">'+(cbr.pillBusy?'PLANNING…':'PLAN ROUTE')+'</button>'
+        +'</div>'
+        +'<div style="font-size:8.5px;color:#8ba0b5;line-height:1.4;margin-bottom:5px">Pick where you are launching from, then PLAN ROUTE builds the fewest-stops shopping run from there with listed aUEC prices.</div>';
+      if(cbr.pillCache && cbr.pillCache.hash===cbr.listHash()) plan+='<div id="ops4-br-out">'+cbr.pillCache.html+'</div>';
+      else if(cbr.pillBusy) plan+='<div class="ops4-empty">fetching shop data…</div>';
+    }
+    return '<div class="ops4-head">'+b.length+' item'+(b.length===1?'':'s')+' to buy</div>'+plan+rows+more;
   }
   function renderNotes(){
     var t=''; try{ t=localStorage.getItem('sc_ops_notes')||''; }catch(e){}
@@ -24812,6 +24883,42 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
       pill.classList.add('b385');
       body.innerHTML='<div class="ops4-tabs">'+VIEWS.map(function(v){return '<button type="button" class="ops4-tab" data-v="'+v.k+'">'+v.label+'</button>';}).join('')+'</div><div class="ops4-body"></div>';/* build 467 (user: remove the GO TO OPS link from the centre pill) */
       body.querySelector('.ops4-tabs').addEventListener('click',function(e){ var t=e.target.closest('.ops4-tab'); if(!t) return; try{ localStorage.setItem(LSK,t.getAttribute('data-v')); }catch(_){} refresh(); });
+      /* build 542: pill BUY-tab route planner controls (delegated - survive every repaint) */
+      body.addEventListener('click',function(e){
+        /* build 543: pin/override taps inside the pill itinerary re-plan from cached data */
+        if(window.cgBuyRoute && !window.cgBuyRoute.pillBusy && window.cgBuyRoute.handlePinClick(e.target)){
+          var c2=window.cgBuyRoute;
+          var s2=body.querySelector('#ops4-br-start');
+          c2.pillBusy=true; contentEl.__last=null; refresh();
+          c2.planHTML(c2.startInfoFrom(s2?s2.value:c2.savedStart()), true).then(function(html){
+            c2.pillCache={hash:c2.listHash(), html:html};
+            c2.pillBusy=false; contentEl.__last=null; refresh();
+          }).catch(function(err){
+            c2.pillCache={hash:c2.listHash(), html:c2.offlineHTML(err)};
+            c2.pillBusy=false; contentEl.__last=null; refresh();
+          });
+          return;
+        }
+        var pb=e.target.closest&&e.target.closest('#ops4-br-plan');
+        if(!pb||!window.cgBuyRoute||window.cgBuyRoute.pillBusy) return;
+        var cbr=window.cgBuyRoute;
+        var sel=body.querySelector('#ops4-br-start');
+        var v=sel?sel.value:cbr.savedStart();
+        cbr.pillBusy=true; contentEl.__last=null; refresh();
+        cbr.planHTML(cbr.startInfoFrom(v), true).then(function(html){
+          cbr.pillCache={hash:cbr.listHash(), html:html};
+          cbr.pillBusy=false; contentEl.__last=null; refresh();
+        }).catch(function(err){
+          cbr.pillCache={hash:cbr.listHash(), html:cbr.offlineHTML(err)};
+          cbr.pillBusy=false; contentEl.__last=null; refresh();
+        });
+      });
+      body.addEventListener('change',function(e){
+        var ss=e.target.closest&&e.target.closest('#ops4-br-start');
+        if(!ss||!window.cgBuyRoute) return;
+        window.cgBuyRoute.saveStart(ss.value);
+        window.cgBuyRoute.pillCache=null; contentEl.__last=null; refresh();
+      });
     }
     tabsEl=body.querySelector('.ops4-tabs'); contentEl=body.querySelector('.ops4-body');
     return true;
@@ -25677,8 +25784,26 @@ body.sc-home-mode #cg-onebar .cg-ob-side #cg-npa-btn,body.sc-home-mode #cg-oneba
       bar.appendChild(lg); bar.appendChild(appbar); bar.appendChild(rg);
     }
     var lg=bar.querySelector('.cg-ob-left'), rg=bar.querySelector('.cg-ob-right');
-    LEFT.forEach(function(id){ var el=document.getElementById(id); if(el) lg.appendChild(el); });   /* build 479: enforce full order every cycle so items can't drift */
-    RIGHT.forEach(function(id){ var el=document.getElementById(id); if(el) rg.appendChild(el); });
+    /* build 538 (user: "this entire row blinks in sync with the live people counter").
+       ROOT CAUSE: build 479's order enforcement called appendChild on EVERY flank item EVERY
+       700ms cycle. appendChild on an already-placed node is a remove+reinsert - each cycle tore
+       the whole row out of layout and put it back, restarting every CSS animation in it. The
+       PILOTS ONLINE dot (cgpPulse) restarted at the same instant the row repainted, so the row
+       "blinked in sync with the counter" - same 700ms clock, two symptoms.
+       FIX: write-guard (the MutationObserver rule from the render gate): verify membership AND
+       relative order first; touch the DOM only when something is actually wrong. */
+    function placeAll(group, ids){
+      var want=ids.map(function(id){ return document.getElementById(id); }).filter(Boolean);
+      if(!want.length) return;
+      var ok=want.every(function(el){ return el.parentElement===group; });
+      if(ok){
+        var kids=[].slice.call(group.children).filter(function(c){ return want.indexOf(c)>-1; });
+        ok = kids.length===want.length && kids.every(function(c,i){ return c===want[i]; });
+      }
+      if(!ok){ want.forEach(function(el){ group.appendChild(el); }); }
+    }
+    placeAll(lg, LEFT);
+    placeAll(rg, RIGHT);
     /* keep DOM order lg, appbar, rg so grid columns map 1,2,3 */
     if(appbar.parentElement!==bar || bar.children[1]!==appbar){ bar.insertBefore(appbar, rg); }
     var tp=document.getElementById('cg-theme-pick'); var tr536=document.getElementById('cg-theme-row536'); if(tp && !tr536 && tp.parentElement!==bar) bar.appendChild(tp); /* build 536 (user: ticker covered the corner-pinned picker): the centered theme row below this bar owns the picker when present - do NOT steal it back */
@@ -27408,10 +27533,9 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
 (function(){
   if(window.__cgDevlog533) return; window.__cgDevlog533=true;
   var BUILD_STAMP='TABLET UPDATED 27 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
-  var NOTES='WORKING ON: multi-org comms - founders apply, org command vets its own pilots'
-    +' &middot; NEW: BLUEPRINTS, HARVESTABLES and HAULING are table-only now - the laggy card decks are retired'
-    +' &middot; NEW: COMMS rosters - online pilots glow bright with a green edge, offline names dimmed'
-    +' &middot; NEW: theme selector moved to its own centered row below REPORT ISSUE (news bar was covering it)';
+  var NOTES='WORKING ON: BUY ROUTE PLANNER - pick a START AT on the buy list, hit PLAN ROUTE for the fewest-stops shopping run with listed aUEC prices (finder.cstone.space via the control server)'
+    +' &middot; WORKING ON: the same planner for the GATHER list - mining and harvest runs sorted by location'
+    +' &middot; NEW: cart buttons on every ship-builder slot push parts to the buy list - tap again to recall';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -27509,6 +27633,42 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
 #tab-trading .tr-deck-wrap{display:none !important}
 #tab-trading table.tr-src.tr-hidden{display:table !important}
 </style>
+<style id="sc-b538-commshead-css">/* 2026-07-27 build 538 (user, on iPad: "the comms chan selector is still
+   partially covered by the comms label"). ROOT CAUSE: the collapsed COMMS dock head is a fixed flex
+   row (mic + COMMS + ›› + channel <select> + broadcast + mute + TX + expand + chevron) that
+   sc-tools-row is allowed to squeeze to ~220px (flex:1 1 0, min-width:0, max-width:340). The title
+   span and the select both carry default flex-shrink; how that shrink is split is engine-specific -
+   Chromium overflows the row to the right, iPad Safari shrinks the SELECT into the glowing title.
+   FIX: make overlap impossible instead of chasing Safari's shrink math:
+     - the select gets a GUARANTEED width band (64-110px) and never shrinks below it;
+     - the TITLE is the element that gives way - it may ellipsize, it may not collide;
+     - the decorative ›› glyph is dropped (first thing to go for space);
+     - a hard gap stays between every head item.
+   Applies to both dock variants (floating bar and the home-mode tools-row tile) - the selectors
+   target the head generally. Reversible: delete this block. */
+#sc-chatdock .cd-head{flex-wrap:nowrap !important;gap:8px !important;min-width:0 !important}
+#sc-chatdock .cd-head .cd-acc{display:none !important}
+#sc-chatdock .cd-head .cd-title{flex:0 1 auto !important;min-width:0 !important;overflow:hidden !important;
+  text-overflow:ellipsis !important;white-space:nowrap !important}
+#sc-chatdock .cd-head .cd-ch.cd-chsel{flex:0 0 auto !important;min-width:64px !important;max-width:110px !important;
+  width:auto !important;margin-left:auto !important;position:relative;z-index:2}
+/* wide screens: instead of letting the tools row squeeze the dock to ~220px, reserve enough width
+   that every head control AND the full COMMS title fit. The search box beside it shrinks instead -
+   its input tolerates that; the dock's controls do not. */
+@media(min-width:1000px){
+  #sc-tools-row > #sc-chatdock{min-width:300px !important}
+}
+/* narrow screens (iPad portrait): the head can shrink under ~190px - no honest way to fit a
+   readable picker there. The decorative art (mic, broadcast, chevron) AND the head picker go;
+   the full channel rail inside the opened COMMS covers channel switching. What remains - COMMS
+   title, mute, TX, expand - always fits, nothing overlaps, nothing clips. */
+@media(max-width:999px){
+  #sc-chatdock .cd-head{gap:6px !important;padding:0 11px !important}
+  #sc-chatdock .cd-head .cd-mic,#sc-chatdock .cd-head .cd-bcast,#sc-chatdock .cd-head .cd-chev,
+  #sc-chatdock .cd-head .cd-ch.cd-chsel{display:none !important}
+  #sc-chatdock .cd-head .cd-tx{padding:0 9px 0 8px !important;letter-spacing:1px !important}
+}
+</style>
 <script id="sc-b537-tablesonly-js">
 (function(){
   if(window.__cgTablesOnly537) return; window.__cgTablesOnly537=true;
@@ -27538,6 +27698,437 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
   var iv=setInterval(tick,600); tick();
   /* hauling's bar only mounts when the live UEX table lands - if it never does, stop trying */
   setTimeout(function(){ clearInterval(iv); },60000);
+})();
+</script>
+<script id="sc-b540-slotcart-js">
+/* 2026-07-27 build 540 (T: "i selected a ship part from the ship builder, hit the cart button,
+   went to buy tab but nothing is showing up"). REPRODUCED: the cart existed ONLY on the four
+   free-text component boxes (build 451) and silently no-opped when the box was empty - and the
+   WEAPON / MISSILE / TURRET dropdowns, where parts actually get picked, had no cart at all.
+   FIX: every .wep-select in the ship detail gets its own cart; it pushes the SELECTED value to
+   the BUY list (ignoring the "— empty —" placeholders). Injection is write-guarded (data-cart540
+   marker) because the detail pane re-renders on every ship pick - the MutationObserver rule. */
+(function(){
+  if(window.__cgSlotCart540) return; window.__cgSlotCart540=true;
+  function wire(){
+    var det=document.getElementById('loadout-detail'); if(!det) return;
+    [].forEach.call(det.querySelectorAll('select.wep-select'),function(sel){
+      if(sel.dataset.cart540) return;
+      sel.dataset.cart540='1';
+      var b=document.createElement('button');
+      b.type='button'; b.innerHTML='&#128722;';
+      b.title='Add the selected part to the BUY list (GATHER & BUY pill)';
+      b.style.cssText='background:var(--steel2);border:1px solid var(--border2);color:#7fd0a0;border-radius:4px;padding:2px 7px;font-size:12px;line-height:1;cursor:pointer;margin-left:5px;flex:0 0 auto';
+      b.addEventListener('click',function(ev){
+        ev.stopPropagation();
+        var v=(sel.value||'').trim();
+        if(!v || /^[—-]/.test(v)){ b.textContent='pick?'; b.style.color='#ff8a7a';
+          setTimeout(function(){ b.dataset.on='x'; paintState(sel,b); },1400); return; }
+        /* slot values carry display decoration ("Attrition-4 · S4 C · Laser Rpt") - the BUY list
+           and the cstone matcher want the bare part name, so push only the piece before the dot */
+        var bare=v.split('·')[0].trim()||v;
+        /* build 541 (T): the cart is a TOGGLE - already on the list = tap RECALLS it */
+        if(typeof opsHasBuy==='function' && opsHasBuy(bare)){
+          opsRecallBuy(bare);
+          b.textContent='−'; b.style.color='#ff8a7a';
+        }else{
+          if(typeof opsPushBuy==='function') opsPushBuy([{name:bare,kind:'weapon/part'}],'Ship Loadout');
+          b.textContent='✓'; b.style.color='#39d353';
+        }
+        setTimeout(function(){ b.dataset.on='x'; paintState(sel,b); },1200);
+      });
+      sel.insertAdjacentElement('afterend',b);
+      b.dataset.on='x'; paintState(sel,b);
+      sel.addEventListener('change',function(){ b.dataset.on='x'; paintState(sel,b); });
+    });
+  }
+  /* build 541: the cart SHOWS list membership - green glow = on the buy list, tap recalls.
+     Write-guarded via data-on so the 2s keep-honest sweep never repaints an unchanged button. */
+  function paintState(sel,b){
+    var v=(sel.value||'').trim(); var bare=v&&!/^[—-]/.test(v)?(v.split('·')[0].trim()||v):'';
+    var on=!!(bare && typeof opsHasBuy==='function' && opsHasBuy(bare));
+    var want=on?'1':'0';
+    if(b.dataset.on===want) return;
+    b.dataset.on=want;
+    b.innerHTML='&#128722;';
+    b.style.color=on?'#39d353':'#7fd0a0';
+    b.style.borderColor=on?'#39d353':'var(--border2)';
+    b.style.boxShadow=on?'0 0 6px rgba(57,211,83,.45)':'none';
+    b.title=on?'On the BUY list - tap to RECALL it':'Add the selected part to the BUY list (GATHER & BUY pill)';
+  }
+  setInterval(function(){
+    var det=document.getElementById('loadout-detail'); if(!det) return;
+    [].forEach.call(det.querySelectorAll('select.wep-select'),function(sel){
+      var b=sel.nextElementSibling;
+      if(b&&b.tagName==='BUTTON'&&b.dataset.cartState!=='never'&&b.dataset.on!==undefined) paintState(sel,b);
+    });
+  },2000);
+  try{ var det=document.getElementById('loadout-detail');
+    if(det) new MutationObserver(function(){ setTimeout(wire,80); }).observe(det,{childList:true}); }catch(e){}
+  var n=0, iv=setInterval(function(){ wire(); if(++n>40) clearInterval(iv); },500);
+})();
+</script>
+<style id="sc-b539-opsprune-css">/* 2026-07-27 build 539 (T: "there is no ops panel anymore. they should've all been
+   removed"). The GATHER & BUY page is now exactly that: GATHER LIST + BUY LIST. The other panels
+   (server status, PC/control server, shard health, best haul, keybinds, notepad, medical manual,
+   discord) all have their own pages and are removed from here for good - along with the ADD PANEL
+   and RESET LAYOUT chrome that managed them. display:flex !important on the two survivors also
+   overrides any old sc_ov_panels "unchecked" state that was hiding them as inline style. */
+#tab-myops .ops-panel:not([data-ops="gather"]):not([data-ops="buy"]){display:none !important}
+#tab-myops .ops-panel[data-ops="gather"],#tab-myops .ops-panel[data-ops="buy"]{display:flex !important}
+#tab-myops [onclick="opsResetLayout()"]{display:none !important}
+#tab-myops button[title^="Choose which OPS panels"]{display:none !important}
+/* with exactly two fixed lists, the drag/resize grid is pointless and its stored per-device
+   geometry (tiny title-high panels) is what made the page look empty. Two full-width stacked
+   panels, natural height, no grips, no SHOW/HIDE chips, never collapsed: */
+#tab-myops #ops-grid{display:flex !important;flex-direction:column !important;gap:14px !important;height:auto !important}
+#tab-myops #ops-grid .ops-panel[data-ops="gather"],#tab-myops #ops-grid .ops-panel[data-ops="buy"]{
+  position:static !important;width:auto !important;height:auto !important;min-height:0 !important;
+  grid-column:auto !important;grid-row:auto !important;flex-direction:column !important}
+#tab-myops #ops-grid .ops-panel.ops-collapsed > *:not(.ld-section-title){display:block !important}
+#tab-myops #ops-grid .ops-panel .ops-grip,#tab-myops #ops-grid .ops-panel .ops-rz,
+#tab-myops #ops-grid .ops-panel .ops-collapse{display:none !important}
+#tab-myops #ops-grid .ops-panel > .ld-section-title{cursor:default !important}
+#tab-myops #ops-grid .ops-toolbar{display:none !important}/* drag/resize/ADD PANEL chrome - gone with the grid */
+</style>
+<script id="sc-b539-buyroute-js">
+/* 2026-07-27 build 539/542 (T): BUY ROUTE PLANNER - TWO SURFACES, ONE ENGINE.
+   539 wired the planner into the GATHER & BUY page (#br-*). 542 adds it to the surface T actually
+   uses - the CENTER PILL's BUY tab (ops4 widget) - after his screenshots showed the pill, not the
+   page ("for the buy section of the center top pill" meant exactly this). The engine (catalog
+   match -> shops -> greedy fewest-stops set cover -> aUEC itinerary HTML) is shared; each surface
+   only owns its controls. Data path unchanged: /api/buy_index + /api/buy_locations on the control
+   server (cstone proxy, no CORS on their side - verified). Honesty rules unchanged: unmatched
+   items listed under CHECK MANUALLY, listed-price disclaimer on the itinerary, offline = a plain
+   statement that the control server is needed. */
+(function(){
+  if(window.__cgBuyRoute539) return; window.__cgBuyRoute539=true;
+  var BK='sc_ops_buy';
+  var MAJORS=[
+    ['Area18 (ArcCorp)','Area18','Stanton'],
+    ['Lorville (Hurston)','Lorville','Stanton'],
+    ['New Babbage (microTech)','New Babbage','Stanton'],
+    ['Orison (Crusader)','Orison','Stanton'],
+    ['GrimHEX','GrimHEX','Stanton'],
+    ['Everus Harbor','Everus Harbor','Stanton'],
+    ['Baijini Point','Baijini Point','Stanton'],
+    ['Seraphim Station','Seraphim','Stanton'],
+    ['Port Tressler','Tressler','Stanton'],
+    ['Ruin Station (Pyro)','Ruin Station','Pyro'],
+    ['Levski (Nyx)','Levski','Nyx']
+  ];
+  var IDX=null, IDX_T=0, LOCS={};
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function aUEC(n){ return (n==null)?'price?':(Math.round(n).toLocaleString()+' aUEC'); }
+  function sysOf(loc){ return String(loc||'').split(' - ')[0].split('>')[0].trim(); }
+  function buyList(){ try{ return JSON.parse(localStorage.getItem(BK)||'[]'); }catch(e){ return []; } }
+  function listHash(){ return JSON.stringify(buyList()); }
+  function homeStation(){ try{ return (localStorage.getItem('sc_home_station')||'').replace(/^"|"$/g,'').trim(); }catch(e){ return ''; } }
+  function savedStart(){ try{ return localStorage.getItem('sc_buyroute_start')||''; }catch(e){ return ''; } }
+  function saveStart(v){ try{ localStorage.setItem('sc_buyroute_start',v); }catch(e){} }
+  /* build 543 (T: "give me a per item override"): pins. {itemName: locationString} - a pinned
+     item is bought at ITS location no matter what the fewest-stops math prefers; everything
+     else still optimizes around it. AUTO clears the pin. */
+  function pins(){ try{ return JSON.parse(localStorage.getItem('sc_buyroute_pins')||'{}'); }catch(e){ return {}; } }
+  function setPin(name,loc){ var p=pins(); if(loc) p[name]=loc; else delete p[name]; try{ localStorage.setItem('sc_buyroute_pins',JSON.stringify(p)); }catch(e){} }
+  var OPEN_ITEM=null; /* which itinerary item is showing its other-locations list */
+  /* build 543 (T: "the buy list also needs the info from smart citizen showing civ mil - size
+     and a through d grades"). Source of truth: the tablet's own COMP_GRADE map (Smart Citizen
+     data, "MIL-S3-A" = class-size-grade). Longest-substring match so "FR-86 Shield Generator"
+     finds key "FR-86" and never the shorter "FR-66"; no match -> NO chip - weapons have no
+     grade in the game and this never invents one. */
+  function gradeOf(name){
+    var G=window.COMP_GRADE||{}; var n=String(name||'').toLowerCase(); if(!n) return null;
+    if(G[name]) return G[name];
+    var bestK=null;
+    Object.keys(G).forEach(function(k){
+      var kl=k.toLowerCase();
+      if((n.indexOf(kl)>-1||kl.indexOf(n)>-1) && (!bestK||k.length>bestK.length)) bestK=k;
+    });
+    return bestK?G[bestK]:null;
+  }
+  function gradeChip(name){
+    var g=gradeOf(name); if(!g) return '';
+    var p=String(g).split('-'); if(p.length<3) return '';
+    var gr=p[2].toUpperCase();
+    var gc={A:'#39d353',B:'#9fd8ff',C:'#ffcf6b',D:'#ff8a7a'}[gr]||'#8ba0b5';
+    return ' <span style="font-size:8.5px;letter-spacing:.5px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 4px;color:#9fc0d5;white-space:nowrap">'
+      +String(p[0]).toUpperCase()+' &middot; '+String(p[1]).toUpperCase()+' &middot; <b style="color:'+gc+'">'+gr+'</b></span>';
+  }
+  function startOptionsHTML(){
+    var hs=homeStation(), sel=savedStart(), html='';
+    if(hs) html+='<option value="__home__"'+((sel==='__home__'||!sel)?' selected':'')+'>HOME: '+esc(hs)+'</option>';
+    MAJORS.forEach(function(m,i){
+      var isSel = sel?sel===m[1]:(!hs&&i===0);
+      html+='<option value="'+esc(m[1])+'"'+(isSel?' selected':'')+'>'+esc(m[0])+'</option>';
+    });
+    return html;
+  }
+  function startInfoFrom(v){
+    if(v==='__home__'){
+      var hs=homeStation();
+      var hit=MAJORS.filter(function(m){ return hs.toLowerCase().indexOf(m[1].toLowerCase())>-1; })[0];
+      return { token:(hit?hit[1]:(hs||'Area18')), sys:(hit?hit[2]:'Stanton') };
+    }
+    var m=MAJORS.filter(function(x){ return x[1]===v; })[0]||MAJORS[0];
+    return { token:m[1], sys:m[2] };
+  }
+  function jget(path){ return fetch(path,{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); }); }
+  function getIndex(){
+    if(IDX && (Date.now()-IDX_T)<3600000) return Promise.resolve(IDX);
+    return jget('/api/buy_index').then(function(d){
+      if(!d||!d.ok||!(d.items||[]).length) throw new Error(d&&d.error||'empty catalog');
+      IDX=d.items; IDX_T=Date.now(); return IDX;
+    });
+  }
+  function norm(s){ return String(s||'').toLowerCase().replace(/[\u2019']/g,"'").replace(/\s+/g,' ').trim(); }
+  /* build 544 (T caught it live: "BLOC" was matched into Ripper "SunBLOCk" SMG - an SMG for a
+     ship shield). Substring matching mid-word is banned. Matching is now TOKEN-BOUNDARY only:
+     every query word must equal or PREFIX a whole word of the candidate (forward), or every
+     candidate word must appear in the query (reverse - "FR-86 Shield Generator" finds "FR-86").
+     Exact name always wins instantly. Ties prefer exact word hits, then the shorter name. */
+  function toks(s){ return norm(s).split(/[^a-z0-9]+/).filter(Boolean); }
+  function matchId(name){
+    var n=norm(name); if(!n) return null;
+    var qt=toks(name); if(!qt.length) return null;
+    var best=null, bestScore=-1e9;
+    for(var i=0;i<IDX.length;i++){
+      var c=IDX[i], cn=norm(c.name);
+      if(cn===n) return c;
+      var ct=toks(c.name);
+      var fwd=qt.every(function(q){ return ct.some(function(t){ return t===q || t.indexOf(q)===0; }); });
+      var rev=ct.length>=2 && ct.every(function(t){ return qt.indexOf(t)>-1; });
+      if(!fwd && !rev) continue;
+      var exactHits=qt.filter(function(q){ return ct.indexOf(q)>-1; }).length;
+      var score=(fwd?2000:0)+(rev?1500:0)+1000*exactHits-ct.length;
+      if(score>bestScore){ best=c; bestScore=score; }
+    }
+    return best;
+  }
+  function getLocs(ids){
+    var need=ids.filter(function(id){ return !LOCS[id]; });
+    if(!need.length) return Promise.resolve();
+    return jget('/api/buy_locations?ids='+need.join(',')).then(function(d){
+      var items=(d&&d.items)||{};
+      Object.keys(items).forEach(function(k){ LOCS[k]=items[k]; });
+    });
+  }
+  /* -------- the engine: buy list -> itinerary HTML (surface-independent) -------- */
+  function itineraryHTML(items, unmatched, start, compact){
+    var P=pins();
+    var byLoc={}, itemShops={};
+    items.forEach(function(m){
+      var seen={};
+      m.shops.forEach(function(s){
+        if(seen[s.loc] && (seen[s.loc].price!=null) && (s.price==null || s.price>=seen[s.loc].price)) return;
+        seen[s.loc]=s;
+      });
+      itemShops[m.buyName]=Object.keys(seen).map(function(loc){ return {loc:loc, price:seen[loc].price}; })
+        .sort(function(a,b){ return (a.price==null?9e9:a.price)-(b.price==null?9e9:b.price); });
+      Object.keys(seen).forEach(function(loc){
+        (byLoc[loc]=byLoc[loc]||{}).items=byLoc[loc].items||{};
+        byLoc[loc].items[m.buyName]={ price:seen[loc].price, verified:seen[loc].verified, csName:m.csName };
+      });
+    });
+    var remaining={}; items.forEach(function(m){ remaining[m.buyName]=1; });
+    var stopMap={}, order=[];
+    function addTo(loc,name,pinned){
+      if(!stopMap[loc]){ stopMap[loc]={ loc:loc, sys:sysOf(loc), items:[], startHit:(loc.toLowerCase().indexOf(start.token.toLowerCase())>-1?1:0), pinned:false }; order.push(loc); }
+      stopMap[loc].items.push({ name:name, info:byLoc[loc].items[name], pinned:!!pinned });
+      if(pinned) stopMap[loc].pinned=true;
+      delete remaining[name];
+    }
+    /* pinned items claim their stops FIRST - the pin has authority over the math */
+    items.forEach(function(m){
+      var pl=P[m.buyName];
+      if(pl && byLoc[pl] && byLoc[pl].items[m.buyName]) addTo(pl, m.buyName, true);
+    });
+    while(Object.keys(remaining).length){
+      var best=null;
+      Object.keys(byLoc).forEach(function(loc){
+        var its=byLoc[loc].items, cover=0, total=0;
+        Object.keys(its).forEach(function(n){ if(remaining[n]){ cover++; total+=(its[n].price||0); } });
+        if(!cover) return;
+        /* reusing a stop the route already makes is a free ride - strongest preference */
+        var reuse=stopMap[loc]?1:0;
+        var cand={ loc:loc, cover:cover, total:total, reuse:reuse,
+                   sysHit:(sysOf(loc)===start.sys?1:0),
+                   startHit:(loc.toLowerCase().indexOf(start.token.toLowerCase())>-1?1:0) };
+        if(!best
+          || (cand.cover+cand.reuse)>(best.cover+best.reuse)
+          || ((cand.cover+cand.reuse)===(best.cover+best.reuse) && cand.startHit>best.startHit)
+          || ((cand.cover+cand.reuse)===(best.cover+best.reuse) && cand.startHit===best.startHit && cand.sysHit>best.sysHit)
+          || ((cand.cover+cand.reuse)===(best.cover+best.reuse) && cand.startHit===best.startHit && cand.sysHit===best.sysHit && cand.total<best.total)){ best=cand; }
+      });
+      if(!best) break;
+      Object.keys(byLoc[best.loc].items).forEach(function(n){ if(remaining[n]) addTo(best.loc, n, false); });
+    }
+    var stops=order.map(function(l){ return stopMap[l]; });
+    stops.sort(function(a,b){
+      if(a.startHit!==b.startHit) return b.startHit-a.startHit;
+      var as=(a.sys===start.sys)?0:1, bs=(b.sys===start.sys)?0:1;
+      if(as!==bs) return as-bs;
+      if(a.sys!==b.sys) return a.sys<b.sys?-1:1;
+      return b.items.length-a.items.length;
+    });
+    var fs=compact?'10.5px':'11px';
+    function pickerHTML(name){
+      var opts=itemShops[name]||[]; if(!opts.length) return '';
+      var cur=P[name]||'';
+      var rows=opts.slice(0,8).map(function(o){
+        var on=o.loc===cur;
+        return '<div data-brpinset="'+encodeURIComponent(name)+'|'+encodeURIComponent(o.loc)+'" style="display:flex;gap:8px;justify-content:space-between;font-size:9.5px;padding:2px 4px;cursor:pointer;border-radius:4px;'+(on?'background:rgba(57,211,83,.15);color:#7fffb0':'color:#9fc0d5')+'">'
+          +'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(on?'&#128204; ':'')+esc(o.loc)+'</span>'
+          +'<span style="white-space:nowrap;color:#ffcf6b">'+esc(aUEC(o.price))+'</span></div>';
+      }).join('');
+      var more=opts.length>8?'<div style="font-size:8.5px;color:#5f7b91;padding:1px 4px">+'+(opts.length-8)+' more listed on cstone</div>':'';
+      return '<div style="border:1px dashed rgba(108,180,214,.3);border-radius:6px;padding:4px 5px;margin:3px 0 4px">'
+        +'<div style="font-size:8.5px;letter-spacing:1px;color:#8fb3c8;margin-bottom:2px">BUY '+esc(name).toUpperCase()+' AT: <span data-brpinclear="'+encodeURIComponent(name)+'" style="cursor:pointer;color:'+(cur?'#9fc0d5':'#7fffb0')+';text-decoration:underline">AUTO (fewest stops)</span></div>'
+        +rows+more+'</div>';
+    }
+    var total=0, html='';
+    stops.forEach(function(s,i){
+      var sub=0, priceKnown=true;
+      var rows=s.items.map(function(it){
+        if(it.info.price!=null){ sub+=it.info.price; } else { priceKnown=false; }
+        var open=OPEN_ITEM===it.name;
+        return '<div data-brpick="'+encodeURIComponent(it.name)+'" title="Tap to choose a different shop for this item" style="display:flex;gap:8px;justify-content:space-between;font-size:'+fs+';padding:2px 0;cursor:pointer">'
+          +'<span style="color:#dbe9f5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(it.pinned?'&#128204; ':'')+esc(it.name)+gradeChip(it.name)
+          +(norm(it.name)!==norm(it.info.csName)?' <span style="color:#8ba0b5;font-size:9px">(as "'+esc(it.info.csName)+'")</span>':'')
+          +' <span style="color:#5f7b91;font-size:9px">'+(open?'&#9652;':'&#9662;')+'</span></span>'
+          +'<span style="color:#ffcf6b;white-space:nowrap">'+esc(aUEC(it.info.price))+'</span></div>'
+          +(open?pickerHTML(it.name):'');
+      }).join('');
+      total+=sub;
+      html+='<div style="border:1px solid rgba(108,180,214,.25);border-left:3px solid '+(s.pinned?'#ffcf6b':'#39d353')+';border-radius:8px;padding:6px 9px;margin-bottom:6px;background:rgba(10,22,34,.5)">'
+        +'<div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;font-size:'+fs+';letter-spacing:.5px;margin-bottom:2px">'
+        +'<b style="color:'+(s.pinned?'#ffcf6b':'#39d353')+'">STOP '+(i+1)+' &middot; '+esc(s.loc)+(s.pinned?' &middot; &#128204; PINNED':'')+'</b>'
+        +'<span style="color:#ffcf6b;white-space:nowrap">'+esc(aUEC(sub))+(priceKnown?'':' +?')+'</span></div>'
+        +rows+'</div>';
+    });
+    if(stops.length){
+      html='<div style="font-size:9.5px;color:#8ba0b5;letter-spacing:1px;margin:4px 0 6px">'
+        +stops.length+' stop'+(stops.length===1?'':'s')+' from '+esc(start.token)+' &middot; run total <b style="color:#ffcf6b">'+esc(aUEC(total))+'</b>'
+        +' &middot; cstone LISTED prices - kiosk stock can differ &middot; tap an item to pick its shop</div>'+html;
+    }
+    if(unmatched.length){
+      html+='<div style="border:1px solid rgba(255,176,0,.35);border-radius:8px;padding:6px 9px;background:rgba(10,22,34,.5)">'
+        +'<div style="font-size:9px;letter-spacing:1px;color:#ffcf6b;margin-bottom:2px">CHECK MANUALLY - no shop data</div>'
+        +unmatched.map(function(u){ return '<div style="font-size:'+fs+';color:#8ba0b5">'+esc(u.name)+' <span style="font-size:9px">('+esc(u.why)+')</span></div>'; }).join('')
+        +'</div>';
+    }
+    return html||'<div style="font-size:11px;color:#8ba0b5">Nothing plannable on the list.</div>';
+  }
+  function planHTML(start, compact){
+    var list=buyList();
+    if(!list.length) return Promise.resolve('<div style="font-size:11px;color:#8ba0b5;padding:4px 0">Buy list is empty - push parts to it first.</div>');
+    return getIndex().then(function(){
+      var matched=[], unmatched=[];
+      list.forEach(function(it){
+        var hit=matchId(it.name);
+        if(hit) matched.push({ buyName:it.name, id:hit.id, csName:hit.name });
+        else unmatched.push({ name:it.name, why:'not in the cstone catalog' });
+      });
+      return getLocs(matched.map(function(m){ return m.id; })).then(function(){
+        matched.forEach(function(m){
+          var e=LOCS[m.id];
+          m.shops=(e&&e.shops)||[];
+          if(!m.shops.length) unmatched.push({ name:m.buyName, why:(e&&e.err)||'no listed shop' });
+        });
+        return itineraryHTML(matched.filter(function(m){ return m.shops.length; }), unmatched, start, compact);
+      });
+    });
+  }
+  function offlineHTML(e){
+    return '<div style="font-size:10.5px;color:#ffcf6b;border:1px solid rgba(255,176,0,.35);border-radius:8px;padding:7px 9px;line-height:1.5">'
+      +'ROUTE PLANNER NEEDS THE CMDGLAS CONTROL SERVER ('+esc((e&&e.message)||e||'?')+'). It proxies the shop database '
+      +'(finder.cstone.space sends no CORS headers, so the browser cannot ask it directly). '
+      +'Open the tablet through your PC or LAN address and this works.</div>';
+  }
+  /* shared, published API - the center-pill BUY tab (ops4 widget) renders through this */
+  window.cgBuyRoute={
+    startOptionsHTML:startOptionsHTML, startInfoFrom:startInfoFrom, savedStart:savedStart,
+    saveStart:saveStart, listHash:listHash, planHTML:planHTML, offlineHTML:offlineHTML,
+    pillCache:null, pillBusy:false, gradeChip:gradeChip,
+    /* build 543 pin API: returns true if the click was a planner interaction (toggle/pin/auto);
+       caller then re-plans. Works for BOTH surfaces via event delegation. */
+    handlePinClick:function(t){
+      var el=t.closest&&(t.closest('[data-brpinset]')||t.closest('[data-brpinclear]')||t.closest('[data-brpick]'));
+      if(!el) return false;
+      if(el.hasAttribute('data-brpinset')){
+        var kv=el.getAttribute('data-brpinset').split('|');
+        setPin(decodeURIComponent(kv[0]), decodeURIComponent(kv[1]));
+        OPEN_ITEM=null;
+      }else if(el.hasAttribute('data-brpinclear')){
+        setPin(decodeURIComponent(el.getAttribute('data-brpinclear')), null);
+        OPEN_ITEM=null;
+      }else{
+        var n=decodeURIComponent(el.getAttribute('data-brpick'));
+        OPEN_ITEM=(OPEN_ITEM===n)?null:n;
+      }
+      return true;
+    }
+  };
+
+  /* -------------------- surface 1: the GATHER & BUY page (#br-*) -------------------- */
+  function fillStart(){
+    var s=$('br-start'); if(!s||s.options.length) return;
+    s.innerHTML=startOptionsHTML();
+    s.addEventListener('change',function(){ saveStart(s.value); if($('br-out').innerHTML) planPage(true); });
+  }
+  var lastHash='', lastPlanKey='';
+  function planPage(silent){
+    var out=$('br-out'), st=$('br-status'); if(!out) return;
+    lastHash=listHash();
+    if(!silent&&st) st.textContent='fetching shop data\u2026';
+    var s=$('br-start');
+    planHTML(startInfoFrom(s?s.value:''), false).then(function(html){
+      out.innerHTML=html; if(st) st.textContent=''; lastPlanKey=lastHash;
+    }).catch(function(e){ if(st) st.textContent=''; out.innerHTML=offlineHTML(e); });
+  }
+  function fixOpsState(){
+    try{
+      var ov={}, ck={}, ch=false;
+      try{ ov=JSON.parse(localStorage.getItem('sc_ov_panels')||'{}'); }catch(e){}
+      try{ ck=JSON.parse(localStorage.getItem('sc_ops_collapsed')||'{}'); }catch(e){}
+      ['gather','buy'].forEach(function(k){
+        if(ov[k]===false){ ov[k]=true; ch=true; }
+        if(ck[k]){ ck[k]=false; ch=true; }
+      });
+      if(ch){
+        localStorage.setItem('sc_ov_panels',JSON.stringify(ov));
+        localStorage.setItem('sc_ops_collapsed',JSON.stringify(ck));
+        if(window.scOpsRepaint) scOpsRepaint();
+      }
+      ['gather','buy'].forEach(function(k){
+        var p=document.querySelector('#tab-myops .ops-panel[data-ops="'+k+'"]');
+        if(p&&p.classList.contains('ops-collapsed')&&ch) p.classList.remove('ops-collapsed');
+      });
+    }catch(e){}
+  }
+  function boot(){
+    var b=$('br-plan'); if(!b||b.__br539){ return !!b; }
+    b.__br539=true;
+    fixOpsState();
+    fillStart();
+    b.addEventListener('click',function(){ planPage(false); });
+    var out=$('br-out');
+    if(out) out.addEventListener('click',function(e){
+      if(window.cgBuyRoute.handlePinClick(e.target)) planPage(true);
+    });
+    setInterval(function(){
+      var h=listHash();
+      if(h!==lastHash){
+        lastHash=h;
+        if($('br-out') && $('br-out').innerHTML && lastPlanKey) planPage(true);
+        /* pill surface: a changed list invalidates its cached route; its own refresh repaints */
+        if(window.cgBuyRoute.pillCache && window.cgBuyRoute.pillCache.hash!==h) window.cgBuyRoute.pillCache=null;
+      }
+    },2000);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ if(boot()||++n>80) clearInterval(iv); },400);
 })();
 </script>
 </body>
