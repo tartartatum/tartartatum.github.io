@@ -290,7 +290,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
 <script>
 (function(){
   "use strict";
-  var ORG_BUILD=6, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
+  var ORG_BUILD=7, ORG_ID=null; /* ORG_ID is DYNAMIC now: your approved org, null until known */
   var GAMERPOOL='gamerpool';
   var isAdmin=false, approvedOrgs=[], pendingOrgs=[], myPendingOrg=null, myFoundedOrg=null, subOrgId=null, rtOrgs=null;
   var poolRoster=[], poolQ='';   /* ORG_BUILD 5: the registered-pilots list + its search text */
@@ -429,7 +429,7 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
   }
   function renderJoin(box){ box.className='oc-console'; var h='';
     if(myPendingOrg) h+='<div class="oc-applicants"><h3>APPLICATION PENDING</h3><div style="font-size:13px;color:#c9d7e4">Your request to join <b>'+esc(orgName(myPendingOrg))+'</b> sits with that org\'s command — not the system admin. General + Party stay open while you wait.</div></div>';
-    if(myFoundedOrg) h+='<div class="oc-applicants"><h3>YOUR ORG — '+esc(String(myFoundedOrg.status||'').toUpperCase())+'</h3><div style="font-size:13px;color:#c9d7e4">'+(myFoundedOrg.status==='pending'?('<b>'+esc(myFoundedOrg.name)+'</b> is waiting on the system admin. The moment it\'s approved you are its Wing Commander.'):('<b>'+esc(myFoundedOrg.name)+'</b> was not approved. You can found a different org below.'))+'</div></div>';
+    if(myFoundedOrg) h+='<div class="oc-applicants"><h3>YOUR ORG — '+esc(String(myFoundedOrg.status||'').toUpperCase())+'</h3><div style="font-size:13px;color:#c9d7e4">'+(myFoundedOrg.status==='pending'?('<b>'+esc(myFoundedOrg.name)+'</b> is in my review queue. I look at every application personally — one human, and I sleep sometimes — so give me <b>12&ndash;24 hours</b>. The moment I approve it, you\'re its Wing Commander.'):('<b>'+esc(myFoundedOrg.name)+'</b> was not approved. You can found a different org below.'))+'</div></div>';
     h+='<div class="oc-sqn" style="max-width:430px"><div class="oc-sqn-h"><span class="sn">JOIN AN ORG</span></div>';
     if(approvedOrgs.length){
       h+='<div class="oc-apply-form" style="max-width:none;margin:0">'
@@ -448,6 +448,8 @@ button.oc-send{background:linear-gradient(180deg,#6fbdd8,#2a84ac) !important;bor
       +'<label class="oc-fl">ORG ID <span class="oc-req">*</span><input id="oc-fo-id" class="oc-fi" maxlength="24" spellcheck="false" autocomplete="off" placeholder="lowercase-slug-3-24-chars"></label>'
       +'<label class="oc-fl">TAG <span class="oc-opt">(2-6 chars, optional)</span><input id="oc-fo-tag" class="oc-fi" maxlength="6" autocomplete="off"></label>'
       +'<div id="oc-fo-err" class="oc-ap-err"></div>'
+      /* ORG_BUILD 7 (T): set the expectation BEFORE they submit - approvals are one human, not a bot */
+      +'<div style="font-size:11px;color:#8ba0b5;line-height:1.55;border:1px solid rgba(255,176,0,.3);background:rgba(255,176,0,.06);border-radius:7px;padding:8px 10px">A quick heads-up before you submit: your application comes to me personally — <b style="color:#ffd479">one person, not a bot</b> — and I do occasionally need to sleep. You\'ll usually hear back within <b style="color:#ffd479">12&ndash;24 hours</b>. General and Party chat are open to you the whole time, so make yourself at home while you wait.</div>'
       +'<button class="oc-btn" id="oc-found-btn" disabled>SUBMIT TO SYSTEM ADMIN</button></div></div>';
     box.innerHTML=h; wireJoinForms();
   }
