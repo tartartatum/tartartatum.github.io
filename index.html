@@ -7995,7 +7995,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=531;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=532;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-26';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -27319,5 +27319,51 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   #sc-chatdock .cd-title{letter-spacing:1px !important}
 }
 </style>
+<script id="sc-b532-registered-js">
+/* 2026-07-27 user: "current pilots online and registered pilots. put it right next to the
+   pilots online. bottom row still even and only one line."
+   REGISTERED = Supabase RPC cg_pilot_stats() (cmdglas_stats.sql): the REAL count of
+   accounts, readable without a login, aggregate only. Renders INSIDE the existing
+   #cg-pilots pill (same flex line - it cannot wrap):  ● 3 PILOTS ONLINE · 12 REGISTERED
+   HONESTY RULE: RPC missing or unreachable -> the REGISTERED half stays hidden. We never
+   print a stale or made-up number. PILOTS ONLINE (Cloudflare beat) is untouched.
+   LOOP GUARD: attach() must NOT mutate the DOM unless the value actually changed -
+   it runs from a MutationObserver, and an observer that mutates on every call observes
+   its own writes forever (caught in the render gate; killed the tab).
+   Reversible: delete this block; in Supabase run: drop function public.cg_pilot_stats(); */
+(function(){
+  if(window.__cgReg532) return; window.__cgReg532=true;
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
+  var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
+  var reg=null;
+  function attach(){
+    if(reg==null) return;
+    var el=document.getElementById('cg-pilots'); if(!el) return;
+    var box=document.getElementById('cgp-reg-wrap');
+    if(box && box.getAttribute('data-v')===String(reg)) return;  /* no change -> no write -> no loop */
+    if(!box){
+      box=document.createElement('span'); box.id='cgp-reg-wrap';
+      box.style.display='inline-flex'; box.style.alignItems='center';
+      box.innerHTML='<span style="margin:0 6px;color:#4a708a">&middot;</span>'
+        +'<span class="cgp-num" id="cgp-reg-num"></span>&nbsp;<span class="cgp-lbl">REGISTERED</span>';
+      el.appendChild(box);
+      el.title='Tablets active in the last 2 minutes / accounts registered';
+    }
+    box.setAttribute('data-v',String(reg));
+    var n=document.getElementById('cgp-reg-num'); if(n) n.textContent=reg.toLocaleString();
+  }
+  function pull(){
+    fetch(SB_URL+'/rest/v1/rpc/cg_pilot_stats',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:'{}'})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){ if(d&&typeof d.registered==='number'){ reg=d.registered; attach(); } })
+      .catch(function(){});
+  }
+  try{ new MutationObserver(attach).observe(document.body,{childList:true,subtree:true}); }catch(e){}
+  var k=0, iv=setInterval(function(){ attach(); if(++k>150) clearInterval(iv); }, 500);
+  pull(); setInterval(pull, 300000);
+})();
+</script>
 </body>
 </html>
