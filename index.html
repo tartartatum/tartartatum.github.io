@@ -2593,10 +2593,10 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
             1. Dock at a refinery (e.g. an <b>ARC-L / refinery deck</b>) and use the <b>Refinery Terminal</b>.<br>
             2. Select your ore. The terminal lists <b>every method side-by-side with its YIELD %, TIME, and COST</b>, those change per material, so compare before you commit. Methods (yield &harr; speed &harr; cost tradeoff):<br>
             &bull; <b>Dinyx Solventation</b> - highest yield, but slowest (long real-time timer). Best started before you log off.<br>
-            &bull; <b>Pyrometric Chromalysis</b> - above-average yield; higher cost, slow.<br>
+            &bull; <b>Pyrometric Chromalysis</b> - high yield at LOW cost, but the slowest method on the board. <span style="color:#39d353">[re-verified vs wiki 27 JUL 2026]</span><br>
             &bull; <b>Ferron Exchange</b> - balanced compromise of yield / fee / time. Safe default.<br>
             &bull; <b>Electrostarolysis</b>, <b>Gaskin Process</b>, <b>Kazen Winnowing</b>, <b>Thermonatic Deposition</b>, <b>XCR Reaction</b>, mid-range; yield/time/cost vary by ore - read the terminal.<br>
-            &bull; <b>Cormack Method</b> - fastest + cheapest, but lowest yield. Use when you need it now or the ore is cheap.<br>
+            &bull; <b>Cormack Method</b> - fastest, but lowest yield at a mid-pack fee (the wiki lists its cost MODERATE, not cheapest - this tablet previously had that wrong). Use when you need the ore now. <span style="color:#39d353">[re-verified vs wiki 27 JUL 2026]</span><br>
             CAUTION: no method is best for everything, higher yield usually means slower + pricier. A refinery calculator (UEX) can pre-compute the best method + yield per ore.<br>
             3. Pay, wait for the timer, then <b>collect refined SCU</b> onto a hauler.<br>
             4. Sell refined ore at a <b>Trade / Commodity terminal</b>, check the <b>Hauling</b> tab / UEX for best price. Use the YIELD ESTIMATOR below to value a rock before you crack it.
@@ -6847,6 +6847,11 @@ function selShip(idx){
       <span class="ld-role">${s.Role||''}</span>
       <span class="ld-mfr">${s['Mfr']||''}</span>
   </div>
+    <!-- build 549 (T): "ship builder page also needs a dps (burst and alpha) total ship hull xp and
+         shield pool for each selected and built ship" - filled async from the LIVE wiki API by
+         ldTotals(); source + patch stamped on the panel, never invented. -->
+    <div class="ld-section" id="lt_${key}"><div class="ld-section-title">SHIP TOTALS</div>
+      <div style="font-size:10px;color:var(--text-dim);letter-spacing:1px">checking api.star-citizen.wiki&hellip;</div></div>
     <div class="ld-section">
       <div class="ld-section-title">WEAPON SLOTS${(s['Pilot Hardpoints']&&s['Pilot Hardpoints']!=='—')?(' - '+s['Pilot Hardpoints']):''}</div>
       ${slotsHtml}
@@ -6869,7 +6874,7 @@ function selShip(idx){
     <div class="ld-section">
       <div class="ld-section-title">MISSILE RACKS - EDITABLE</div>
       ${missileHtml}
-  </div>
+  </div>${''/* build 549: totals fetch fires after the pane paints */}
     <!-- === SHIP LOADOUT REFERENCE (2026-07-17 user order) ===================================
          Same treatment as the META page: local best-in-slot opinion out, self-updating sources in.
          WHAT WAS HERE: a per-ROLE lookup rendering ~12 hand-written pve/pvp verdicts on EVERY ship
@@ -6912,6 +6917,7 @@ function selShip(idx){
       </div>
     </div>
   </div>`;
+  try{ if(window.ldTotals) window.ldTotals(s.Ship, key); }catch(e){} /* build 549: async ship totals */
 }
 
 // ── Hangar state (persisted in localStorage) ──────────────────────────
@@ -8040,7 +8046,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=547;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=550;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-27';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -10168,7 +10174,7 @@ const MN_LASERS = [
   {n:'Arbor MH2', mfr:'Greycat Industrial', opt:2590, max:2900, res:25,  inst:-35,wmin:90, wmax:270,slots:2, note:'Window Size +40% [4.9 VERIFIED]'},
   {n:'Helix II',  mfr:'Thermyte Concern',   opt:2590, max:4930, res:-30, inst:0,  wmin:30, wmax:90, slots:3, note:'Window Size -40% [4.9 VERIFIED; instability 0 confirmed]'},
   {n:'Hofstede-S2',mfr:'Shubin Interstellar',opt:1295,max:4060, res:-30, inst:10, wmin:60, wmax:180,slots:2, note:'Window Rate +20%, Size +60% [4.9 VERIFIED]'},
-  {n:'Impact II', mfr:'Thermyte Concern',   opt:3145, max:3360, res:10,  inst:-10,wmin:60, wmax:180,slots:3, note:'Window Rate -40%, Size +20% [4.9 DATAMINE INCONSISTENT - 4.8 values kept, verify in game]'},
+  {n:'Impact II', mfr:'Thermyte Concern',   opt:3145, max:3360, res:10,  inst:-10,wmin:60, wmax:180,slots:3, note:'Window Rate -40%, Size +20% [4.9 API VERIFIED 27 JUL 2026 - these are the BASE variant values; the CRAFTABLE variant runs 1015-4060 power]'},
   {n:'Klein-S2',  mfr:'Shubin Interstellar',opt:2775, max:4350, res:-45, inst:35, wmin:60, wmax:180,slots:1, note:'Window Size +20% [4.9 VERIFIED]'},
   {n:'Lancet MH2',mfr:'Greycat Industrial', opt:2590, max:4350, res:0,   inst:-10,wmin:45, wmax:135,slots:2, note:'Window Rate +40%, Size -60% [4.9 VERIFIED; resistance 0 confirmed]'}
 ];
@@ -10198,7 +10204,7 @@ const MN_MODULES = [
   {n:'Optimum',   t:'Active', pwr:85, res:0,  inst:-10,mfr:'Greycat Industrial', o:'Overcharge Rate -80%; 60s, 5 uses'},
   {n:'Rime',      t:'Active', pwr:85, res:-25,inst:0,  mfr:'Greycat Industrial', o:'Inert -10%; 20s, 10 uses'},
   {n:'Stampede',  t:'Active', pwr:135,res:0,  inst:-10,mfr:'Thermyte Concern',   o:'Inert -10%; 30s, 6 uses'},
-  {n:'Surge',     t:'Active', pwr:150,res:-15,inst:10, mfr:'Thermyte Concern',   o:'15s, 7 uses'},
+  {n:'Surge',     t:'Active', pwr:150,res:-15.5,inst:10, mfr:'Thermyte Concern',   o:'15s, 7 uses [4.9 API VERIFIED 27 JUL 2026; res is -15.5 exactly]'},
   {n:'Torpid',    t:'Active', pwr:100,res:0,  inst:0,  mfr:'Greycat Industrial', o:'Rate +60%, Catastrophic -60%, Inert +40%; 60s, 5 uses'}
 ];
 const MN_ROCKS_DEFAULT = [
@@ -13569,7 +13575,11 @@ window._buildOverlayBody = function(opts){
     var v="";
     try{ v=(JSON.parse(localStorage.getItem("sc_ld_comps")||"{}")[ship]||{})[kind]||""; }catch(e){}
     var se=String(ship).replace(/'/g,"\\'");
-    return '<span class="ld-val" style="display:inline-flex;gap:5px;align-items:center"><input type="text" value="'+String(v).replace(/"/g,"&quot;")+'" placeholder="'+String(slot||"—").replace(/"/g,"&quot;")+'" onchange="ldSetComp(\''+se+'\',\''+kind+'\',this.value)" style="background:var(--bg2);border:1px solid var(--border2);color:var(--amber2);padding:2px 6px;font-family:inherit;font-size:12px;width:150px"><button type="button" title="Add this component to the BUY list (top-centre OPS pill)" onclick="ldBuyComp(this,\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:#7fd0a0;border-radius:4px;padding:2px 7px;font-size:12px;line-height:1;cursor:pointer">&#128722;</button><button type="button" title="Remove component" onclick="ldClearComp(this,\''+se+'\',\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:var(--text-mid);border-radius:4px;padding:2px 8px;font-size:12px;line-height:1;cursor:pointer">&#10006;</button></span>';
+    /* build 549 (T): "the ship components inside the ship builder for systems doesn't show the
+       mil/civ-size-tier. weapons do but not the system items" - the grade chip (MIL · S3 · A etc,
+       same renderer the BUY itinerary uses) now rides beside every system input, live on change.
+       Chip only shows for components the COMP_GRADE table knows - never guessed. */
+    return '<span class="ld-val" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap"><input type="text" value="'+String(v).replace(/"/g,"&quot;")+'" placeholder="'+String(slot||"—").replace(/"/g,"&quot;")+'" onchange="ldSetComp(\''+se+'\',\''+kind+'\',this.value);ldGradeRefresh(this)" style="background:var(--bg2);border:1px solid var(--border2);color:var(--amber2);padding:2px 6px;font-family:inherit;font-size:12px;width:150px"><span class="ld-gchip">'+(window.ldGradeChip?window.ldGradeChip(v):'')+'</span><button type="button" title="Add this component to the BUY list (top-centre OPS pill)" onclick="ldBuyComp(this,\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:#7fd0a0;border-radius:4px;padding:2px 7px;font-size:12px;line-height:1;cursor:pointer">&#128722;</button><button type="button" title="Remove component" onclick="ldClearComp(this,\''+se+'\',\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:var(--text-mid);border-radius:4px;padding:2px 8px;font-size:12px;line-height:1;cursor:pointer">&#10006;</button></span>';
   };
   /* build 451 (user: unowned components added in the ship builder never reached the BUY tab). ROOT CAUSE: opsPushBuy existed but was never called anywhere. This button wires each component to it. */
   window.ldBuyComp=function(btn,kind){ try{ var inp=btn.parentNode.querySelector('input'); var name=inp?(inp.value||'').trim():''; if(!name){ if(inp) inp.focus(); var t0=btn.textContent; btn.textContent='name?'; btn.style.color='#ff8a7a'; setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1400); return; } /* build 540: an empty box used to fail SILENTLY - the exact "hit cart, nothing happened" report */ /* build 541 (T): toggle - on the list already = tap RECALLS */ if(typeof opsHasBuy==='function'&&opsHasBuy(name)){ opsRecallBuy(name); btn.textContent='−'; btn.style.color='#ff8a7a'; } else { if(typeof opsPushBuy==='function'){ opsPushBuy([{name:name,kind:(kind||'component')}], 'Ship Loadout'); } btn.textContent='✓'; btn.style.color='#39d353'; } setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1200); }catch(e){} };
@@ -24835,7 +24845,8 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   function bpsChips(){ var bps=pushedBPs(); if(!bps.length) return ''; return '<div class="ops4-bps"><span class="ops4-bps-l">PUSHED</span>'+bps.map(function(n){ return '<span class="ops4-bp" title="pushed from Blueprints">'+esc(n)+'</span>'; }).join('')+'</div>'; }
   function renderGather(){
     var bph=bpsChips();
-    var g=gatherList(); if(!g.length) return bph || '<div class="ops4-empty">No crafting materials yet - pick blueprints in the Craft Calculator (they land here) or push from a Blueprints card.</div>';
+    var g=gatherList(); if(!g.length) return (bph||'<div class="ops4-empty">No crafting materials yet - pick blueprints in the Craft Calculator (they land here) or push from a Blueprints card.</div>')
+      +(window.cgSamples?cgSamples.gatherSample():'');/* build 548: empty list -> labelled sample of what PLAN MINING RUN builds */
     g.sort(function(a,b){ return (b.qty||0)-(a.qty||0); });
     /* build 444 (user: the expanded view left dead space below — fill it). Show the whole list; ops4-body has overflow:auto so it scrolls when docked and fills the tall pop-out. */
     var nb=uniqFroms(g), top=g.slice(0,120);
@@ -24871,7 +24882,12 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
         +'<button type="button" class="ops4-go" id="ops4-br-plan" style="padding:6px 12px;flex:0 0 auto" title="Build the fewest-stops shopping run for every item above, with listed aUEC prices">'+(cbr.pillBusy?'PLANNING…':'PLAN ROUTE')+'</button>'
         +'</div>'
         +'<div style="font-size:8.5px;color:#8ba0b5;line-height:1.4;margin-bottom:5px">Pick where you are launching from, then PLAN ROUTE builds the fewest-stops shopping run from there with listed aUEC prices.</div>';
-      if(cbr.pillCache && cbr.pillCache.hash===cbr.listHash()) plan+='<div id="ops4-br-out">'+cbr.pillCache.html+'</div>';
+      if(window.cgSamples && cgSamples.srvDown()){
+        /* build 548: no control server reachable - show the labelled mockup so visitors see what
+           the planner does and exactly what it takes to get it (T's order) */
+        plan+=cgSamples.buySample();
+      }
+      else if(cbr.pillCache && cbr.pillCache.hash===cbr.listHash()) plan+='<div id="ops4-br-out">'+cbr.pillCache.html+'</div>';
       else if(cbr.pillBusy) plan+='<div class="ops4-empty">fetching shop data…</div>';
     }
     return '<div class="ops4-head">'+b.length+' item'+(b.length===1?'':'s')+' to buy</div>'+plan+rows+more;
@@ -27596,7 +27612,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   var BUILD_STAMP='TABLET UPDATED 27 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
   /* T's order 27 JUL 2026: the two pin/price items below STAY in the ticker until at least
      30 JUL 2026, even as newer items are added above them. Add new NEW items BEFORE these two. */
-  var NOTES='WORKING ON: polishing the route planners - report anything that plans wrong'
+  var NOTES='WORKING ON: expanding Org/Party chat capabilities'  /* 2026-07-27 T: "update the banner saying \'expanding Org/Party chat capabilities\'" */
     +' &middot; NEW: PIN where you buy or mine - tap any item in a planned route to pick its shop or mining spot; AUTO hands it back to the optimizer'
     +' &middot; NEW: buy routes flag items that are LISTED CHEAPER at another shop, so you see what the fewest-stops convenience costs'
     +' &middot; NEW: BUY + GATHER route planners in the centre pill - one tap builds your shopping run (aUEC prices) or mining run (verified yields)';
@@ -27733,6 +27749,409 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
   #sc-chatdock .cd-head .cd-tx{padding:0 9px 0 8px !important;letter-spacing:1px !important}
 }
 </style>
+<style id="sc-b549-orgpill-css">/* 2026-07-27 build 549 (T: "the org pill inside the comms pill is still getting
+   cut off. i suggest simply moving it to the right a little bit"). MEASURED root cause, not guessed:
+   sc-b491 restyles the channel <select> as a bordered rounded box with padding 3px 6px, but the ORIGINAL
+   .cd-ch pill clip-path (polygon starting 6px in from the top-left) still applies - so the select's own
+   top-left corner is shaved diagonally and the first letter of "Org"/"General" sits exactly on the cut.
+   FIX, per T's suggestion: drop the stale clip (it belonged to the old decorative pill, not a select box)
+   and move the text right with real left padding. Width band widened so the extra padding never
+   ellipsizes "General". Reversible: delete this block. */
+#sc-chatdock select.cd-ch{clip-path:none !important;padding:3px 8px 3px 13px !important;
+  min-width:72px !important;max-width:124px !important}
+</style>
+<style id="sc-b549-igpill-css">/* 2026-07-27 build 549 (T): "Ship loadouts needs it's own home inside of the
+   ingame tools pill ... reduce size of all buttons inside the pill and place one singular short in
+   verticallity but spanning the horizontal width of the ingame tools pill. the button ... should look
+   exactly like the other buttons" + "fix the alignment of the title for blueprints, contracts (center
+   on buttons) then the craft calculator the word calculator is off center to the button itself."
+   LABEL CENTERING - measured root cause, not guessed: labels carry letter-spacing 1.8px, which adds a
+   trailing space after the LAST letter of every line; text-align:center centers each line INCLUDING
+   that invisible trailing space, so every line sits ~0.9px left. The old fix was text-indent:1.8px -
+   but text-indent applies to the FIRST LINE ONLY, so single-line labels looked fine while wrapped ones
+   ("CRAFT / CALCULATOR") had line 1 pushed right and line 2 left - exactly the off-center T sees.
+   padding-left on the box compensates every line uniformly. Reversible: delete css+js blocks. */
+#tab-home .hm-cell .hm-lab-out,#tab-home .hm-tray .hm-tile.hm-noico .hm-lab{text-indent:0 !important;padding-left:1.8px !important}
+/* beats the b328 rule (#tab-home .hm-cols .hm-col .hm-cell .hm-lab-out - text-indent:1.6px !important)
+   at equal-or-higher specificity, later in the sheet; its letter-spacing there is 1.6px so the
+   uniform compensation is 1.6px in that context */
+#tab-home .hm-cols .hm-col .hm-cell .hm-lab-out{text-indent:0 !important;padding-left:1.6px !important}
+/* smaller tiles - INGAME TOOLS tray only (the GENERAL pill keeps its own sizing) */
+#tab-home .hm-tray:not(.hm-tray-gen) .hm-tile.hm-img{width:104px !important;height:104px !important;max-width:104px !important}
+#tab-home .hm-tray:not(.hm-tray-gen) .hm-cell{width:104px !important}
+#tab-home .hm-cols .hm-col #sc-tools-row .hm-tray:not(.hm-tray-gen) .hm-tile.hm-img{max-width:104px !important;height:auto !important;aspect-ratio:1/1 !important}
+/* the SHIP LOADOUTS bar: one tile, short vertically, spanning the tray width; same .hm-tile skin */
+#tab-home .hm-tray:not(.hm-tray-gen) .hm-tile.hm-wide549{grid-column:1/-1;flex:1 1 100%;width:100%;height:46px;
+  display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;padding:0 14px;border-radius:14px}
+/* T (27 JUL): "remove the rocket. there shouldn't be a line on the bottom of the pill around ship
+   loadouts at all." The ::before/::after holo rings are drawn for SQUARE tiles - masked to arcs,
+   they read as stray lines on a 46px-tall bar, so the bar drops them. Box, border, gradient and
+   shadow stay the stock .hm-tile skin. */
+#tab-home .hm-tile.hm-wide549::before,#tab-home .hm-tile.hm-wide549::after{display:none !important;content:none !important}
+/* T (27 JUL): "the bottom line is still there" - MEASURED: it was the hard 2px ledge in the
+   tools-row profile's tile shadow (0 2px 0 #0a111c). The bar keeps the soft depth + top sheen,
+   drops the ledge. */
+/* specificity note: the global button skin (#content button:not()... at ~L20707) is (1,3,1) with
+   !important - the doubled class here lifts this to (1,4,0) so the ledge actually drops */
+#tab-home .hm-tray .hm-tile.hm-wide549.hm-wide549{box-shadow:inset 0 1px 0 rgba(205,235,255,.24),0 3px 6px rgba(0,0,0,.45) !important}
+/* T 27 JUL, corrected same day: an earlier attempt here masked the tray's holo frame bottom to
+   kill the line under the SHIP LOADOUTS bar - T then reported "the bottom part of the 3D effect
+   and lines on the ingame tools pill is missing". The mask override is DELETED: the pill keeps
+   its stock full frame; only the bar's own hard ledge-shadow removal (above) stands. */
+/* T (27 JUL): "font style/size needs to be the same as the other buttons" - mirrors .hm-lab-out:
+   8px/1.5px base, and the b328 hm-cols context bumps labels to 11px/1.6px/700 - so does the bar */
+#tab-home .hm-tile.hm-wide549 .hm-lab{font-size:8px;letter-spacing:1.5px;color:#cfe6f8;max-width:none;text-indent:0;padding-left:1.5px;white-space:nowrap;text-transform:uppercase}
+#tab-home .hm-cols .hm-col .hm-tile.hm-wide549 .hm-lab{font-size:11px !important;letter-spacing:1.6px !important;font-weight:700 !important;padding-left:1.6px !important}
+</style>
+<script id="sc-b549-igpill-js">
+/* 2026-07-27 build 549 (T): inject the full-width SHIP LOADOUTS tile into the INGAME TOOLS tray and
+   retire the small "Ship" tile from the GENERAL tray - its home is here now. The GENERAL page-jump
+   <select> keeps its loadout option untouched (values are load-bearing, per the L1479 warning).
+   data-tab="loadout" rides the existing document-level tile delegation (click -> go('loadout'),
+   hover -> popout) - no new handlers. Injection is guarded: it only writes when the bar is missing
+   (render-gate rule), and the MutationObserver re-injects after every home rebuild. */
+(function(){
+  if(window.__cgIgLoadout549) return; window.__cgIgLoadout549=true;
+  /* T (27 JUL): no icon on the bar - label only, identical skin to the other tiles */
+  function igTray(){
+    var secs=document.querySelectorAll('#tab-home .hm-sec');
+    for(var i=0;i<secs.length;i++){
+      if(/INGAME TOOLS/i.test(secs[i].textContent||'')){
+        var n=secs[i].nextElementSibling;
+        if(n&&n.classList&&n.classList.contains('hm-tray')) return n;
+      }
+    }
+    return null;
+  }
+  function inject(){
+    var tr=igTray(); if(!tr) return;
+    if(!tr.querySelector('.hm-wide549')){
+      var b=document.createElement('button'); b.type='button';
+      b.className='hm-tile hm-wide549'; b.setAttribute('data-tab','loadout'); b.title='Ship Loadouts';
+      b.innerHTML='<span class="hm-lab">SHIP LOADOUTS</span>';
+      tr.appendChild(b);
+    }
+    var olds=document.querySelectorAll('#tab-home .hm-tray-gen .hm-tile[data-tab="loadout"]');
+    for(var j=0;j<olds.length;j++) olds[j].parentNode.removeChild(olds[j]);
+  }
+  function boot(){
+    var hs=document.getElementById('home-scroll');
+    if(!hs){ setTimeout(boot,800); return; }
+    try{ new MutationObserver(function(){ inject(); }).observe(hs,{childList:true}); }catch(e){}
+    inject();
+  }
+  boot();
+})();
+</script>
+<style id="sc-b549-orgparty-css">/* 2026-07-27 build 549 (T): "we need a org/party page in the top middle pill.
+   add between notes and stream ... selectable buttons inside that lets the user switch between party
+   view and org view" + refinement same day: "should list party leader, org leader and then offer a
+   button to open another overlay page that shows all party/org members and shows their status".
+   Rider on the ops4 pill, same pattern as the b418 Stream view: own panel, own tab, core untouched.
+   Reversible: delete css+js. */
+#cg-orgparty{display:none;flex-direction:column;gap:7px;flex:1 1 auto;min-height:0;overflow:auto}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on > .ops4-body{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on #cg-twitch{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on #cg-orgparty{display:flex}
+#cg-orgparty .op-switch{display:flex;gap:6px;flex:0 0 auto}
+#cg-orgparty .op-sw{flex:1;font:800 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;text-transform:uppercase;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:7px;padding:6px 0;cursor:pointer}
+#cg-orgparty .op-sw.on{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border-color:#7fd4f2}
+#cg-orgparty .op-h{font:700 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#6f8ba0;text-transform:uppercase;margin:2px 0 1px}
+.cg-op-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border:1px solid rgba(108,180,214,.25);border-radius:12px;background:rgba(8,20,32,.55);font:600 11px 'Rajdhani','Segoe UI',sans-serif;color:#b9c9d8;margin:0 3px 3px 0}
+.cg-op-pill i{width:6px;height:6px;border-radius:50%;background:#4a5563;flex:none}
+.cg-op-pill.on{border-color:rgba(87,211,138,.4)}
+.cg-op-pill.on i{background:#57d38a;box-shadow:0 0 4px #57d38a}
+.cg-op-tac{font-size:8px;letter-spacing:1px;color:#8fe6ff;border:1px solid rgba(110,205,255,.4);border-radius:3px;padding:0 3px}
+.cg-op-kia{color:#ff5050;font-weight:800;letter-spacing:1px}
+.cg-op-res{font-size:8px;letter-spacing:1px;color:#ffd479;border:1px solid rgba(255,207,107,.5);border-radius:3px;padding:0 3px}
+.cg-op-ord{font-size:8px;letter-spacing:1px;border:1px solid;border-radius:3px;padding:0 4px;vertical-align:middle}
+#cg-orgparty .op-note{font:600 11px 'Rajdhani','Segoe UI',sans-serif;color:#6f8ba0;padding:8px 4px}
+.cg-op-btn{font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#8fdcff;background:transparent;border:1px solid rgba(108,180,214,.35);border-radius:5px;padding:3px 8px;cursor:pointer}
+.cg-op-btn:hover{color:#04141d;background:#7fd4f2}
+#cg-orgparty .op-lead-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+#cg-orgparty .op-lead-t{font:700 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#c9a86a;text-transform:uppercase;flex:none;min-width:86px}
+/* T bug report 27 JUL ("after clicking on org/party it highlights and selects buy or any other
+   random button and flicks back and forth"): the ops4 core repaints its own tab highlight from
+   ITS stored view every 1.5 s while this rider re-asserted the Org/Party highlight on a faster
+   tick - two owners of one classlist = visible flicker war. FIX: JS no longer touches the other
+   tabs at all; while the glance view is open, CSS alone mutes whatever the core highlights and
+   paints the Org/Party tab active. One owner per state, zero flicker. */
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on .ops4-tab.on:not([data-v="orgparty"]){
+  color:#8fb3c8 !important;background:rgba(10,22,34,.6) !important;
+  border-color:rgba(108,180,214,.28) !important;box-shadow:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on .ops4-tab[data-v="orgparty"]{
+  color:#04141d !important;background:linear-gradient(180deg,#a6f2ff,#33b5e6) !important;
+  border-color:rgba(170,242,255,.9) !important;box-shadow:0 0 8px rgba(120,220,255,.35) !important}
+/* full-roster overlay (T: "another overlay page that shows all party/org members and shows their status") */
+#cg-op-overlay{display:none;position:fixed;inset:0;z-index:9990;background:rgba(3,7,12,.9);backdrop-filter:blur(3px);padding:26px}
+#cg-op-overlay.open{display:flex;align-items:center;justify-content:center}
+#cg-op-overlay .op-card{max-width:760px;width:100%;max-height:82vh;overflow:auto;background:linear-gradient(180deg,#101b29,#0a121c);border:1px solid rgba(108,180,214,.4);border-radius:14px;padding:18px 20px;box-shadow:0 24px 60px rgba(0,0,0,.7)}
+#cg-op-overlay .op-card h2{font:700 13px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:3px;color:#9fcfe2;margin:0 0 10px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+#cg-op-overlay .op-x{margin-left:auto;font:800 11px 'Rajdhani',sans-serif;color:#ff9a8a;background:transparent;border:1px solid rgba(255,128,110,.4);border-radius:6px;padding:3px 9px;cursor:pointer}
+#cg-op-overlay .op-seen{font-size:9px;color:#6f8ba0;letter-spacing:.5px}
+</style>
+<script id="sc-b549-orgparty-js">
+/* ORG/PARTY glance view (T, 2026-07-27). Reads Supabase directly with the SAME session token the
+   COMMS pages use (shared localStorage, same origin) - read-only, no writes. Presence realtime is
+   not available over plain REST, so LIVE = heartbeat fresher than 3 min (the comms heartbeat
+   writes every 60 s). Poll 30 s while open; repaints string-guarded (__last pattern). MSG buttons
+   open the COMMS dock on the right channel - the glance view LINKS to comms, never duplicates it.
+   Main view = leaders only + counts (T refinement); FULL ROSTER button opens the overlay with
+   every member and their status. */
+(function(){
+  if(window.__cgOrgParty549) return; window.__cgOrgParty549=true;
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
+  var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
+  var VKEY='cg_op_glance_view', ONKEY='cg_op_glance_on';
+  var pool=[], orgRows=[], sqns=[], orgId=null, orgNm='', uid=null, lastErr='';
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function tok(){ try{ var raw=localStorage.getItem('sb-rvbxbrgvsdjdtsjdusfh-auth-token'); if(!raw) return null;
+      var j=JSON.parse(raw); return (j&&(j.access_token||(j.currentSession&&j.currentSession.access_token)))||null; }catch(e){ return null; } }
+  function uidOf(){ try{ var t=tok(); if(!t) return null; var p=JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))); return p.sub||null; }catch(e){ return null; } }
+  function rest(path,cb){ var t=tok(); if(!t){ lastErr='signin'; cb(null); return; }
+    fetch(SB_URL+'/rest/v1/'+path,{headers:{apikey:SB_KEY,Authorization:'Bearer '+t}})
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(function(j){ lastErr=''; cb(j); },function(e){ lastErr=String(e&&e.message||e); cb(null); }); }
+  function viewSel(){ try{ return localStorage.getItem(VKEY)==='org'?'org':'party'; }catch(e){ return 'party'; } }
+  function glanceOn(){ try{ return localStorage.getItem(ONKEY)==='1'; }catch(e){ return false; } }
+  function setOn(v){ try{ localStorage.setItem(ONKEY,v?'1':'0'); }catch(e){} }
+  function liveMin(m){ if(!m||!m.last_seen) return 99999; var s=Math.floor((Date.now()-new Date(m.last_seen).getTime())/60000); return isNaN(s)?99999:s; }
+  function isLive(m){ return liveMin(m)<3; }
+  function agoTxt(m){ var s=liveMin(m); if(s<3) return 'LIVE'; if(s>=99999) return 'no contact';
+    if(s<60) return s+'m ago'; if(s<1440) return Math.floor(s/60)+'h ago'; return Math.floor(s/1440)+'d ago'; }
+  var ORD_C={defend:'#6ecdff',guard:'#8fdcff',attack:'#ff6b6b',suppress:'#e0be7d',distract:'#c39bff',lure:'#57d38a'};
+  function pillHTML(m,withSeen){ var on=isLive(m);
+    return '<span class="cg-op-pill'+(on?' on':'')+'"><i></i>'
+      +(m.tac_callsign?'<span class="cg-op-tac">'+esc(m.tac_callsign)+'</span>':'')
+      +(m.kia?'<span class="cg-op-kia">KIA</span> ':'')
+      +'<span>'+esc(m.callsign||'CMDR')+(uid&&m.user_id===uid?' (you)':'')+'</span>'
+      +(m.rescue?'<span class="cg-op-res">MEDIVAC</span>':'')
+      +(m.party_role==='leader'?'<span style="color:#ffd479">&#9733;</span>':'')
+      +(withSeen?'<span class="op-seen">'+agoTxt(m)+'</span>':'')
+      +'</span>'; }
+  function openComms(ch){ try{
+      var sel=document.getElementById('cd-chsel');
+      if(sel){ sel.value=ch; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+      var dock=document.getElementById('sc-chatdock');
+      var h=dock?dock.querySelector('.cd-head'):null;
+      if(h && dock && !dock.classList.contains('open')) h.click();
+    }catch(e){} }
+  function fetchAll(){
+    uid=uidOf(); if(!uid){ paint(); return; }
+    rest('org_members?select=*&user_id=eq.'+uid,function(mine){
+      if(mine){ var ap=null; (mine||[]).forEach(function(r){ if(r.org_id!=='gamerpool'&&r.status==='approved'&&!ap) ap=r; });
+        orgId=ap?ap.org_id:null; }
+      rest('org_members?select=*&org_id=eq.gamerpool&limit=1000',function(p){ if(p) pool=p;
+        if(!orgId){ orgRows=[]; sqns=[]; paint(); return; }
+        rest('orgs?select=id,name&id=eq.'+encodeURIComponent(orgId),function(o){ if(o&&o[0]) orgNm=o[0].name||orgId;
+          rest('org_members?select=*&org_id=eq.'+encodeURIComponent(orgId),function(r){ if(r) orgRows=r;
+            rest('org_squadrons?select=*&org_id=eq.'+encodeURIComponent(orgId)+'&order=sort',function(q){ if(q) sqns=q; paint(); }); }); }); });
+    });
+  }
+  function myParty(){ var mine=pool.filter(function(r){return r.user_id===uid;})[0];
+    return (mine&&mine.party_id)?pool.filter(function(r){return r.party_id===mine.party_id;}):[]; }
+  function counts(list){ var on=0,k=0,r=0; list.forEach(function(m){ if(isLive(m))on++; if(m.kia)k++; if(m.rescue)r++; });
+    return on+'/'+list.length+' LIVE'+(k?' &middot; <span class="cg-op-kia">'+k+' KIA</span>':'')+(r?' &middot; <span class="cg-op-res">'+r+' MEDIVAC</span>':''); }
+  /* main glance: LEADERS + counts + FULL ROSTER button (T refinement 27 JUL) */
+  function partyHTML(){
+    if(!tok()) return '<div class="op-note">Sign in (account pill) to see your party.</div>';
+    var mem=myParty();
+    if(!mem.length) return '<div class="op-note">No party. Open COMMS &rarr; #party to create or join one.</div>'
+      +'<div><button type="button" class="cg-op-btn" data-opmsg="party">OPEN #PARTY</button></div>';
+    var mine=pool.filter(function(r){return r.user_id===uid;})[0];
+    var ld=mem.filter(function(m){return m.party_role==='leader';})[0];
+    return '<div class="op-h">PARTY '+esc(mine.party_id)+' &middot; '+counts(mem)+'</div>'
+      +'<div class="op-lead-line"><span class="op-lead-t">Party leader</span>'+(ld?pillHTML(ld):'<span class="op-note" style="padding:0">seat empty</span>')+'</div>'
+      +'<div style="display:flex;gap:6px;margin-top:4px"><button type="button" class="cg-op-btn" data-oproster="party">FULL ROSTER</button>'
+      +'<button type="button" class="cg-op-btn" data-opmsg="party">MSG PARTY</button></div>';
+  }
+  function orgHTML(){
+    if(!tok()) return '<div class="op-note">Sign in (account pill) to see your org.</div>';
+    if(!orgId) return '<div class="op-note">No org yet. Join or found one on the COMMS ORG tab.</div>';
+    var ap=orgRows.filter(function(m){return m.status==='approved';});
+    var wc=ap.filter(function(m){return m.role==='wing-commander';});
+    var tasked=sqns.filter(function(q){return q.task;});
+    var oc=tasked.map(function(sq){ return '<span class="cg-op-ord" style="border-color:'+(ORD_C[sq.task]||'#8ba0b5')+';color:'+(ORD_C[sq.task]||'#8ba0b5')+'">'+esc(sq.name)+': '+esc(String(sq.task).toUpperCase())+(sq.task_target?' &middot; '+esc(sq.task_target):'')+'</span>'; }).join(' ');
+    return '<div class="op-h">'+esc(orgNm||orgId)+' &middot; '+counts(ap)+'</div>'
+      +'<div class="op-lead-line"><span class="op-lead-t">Org leader</span>'+(wc.length?wc.map(function(m){return pillHTML(m);}).join(''):'<span class="op-note" style="padding:0">none</span>')+'</div>'
+      +(oc?'<div class="op-h" style="margin-top:4px">ORDERS</div><div>'+oc+'</div>':'')
+      +'<div style="display:flex;gap:6px;margin-top:4px"><button type="button" class="cg-op-btn" data-oproster="org">FULL ROSTER</button>'
+      +'<button type="button" class="cg-op-btn" data-opmsg="org">MSG ORG</button></div>';
+  }
+  /* overlay: EVERY member + status */
+  var _lastOv='';
+  function overlayHTML(kind){
+    if(kind==='party'){ var mem=myParty();
+      return '<h2>PARTY ROSTER'+(mem.length?' &middot; '+counts(mem):'')+'<button type="button" class="op-x" id="cg-op-ov-x">CLOSE</button></h2>'
+        +(mem.length?'<div>'+mem.map(function(m){return pillHTML(m,true);}).join('')+'</div>':'<div class="op-note">No party.</div>'); }
+    var ap=orgRows.filter(function(m){return m.status==='approved';});
+    var h='<h2>'+esc(orgNm||orgId||'ORG')+' ROSTER'+(ap.length?' &middot; '+counts(ap):'')+'<button type="button" class="op-x" id="cg-op-ov-x">CLOSE</button></h2>';
+    if(!ap.length) return h+'<div class="op-note">No approved members.</div>';
+    var cols=sqns.slice(); cols.push({id:'',name:'Unassigned',_un:1});
+    var wc=ap.filter(function(m){return m.role==='wing-commander';});
+    if(wc.length) h+='<div class="op-h">WING COMMAND</div><div>'+wc.map(function(m){return pillHTML(m,true);}).join('')+'</div>';
+    cols.forEach(function(sq){
+      var mem=ap.filter(function(m){return (m.squadron||'')===sq.id && m.role!=='wing-commander';});
+      if(!mem.length) return;
+      var oc=sq.task?(' <span class="cg-op-ord" style="border-color:'+(ORD_C[sq.task]||'#8ba0b5')+';color:'+(ORD_C[sq.task]||'#8ba0b5')+'">'+esc(String(sq.task).toUpperCase())+(sq.task_target?' &middot; '+esc(sq.task_target):'')+'</span>'):'';
+      h+='<div class="op-h">'+esc(sq.name)+oc+'</div><div>'+mem.map(function(m){return pillHTML(m,true);}).join('')+'</div>';
+    });
+    return h;
+  }
+  function ensureOverlay(){
+    var ov=document.getElementById('cg-op-overlay');
+    if(!ov){ ov=document.createElement('div'); ov.id='cg-op-overlay';
+      ov.innerHTML='<div class="op-card"></div>';
+      document.body.appendChild(ov);
+      ov.addEventListener('click',function(e){ if(e.target===ov||e.target.closest('#cg-op-ov-x')) ov.classList.remove('open'); });
+    }
+    return ov;
+  }
+  function openOverlay(kind){ var ov=ensureOverlay(); ov.setAttribute('data-kind',kind);
+    _lastOv=''; paintOverlay(); ov.classList.add('open'); fetchAll(); }
+  function paintOverlay(){ var ov=document.getElementById('cg-op-overlay'); if(!ov||!ov.classList.contains('open'))
+    { if(ov&&!ov.classList.contains('open')) _lastOv=_lastOv; return; }
+    var html=overlayHTML(ov.getAttribute('data-kind')||'party');
+    if(html!==_lastOv){ ov.querySelector('.op-card').innerHTML=html; _lastOv=html; } }
+  var _last='';
+  function paint(){
+    var el=document.getElementById('cg-op-body'); if(!el){ paintOverlay(); return; }
+    var v=viewSel();
+    var html=(lastErr==='signin'?'<div class="op-note">Sign in (account pill) to see org/party status.</div>'
+      :(lastErr?'<div class="op-note">Comms backend unreachable - retrying.</div>':(v==='party'?partyHTML():orgHTML())));
+    var sws=document.querySelectorAll('#cg-orgparty .op-sw');
+    for(var i=0;i<sws.length;i++) sws[i].classList.toggle('on', sws[i].getAttribute('data-opv')===v);
+    if(html!==_last){ el.innerHTML=html; _last=html; }
+    paintOverlay();
+  }
+  function build(){
+    var pill=document.querySelector('#sc-home-widgets .ops-pill.b385'); if(!pill) return false;
+    var body=pill.querySelector('.pill-body'); if(!body) return false;
+    var tabs=body.querySelector('.ops4-tabs'); if(!tabs) return false;
+    if(!tabs.querySelector('.ops4-tab[data-v="orgparty"]')){
+      var bt=document.createElement('button'); bt.type='button'; bt.className='ops4-tab';
+      bt.setAttribute('data-v','orgparty'); bt.textContent='Org/Party';
+      var stab=tabs.querySelector('.ops4-tab[data-v="status"]'); /* Stream rides the status slot: inserting BEFORE it = between Notes and Stream */
+      tabs.insertBefore(bt, stab||null);
+      bt.addEventListener('click',function(e){ e.stopPropagation(); setOn(true); fetchAll(); sync();
+        /* the core's own tabs listener may also fire and store 'orgparty' as ITS view - an invalid
+           value its activeView() regex rejects into a fallback. Put a valid value back so the core's
+           state never carries our tab name. */
+        setTimeout(function(){ try{ if(localStorage.getItem('sc_ops_pill_view')==='orgparty') localStorage.setItem('sc_ops_pill_view','status'); }catch(err){} },0); });
+      tabs.addEventListener('click',function(e){ var t=e.target.closest?e.target.closest('.ops4-tab'):null;
+        if(t&&t.getAttribute('data-v')!=='orgparty') setOn(false); sync(); },true);
+    }
+    if(!document.getElementById('cg-orgparty')){
+      var ob=body.querySelector('.ops4-body'); if(!ob) return false;
+      var wrap=document.createElement('div'); wrap.id='cg-orgparty';
+      wrap.innerHTML='<div class="op-switch"><button type="button" class="op-sw" data-opv="party">PARTY VIEW</button><button type="button" class="op-sw" data-opv="org">ORG VIEW</button></div><div id="cg-op-body" style="min-height:0;overflow:auto"></div>';
+      ob.parentNode.insertBefore(wrap, ob.nextSibling);
+      wrap.addEventListener('click',function(e){ e.stopPropagation();
+        var sw=e.target.closest('.op-sw');
+        if(sw){ try{ localStorage.setItem(VKEY,sw.getAttribute('data-opv')); }catch(err){} _last=''; paint(); return; }
+        var rb=e.target.closest('[data-oproster]');
+        if(rb){ openOverlay(rb.getAttribute('data-oproster')); return; }
+        var mg=e.target.closest('[data-opmsg]');
+        if(mg){ openComms(mg.getAttribute('data-opmsg')); return; } });
+    }
+    return true;
+  }
+  /* class upkeep: cheap idempotent toggles - the ops4 core repaints its tabs every 1.5 s, ours
+     re-asserts on a faster tick. No DOM writes unless state actually differs (render gate rule). */
+  function sync(){
+    if(!build()) return;
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body'); if(!body) return;
+    var on=glanceOn();
+    if(body.classList.contains('cg-op-on')!==on) body.classList.toggle('cg-op-on',on);
+    /* highlight is CSS-owned via .cg-op-on (see the b549 flicker-fix note) - JS never
+       touches any tab's .on class, so the core's 1.5 s repaint has nothing to fight. */
+  }
+  var tries=0, bi=setInterval(function(){ if(build()||++tries>200) clearInterval(bi); sync(); },400);
+  setInterval(sync, 700);
+  function overlayOpen(){ var ov=document.getElementById('cg-op-overlay'); return !!(ov&&ov.classList.contains('open')); }
+  setInterval(function(){ if(glanceOn()||overlayOpen()) fetchAll(); }, 30000);
+  setInterval(function(){ if(glanceOn()) paint(); else paintOverlay(); }, 5000);
+})();
+</script>
+<script id="sc-b549-shiptotals-js">
+/* 2026-07-27 build 549 (T): (1) "ship components inside the ship builder for systems doesn't show
+   the mil/civ-size-tier" -> ldGradeChip/ldGradeRefresh feed the chip compSelect renders (reuses
+   cgBuyRoute.gradeChip - the SAME renderer the buy itinerary uses - falling back to COMP_GRADE
+   directly before that module loads).
+   (2) "ship builder page also needs a dps (burst and alpha) total ship hull xp and shield pool for
+   each selected and built ship" -> ldTotals() pulls the SELECTED hull's totals from
+   api.star-citizen.wiki v2/vehicles (verified 27 JUL 2026: fields health, shield_hp,
+   weaponry.pilot_dps / pilot_alpha / pilot_sustained_dps, stamped 4.9.0-LIVE) - fetched from the
+   browser exactly like the game-version fallback already does (the wiki sends CORS headers).
+   HONESTY: numbers are the wiki's STOCK-loadout figures for the hull; a custom shield/weapon swap
+   changes reality and the panel says so. On any failure the panel says what failed - it never
+   shows a guessed number. 1 h in-memory cache per hull. */
+(function(){
+  if(window.__cgShipTotals549) return; window.__cgShipTotals549=true;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  window.ldGradeChip=function(name){
+    name=String(name||'').trim(); if(!name) return '';
+    try{ if(window.cgBuyRoute&&cgBuyRoute.gradeChip) return cgBuyRoute.gradeChip(name)||''; }catch(e){}
+    try{ var G=window.COMP_GRADE||{}; var g=G[name]; if(!g){ var n=name.toLowerCase(), bk=null;
+        Object.keys(G).forEach(function(k){ var kl=k.toLowerCase();
+          if((n.indexOf(kl)>-1||kl.indexOf(n)>-1)&&(!bk||k.length>bk.length)) bk=k; });
+        g=bk?G[bk]:null; }
+      if(!g) return ''; var p=String(g).split('-'); if(p.length<3) return '';
+      return ' <span style="font-size:8.5px;letter-spacing:.5px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 4px;color:#9fc0d5;white-space:nowrap">'
+        +esc(p[0].toUpperCase())+' &middot; '+esc(p[1].toUpperCase())+' &middot; <b>'+esc(p[2].toUpperCase())+'</b></span>';
+    }catch(e){ return ''; } };
+  window.ldGradeRefresh=function(inp){ try{
+      var chip=inp.parentNode.querySelector('.ld-gchip');
+      if(chip) chip.innerHTML=window.ldGradeChip(inp.value); }catch(e){} };
+  var CACHE={};
+  function fmt(n){ if(n==null||isNaN(n)) return '?'; n=Math.round(n); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function cell(l,v,c){ return '<div style="flex:1 1 110px;min-width:100px;border:1px solid var(--border2,#39414d);border-radius:8px;padding:6px 9px;background:var(--bg2,#0d141d)">'
+    +'<div style="font-size:8px;letter-spacing:1.5px;color:var(--text-dim,#8fa1b3);text-transform:uppercase">'+l+'</div>'
+    +'<div style="font-size:16px;font-weight:700;color:'+(c||'var(--amber2,#ffd070)')+'">'+v+'</div></div>'; }
+  function paintTotals(key,d,shipName){
+    var el=document.getElementById('lt_'+key); if(!el) return;
+    var w=(d&&d.weaponry)||{};
+    var ver=(d&&(d.version||d.game_version))||'';
+    var when=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    el.innerHTML='<div class="ld-section-title">SHIP TOTALS - '+esc(String(shipName).toUpperCase())+'</div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">'
+      +cell('BURST DPS', fmt(w.pilot_dps),'#ff8a7a')
+      +cell('ALPHA', fmt(w.pilot_alpha),'#ff8a7a')
+      +cell('SUSTAINED DPS', fmt(w.pilot_sustained_dps),'#ffcf6b')
+      +cell('HULL HP', fmt(d.health),'#9fd8ff')
+      +cell('SHIELD POOL', fmt(d.shield_hp),'#7fd0a0')
+      +'</div>'
+      +'<div style="font-size:9px;color:var(--text-dim,#8fa1b3);line-height:1.5">STOCK-loadout figures from api.star-citizen.wiki'
+      +(ver?(' &middot; game '+esc(ver)):'')+' &middot; read '+esc(when)+' local. Swapping shields or guns above changes the real numbers - the wiki only tracks the stock fit.</div>';
+  }
+  function failTotals(key,msg){ var el=document.getElementById('lt_'+key); if(!el) return;
+    el.innerHTML='<div class="ld-section-title">SHIP TOTALS</div>'
+      +'<div style="font-size:10px;color:var(--text-dim,#8fa1b3);line-height:1.5">No live totals - '+esc(msg)
+      +'. Nothing shown rather than a guessed number.</div>'; }
+  function tryNames(ship){
+    var out=[ship];
+    var noParen=ship.replace(/\([^)]*\)/g,'').trim(); if(noParen&&noParen!==ship) out.push(noParen);
+    var noMk=ship.replace(/\s+Mk\s*/i,' Mk '); if(out.indexOf(noMk)<0) out.push(noMk);
+    return out;
+  }
+  window.ldTotals=function(ship,key){
+    var hit=CACHE[ship];
+    if(hit&&(Date.now()-hit.t)<3600000){ if(hit.d) paintTotals(key,hit.d,ship); else failTotals(key,hit.err||'no wiki match'); return; }
+    var names=tryNames(ship);
+    function attempt(i){
+      if(i>=names.length){ CACHE[ship]={t:Date.now(),d:null,err:'the wiki has no vehicle under "'+ship+'"'};
+        failTotals(key,'the wiki has no vehicle under this exact name'); return; }
+      fetch('https://api.star-citizen.wiki/api/v2/vehicles/'+encodeURIComponent(names[i]),{cache:'no-store'})
+        .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+        .then(function(j){ var d=j&&(j.data||j);
+          if(!d||(d.health==null&&!(d.weaponry))) throw new Error('empty record');
+          CACHE[ship]={t:Date.now(),d:d}; paintTotals(key,d,ship); },
+        function(){ attempt(i+1); });
+    }
+    attempt(0);
+  };
+})();
+</script>
 <script id="sc-b537-tablesonly-js">
 (function(){
   if(window.__cgTablesOnly537) return; window.__cgTablesOnly537=true;
@@ -28368,6 +28787,66 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     return true;
   }
   var n=0, iv=setInterval(function(){ if(boot()||++n>80) clearInterval(iv); },400);
+})();
+</script>
+<script id="sc-b548-samples-js">
+/* 2026-07-27 build 548 (T: "put a placeholder with a mockup into each pill that's not accessible
+   without the server ... make it clear in the pill itself on top of the mockup that in order for
+   it to work they need the server. and put twitch header inside the stream").
+   HONESTY SPLIT, deliberate: the BUY planner truly needs the control server (cstone proxy), so
+   its banner says so. The GATHER planner does NOT need the server - its sample banner says the
+   truth instead: it goes live when materials are pushed. No false requirements. Every sample row
+   is tagged SAMPLE so nobody mistakes mock prices for live data. */
+(function(){
+  if(window.__cgSamples548) return; window.__cgSamples548=true;
+  var SRV=null;
+  function ping(){ fetch('/api/server_info',{cache:'no-store'}).then(function(r){ SRV=!!r.ok; }).catch(function(){ SRV=false; }); }
+  ping(); setInterval(ping,60000);
+  function srvBanner(){
+    return '<div style="border:1px solid rgba(255,176,0,.55);background:rgba(255,176,0,.12);border-radius:6px;padding:6px 9px;margin:7px 0 5px;font-size:9px;letter-spacing:1px;color:#ffcf6b;font-weight:800;line-height:1.5">SAMPLE PREVIEW &middot; THIS IS WHAT THE PLANNER BUILDS FOR YOU &mdash; TO RUN IT LIVE YOU NEED THE FREE CMDGLAS CONTROL SERVER ON YOUR PC. TAP THE SERVER LIGHT ON THE BOTTOM BAR TO GET IT.</div>';
+  }
+  function gatherBanner(){
+    return '<div style="border:1px solid rgba(108,180,214,.5);background:rgba(108,180,214,.10);border-radius:6px;padding:6px 9px;margin:7px 0 5px;font-size:9px;letter-spacing:1px;color:#8fdcff;font-weight:800;line-height:1.5">SAMPLE PREVIEW &middot; THIS IS WHAT PLAN MINING RUN BUILDS &mdash; IT GOES LIVE THE MOMENT YOU PUSH MATERIALS FROM MINING, BLUEPRINTS OR THE CRAFT CALCULATOR. NO SERVER NEEDED FOR THIS ONE.</div>';
+  }
+  function stopCard(color,head,rows){
+    return '<div style="opacity:.75;border:1px solid rgba(108,180,214,.25);border-left:3px solid '+color+';border-radius:8px;padding:6px 9px;margin-bottom:6px;background:rgba(10,22,34,.5)">'
+      +'<div style="display:flex;gap:8px;justify-content:space-between;font-size:10.5px;letter-spacing:.5px;margin-bottom:2px"><b style="color:'+color+'">'+head+'</b><span style="font-size:8px;color:#ffcf6b;border:1px solid rgba(255,176,0,.5);border-radius:4px;padding:0 4px;align-self:center">SAMPLE</span></div>'
+      +rows.map(function(r){ return '<div style="display:flex;gap:8px;justify-content:space-between;font-size:10.5px;padding:2px 0"><span style="color:#dbe9f5">'+r[0]+'</span><span style="color:'+(r[2]||'#ffcf6b')+';white-space:nowrap">'+r[1]+'</span></div>'; }).join('')
+      +'</div>';
+  }
+  window.cgSamples={
+    srvDown:function(){ return SRV===false; },
+    buySample:function(){
+      return srvBanner()
+        +'<div style="font-size:9px;color:#8ba0b5;letter-spacing:1px;margin:2px 0 5px;opacity:.8">2 stops from Area18 &middot; run total <b style="color:#ffcf6b">104,647 aUEC</b> &middot; every price is a listed community price</div>'
+        +stopCard('#39d353','STOP 1 &middot; Stanton - ArcCorp - Area18 - Centermass',[['BLOC <span style="font-size:8px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 3px;color:#9fc0d5">MIL &middot; S2 &middot; A</span>','60,000 aUEC'],['CoolCore','21,600 aUEC']])
+        +stopCard('#39d353','STOP 2 &middot; Stanton - Hurston - Lorville - HD Showcase',[['Attrition-2 Repeater','23,047 aUEC']]);
+    },
+    gatherSample:function(){
+      return gatherBanner()
+        +stopCard('#8fd0ea','STOP 1 &middot; Akiro Cluster',[['Torite <span style="font-size:8px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 3px;color:#9fc0d5">SHIP</span>','<b style="color:#39d353">28.5%</b> &middot; 0.42 SCU','#8fd0ea']])
+        +stopCard('#8fd0ea','STOP 2 &middot; ARC L1',[['Laranite <span style="font-size:8px;border:1px solid rgba(108,180,214,.35);border-radius:4px;padding:0 3px;color:#9fc0d5">SHIP</span>','<b style="color:#39d353">28.5%</b> &middot; 0.68 SCU','#8fd0ea']]);
+    }
+  };
+  /* ---- Twitch header INSIDE the stream pill (T's order) - guarded injection ---- */
+  var TWICON='<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" style="flex:0 0 auto"><path d="M4.3 3 3 6.4v13.7h4.7V22h2.6l2.4-2h3.6L21 15.3V3H4.3zm15 11.6-2.7 2.7h-4.3l-2.4 2v-2H6.3V4.7h13V14.6zM17 8h-1.7v5H17V8zm-4.6 0h-1.7v5h1.7V8z"/></svg>';
+  function twHead(){
+    var tw=document.getElementById('cg-twitch'); if(!tw) return;
+    if(document.getElementById('cg-tw-head')) return;
+    var fr=tw.querySelector('.cg-tw-frame'); if(!fr) return;
+    var h=document.createElement('div'); h.id='cg-tw-head';
+    h.style.cssText='display:flex;align-items:center;gap:7px;flex:0 0 auto;background:linear-gradient(180deg,#772ce8,#5c16c5);color:#fff;border-radius:6px;padding:4px 9px;font:800 9px "Rajdhani","Segoe UI",sans-serif;letter-spacing:2px';
+    h.innerHTML=TWICON+'<span>TWITCH</span><span id="cg-tw-head-ch" style="margin-left:auto;font-weight:600;letter-spacing:1px;color:#e6d9ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>';
+    fr.parentNode.insertBefore(h, fr);
+  }
+  function twHeadCh(){
+    var el=document.getElementById('cg-tw-head-ch'); if(!el) return;
+    var ch=''; try{ ch=(localStorage.getItem('cg_tw_channel')||'').trim(); }catch(e){}
+    if(!ch){ var inp=document.querySelector('#cg-twitch .cg-tw-in'); ch=inp?(inp.value||'').trim():''; }
+    var want=ch?('twitch.tv/'+ch):'pick a channel below';
+    if(el.textContent!==want) el.textContent=want;
+  }
+  setInterval(function(){ twHead(); twHeadCh(); },900);
 })();
 </script>
 </body>
