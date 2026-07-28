@@ -27580,7 +27580,8 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
 @media (pointer:coarse){
   #tab-home .hm-cols .hm-col #sc-tools-row>*:nth-child(1),
   #tab-home .hm-cols .hm-col #sc-tools-row>*:nth-child(3){flex:1 1 0 !important;min-width:0 !important}
-  #tab-home .hm-cols .hm-col #sc-tools-row>.hm-tray{flex:1.9 1.9 0 !important;width:auto !important;min-width:0 !important;
+  /* 2026-07-28 T: tray 1.9 made INGAME TOOLS fat and squished COMMS on iPad. The PC layout T calls perfect runs the bottom row at about 1 : 1.15 : 1 (measured off his screenshot), so touch now matches it (flex 1.1 renders 1 : 1.17 : 1 with row gaps). Top widget row stays 1.9. */
+  #tab-home .hm-cols .hm-col #sc-tools-row>.hm-tray{flex:1.1 1.1 0 !important;width:auto !important;min-width:0 !important;
       grid-template-columns:repeat(5,minmax(0,1fr)) !important;justify-content:stretch !important;justify-items:center !important}
   #tab-home .hm-cols .hm-col #sc-tools-row .hm-cell{width:100% !important;min-width:0 !important}
   #tab-home .hm-cols .hm-col #sc-tools-row .hm-tile.hm-img{width:100% !important;max-width:148px !important;height:auto !important;aspect-ratio:1/1 !important}
@@ -27889,7 +27890,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important} /* 2026-07-28 T: the
 <script id="sc-b560-social-js">
 (function(){
   if(window.__cgSocial560) return; window.__cgSocial560=true;
-  var CG_FB_URL="";/* T: paste the Facebook page URL here and the button links up */
+  var CG_FB_URL="https://www.facebook.com/profile.php?id=61592619687062";/* T's Cmd Glas Facebook, verified 28 Jul 2026 */
   function setup(){
     var tr=document.getElementById('cg-theme-row536'); if(!tr||!tr.parentNode) return;
     var row=document.getElementById('cg-social-row');
