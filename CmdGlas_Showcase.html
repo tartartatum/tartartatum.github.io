@@ -28,8 +28,8 @@ main{padding:8px 26px 60px;max-width:1500px;margin:0 auto}
 .ph h2{margin:0;font-size:19px;letter-spacing:2px;color:#eafaff;text-transform:uppercase;font-weight:700}
 .pw{font-size:12px;color:#c9a86a;letter-spacing:.6px;margin-top:2px}
 .pb{margin:6px 0 14px;color:#a9c4d6;max-width:1000px}
-.shot{border-radius:12px;overflow:hidden;border:1px solid rgba(108,180,214,.22);background:#05090f}
-.shot img{display:block;width:100%;height:auto}
+.shot{border-radius:12px;overflow:hidden;border:1px solid rgba(108,180,214,.22);background:#05090f;width:fit-content;max-width:880px;margin-left:auto;margin-right:auto}/* 2026-07-28 T: images rendered near full 1500px column width - oversized on a regular monitor. Capped at 880px and centered; tall narrow shots cap tighter below. Reversible: restore the two rules. */
+.shot img{display:block;max-width:100%;height:auto}
 .pl{margin:14px 0 0;padding:0;list-style:none;display:grid;
   grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:8px}
 .pl li{position:relative;padding:8px 12px 8px 26px;border-radius:10px;font-size:14px;color:#cfe6f5;

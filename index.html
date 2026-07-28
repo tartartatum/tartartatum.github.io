@@ -27744,7 +27744,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
   var NOTES_VER='2026-07-28c';
-  var NOTES='LIVE NOW: the full ORG BUILDER, MISSION PLANNER and PARTY &amp; ORG CHAT are operational - ready for pilots to use'
+  var NOTES='LIVE NOW: ORG BUILDER, MISSION PLANNER and PARTY &amp; ORG CHAT. Joint ops with other players soon - grounded on tablet fixes for now. Watch for an invite from Razvyn to come hang out and explore.'
     +' &middot; NEW: MULTI-ORG OPERATIONS - joint battle plans, phase lines and a commanders&apos; channel, each Wing Commander confirms orders into his own wing'
     +' &middot; NEW: PIRATE ORGS fly their colours - the org and every member carry a visible PIRATE mark, and it sticks for 48 hours after leaving'
     +' &middot; NEW: GROUND ASSAULT TEAMS on the assignment sheet, squadron COMMS CHANNEL assignment, and a PUBLIC support net every signed-in pilot can see'
@@ -27763,7 +27763,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
     if(!el){ el=document.createElement('div'); el.id='cg-devlog';
       el.innerHTML='<div class="dl-track"></div>'; document.body.appendChild(el); }
     var tr=el.querySelector('.dl-track');
-    tr.innerHTML='<b>DEV LOG</b><span class="dl-sep">//</span>'+notesHtml
+    tr.innerHTML='<b>COMMAND LOG</b><span class="dl-sep">//</span>'+notesHtml
       +'<span class="dl-sep">//</span><b>'+esc(BUILD_STAMP)+'</b><span class="dl-sep">//</span>';
     el.style.display='block';
     /* HIDE NEWS / SHOW NEWS (2026-07-27 user order). Choice sticks via localStorage.
@@ -28379,7 +28379,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important} /* 2026-07-28 T: the
     if(!mem.length) return '<div class="op-id"><div class="nm">NO PARTY</div>'
       +'<div class="me">You are not in a party right now.</div></div>'
       +'<div class="op-note">Open COMMS &rarr; <b>#party</b> to create one, or type a friend\'s 6-character code to join. '
-      +'Parties need no org — anyone signed in can run one.</div>'
+      +'Parties need no org - anyone signed in can run one.</div>'
       +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="party">OPEN #PARTY</button></div>';
     var ld=mem.filter(function(m){return m.party_role==='leader';})[0];
     var iLead=!!(mine&&mine.party_role==='leader');
