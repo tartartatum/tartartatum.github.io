@@ -6868,7 +6868,7 @@ function selShip(idx){
         <div class="ld-row"><span class="ld-label">POWER PLANT</span>${compSelect('PP', s['Power Plant'], key, s.Ship)}</div>
         <div class="ld-row"><span class="ld-label">COOLER</span>${compSelect('COOLER', s['Cooler(s)'], key, s.Ship)}</div>
         <div class="ld-row"><span class="ld-label">QT DRIVE</span>${compSelect('QD', s['QD Slot'], key, s.Ship)}</div>
-        <div class="ld-row"><span class="ld-label">RADAR</span>${compSelect('RADAR', s['Shield Slot'], key, s.Ship)}</div>
+        <div class="ld-row"><span class="ld-label">RADAR</span>${compSelect('RADAR', '', key, s.Ship)}</div>
     </div>
   </div>
     <div class="ld-section">
@@ -6904,6 +6904,13 @@ function selShip(idx){
           <a class="panel-btn" href="https://www.spviewer.eu/" target="_blank" rel="noopener"
              style="font-size:9px;text-decoration:none"
              title="Capacitors, endurance and component stats on the current patch">SPVIEWER &#8599;</a>
+          <!-- 2026-07-27 T: "add to your database resources. all updates and changes are listed for
+               EVERYTHING better then erkul" - the ranking view, deep-linked. It stays a LINK, not a
+               feed: spviewer publishes no API and serves no CORS headers, so a browser cannot read
+               it directly (same limitation already recorded against the hand-stat list in this file). -->
+          <a class="panel-btn" href="https://www.spviewer.eu/ranking?rank=Size" target="_blank" rel="noopener"
+             style="font-size:9px;text-decoration:none;color:var(--amber2);border-color:var(--amber)"
+             title="SPViewer rankings - every ship ranked by size, with per-patch updates and changes">SPVIEWER &middot; RANKINGS &#8599;</a>
           <!-- 2026-07-17 user: "include cornerstone finder and starcitizen.tools" - the remaining two
                sources from the rebuilt META page now live here, on the ship you are actually looking
                at. Both verified reachable 2026-07-17. Each title says what the tool is AUTHORITATIVE
@@ -8046,7 +8053,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=550;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=553;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-27';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -13582,8 +13589,8 @@ window._buildOverlayBody = function(opts){
     return '<span class="ld-val" style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap"><input type="text" value="'+String(v).replace(/"/g,"&quot;")+'" placeholder="'+String(slot||"—").replace(/"/g,"&quot;")+'" onchange="ldSetComp(\''+se+'\',\''+kind+'\',this.value);ldGradeRefresh(this)" style="background:var(--bg2);border:1px solid var(--border2);color:var(--amber2);padding:2px 6px;font-family:inherit;font-size:12px;width:150px"><span class="ld-gchip">'+(window.ldGradeChip?window.ldGradeChip(v):'')+'</span><button type="button" title="Add this component to the BUY list (top-centre OPS pill)" onclick="ldBuyComp(this,\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:#7fd0a0;border-radius:4px;padding:2px 7px;font-size:12px;line-height:1;cursor:pointer">&#128722;</button><button type="button" title="Remove component" onclick="ldClearComp(this,\''+se+'\',\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:var(--text-mid);border-radius:4px;padding:2px 8px;font-size:12px;line-height:1;cursor:pointer">&#10006;</button></span>';
   };
   /* build 451 (user: unowned components added in the ship builder never reached the BUY tab). ROOT CAUSE: opsPushBuy existed but was never called anywhere. This button wires each component to it. */
-  window.ldBuyComp=function(btn,kind){ try{ var inp=btn.parentNode.querySelector('input'); var name=inp?(inp.value||'').trim():''; if(!name){ if(inp) inp.focus(); var t0=btn.textContent; btn.textContent='name?'; btn.style.color='#ff8a7a'; setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1400); return; } /* build 540: an empty box used to fail SILENTLY - the exact "hit cart, nothing happened" report */ /* build 541 (T): toggle - on the list already = tap RECALLS */ if(typeof opsHasBuy==='function'&&opsHasBuy(name)){ opsRecallBuy(name); btn.textContent='−'; btn.style.color='#ff8a7a'; } else { if(typeof opsPushBuy==='function'){ opsPushBuy([{name:name,kind:(kind||'component')}], 'Ship Loadout'); } btn.textContent='✓'; btn.style.color='#39d353'; } setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1200); }catch(e){} };
-  window.ldClearComp=function(btn,ship,kind){ try{ var inp=btn.parentNode.querySelector("input"); if(inp){ inp.value=""; inp.style.borderColor=""; inp.title=""; } }catch(e){} if(window.ldSetComp) window.ldSetComp(ship,kind,""); };
+  window.ldBuyComp=function(btn,kind){ try{ var inp=btn.parentNode.querySelector('select,input'); var name=inp?(inp.value||'').trim():''; if(!name){ if(inp) inp.focus(); var t0=btn.textContent; btn.textContent='name?'; btn.style.color='#ff8a7a'; setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1400); return; } /* build 540: an empty box used to fail SILENTLY - the exact "hit cart, nothing happened" report */ /* build 541 (T): toggle - on the list already = tap RECALLS */ if(typeof opsHasBuy==='function'&&opsHasBuy(name)){ opsRecallBuy(name); btn.textContent='−'; btn.style.color='#ff8a7a'; } else { if(typeof opsPushBuy==='function'){ opsPushBuy([{name:name,kind:(kind||'component')}], 'Ship Loadout'); } btn.textContent='✓'; btn.style.color='#39d353'; } setTimeout(function(){ btn.innerHTML='&#128722;'; btn.style.color=''; },1200); }catch(e){} };
+  window.ldClearComp=function(btn,ship,kind){ try{ var inp=btn.parentNode.querySelector("select,input"); if(inp){ inp.value=""; inp.style.borderColor=""; inp.title=""; } }catch(e){} if(window.ldSetComp) window.ldSetComp(ship,kind,""); };
   window.ldSetComp=function(ship,kind,val){
     var o={}; try{o=JSON.parse(localStorage.getItem("sc_ld_comps")||"{}");}catch(e){}
     (o[ship]=o[ship]||{})[kind]=val;
@@ -22752,7 +22759,20 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
   function commsFillerEl(){ var f=document.createElement('div'); f.className='commsfill'; var bars=''; for(var i=0;i<11;i++) bars+='<i></i>';
     f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Org Comms</div><div class="hlog">CH-01 · GENERAL\nawaiting signal...\nsign in to connect</div>'
       +'<div class="cg-comms-btns"><button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN</button>'
-      +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'; return f; }/* build 455 (user): OPEN COMMS + HOW TO SET UP buttons in the COMMS pill (setup sits above UNDOCK) */
+      +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
+      /* T (27 JUL): "one more button below setup that says user manual. make sure it doesn't touch
+         the line of the comms pill", and "the user and setup guide ... in the comms pill along with
+         open and undock". Own row, its own bottom margin, so it never crowds the pill frame. */
+      +'<div class="cg-comms-btns2">'
+      +'<button type="button" class="cg-comms-man" onclick="event.stopPropagation();window.cgOpenManual&&cgOpenManual()">USER MANUAL</button>'
+      +'<button type="button" class="cg-comms-mandock" onclick="event.stopPropagation();window.cgUndockManual&&cgUndockManual()">UNDOCK</button>'
+      +'</div>'
+      /* T 28 JUL: "i guess name it showcase button and put them in it" then "underneath centered
+         on the comms pill". So it gets a row of its own, centred, under the manual row. Every
+         panel, with a picture of each and where it lives on screen. */
+      +'<div class="cg-comms-btns3">'
+      +'<button type="button" class="cg-comms-show" onclick="event.stopPropagation();window.cgOpenShowcase&&cgOpenShowcase()" title="Every panel, with a picture of each and where to find it">SHOWCASE</button>'
+      +'</div>'; return f; }/* build 455 (user): OPEN COMMS + HOW TO SET UP buttons in the COMMS pill (setup sits above UNDOCK) */
   function buildSearch(){
     var frame=document.querySelector('#sc-tools-row > #sc-navsearch .ns-frame')||document.querySelector('#sc-navsearch .ns-frame');
     if(!frame) return false;
@@ -26664,6 +26684,12 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     +'<section data-sec="setup" hidden>'
       +'<h3>Set up COMMS</h3>'
       +'<p class="cgcp-sub">There are two ways to use COMMS and the steps are different. Pick the one you are setting up.</p>'
+      /* T 28 JUL: "for comms guides and setup, probably a link from both that the user can read
+         through". People look for the pictures here as well as on the pill, so it is in both. */
+      +'<div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:2px 0 14px">'
+      +'<button type="button" class="cgcp-btn" onclick="event.stopPropagation();window.cgOpenShowcase&&cgOpenShowcase()" style="background:rgba(120,90,220,.18);border-color:rgba(165,140,255,.5);color:#d9ccff">OPEN THE SHOWCASE</button>'
+      +'<span style="font-size:11.5px;color:#9fc4d8">Every panel with a picture of it and where it sits on screen. Worth a look before you start.</span>'
+      +'</div>'
       +'<div class="cgcp-choose" id="cgcp-setup-choose">'
         +'<button type="button" class="cgcp-path cgcp-path-personal" data-setup="personal"><span class="cgcp-path-badge personal">PERSONAL</span><span class="cgcp-path-t">Personal chat</span><span class="cgcp-path-d">Just you and your friends. Add friends, invite them to a party, fly together. No org required.</span><span class="cgcp-path-go">Set up personal &rsaquo;</span></button>'
         +'<button type="button" class="cgcp-path cgcp-path-org" data-setup="org"><span class="cgcp-path-badge org">ORG</span><span class="cgcp-path-t">Org chat</span><span class="cgcp-path-d">Your whole org: live text channels, member roster, who is online, and the org-only CHAN 1-6. Needs a one-time switch-on by the org owner.</span><span class="cgcp-path-go">Set up org &rsaquo;</span></button>'
@@ -27612,10 +27638,15 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   var BUILD_STAMP='TABLET UPDATED 27 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
   /* T's order 27 JUL 2026: the two pin/price items below STAY in the ticker until at least
      30 JUL 2026, even as newer items are added above them. Add new NEW items BEFORE these two. */
-  var NOTES='WORKING ON: expanding Org/Party chat capabilities'  /* 2026-07-27 T: "update the banner saying \'expanding Org/Party chat capabilities\'" */
-    +' &middot; NEW: PIN where you buy or mine - tap any item in a planned route to pick its shop or mining spot; AUTO hands it back to the optimizer'
-    +' &middot; NEW: buy routes flag items that are LISTED CHEAPER at another shop, so you see what the fewest-stops convenience costs'
-    +' &middot; NEW: BUY + GATHER route planners in the centre pill - one tap builds your shopping run (aUEC prices) or mining run (verified yields)';
+  /* T 2026-07-27: "update new news banner on the tablet to read: Org Planner and Mission builder
+     for Parties and Orgs ready for imminent release. make it shorter but leave the two gather and
+     mining." So: the new headline, the two route-planner items kept, the two pin/price items
+     retired to keep it short. Bump NOTES_VER whenever this text changes - see forceShow(). */
+  var NOTES_VER='2026-07-27c';
+  var NOTES='COMING: Org Builder and Mission Planner for parties and orgs - imminent release'
+    +' &middot; PLEASE TEST the new Org Builder, Mission Planner and chat features, then tell me what broke'
+    +' &middot; NEW: GATHER route planner in the centre pill - one tap builds your mining run on verified yields'
+    +' &middot; NEW: BUY route planner in the centre pill - one tap builds your shopping run on live aUEC prices';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -27632,9 +27663,20 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
     if(!el.querySelector('.dl-btn')){
       var bt=document.createElement('span'); bt.className='dl-btn'; el.appendChild(bt);
       var hid=false; try{ hid=localStorage.getItem('cg_devlog_hidden')==='1'; }catch(e){}
+      /* T 2026-07-27: "turn on a force dev banner to on whenever you update the banner when the
+         user has it hidden. auto turn on and display the message until the user hides it."
+         So a NEW message overrides an old hide exactly once: if the version stamp they last saw
+         is not the one being shown, the strip comes back open. The moment they press HIDE NEWS
+         we record the current version, and it stays hidden until the message changes again.
+         A message that reopens itself every session would be an advert; this reopens once. */
+      try{
+        var seen=localStorage.getItem('cg_devlog_seen')||'';
+        if(hid && seen!==NOTES_VER){ hid=false; localStorage.setItem('cg_devlog_hidden','0'); }
+      }catch(e){}
       function apply(){ el.classList.toggle('dl-hidden',hid); bt.textContent=hid?'SHOW NEWS':'HIDE NEWS'; }
       bt.addEventListener('click',function(ev){ ev.stopPropagation(); hid=!hid;
-        try{ localStorage.setItem('cg_devlog_hidden',hid?'1':'0'); }catch(e){} apply(); });
+        try{ localStorage.setItem('cg_devlog_hidden',hid?'1':'0');
+             if(hid) localStorage.setItem('cg_devlog_seen',NOTES_VER); }catch(e){} apply(); });
       apply();
     }
     /* speed scales with length: ~70 px/s, never faster than 18s per pass */
@@ -27644,7 +27686,18 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   fetch(SB_URL+'/rest/v1/site_news?select=body,created_at&order=created_at.desc&limit=1',
     {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}})
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-    .then(function(d){ if(d&&d[0]&&d[0].body){ paint(esc(d[0].body)); } })
+    .then(function(d){ if(d&&d[0]&&d[0].body){
+        /* a message pushed from Supabase is new news too - version it by its timestamp so it
+           reopens a hidden strip exactly once, same rule as the baked text */
+        NOTES_VER='sb:'+String(d[0].created_at||'');
+        try{ var seen=localStorage.getItem('cg_devlog_seen')||'';
+          if(seen!==NOTES_VER && localStorage.getItem('cg_devlog_hidden')==='1'){
+            localStorage.setItem('cg_devlog_hidden','0');
+            var e2=document.getElementById('cg-devlog');
+            if(e2){ e2.classList.remove('dl-hidden');
+              var b2=e2.querySelector('.dl-btn'); if(b2) b2.textContent='HIDE NEWS'; } }
+        }catch(e){}
+        paint(esc(d[0].body)); } })
     .catch(function(){});
 })();
 </script>
@@ -27843,52 +27896,129 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
   boot();
 })();
 </script>
-<style id="sc-b549-orgparty-css">/* 2026-07-27 build 549 (T): "we need a org/party page in the top middle pill.
-   add between notes and stream ... selectable buttons inside that lets the user switch between party
-   view and org view" + refinement same day: "should list party leader, org leader and then offer a
-   button to open another overlay page that shows all party/org members and shows their status".
-   Rider on the ops4 pill, same pattern as the b418 Stream view: own panel, own tab, core untouched.
-   Reversible: delete css+js. */
-#cg-orgparty{display:none;flex-direction:column;gap:7px;flex:1 1 auto;min-height:0;overflow:auto}
+<style id="sc-b549-orgparty-css">/* 2026-07-27 build 552 (T: "the org view is underwhelming and doesn't
+   explain anything ... who's panel is that. no, that was low effort" — correct, and this is the rebuild).
+   The panel now answers three questions the moment you look at it: WHOSE view this is, WHAT the wing's
+   state is, and WHAT YOU personally have been told to do. Same 3D rounded language as the rest of the
+   tablet: top sheen, body gradient, bottom bevel, cast shadow, nothing sharper than 10px.
+   Reversible: delete this block and its script. */
+#cg-orgparty{display:none;flex-direction:column;gap:11px;flex:1 1 auto;min-height:0;overflow:auto;padding:2px 3px 4px}
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on > .ops4-body{display:none !important}
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on #cg-twitch{display:none !important}
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on #cg-orgparty{display:flex}
-#cg-orgparty .op-switch{display:flex;gap:6px;flex:0 0 auto}
-#cg-orgparty .op-sw{flex:1;font:800 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;text-transform:uppercase;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:7px;padding:6px 0;cursor:pointer}
-#cg-orgparty .op-sw.on{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border-color:#7fd4f2}
-#cg-orgparty .op-h{font:700 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#6f8ba0;text-transform:uppercase;margin:2px 0 1px}
-.cg-op-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border:1px solid rgba(108,180,214,.25);border-radius:12px;background:rgba(8,20,32,.55);font:600 11px 'Rajdhani','Segoe UI',sans-serif;color:#b9c9d8;margin:0 3px 3px 0}
+#cg-orgparty .op-switch{display:flex;gap:7px;flex:0 0 auto}
+#cg-orgparty .op-sw{flex:1;font:800 9.5px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.8px;text-transform:uppercase;
+  color:#8ba0b5;background:linear-gradient(180deg,rgba(30,46,64,.9),rgba(12,20,30,.9));
+  background-image:linear-gradient(180deg,rgba(200,232,255,.13),rgba(255,255,255,0) 46%,rgba(0,0,0,.28));
+  border:1px solid rgba(108,180,214,.34);border-radius:11px;padding:7px 0;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(212,238,255,.24),inset 0 -4px 8px rgba(0,0,0,.34),0 3px 7px rgba(0,0,0,.44)}
+#cg-orgparty .op-sw.on{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border-color:#7fd4f2;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -4px 8px rgba(0,0,0,.18),0 3px 9px rgba(40,150,200,.45)}
+#cg-orgparty .op-sw:active{transform:translateY(2px)}
+/* who this belongs to */
+#cg-orgparty .op-id{border:1px solid rgba(108,180,214,.32);border-radius:13px;padding:11px 13px;
+  background-image:linear-gradient(180deg,rgba(30,46,64,.85),rgba(10,17,26,.9)),radial-gradient(rgba(130,215,255,.05) 1px,transparent 1.4px);
+  background-size:auto,16px 16px;
+  box-shadow:inset 0 1px 0 rgba(200,232,255,.15),inset 0 -10px 20px rgba(0,0,0,.3),0 6px 14px rgba(0,0,0,.45)}
+#cg-orgparty .op-id .nm{font:700 14px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#eafaff;text-transform:uppercase}
+#cg-orgparty .op-id .me{font:600 11px 'Rajdhani',sans-serif;letter-spacing:.6px;color:#8fdcff;margin-top:1px}
+#cg-orgparty .op-id .me b{color:#ffd479}
+/* the tally strip */
+#cg-orgparty .op-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#cg-orgparty .op-t{border:1px solid rgba(108,180,214,.28);border-radius:11px;padding:8px 4px;text-align:center;
+  background-image:linear-gradient(180deg,rgba(200,232,255,.09),rgba(255,255,255,0) 44%,rgba(0,0,0,.26)),linear-gradient(180deg,rgba(24,38,54,.9),rgba(10,17,26,.9));
+  box-shadow:inset 0 1px 0 rgba(200,232,255,.18),0 3px 8px rgba(0,0,0,.4)}
+#cg-orgparty .op-t b{display:block;font:800 16px 'Rajdhani',sans-serif;line-height:1.15;color:#eafaff}
+#cg-orgparty .op-t span{font:700 7.5px 'Rajdhani',sans-serif;letter-spacing:1.4px;color:#6f8ba0}
+#cg-orgparty .op-t.kia b{color:#ff6b6b}#cg-orgparty .op-t.res b{color:#ffd479}#cg-orgparty .op-t.live b{color:#57d38a}
+/* your tasking - the bit that is actually about you */
+#cg-orgparty .op-task{border:1px solid rgba(255,207,107,.42);border-left:3px solid #ffcf6b;border-radius:13px;padding:11px 13px;
+  background-image:linear-gradient(180deg,rgba(255,207,107,.1),rgba(255,255,255,0) 45%,rgba(0,0,0,.22)),linear-gradient(180deg,rgba(34,28,14,.85),rgba(12,11,8,.9));
+  box-shadow:inset 0 1px 0 rgba(255,225,170,.18),0 6px 14px rgba(0,0,0,.42)}
+#cg-orgparty .op-task .hd{font:700 8px 'Rajdhani',sans-serif;letter-spacing:2px;color:#c9a86a;text-transform:uppercase}
+#cg-orgparty .op-task .obj{font:700 14px 'Rajdhani',sans-serif;color:#ffe9bd;letter-spacing:.6px;margin-top:2px}
+#cg-orgparty .op-task .ln{font:600 11.5px 'Rajdhani',sans-serif;color:#cfe6f5;margin-top:3px;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+/* squadron strip */
+/* T (27 JUL): six squadrons on two lines, and "let them breathe they're all scrunched together" */
+#cg-orgparty .op-sqgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+@media(max-width:560px){#cg-orgparty .op-sqgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#cg-orgparty .op-sqn{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:12px;min-width:0;
+  border:1px solid rgba(108,180,214,.26);
+  background-image:linear-gradient(180deg,rgba(190,225,255,.06),rgba(255,255,255,0) 42%,rgba(0,0,0,.2)),linear-gradient(180deg,rgba(20,32,46,.85),rgba(10,17,26,.85));
+  box-shadow:inset 0 1px 0 rgba(212,238,255,.2),inset 0 -7px 13px rgba(0,0,0,.32),0 4px 10px rgba(0,0,0,.44)}
+#cg-orgparty .op-sqn .s-n{font:700 11.5px 'Rajdhani',sans-serif;color:#eafaff;letter-spacing:1px;flex:0 0 auto}
+#cg-orgparty .op-sqn .s-c{margin-left:auto;font:700 10.5px 'Rajdhani',sans-serif;color:#8fdcff;white-space:nowrap;flex:0 0 auto}
+#cg-orgparty .op-sqn .cg-op-ord{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#cg-orgparty .op-h{font:700 8px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:#6f8ba0;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px}
+#cg-orgparty .op-h::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(108,180,214,.4),transparent)}
+/* party crew tiles - T (27 JUL): "spread out the party view and give all the pills some breathing
+   room just like the pill org. it's also missing it's 3D treatment (the pills)". The party view used
+   inline flow pills, which packed tight and read as a wall of text. Now it is a two-column grid of
+   crew tiles with the same bevel language as the squadron grid, so both views look like one product. */
+#cg-orgparty .op-crew{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+@media(max-width:520px){#cg-orgparty .op-crew{grid-template-columns:1fr}}
+#cg-orgparty .op-cm{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;min-width:0;
+  border:1px solid rgba(108,180,214,.26);
+  background-image:linear-gradient(180deg,rgba(200,232,255,.12),rgba(255,255,255,0) 44%,rgba(0,0,0,.26)),linear-gradient(180deg,rgba(22,35,50,.92),rgba(9,16,25,.92));
+  box-shadow:inset 0 1px 0 rgba(212,238,255,.24),inset 0 -7px 13px rgba(0,0,0,.34),0 4px 10px rgba(0,0,0,.45)}
+#cg-orgparty .op-cm.on{border-color:rgba(87,211,138,.4)}
+#cg-orgparty .op-cm .c-i{width:7px;height:7px;border-radius:50%;background:#4a5563;flex:none;
+  box-shadow:inset 0 1px 1px rgba(0,0,0,.65)}
+#cg-orgparty .op-cm.on .c-i{background:#57d38a;box-shadow:0 0 7px #57d38a,inset 0 1px 1px rgba(255,255,255,.35)}
+#cg-orgparty .op-cm .c-b{display:flex;flex-direction:column;min-width:0;gap:3px}
+#cg-orgparty .op-cm .c-nm{font:700 12.5px 'Rajdhani',sans-serif;color:#eafaff;letter-spacing:.7px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cg-orgparty .op-cm .c-sub{font:600 8.5px 'Rajdhani',sans-serif;letter-spacing:1.2px;color:#7f97ac;
+  text-transform:uppercase;display:flex;gap:5px;align-items:center;flex-wrap:wrap;line-height:1.7}
+#cg-orgparty .op-cm .c-st{margin-left:auto;font:700 8.5px 'Rajdhani',sans-serif;letter-spacing:1px;
+  color:#8fdcff;flex:0 0 auto;white-space:nowrap;align-self:flex-start;padding-top:2px}
+#cg-orgparty .op-cm.on .c-st{color:#57d38a}
+/* crew pills */
+.cg-op-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;margin:0 5px 5px 0;
+  border:1px solid rgba(108,180,214,.3);font:600 11.5px 'Rajdhani','Segoe UI',sans-serif;color:#cfe6f5;
+  background-image:linear-gradient(180deg,rgba(200,232,255,.14),rgba(255,255,255,0) 46%,rgba(0,0,0,.22)),linear-gradient(180deg,rgba(24,38,54,.9),rgba(10,17,26,.9));
+  box-shadow:inset 0 1px 0 rgba(212,238,255,.26),inset 0 -3px 6px rgba(0,0,0,.32),0 2px 5px rgba(0,0,0,.4)}
 .cg-op-pill i{width:6px;height:6px;border-radius:50%;background:#4a5563;flex:none}
-.cg-op-pill.on{border-color:rgba(87,211,138,.4)}
-.cg-op-pill.on i{background:#57d38a;box-shadow:0 0 4px #57d38a}
-.cg-op-tac{font-size:8px;letter-spacing:1px;color:#8fe6ff;border:1px solid rgba(110,205,255,.4);border-radius:3px;padding:0 3px}
+.cg-op-pill.on{border-color:rgba(87,211,138,.42)}
+.cg-op-pill.on i{background:#57d38a;box-shadow:0 0 5px #57d38a}
+.cg-op-tac{font:700 8px 'Rajdhani',sans-serif;letter-spacing:1px;color:#8fe6ff;line-height:1.9;border:1px solid rgba(110,205,255,.45);border-radius:999px;padding:1px 7px;background-image:linear-gradient(180deg,rgba(140,230,255,.16),rgba(0,0,0,.2));box-shadow:inset 0 1px 0 rgba(200,240,255,.28),0 1px 3px rgba(0,0,0,.4)}
 .cg-op-kia{color:#ff5050;font-weight:800;letter-spacing:1px}
-.cg-op-res{font-size:8px;letter-spacing:1px;color:#ffd479;border:1px solid rgba(255,207,107,.5);border-radius:3px;padding:0 3px}
-.cg-op-ord{font-size:8px;letter-spacing:1px;border:1px solid;border-radius:3px;padding:0 4px;vertical-align:middle}
-#cg-orgparty .op-note{font:600 11px 'Rajdhani','Segoe UI',sans-serif;color:#6f8ba0;padding:8px 4px}
-.cg-op-btn{font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#8fdcff;background:transparent;border:1px solid rgba(108,180,214,.35);border-radius:5px;padding:3px 8px;cursor:pointer}
-.cg-op-btn:hover{color:#04141d;background:#7fd4f2}
-#cg-orgparty .op-lead-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-#cg-orgparty .op-lead-t{font:700 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#c9a86a;text-transform:uppercase;flex:none;min-width:86px}
-/* T bug report 27 JUL ("after clicking on org/party it highlights and selects buy or any other
-   random button and flicks back and forth"): the ops4 core repaints its own tab highlight from
-   ITS stored view every 1.5 s while this rider re-asserted the Org/Party highlight on a faster
-   tick - two owners of one classlist = visible flicker war. FIX: JS no longer touches the other
-   tabs at all; while the glance view is open, CSS alone mutes whatever the core highlights and
-   paints the Org/Party tab active. One owner per state, zero flicker. */
+.cg-op-res{font:700 8px 'Rajdhani',sans-serif;letter-spacing:1px;color:#ffd479;line-height:1.9;border:1px solid rgba(255,207,107,.55);border-radius:999px;padding:1px 7px;background-image:linear-gradient(180deg,rgba(255,207,107,.16),rgba(0,0,0,.2));box-shadow:inset 0 1px 0 rgba(255,230,180,.26),0 1px 3px rgba(0,0,0,.4)}
+.cg-op-ord{font:700 8px 'Rajdhani',sans-serif;letter-spacing:1px;border:1px solid;border-radius:999px;padding:2px 8px;white-space:nowrap;line-height:1.6;background-image:linear-gradient(180deg,rgba(255,255,255,.1),rgba(0,0,0,.24));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 1px 3px rgba(0,0,0,.4)}
+.cg-op-ack{font:700 8px 'Rajdhani',sans-serif;letter-spacing:1px;border-radius:999px;padding:2px 8px;border:1px solid;line-height:1.6;background-image:linear-gradient(180deg,rgba(255,255,255,.1),rgba(0,0,0,.24));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 1px 3px rgba(0,0,0,.4)}
+.cg-op-ack.o7{color:#57d38a;border-color:rgba(87,211,138,.55)}
+.cg-op-ack.unable{color:#ff8a7a;border-color:rgba(255,110,100,.6)}
+.cg-op-ack.wait{color:#ffd479;border-color:rgba(255,207,107,.55)}
+#cg-orgparty .op-note{font:600 12px 'Rajdhani','Segoe UI',sans-serif;color:#8fa6ba;padding:10px 4px;line-height:1.5}
+#cg-orgparty .op-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.cg-op-btn{flex:1 1 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;color:#cfe6f5;border-radius:11px;padding:9px 10px;cursor:pointer;
+  border:1px solid rgba(108,180,214,.4);
+  background-image:linear-gradient(180deg,rgba(200,232,255,.13),rgba(255,255,255,0) 44%,rgba(0,0,0,.26)),linear-gradient(180deg,rgba(29,111,156,.5),rgba(14,40,58,.6));
+  box-shadow:inset 0 1px 0 rgba(212,238,255,.26),inset 0 -4px 8px rgba(0,0,0,.3),0 3px 7px rgba(0,0,0,.42)}
+.cg-op-btn:hover{color:#eafaff;border-color:#7fd4f2}
+.cg-op-btn:active{transform:translateY(2px)}
+/* full-roster overlay */
+#cg-op-overlay{display:none;position:fixed;inset:0;z-index:9990;background:rgba(3,7,12,.9);backdrop-filter:blur(3px);padding:26px}
+#cg-op-overlay.open{display:flex;align-items:center;justify-content:center}
+#cg-op-overlay .op-card{max-width:780px;width:100%;max-height:82vh;overflow:auto;
+  background:linear-gradient(180deg,#101b29,#0a121c);border:1px solid rgba(108,180,214,.4);border-radius:16px;padding:18px 20px;
+  box-shadow:inset 0 1px 0 rgba(200,232,255,.14),0 24px 60px rgba(0,0,0,.7)}
+#cg-op-overlay .op-card h2{font:700 13px 'Rajdhani',sans-serif;letter-spacing:3px;color:#9fcfe2;margin:0 0 10px;
+  text-transform:uppercase;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#cg-op-overlay .op-x{margin-left:auto;font:800 11px 'Rajdhani',sans-serif;color:#ff9a8a;background:transparent;
+  border:1px solid rgba(255,128,110,.4);border-radius:10px;padding:4px 10px;cursor:pointer}
+#cg-op-overlay .op-seen{font-size:9px;color:#6f8ba0;letter-spacing:.5px}
+/* T bug 27 JUL ("it highlights and selects buy or any other random button and flicks back and
+   forth"): the ops4 core repaints its own tab highlight from ITS stored view every 1.5 s. JS must
+   not fight it, so CSS alone owns the highlight while this panel is open. One owner, no flicker.
+   (These rules were lost in the panel rebuild and are restored here - keep them with the block.) */
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on .ops4-tab.on:not([data-v="orgparty"]){
   color:#8fb3c8 !important;background:rgba(10,22,34,.6) !important;
   border-color:rgba(108,180,214,.28) !important;box-shadow:none !important}
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-op-on .ops4-tab[data-v="orgparty"]{
   color:#04141d !important;background:linear-gradient(180deg,#a6f2ff,#33b5e6) !important;
   border-color:rgba(170,242,255,.9) !important;box-shadow:0 0 8px rgba(120,220,255,.35) !important}
-/* full-roster overlay (T: "another overlay page that shows all party/org members and shows their status") */
-#cg-op-overlay{display:none;position:fixed;inset:0;z-index:9990;background:rgba(3,7,12,.9);backdrop-filter:blur(3px);padding:26px}
-#cg-op-overlay.open{display:flex;align-items:center;justify-content:center}
-#cg-op-overlay .op-card{max-width:760px;width:100%;max-height:82vh;overflow:auto;background:linear-gradient(180deg,#101b29,#0a121c);border:1px solid rgba(108,180,214,.4);border-radius:14px;padding:18px 20px;box-shadow:0 24px 60px rgba(0,0,0,.7)}
-#cg-op-overlay .op-card h2{font:700 13px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:3px;color:#9fcfe2;margin:0 0 10px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-#cg-op-overlay .op-x{margin-left:auto;font:800 11px 'Rajdhani',sans-serif;color:#ff9a8a;background:transparent;border:1px solid rgba(255,128,110,.4);border-radius:6px;padding:3px 9px;cursor:pointer}
-#cg-op-overlay .op-seen{font-size:9px;color:#6f8ba0;letter-spacing:.5px}
 </style>
 <script id="sc-b549-orgparty-js">
 /* ORG/PARTY glance view (T, 2026-07-27). Reads Supabase directly with the SAME session token the
@@ -27903,7 +28033,7 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   var VKEY='cg_op_glance_view', ONKEY='cg_op_glance_on';
-  var pool=[], orgRows=[], sqns=[], orgId=null, orgNm='', uid=null, lastErr='';
+  var pool=[], orgRows=[], sqns=[], objs=[], orgId=null, orgNm='', uid=null, lastErr='';
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function tok(){ try{ var raw=localStorage.getItem('sb-rvbxbrgvsdjdtsjdusfh-auth-token'); if(!raw) return null;
       var j=JSON.parse(raw); return (j&&(j.access_token||(j.currentSession&&j.currentSession.access_token)))||null; }catch(e){ return null; } }
@@ -27936,6 +28066,23 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       var h=dock?dock.querySelector('.cd-head'):null;
       if(h && dock && !dock.classList.contains('open')) h.click();
     }catch(e){} }
+  /* T (27 JUL): "how do the different leaders all the way down to team leaders see their command
+     screen? should be a button in the org/party middle top pill."
+     The panel already knows the reader's rank, so it works out WHICH console is theirs and opens
+     the COMMS page straight onto it. One button, different destination per rank - nobody has to
+     learn which tab is theirs. Opens in its own tab because the dock is too small for a console. */
+  function myConsole(){
+    var mine=pool.filter(function(r){return r.user_id===uid;})[0]||null;
+    var o=orgRows.filter(function(m){return m.user_id===uid;})[0]||null;
+    var role=o?String(o.role||''):'';
+    if(role==='wing-commander'||role==='squadron-leader') return {cmd:'ocmd',lab:'ORG COMMAND'};
+    if(role==='flight-lead'||role==='element-lead')       return {cmd:'ocmd',lab:'MY FLIGHT SHEET'};
+    if(mine&&mine.party_role==='leader')                  return {cmd:'pcmd',lab:'PARTY COMMAND'};
+    if(mine&&mine.party_id)                               return {cmd:'pcmd',lab:'MY PARTY'};
+    if(o&&o.status==='approved')                          return {cmd:'chat',lab:'MY ORDERS'};
+    return null; }
+  function openConsole(){ var c=myConsole(); if(!c) return;
+    try{ window.open('cmdglas_org.html?cmd='+encodeURIComponent(c.cmd),'cgcomms'); }catch(e){} }
   function fetchAll(){
     uid=uidOf(); if(!uid){ paint(); return; }
     rest('org_members?select=*&user_id=eq.'+uid,function(mine){
@@ -27945,38 +28092,153 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
         if(!orgId){ orgRows=[]; sqns=[]; paint(); return; }
         rest('orgs?select=id,name&id=eq.'+encodeURIComponent(orgId),function(o){ if(o&&o[0]) orgNm=o[0].name||orgId;
           rest('org_members?select=*&org_id=eq.'+encodeURIComponent(orgId),function(r){ if(r) orgRows=r;
-            rest('org_squadrons?select=*&org_id=eq.'+encodeURIComponent(orgId)+'&order=sort',function(q){ if(q) sqns=q; paint(); }); }); }); });
+            rest('org_squadrons?select=*&org_id=eq.'+encodeURIComponent(orgId)+'&order=sort',function(q){ if(q) sqns=q;
+              /* objectives are optional: an org that has not run phase 4 simply shows none */
+              rest('org_objectives?select=*&org_id=eq.'+encodeURIComponent(orgId),function(o2){ objs=(o2&&o2.length)?o2:[]; paint(); }); }); }); }); });
     });
   }
   function myParty(){ var mine=pool.filter(function(r){return r.user_id===uid;})[0];
     return (mine&&mine.party_id)?pool.filter(function(r){return r.party_id===mine.party_id;}):[]; }
   function counts(list){ var on=0,k=0,r=0; list.forEach(function(m){ if(isLive(m))on++; if(m.kia)k++; if(m.rescue)r++; });
     return on+'/'+list.length+' LIVE'+(k?' &middot; <span class="cg-op-kia">'+k+' KIA</span>':'')+(r?' &middot; <span class="cg-op-res">'+r+' MEDIVAC</span>':''); }
-  /* main glance: LEADERS + counts + FULL ROSTER button (T refinement 27 JUL) */
+  /* ===== the panel proper (T, 27 JUL: "who's panel is that" — it says so now, at the top) =====
+     Three questions answered without scrolling: whose view this is, how the force is doing, and
+     what YOU were told to do. Everything below is read live; nothing is filler. */
+  function tiles(list,labels){
+    var on=0,k=0,r=0; list.forEach(function(m){ if(isLive(m))on++; if(m.kia)k++; if(m.rescue)r++; });
+    return '<div class="op-tiles">'
+      +'<div class="op-t live"><b>'+on+'</b><span>ON STATION</span></div>'
+      +'<div class="op-t"><b>'+list.length+'</b><span>'+labels+'</span></div>'
+      +'<div class="op-t kia"><b>'+k+'</b><span>KIA</span></div>'
+      +'<div class="op-t res"><b>'+r+'</b><span>MEDIVAC</span></div></div>'; }
+  function ackPill(m){
+    if(!m) return '';
+    if(m.op_ack==='o7') return '<span class="cg-op-ack o7">o7 SENT</span>';
+    if(m.op_ack==='unable') return '<span class="cg-op-ack unable">UNABLE'+(m.op_ack_note?(': '+esc(String(m.op_ack_note).slice(0,30))):'')+'</span>';
+    return '<span class="cg-op-ack wait">ANSWER OWED</span>'; }
+  function ordPill(sq){ if(!sq||!sq.task) return '';
+    var c=ORD_C[sq.task]||'#8ba0b5';
+    return '<span class="cg-op-ord" style="border-color:'+c+';color:'+c+'">'+esc(String(sq.task).toUpperCase())
+      +(sq.task_target?(' · '+esc(sq.task_target)):'')+'</span>'; }
+  function rankName(r){ return ({'wing-commander':'Wing Commander','squadron-leader':'Squadron Leader',
+    'flight-lead':'Flight Lead','element-lead':'Element Lead','wingman':'Wingman','recruit':'Recruit'})[r]||(r||'member'); }
+  function sqName(id){ if(!id) return 'Unassigned';
+    for(var i=0;i<sqns.length;i++) if(sqns[i].id===id) return sqns[i].name; return id; }
+  /* squadron names shorten to 6 characters so six of them fit two lines; full name on hover */
+  function shortName(n){ n=String(n||''); return n.length<=6?n.toUpperCase():n.slice(0,6).toUpperCase(); }
+  /* DEFEND -> DEF, SUPPRESS -> SUPP, plus a trimmed target. Full order on the tile's hover title. */
+  var ORD_SHORT={defend:'DEF',guard:'GRD',attack:'ATK',suppress:'SUPP',distract:'DIST',lure:'LURE'};
+  function ordPillShort(sq){ if(!sq||!sq.task) return '';
+    var c=ORD_C[sq.task]||'#8ba0b5';
+    var t=sq.task_target?String(sq.task_target):'';
+    if(t.length>9) t=t.slice(0,8)+'\u2026';
+    return '<span class="cg-op-ord" style="border-color:'+c+';color:'+c+'">'
+      +(ORD_SHORT[sq.task]||String(sq.task).slice(0,4).toUpperCase())+(t?(' '+esc(t)):'')+'</span>'; }
+
+  /* one crew member, as a raised tile: light = live, name, what they are, and last contact */
+  function crewTile(m){ var on=isLive(m);
+    var role=(m.party_role==='leader')?'party lead':'crew';
+    return '<div class="op-cm'+(on?' on':'')+'" title="'+esc((m.callsign||'CMDR')+' — '+role+' — '+agoTxt(m))+'">'
+      +'<span class="c-i"></span><span class="c-b">'
+      +'<span class="c-nm">'+esc(m.callsign||'CMDR')+(uid&&m.user_id===uid?' (you)':'')+'</span>'
+      +'<span class="c-sub">'
+      +(m.tac_callsign?'<span class="cg-op-tac">'+esc(m.tac_callsign)+'</span>':'')
+      +'<span>'+role+'</span>'
+      +(m.kia?'<span class="cg-op-kia">KIA</span>':'')
+      +(m.rescue?'<span class="cg-op-res">MEDIVAC</span>':'')
+      +'</span></span><span class="c-st">'+esc(agoTxt(m))+'</span></div>'; }
+
   function partyHTML(){
-    if(!tok()) return '<div class="op-note">Sign in (account pill) to see your party.</div>';
-    var mem=myParty();
-    if(!mem.length) return '<div class="op-note">No party. Open COMMS &rarr; #party to create or join one.</div>'
-      +'<div><button type="button" class="cg-op-btn" data-opmsg="party">OPEN #PARTY</button></div>';
+    if(!tok()) return '<div class="op-note">Sign in from the account pill to see your party.</div>';
     var mine=pool.filter(function(r){return r.user_id===uid;})[0];
+    var mem=myParty();
+    if(!mem.length) return '<div class="op-id"><div class="nm">NO PARTY</div>'
+      +'<div class="me">You are not in a party right now.</div></div>'
+      +'<div class="op-note">Open COMMS &rarr; <b>#party</b> to create one, or type a friend\'s 6-character code to join. '
+      +'Parties need no org — anyone signed in can run one.</div>'
+      +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="party">OPEN #PARTY</button></div>';
     var ld=mem.filter(function(m){return m.party_role==='leader';})[0];
-    return '<div class="op-h">PARTY '+esc(mine.party_id)+' &middot; '+counts(mem)+'</div>'
-      +'<div class="op-lead-line"><span class="op-lead-t">Party leader</span>'+(ld?pillHTML(ld):'<span class="op-note" style="padding:0">seat empty</span>')+'</div>'
-      +'<div style="display:flex;gap:6px;margin-top:4px"><button type="button" class="cg-op-btn" data-oproster="party">FULL ROSTER</button>'
+    var iLead=!!(mine&&mine.party_role==='leader');
+    var h='<div class="op-id"><div class="nm">PARTY '+esc(mine.party_id)+'</div>'
+      +'<div class="me">YOU: <b>'+esc((mine.callsign||'CMDR'))+'</b> · '+(iLead?'PARTY LEAD':'party member')
+      +(mine.tac_callsign?(' · callsign '+esc(mine.tac_callsign)):'')+'</div></div>'
+      +tiles(mem,'IN PARTY');
+    if(mine.kia||mine.rescue) h+='<div class="op-task"><div class="hd">YOUR STATUS</div><div class="ln">'
+      +(mine.kia?'<span class="cg-op-kia">KIA — clear it in COMMS when you are back</span>':'')
+      +(mine.rescue?'<span class="cg-op-res">MEDIVAC CALLED</span>':'')+'</div></div>';
+    /* T (27 JUL): "the crew - razvyn writing is there in error. unecessary please remove" - the
+       leader is already starred on their own pill and named on the YOU line above, so the
+       "led by X" tail said it a third time. Plain section label now. */
+    /* T (27 JUL): "spread out the party view and give all the pills some breathing room just like
+       the pill org." Crew now renders as a two-column tile grid, leader first, then whoever is
+       actually flying, then the rest. Same tile grammar as the squadron grid in the org view. */
+    var crew=mem.slice().sort(function(a,b){
+      var ar=(a.party_role==='leader'?0:isLive(a)?1:2), br=(b.party_role==='leader'?0:isLive(b)?1:2);
+      if(ar!==br) return ar-br;
+      return String(a.callsign||'').localeCompare(String(b.callsign||'')); });
+    h+='<div class="op-h">CREW</div><div class="op-crew">'
+      +crew.map(crewTile).join('')+'</div>';
+    var _mc=myConsole();
+    h+='<div class="op-actions"><button type="button" class="cg-op-btn" data-oproster="party">FULL ROSTER</button>'
+      +(_mc?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the COMMS console that belongs to your rank">'+esc(_mc.lab)+'</button>':'')
       +'<button type="button" class="cg-op-btn" data-opmsg="party">MSG PARTY</button></div>';
+    return h;
   }
+
   function orgHTML(){
-    if(!tok()) return '<div class="op-note">Sign in (account pill) to see your org.</div>';
-    if(!orgId) return '<div class="op-note">No org yet. Join or found one on the COMMS ORG tab.</div>';
+    if(!tok()) return '<div class="op-note">Sign in from the account pill to see your org.</div>';
+    if(!orgId) return '<div class="op-id"><div class="nm">NO ORG</div>'
+      +'<div class="me">You are flying in the General Gamer Pool.</div></div>'
+      +'<div class="op-note">Open COMMS &rarr; <b>ORG</b> tab to apply to an org, or found your own. '
+      +'#general and #party stay open to you either way.</div>'
+      +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="org">OPEN COMMS</button></div>';
     var ap=orgRows.filter(function(m){return m.status==='approved';});
-    var wc=ap.filter(function(m){return m.role==='wing-commander';});
-    var tasked=sqns.filter(function(q){return q.task;});
-    var oc=tasked.map(function(sq){ return '<span class="cg-op-ord" style="border-color:'+(ORD_C[sq.task]||'#8ba0b5')+';color:'+(ORD_C[sq.task]||'#8ba0b5')+'">'+esc(sq.name)+': '+esc(String(sq.task).toUpperCase())+(sq.task_target?' &middot; '+esc(sq.task_target):'')+'</span>'; }).join(' ');
-    return '<div class="op-h">'+esc(orgNm||orgId)+' &middot; '+counts(ap)+'</div>'
-      +'<div class="op-lead-line"><span class="op-lead-t">Org leader</span>'+(wc.length?wc.map(function(m){return pillHTML(m);}).join(''):'<span class="op-note" style="padding:0">none</span>')+'</div>'
-      +(oc?'<div class="op-h" style="margin-top:4px">ORDERS</div><div>'+oc+'</div>':'')
-      +'<div style="display:flex;gap:6px;margin-top:4px"><button type="button" class="cg-op-btn" data-oproster="org">FULL ROSTER</button>'
+    var me2=orgRows.filter(function(m){return m.user_id===uid;})[0]||null;
+    var mySq=me2&&me2.squadron?sqns.filter(function(q){return q.id===me2.squadron;})[0]:null;
+    var myObj=me2&&me2.squadron?objs.filter(function(o){return o.squadron===me2.squadron&&o.status==='active';})[0]:null;
+    var h='<div class="op-id"><div class="nm">'+esc(orgNm||orgId)+'</div>'
+      +'<div class="me">YOU: <b>'+esc(me2?(me2.callsign||'CMDR'):'—')+'</b> · '+esc(me2?rankName(me2.role):'not approved')
+      +(me2&&me2.squadron?(' · '+esc(sqName(me2.squadron))):'')
+      +(me2&&me2.tac_callsign?(' · callsign '+esc(me2.tac_callsign)):'')+'</div></div>'
+      +tiles(ap,'ASSIGNED');
+    /* YOUR TASKING - the only part of this panel that is about the person reading it */
+    if(myObj||(mySq&&mySq.task)||(me2&&me2.op_role)){
+      h+='<div class="op-task"><div class="hd">YOUR TASKING · '+esc(sqName(me2.squadron))+'</div>'
+        +(myObj?'<div class="obj">'+esc(myObj.name)+'</div>':'')
+        +'<div class="ln">'+ordPill(mySq)
+        +(me2&&me2.op_role?('<span class="cg-op-tac">SEAT: '+esc(me2.op_role)+'</span>'):'')
+        +ackPill(me2)+'</div></div>';
+    } else if(me2&&me2.status==='approved'){
+      h+='<div class="op-task"><div class="hd">YOUR TASKING</div><div class="ln">No orders for '
+        +esc(sqName(me2&&me2.squadron))+' yet — stand by.</div></div>';
+    }
+    /* every squadron, its order and how many of it are actually flying.
+       T (27 JUL): "squadrons needs 6 slots/pills on the same 2 lines. same info displayed figure
+       out how to abbreviate it." So: a 2 x 3 grid, six squadrons visible without scrolling, and
+       the order abbreviated to its first four letters plus the target trimmed. Full text stays on
+       the hover title, so nothing is actually lost. */
+    var cols=sqns.slice();
+    if(cols.length){
+      h+='<div class="op-h">SQUADRONS</div><div class="op-sqgrid">';
+      cols.slice(0,6).forEach(function(sq){
+        var mem=ap.filter(function(m){return (m.squadron||'')===sq.id;});
+        var on=mem.filter(isLive).length;
+        h+='<div class="op-sqn" title="'+esc(sq.name+(sq.task?(' — '+String(sq.task).toUpperCase()+(sq.task_target?(' · '+sq.task_target):'')):' — no orders'))+'">'
+          +'<span class="s-n">'+esc(shortName(sq.name))+'</span>'+ordPillShort(sq)
+          +'<span class="s-c">'+on+'/'+mem.length+'</span></div>';
+      });
+      var un=ap.filter(function(m){return !m.squadron;});
+      if(un.length&&cols.length<6) h+='<div class="op-sqn" title="Unassigned pilots"><span class="s-n">UNASG</span>'
+        +'<span class="s-c">'+un.filter(isLive).length+'/'+un.length+'</span></div>';
+      h+='</div>';
+      if(cols.length>6) h+='<div style="font:600 10px \'Rajdhani\',sans-serif;color:#6f8ba0;margin-top:3px">'
+        +(cols.length-6)+' more squadron'+((cols.length-6)===1?'':'s')+' — open FULL ROSTER to see them all.</div>';
+    }
+    var _mc2=myConsole();
+    h+='<div class="op-actions"><button type="button" class="cg-op-btn" data-oproster="org">FULL ROSTER</button>'
+      +(_mc2?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the COMMS console that belongs to your rank">'+esc(_mc2.lab)+'</button>':'')
       +'<button type="button" class="cg-op-btn" data-opmsg="org">MSG ORG</button></div>';
+    return h;
   }
   /* overlay: EVERY member + status */
   var _lastOv='';
@@ -28052,7 +28314,8 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
         var rb=e.target.closest('[data-oproster]');
         if(rb){ openOverlay(rb.getAttribute('data-oproster')); return; }
         var mg=e.target.closest('[data-opmsg]');
-        if(mg){ openComms(mg.getAttribute('data-opmsg')); return; } });
+        if(mg){ openComms(mg.getAttribute('data-opmsg')); return; }
+        if(e.target.closest('[data-opconsole]')){ openConsole(); return; } });
     }
     return true;
   }
@@ -28122,7 +28385,8 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       +cell('SHIELD POOL', fmt(d.shield_hp),'#7fd0a0')
       +'</div>'
       +'<div style="font-size:9px;color:var(--text-dim,#8fa1b3);line-height:1.5">STOCK-loadout figures from api.star-citizen.wiki'
-      +(ver?(' &middot; game '+esc(ver)):'')+' &middot; read '+esc(when)+' local. Swapping shields or guns above changes the real numbers - the wiki only tracks the stock fit.</div>';
+      +(ver?(' &middot; game '+esc(ver)):'')+' &middot; read '+esc(when)+' local. Swapping shields or guns above changes the real numbers - the wiki only tracks the stock fit.</div>'
+      +threatHTML(key,shipName);
   }
   function failTotals(key,msg){ var el=document.getElementById('lt_'+key); if(!el) return;
     el.innerHTML='<div class="ld-section-title">SHIP TOTALS</div>'
@@ -28134,6 +28398,165 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     var noMk=ship.replace(/\s+Mk\s*/i,' Mk '); if(out.indexOf(noMk)<0) out.push(noMk);
     return out;
   }
+  /* shared, promise-based stats lookup - the THREAT CHECK below and ldTotals use one cache */
+  window.cgShipStats=function(ship){
+    return new Promise(function(res,rej){
+      var hit=CACHE[ship];
+      if(hit&&(Date.now()-hit.t)<3600000){ return hit.d?res(hit.d):rej(new Error(hit.err||'no wiki match')); }
+      var names=tryNames(ship);
+      (function attempt(i){
+        if(i>=names.length){ CACHE[ship]={t:Date.now(),d:null,err:'no wiki record'}; return rej(new Error('the wiki has no vehicle under "'+ship+'"')); }
+        fetch('https://api.star-citizen.wiki/api/v2/vehicles/'+encodeURIComponent(names[i]),{cache:'no-store'})
+          .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+          .then(function(j){ var d=j&&(j.data||j);
+            if(!d||(d.health==null&&!d.weaponry)) throw new Error('empty record');
+            CACHE[ship]={t:Date.now(),d:d}; res(d); },
+          function(){ attempt(i+1); });
+      })(0);
+    });
+  };
+  function ehp(d){ return (Number(d.health)||0)+(Number(d.shield_hp)||0); }
+  /* ===== THREAT CHECK (T, 2026-07-27, revised same day) =====
+     T: "just let them pick their ship name with the best possible loadout (imagined) strongest
+     weapon and then compare it to the resilience of whatever ship they're selecting as target."
+     So neither side is judged on its stock fit. BOTH ships are given the BEST GUN THE GAME HAS
+     for each of their pilot hardpoints, and the question becomes the only one that matters:
+     WHO RUNS OUT OF SHIP FIRST.
+       best DPS for a size  = highest damage_per_second of any WeaponGun that size (live wiki)
+       a ship's best output = its pilot hardpoints x that best DPS
+       a ship's resilience  = hull HP + shield pool (live wiki)
+       seconds to kill      = their resilience / my best output, and the mirror
+     Whoever needs fewer seconds wins. Nothing here is invented - both inputs are read live and
+     printed on screen next to the verdict, so the arithmetic can be checked by eye. */
+  var GUN_LS='cg_bestgun_v1', GUN_TTL=86400000, bestGun=null, gunLoading=false;
+  function readGuns(){ try{ var j=JSON.parse(localStorage.getItem(GUN_LS)||'null');
+    if(j&&j.d&&(Date.now()-(j.t||0))<GUN_TTL) return j.d; }catch(e){} return null; }
+  function gunDps(it){
+    try{ var vw=it.vehicle_weapon||{};
+      if(vw.damage&&vw.damage.dps){ var tot=0; for(var k in vw.damage.dps){ var v=Number(vw.damage.dps[k]); if(!isNaN(v)) tot+=v; } if(tot>0) return tot; }
+      var m=(vw.modes||[])[0]; if(m&&m.damage_per_second) return Number(m.damage_per_second)||0;
+    }catch(e){}
+    return 0;
+  }
+  function loadGuns(){
+    if(bestGun) return Promise.resolve(bestGun);
+    var c=readGuns(); if(c){ bestGun=c; return Promise.resolve(bestGun); }
+    var best={}, names={};
+    function page(p){
+      return fetch('https://api.star-citizen.wiki/api/v2/items?filter%5Btype%5D=WeaponGun&page='+p,{cache:'no-store'})
+        .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+        .then(function(j){
+          (j.data||[]).forEach(function(it){
+            var sz=it&&it.size, d=gunDps(it);
+            if(sz==null||!d) return;
+            if(!best[sz]||d>best[sz]){ best[sz]=d; names[sz]=it.name; } });
+          var m=j.meta||{}, cur=m.current_page||p, last=m.last_page||cur;
+          if(cur<last&&cur<25) return page(cur+1);
+          return null;
+        });
+    }
+    gunLoading=true;
+    return page(1).then(function(){ gunLoading=false; bestGun={dps:best,name:names};
+      try{ localStorage.setItem(GUN_LS,JSON.stringify({t:Date.now(),d:bestGun})); }catch(e){}
+      return bestGun; });
+  }
+  /* "2x S4", "1x S2 + 2x S1", "2× S4" -> [{n:2,s:4}, ...] */
+  function hardpoints(txt){
+    var out=[], re=/(\d+)\s*[x×]\s*S\s*(\d+)/gi, m;
+    while((m=re.exec(String(txt||'')))) out.push({n:parseInt(m[1],10),s:parseInt(m[2],10)});
+    return out;
+  }
+  /* A ship's guns are its PILOT hardpoints plus its MANNED TURRETS - leaving turrets out made every
+     big hull (Hammerhead, Redeemer, Polaris) read as unarmed, which is the exact matchup a pilot
+     most wants checked. Turret guns are counted and labelled as such; crew to man them is the
+     player's problem and the note under the verdict says so. */
+  function rowsFor(ship){
+    var a=null,b=null;
+    try{ a=(DB.ship_loadout||[]).filter(function(x){return x.Ship===ship;})[0]||null; }catch(e){}
+    try{ b=(DB.ship_db||[]).filter(function(x){return x['Ship Name']===ship;})[0]||null; }catch(e){}
+    return {ld:a, db:b};
+  }
+  function hpOf(ship){
+    var r=rowsFor(ship);
+    var pilot=[], tur=[];
+    if(r.ld){ pilot=hardpoints(r.ld['Pilot Hardpoints']);
+      tur=hardpoints(r.ld['Turrets\n(manned)']||r.ld['Turrets']||''); }
+    if(!pilot.length&&r.db) pilot=hardpoints(r.db['Pilot Guns']);
+    if(!tur.length&&r.db) tur=hardpoints(r.db['Turrets']);
+    return {pilot:pilot, turret:tur};
+  }
+  function bestOutput(ship){
+    if(!bestGun) return null;
+    var h=hpOf(ship);
+    if(!h.pilot.length&&!h.turret.length) return null;
+    var tot=0, parts=[], missing=false;
+    function add(list,tag){ for(var i=0;i<list.length;i++){
+      var b=bestGun.dps[list[i].s]; if(!b){ missing=true; continue; }
+      tot+=list[i].n*b; parts.push(list[i].n+'x S'+list[i].s+' '+(bestGun.name[list[i].s]||'')+tag); } }
+    add(h.pilot,'');
+    add(h.turret,' (turret)');
+    if(!tot) return null;
+    return {dps:tot, parts:parts, turrets:h.turret.length>0, partial:missing};
+  }
+  function shipList(){
+    var set={};
+    try{ (DB.ship_db||[]).forEach(function(r){ if(r&&r['Ship Name']) set[r['Ship Name']]=1; }); }catch(e){}
+    try{ (DB.ship_loadout||[]).forEach(function(r){ if(r&&r.Ship) set[r.Ship]=1; }); }catch(e){}
+    return Object.keys(set).sort(function(x,y){ return x.localeCompare(y); });
+  }
+  function threatHTML(key,shipName){
+    var opts=shipList().map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+'</option>'; }).join('');
+    return '<div class="ld-section" id="tc_'+key+'" style="margin-top:10px">'
+      +'<div class="ld-section-title">THREAT CHECK — CAN I TAKE THAT FIGHT?</div>'
+      +'<div style="font-size:10.5px;color:var(--text-dim);line-height:1.55;margin-bottom:7px">'
+      +'Both ships are given the <b style="color:var(--amber2)">best gun in the game</b> for every pilot hardpoint they have. '
+      +'Then it is just: who runs out of ship first.</div>'
+      +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0">'
+      +'<span style="font-size:9px;letter-spacing:1.5px;color:var(--text-dim)">MY SHIP</span>'
+      +'<select class="wep-select" id="tcme_'+key+'" style="min-width:200px;border-radius:9px">'
+      +shipList().map(function(n){ return '<option value="'+esc(n)+'"'+(n===shipName?' selected':'')+'>'+esc(n)+'</option>'; }).join('')+'</select>'
+      +'<span style="font-size:9px;letter-spacing:1.5px;color:var(--text-dim)">VERSUS</span>'
+      +'<select class="wep-select" id="tcsel_'+key+'" style="min-width:200px;border-radius:9px"><option value="">— pick a target —</option>'+opts+'</select>'
+      +'<button type="button" class="panel-btn" id="tcgo_'+key+'" style="border-radius:9px;color:var(--amber2);border-color:var(--amber)">CHECK IT</button>'
+      +'</div><div id="tcout_'+key+'" style="font-size:11px;color:var(--text-dim)">Pick a target and press CHECK IT.</div></div>';
+  }
+  window.cgThreatHTML=function(key,shipName){ return threatHTML(key,shipName); };
+  window.cgRunThreat=function(key){ return runThreat(key); };
+  function runThreat(key){
+    var me=document.getElementById('tcme_'+key), sel=document.getElementById('tcsel_'+key), out=document.getElementById('tcout_'+key);
+    if(!sel||!out||!me) return;
+    var myShip=me.value, target=sel.value;
+    if(!target){ out.innerHTML='Pick a target ship first.'; return; }
+    out.innerHTML='reading the weapon catalog and both hulls from api.star-citizen.wiki…';
+    loadGuns().then(function(){
+      return Promise.all([window.cgShipStats(myShip),window.cgShipStats(target)]);
+    }).then(function(r){
+      var myB=bestOutput(myShip), thB=bestOutput(target);
+      var myR=ehp(r[0]), thR=ehp(r[1]);
+      if(!myB||!thB||!myR||!thR){
+        out.innerHTML='<span style="color:var(--amber2)">No verdict — '
+          +(!myB?('no pilot hardpoints on record for '+esc(myShip)):(!thB?('no pilot hardpoints on record for '+esc(target)):'the wiki is missing hull or shield HP for one of these hulls'))
+          +'. Nothing shown rather than a guessed number.</span>'; return; }
+      var tThem=thR/myB.dps, tMe=myR/thB.dps, ratio=tMe/tThem;
+      var v = ratio>=1.25 ? {t:'GO GET IT',c:'#39d353'}
+            : ratio<=0.80 ? {t:'RUN AWAY',c:'#ff5f56'}
+            : {t:'EVEN FIGHT — YOUR CALL',c:'#ffb000'};
+      out.innerHTML='<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
+        +'<span style="font-family:Iceland,Rajdhani,sans-serif;font-size:30px;letter-spacing:2px;color:'+v.c+';text-shadow:0 0 16px '+v.c+'55">'+v.t+'</span></div>'
+        +'<div style="font-size:12px;color:var(--text-mid);margin-top:4px;line-height:1.7">'
+        +'You kill <b style="color:#eaf6ff">'+esc(target)+'</b> in <b style="color:'+v.c+'">'+tThem.toFixed(1)+'s</b>.<br>'
+        +'It kills <b style="color:#eaf6ff">'+esc(myShip)+'</b> in <b style="color:'+v.c+'">'+tMe.toFixed(1)+'s</b>.</div>'
+        +'<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:7px;font-size:10.5px;color:var(--text-dim)">'
+        +'<span><b style="color:var(--amber2)">'+esc(myShip)+'</b> — '+Math.round(myB.dps)+' dps best-fit · '+Math.round(myR)+' hp+shield<br>guns: '+esc(myB.parts.join(', '))+'</span>'
+        +'<span><b style="color:var(--amber2)">'+esc(target)+'</b> — '+Math.round(thB.dps)+' dps best-fit · '+Math.round(thR)+' hp+shield<br>guns: '+esc(thB.parts.join(', '))+'</span></div>'
+        +'<div style="font-size:9.5px;color:var(--text-dim);margin-top:7px;line-height:1.55">Hull and shield HP are the wiki\'s live figures; the guns are the highest-DPS weapon the game offers at each hardpoint size. Turret guns are included where a hull has them — you still need crew in those seats. Ignores shield regen, damage falloff and resistances, and ammo — and pilot skill, which decides most real fights.</div>';
+    },function(e){ out.innerHTML='<span style="color:var(--amber2)">No verdict — '+esc((e&&e.message)||e)+'.</span>'; });
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('[id^="tcgo_"]'):null;
+    if(!b) return;
+    runThreat(b.id.replace('tcgo_',''));
+  },true);
   window.ldTotals=function(ship,key){
     var hit=CACHE[ship];
     if(hit&&(Date.now()-hit.t)<3600000){ if(hit.d) paintTotals(key,hit.d,ship); else failTotals(key,hit.err||'no wiki match'); return; }
@@ -28837,7 +29260,11 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     var h=document.createElement('div'); h.id='cg-tw-head';
     h.style.cssText='display:flex;align-items:center;gap:7px;flex:0 0 auto;background:linear-gradient(180deg,#772ce8,#5c16c5);color:#fff;border-radius:6px;padding:4px 9px;font:800 9px "Rajdhani","Segoe UI",sans-serif;letter-spacing:2px';
     h.innerHTML=TWICON+'<span>TWITCH</span><span id="cg-tw-head-ch" style="margin-left:auto;font-weight:600;letter-spacing:1px;color:#e6d9ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>';
-    fr.parentNode.insertBefore(h, fr);
+    /* T (27 JUL): "the twitch streamer purple banner is below the twitch channel picker even
+       though it says pick a channel below. so it's reversed either way." Correct - it was
+       inserted before the FRAME, which put it under the picker bar. The banner is the panel's
+       title, so it goes to the very top and "below" becomes true again. */
+    tw.insertBefore(h, tw.firstChild);
   }
   function twHeadCh(){
     var el=document.getElementById('cg-tw-head-ch'); if(!el) return;
@@ -28847,6 +29274,366 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     if(el.textContent!==want) el.textContent=want;
   }
   setInterval(function(){ twHead(); twHeadCh(); },900);
+})();
+</script>
+<script id="sc-b551-syscat-js">
+/* 2026-07-27 build 551 (T: "under ship loadouts the system shield cooler radar dropdown field
+   still doesn't show the grade type size of the component fix it please").
+   ROOT CAUSE of the 549 attempt: those five SYSTEMS fields were free-text INPUTS, and the grade
+   chip beside them could only resolve names present in COMP_GRADE - a hand-kept table of ~30
+   entries. Type anything else and there was nothing to show. A bigger hand-kept table would rot
+   the same way, so this does not add one.
+   FIX: the fields become REAL DROPDOWNS built from the live component catalog at
+   api.star-citizen.wiki (v2/items?filter[type]=...), the same source the SHIP TOTALS panel uses.
+   Verified 27 JUL 2026: type strings Shield / PowerPlant / Cooler / QuantumDrive / Radar all
+   return data, and every record carries name, size, grade and class. Each option reads
+   "NAME · S3 · MIL-A", and components that FIT THE SHIP'S SLOT SIZE are grouped at the top.
+   HONESTY: nothing is invented. If the catalog cannot be reached the field falls back to the old
+   free-text input and says so, and anything typed before is preserved as its own option.
+   Catalog is cached 24 h in localStorage, so this costs one fetch pass per day, not per ship.
+   Reversible: delete this block (compSelect reverts to the page's own definition). */
+(function(){
+  if(window.__cgSysCat551) return; window.__cgSysCat551=true;
+  var LS='cg_syscat_v1', TTL=86400000, API='https://api.star-citizen.wiki/api/v2/items?filter%5Btype%5D=';
+  var TYPES={SHIELD:'Shield',PP:'PowerPlant',COOLER:'Cooler',QD:'QuantumDrive',RADAR:'Radar'};
+  var CLS={Military:'MIL',Civilian:'CIV',Industrial:'IND',Stealth:'STL',Competition:'COMP'};
+  var cat=null, loading=false, lastErr='';
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  /* the ship DB writes slot sizes as "S1", "S1x2", "S2" - pull the first integer, null if absent */
+  function sizeOf(slot){ var m=/(\d+)/.exec(String(slot||'')); return m?parseInt(m[1],10):null; }
+  function label(it){
+    var bits=[it.n];
+    if(it.s!=null&&it.s!=='') bits.push('S'+it.s);
+    var cg=(it.c?(CLS[it.c]||String(it.c).slice(0,3).toUpperCase()):'')+(it.g?('-'+it.g):'');
+    if(cg) bits.push(cg);
+    return bits.join(' · ');
+  }
+  function readCache(){ try{ var j=JSON.parse(localStorage.getItem(LS)||'null');
+    if(j&&j.d&&(Date.now()-(j.t||0))<TTL) return j.d; }catch(e){} return null; }
+  function writeCache(d){ try{ localStorage.setItem(LS,JSON.stringify({t:Date.now(),d:d})); }catch(e){} }
+  function fetchType(t){
+    var out=[];
+    function page(p){
+      return fetch(API+encodeURIComponent(t)+'&page='+p,{cache:'no-store'})
+        .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+        .then(function(j){
+          (j.data||[]).forEach(function(it){ if(it&&it.name) out.push({n:it.name,s:it.size,g:it.grade,c:it['class']}); });
+          var m=j.meta||{}, cur=m.current_page||p, last=m.last_page||cur;
+          if(cur<last&&cur<15) return page(cur+1);   /* hard stop so bad meta cannot loop forever */
+          return out;
+        });
+    }
+    return page(1);
+  }
+  function load(then){
+    if(cat){ if(then)then(); return; }
+    var c=readCache(); if(c){ cat=c; if(then)then(); return; }
+    if(loading) return; loading=true;
+    var keys=Object.keys(TYPES), acc={}, i=0;
+    (function next(){
+      if(i>=keys.length){ loading=false; cat=acc; writeCache(acc); if(then)then(); return; }
+      var k=keys[i++];
+      fetchType(TYPES[k]).then(function(list){ acc[k]=list; next(); },
+        function(e){ lastErr=String((e&&e.message)||e); acc[k]=[]; next(); });
+    })();
+  }
+  function optionsFor(kind,slot,cur){
+    var list=(cat&&cat[kind])||[];
+    var want=sizeOf(slot);
+    var fits=[], other=[];
+    list.slice().sort(function(a,b){ return String(a.n).localeCompare(String(b.n)); })
+      .forEach(function(it){ (want!=null&&String(it.s)===String(want)?fits:other).push(it); });
+    function opts(arr){ return arr.map(function(it){
+      var sel=(cur&&cur===it.n)?' selected':'';
+      return '<option value="'+esc(it.n)+'"'+sel+'>'+esc(label(it))+'</option>'; }).join(''); }
+    var h='<option value="">'+(want!=null?('— empty (slot S'+want+') —'):'— empty —')+'</option>';
+    /* a value typed before this dropdown existed must never be silently dropped */
+    if(cur && !list.some(function(it){return it.n===cur;}))
+      h+='<option value="'+esc(cur)+'" selected>'+esc(cur)+' · (saved)</option>';
+    if(fits.length) h+='<optgroup label="FITS THIS SLOT — S'+want+'">'+opts(fits)+'</optgroup>';
+    h+='<optgroup label="'+(fits.length?'OTHER SIZES':'ALL COMPONENTS')+'">'+opts(other)+'</optgroup>';
+    return h;
+  }
+  var CTL='background:var(--bg2);border:1px solid var(--border2);color:var(--amber2);padding:3px 6px;font-family:inherit;font-size:12px;max-width:240px;min-width:150px;border-radius:9px';
+  function control(kind,slot,se,v){
+    var ready=!!(cat&&cat[kind]&&cat[kind].length);
+    if(!ready){
+      return '<input type="text" value="'+esc(v)+'" placeholder="'+esc(slot||'—')+'" '
+        +'onchange="ldSetComp(\''+se+'\',\''+kind+'\',this.value);ldGradeRefresh(this)" style="'+CTL+'">';
+    }
+    return '<select onchange="ldSetComp(\''+se+'\',\''+kind+'\',this.value);ldGradeRefresh(this)" style="'+CTL+'" '
+      +'title="Grouped by what fits this slot. Live from api.star-citizen.wiki.">'+optionsFor(kind,slot,v)+'</select>';
+  }
+  /* full replacement for the page's compSelect - same signature, same ids, same buttons */
+  window.compSelect=function(kind,slot,key,ship){
+    var v=''; try{ v=(JSON.parse(localStorage.getItem('sc_ld_comps')||'{}')[ship]||{})[kind]||''; }catch(e){}
+    var se=String(ship).replace(/'/g,"\\'");
+    var ready=!!(cat&&cat[kind]&&cat[kind].length);
+    return '<span class="ld-val ld-sys" data-sysk="'+esc(kind)+'" data-syss="'+esc(ship)+'" data-syssz="'+esc(slot||'')+'" '
+      +'style="display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap">'
+      +control(kind,slot,se,v)
+      +'<span class="ld-gchip">'+(window.ldGradeChip?window.ldGradeChip(v):'')+'</span>'
+      +'<button type="button" title="Add this component to the BUY list (top-centre OPS pill)" onclick="ldBuyComp(this,\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:#7fd0a0;border-radius:8px;padding:2px 7px;font-size:12px;line-height:1;cursor:pointer">&#128722;</button>'
+      +'<button type="button" title="Remove component" onclick="ldClearComp(this,\''+se+'\',\''+kind+'\')" style="background:var(--steel2);border:1px solid var(--border2);color:var(--text-mid);border-radius:8px;padding:2px 8px;font-size:12px;line-height:1;cursor:pointer">&#10006;</button>'
+      +(ready?'':'<span class="syscat-wait" style="font-size:9px;color:var(--text-dim);letter-spacing:.5px">catalog loading…</span>')
+      +'</span>';
+  };
+  /* once the catalog lands, upgrade any fields already on screen - in place, values preserved */
+  function upgrade(){
+    var nodes=document.querySelectorAll('#loadout-detail .ld-sys'); if(!nodes.length) return;
+    for(var i=0;i<nodes.length;i++){
+      var w=nodes[i];
+      if(w.querySelector('select')) continue;
+      var kind=w.getAttribute('data-sysk'), ship=w.getAttribute('data-syss'), slot=w.getAttribute('data-syssz');
+      if(!(cat&&cat[kind]&&cat[kind].length)) continue;
+      var old=w.querySelector('input'); if(!old) continue;
+      var se=String(ship).replace(/'/g,"\\'");
+      var tmp=document.createElement('span'); tmp.innerHTML=control(kind,slot,se,old.value||'');
+      w.replaceChild(tmp.firstChild, old);
+      var note=w.querySelector('.syscat-wait'); if(note) note.parentNode.removeChild(note);
+    }
+  }
+  window.cgSysCat={ load:load, upgrade:upgrade, ready:function(){return !!cat;},
+    error:function(){return lastErr;}, types:TYPES,
+    _label:label, _sizeOf:sizeOf, _optionsFor:optionsFor,
+    _seed:function(d){ cat=d; } };   /* _seed: test hook only */
+  function boot(){ load(function(){ upgrade(); }); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+  document.addEventListener('click',function(e){
+    if(e.target&&e.target.closest&&e.target.closest('.ship-item')) setTimeout(function(){ load(upgrade); },60);
+  },true);
+})();
+</script>
+<script id="sc-b552-fuel-js">
+/* 2026-07-27 build 552 (T: "add this to your resources and query it with your other checks for
+   changes daily. update the tablet with the data. now").
+   SOURCE: "Ship Fuel Changes Spreadsheet by Oshida", Google Sheets, read 27 JUL 2026. The sheet
+   itself was last edited 25 JUL 2026 and is titled EPTU-4.10.0-12311913.
+   WHAT IT IS, stated plainly because it decides how much you should trust it: a comparison of
+   LIVE 4.9.0-12302499 against EPTU 4.10.0-12311913. The "new" column is TEST-BUILD data. It can
+   change before 4.10 ships, and CIG has published no notes tying these numbers to a final patch.
+   The panel says so on screen every time it renders. Nothing here is derived or estimated; the
+   figures are Oshida's, transcribed.
+   WHAT IT SHOWS: for the hull you have open, its quantum tank and range, and the hydrogen tank it
+   has today against the one 4.10 is testing, with the change spelled out. Hydrogen tanks are being
+   cut hard across the fleet, which changes how far you can fly before you need fuel.
+   Reversible: delete this block. */
+(function(){
+  if(window.__cgFuel552) return; window.__cgFuel552=true;
+  var SRC='https://docs.google.com/spreadsheets/d/1J1vGHD1Q7xFh6XfLfha7ZDgtyhwp4Prp7t5NIsrL-bQ/edit';
+  var SHEET_TITLE='Ship Fuel Changes Spreadsheet by Oshida';
+  var READ_ON='27 JUL 2026', SHEET_EDITED='25 JUL 2026';
+  var OLD_BUILD='4.9.0-12302499 (live)', NEW_BUILD='4.10.0-12311913 (EPTU)';
+  /* name|qtSize|quantumTank SCU|quantum range Gm|old H2 SCU|new H2 SCU|H2 diff %|consumption diff %|H2 range diff % */
+  var RAW_SHIPS="Aegis Avenger Stalker|1|1.1|78.6|9|1.2|-87|-79|-38\nAegis Avenger Titan|1|1.1|78.6|9|1.6|-82|-72|-38\nAegis Avenger Titan Renegade|1|1.1|78.6|9|1.6|-82|-72|-38\nAegis Avenger Warlock|1|1.1|78.6|9|1.6|-82|-72|-38\nAegis Eclipse|1|1.8|128.6|9|1.2|-87|-79|-38\nAegis Gladius|1|1.3|92.9|13.5|1.6|-88|-81|-37\nAegis Gladius Dunlevy|1|1.3|92.9|13.5|1.6|-88|-81|-37\nAegis Gladius Pirate|1|1.3|92.9|13.5|1.6|-88|-81|-37\nAegis Gladius Valiant|1|1.3|92.9|13.5|1.6|-88|-81|-37\nAegis Hammerhead|3|6.6|366.7|450|37|-92|-87|-37\nAegis Hammerhead 2949 Best In Show Edition|3|6.6|366.7|450|37|-92|-87|-37\nAegis Idris-M|4|120|75|6400|59.8|-99|-98|-39\nAegis Idris-P|4|120|75|6400|59.8|-99|-98|-39\nAegis Idris-P Wikelo War Special|4|120|75|6400|59.8|-99|-98|-39\nAegis Reclaimer|3|8.6|477.8|1754|57.6|-97|-95|-38\nAegis Reclaimer 2949 Best In Show Edition|3|8.6|477.8|1754|57.6|-97|-95|-38\nAegis Reclaimer Teach's Special|3|8.6|477.8|1754|57.6|-97|-95|-38\nAegis Redeemer|2|1.8|163.6|66|15.6|-76|-62|-38\nAegis Retaliator|2|2.6|236.4|51|17.2|-66|-46|-38\nAegis Sabre|1|1.3|92.9|13.5|2.6|-81|-69|-37\nAegis Sabre Comet|1|1.3|92.9|13.5|2.6|-81|-69|-37\nAegis Sabre Firebird|1|1.3|92.9|12|3.8|-68|-49|-37\nAegis Sabre Firebird Wikelo War Special|1|1.3|92.9|12|3.8|-68|-49|-37\nAegis Sabre Peregrine|1|1.3|92.9|12|4.2|-65|-44|-38\nAegis Sabre Peregrine Wikelo Speedy Special|1|1.3|92.9|12|4.2|-65|-44|-38\nAegis Sabre Raven|1|1.3|92.9|12|2.6|-78|-65|-37\nAegis Tiburon|3|6.7|372.2|465|37|-92|-87|-37\nAegis Vanguard Warden|2|2|181.8|40.5|7.8|-81|-69|-37\nAegis Vanguard Harbinger|2|2|181.8|39|7.8|-80|-68|-38\nAegis Vanguard Hoplite|2|2|181.8|39|7.8|-80|-62|-47\nAegis Vanguard Sentinel|2|2|181.8|39|7.8|-80|-68|-38\nAnvil Arrow|1|1.1|78.6|7.5|1.6|-79|-66|-38\nAnvil Asgard|2|1.85|168.2|97.5|15.6|-84|-74|-38\nAnvil Asgard Wikelo War Special|2|1.85|168.2|97.5|15.6|-84|-74|-38\nAnvil C8R Pisces Rescue|1|1.8|128.6|3.2|1.6|-50|-20|-38\nAnvil C8X Pisces Expedition|1|1.8|128.6|3.2|1.6|-50|-20|-38\nAnvil C8 Pisces|1|1.8|128.6|3.2|1.6|-50|-20|-38\nAnvil Carrack|3|10.6|588.9|360|40.6|-89|-82|-38\nAnvil Carrack Expedition|3|10.6|588.9|360|40.6|-89|-82|-38\nAnvil Gladiator|1|1.3|92.9|15|3.8|-75|-82|38\nAnvil Hawk|1|1.1|78.6|10.5|1.6|-85|-76|-38\nAnvil F7A Hornet Mk II|1|1.3|92.9|16|3.8|-76|-62|-38\nAnvil F7A Hornet Mk I|1|1.3|92.9|14|3.8|-73|-52|-43\nAnvil F7C Hornet Mk I|1|1.3|92.9|12|3.8|-68|-49|-37\nAnvil F7C-M Super Hornet Mk I|1|1.3|92.9|13.5|3.8|-72|-55|-38\nAnvil F7C-M Hornet Heartseeker Mk I|1|1.3|92.9|13.5|3.8|-72|-55|-38\nAnvil F7C-M Super Hornet Mk II|1|1.3|92.9|16|3.8|-76|-62|-38\nAnvil F7C-M Hornet Heartseeker Mk II|1|1.3|92.9|16|3.8|-76|-62|-38\nAnvil F7C-R Hornet Tracker Mk I|1|1.8|128.6|12|2.6|-78|-49|-57\nAnvil F7C-R Hornet Tracker Mk II|1|1.8|128.6|14.4|2.6|-82|-71|-37\nAnvil F7C-S Hornet Ghost Mk I|1|1.3|92.9|12|3.8|-68|-49|-37\nAnvil F7C-S Hornet Ghost Mk II|1|1.3|92.9|14.4|3.8|-74|-58|-38\nAnvil F7C Hornet Mk II|1|1.3|92.9|16|3.8|-76|-62|-38\nAnvil F7C Hornet Wildfire Mk I|1|1.3|92.9|12|3.8|-68|-49|-37\nAnvil F7 Hornet Mk Wikelo|1|1.3|92.9|16|3.8|-76|-62|-38\nAnvil Hurricane|1|1.3|92.9|13.5|7.8|-42|-8|-38\nAnvil F8A Lightning|1|1.3|92.9|37.2|7.8|-79|-66|-37\nAnvil F8C Lightning|1|1.3|92.9|37.2|7.8|-79|-66|-37\nAnvil F8C Lightning Wikelo War Special|1|1.3|92.9|37.2|7.8|-79|-66|-37\nAnvil F8C Lightning Wikelo Sneak Special|1|1.3|92.9|37.2|7.8|-79|-66|-37\nAnvil F8C Lightning Executive Edition|1|1.3|92.9|37.2|7.8|-79|-66|-37\nAnvil Paladin|2|3.85|350|61|17.1|-72|-55|-38\nAnvil Terrapin|1|1.8|128.6|104.5|8|-92|-88|-37\nAnvil Terrapin Medic|1|4|285.7|104.5|6.6|-94|-90|-37\nAnvil Terrapin Medic Wikelo Savior Special|1|4|285.7|104.5|6.6|-94|-90|-37\nAnvil Valkyrie|2|1.8|163.6|94.5|15.6|-83|-74|-37\nAnvil Valkyrie Liberator|2|1.8|163.6|94.5|15.6|-83|-74|-37\nArgo MOLE|2|2.6|236.4|200|11|-95|-91|-37\nARGO MOLE Alliance|2|2.6|236.4|200|11|-95|-91|-37\nArgo MOLE Teach's Special|2|2.6|236.4|200|11|-95|-91|-37\nArgo MOTH|2|2.6|236.4|200|10.9|-95|-91|-38\nArgo RAFT|2|1.8|163.6|225|8|-96|-94|-37\nArgo RAFT Wikelo Work Special|2|1.8|163.6|225|8|-96|-94|-37\nArgo SRV|2|3.1|281.8|28.5|2.3|-92|-87|-37\nBanu Defender|1|3.1|221.4|43|4|-91|-85|-37\nC.O. Mustang Alpha|1|1.1|78.6|6|1.4|-77|-63|-38\nC.O. Mustang CitizenCon 2948 Edition|1|1.1|78.6|6|1.4|-77|-63|-38\nC.O. Mustang Beta|1|1.1|78.6|8|1.6|-80|-68|-38\nC.O. Mustang Delta|1|1.1|78.6|7.5|1.4|-81|-70|-37\nC.O. Mustang Gamma|1|1.1|78.6|6|1.4|-77|-63|-38\nC.O. Mustang Omega|1|1.1|78.6|6|1.4|-77|-63|-38\nC.O. Nomad|1|1.3|92.9|32.8|1.6|-95|-92|-38\nC.O. Nomad Teach's Special|1|1.3|92.9|32.8|1.6|-95|-92|-38\nCrusader Intrepid|1|1.8|128.6|26|1.5|-94|-91|-37\nCrusader Intrepid Wikelo Work Special|1|1.8|128.6|26|1.5|-94|-91|-37\nCrusader A1 Spirit|2|1.8|163.6|45|7.3|-84|-74|-37\nCrusader C1 Spirit|2|1.8|163.6|45|7.3|-84|-74|-37\nCrusader C1 Spirit Wikelo Special|2|1.8|163.6|45|7.3|-84|-74|-37\nCrusader Ares Star Fighter Inferno|2|1.8|163.6|45|8.6|-81|-69|-37\nCrusader Ares Star Fighter Inferno Wikelo War Special|2|1.8|163.6|45|8.6|-81|-69|-37\nCrusader Ares Star Fighter Ion|2|1.8|163.6|45|8.6|-81|-69|-37\nCrusader Ares Star Fighter Ion Wikelo Sneak Special|2|1.8|163.6|45|8.6|-81|-69|-37\nCrusader A2 Hercules Starlifter|3|6.6|366.7|132|45|-66|-45|-38\nCrusader A2 Hercules Starlifter Wikelo War Special|3|6.6|366.7|132|45|-66|-45|-38\nCrusader C2 Hercules Starlifter|3|6.6|366.7|132|45|-66|-45|-38\nCrusader M2 Hercules Starlifter|3|6.6|366.7|132|45|-66|-45|-38\nCrusader Mercury Star Runner|2|3.2|290.9|100|16|-84|-74|-38\nDrake Buccaneer|1|1.3|92.9|7.5|1.6|-79|-66|-38\nDrake Caterpillar|3|8.6|477.8|250.5|43.2|-83|-72|-38\nDrake Caterpillar Pirate|3|8.6|477.8|250.5|43.2|-83|-72|-38\nDrake Caterpillar 2949 Best In Show Edition|3|8.6|477.8|250.5|43.2|-83|-72|-38\nDrake Clipper|1|1.7|121.4|15|1.6|-89|-83|-37\nDrake Clipper Wikelo War Special|1|1.7|121.4|15|1.6|-89|-83|-37\nDrake Corsair|2|5.2|472.7|116|20.6|-82|-72|-37\nDrake Cutlass Black|2|1.8|163.6|36|7.8|-78|-65|-37\nDrake Cutlass 2949 Best In Show Edition|2|1.8|163.6|36|7.8|-78|-65|-37\nDrake Cutlass Blue|2|1.8|163.6|36|6.6|-82|-71|-38\nDrake Cutlass Red|2|1.8|163.6|36|6.6|-82|-70|-38\nDrake Cutlass Steel|2|1.8|163.6|36|7.8|-78|-65|-37\nDrake Cutter|1|1.1|78.6|12|1.6|-87|-79|-38\nDrake Cutter Rambler|1|1.1|78.6|12|1.6|-87|-79|-36\nDrake Cutter Scout|1|1.1|78.6|12|1.6|-87|-79|-38\nDrake Golem|1|0.95|67.9|24|4.3|-82|-78|-19\nDrake Golem Alliance|1|0.95|67.9|24|4.3|-82|-78|-19\nDrake Golem Wikelo Work Special|1|0.95|67.9|24|4.3|-82|-78|-19\nDrake Golem OX|1|1.1|78.6|24|4.3|-82|-78|-19\nDrake Golem Teach's Special|1|0.95|67.9|24|4.3|-82|-78|-19\nDrake Herald|1|1.3|92.9|10.5|4.4|-58|-33|-37\nDrake Ironclad|3|11|611.1|280|43.2|-85|-75|-38\nDrake Ironclad Assault|3|10|555.6|280|37.6|-87|-78|-38\nDrake Vulture|1|1.1|78.6|36|4.8|-87|-79|-38\nDrake Vulture Teach's Special|1|1.1|78.6|36|4.8|-87|-79|-38\nEsperia Prowler|2|2|181.8|39|7.8|-80|-68|-38\nEsperia Prowler Utility|2|2.25|204.5|43|7.8|-82|-70|-39\nEsperia Prowler Utility Wikelo Work Special|2|2.25|204.5|43|7.8|-82|-70|-39\nEsperia Talon|1|1.1|78.6|8|1.6|-80|-68|-38\nEsperia Talon Shrike|1|1.1|78.6|8|1.6|-80|-68|-38\nGatac Railen|2|5.1|463.6|140|18.5|-87|-79|-37\nGatac Syulen|1|1.1|78.6|40|2|-95|-92|-37\nGatac Tyilui|2|5.3|481.8|125|21.3|-83|-73|-38\nGrey's Basher|1|1.3|92.9|4|1.4|-65|-65|-1\nGrey's Shiv|2|1.65|150|32|7.8|-76|-61|-38\nKruger L-21 Wolf|1|0.9|64.3|9|1.5|-83|-73|-37\nKruger L-21 Wolf Wikelo War Special|1|0.9|64.3|9|1.5|-83|-73|-37\nKruger L-21 Wolf Wikelo Sneak Special|1|0.9|64.3|9|1.5|-83|-73|-37\nKruger L-22 Alpha Wolf|1|0.9|64.3|9|1.5|-83|-73|-37\nKruger L-22 Alpha Wolf Wikelo War Special|1|0.9|64.3|9|1.5|-83|-73|-37\nMISC Fortune|1|1.8|128.6|21|2.3|-89|-82|-37\nMISC Fortune Wikelo Special|1|1.8|128.6|21|2.3|-89|-82|-37\nMISC Fortune Teach's Special|1|1.8|128.6|21|2.3|-89|-82|-37\nMISC Freelancer|2|1.8|163.6|108|8.8|-92|-87|-38\nMISC Freelancer DUR|2|2.4|218.2|140|8.8|-94|-87|-51\nMISC Freelancer MAX|2|1.8|163.6|58.5|8|-86|-85|-8\nMISC Freelancer MIS|2|1.8|163.6|58|8.6|-85|-87|14\nMISC Hull A|1|1.8|128.6|16.4|3.9|-76|-62|-38\nMISC Hull B|2|5.7|518.2|210|8|-96|-94|-37\nMISC Prospector|1|1.8|128.6|21|5.3|-75|-60|-38\nMISC Prospector Alliance|1|1.8|128.6|21|5.3|-75|-60|-38\nMISC Prospector Wikelo Work Special|1|1.8|128.6|21|5.3|-75|-60|-38\nMirai Razor|1|1|71.4|3|0.5|-83|-71|-43\nMirai Razor EX|1|1|71.4|3|0.5|-83|-71|-43\nMirai Razor LX|1|1|71.4|3|0.5|-83|-71|-43\nMISC Reliant Kore|1|1.3|92.9|10.5|1.6|-85|-76|-38\nMISC Reliant Mako|1|1.3|92.9|10.5|1.6|-85|-76|-38\nMISC Reliant Sen|1|1.8|128.6|10.5|1.6|-85|-76|-38\nMISC Reliant Tana|1|1.3|92.9|7.5|1.8|-76|-76|-2\nMISC Starfarer|3|8.6|477.8|652.2|32.1|-95|-92|-37\nMISC Starfarer Gemini|3|8.6|477.8|652.2|37.8|-94|-91|-38\nMISC Starfarer Teach's Special|3|8.6|477.8|652.2|32.1|-95|-92|-37\nMISC Starlancer MAX|2|3.6|327.3|50|32.1|-36|3|-38\nMISC Starlancer MAX Wikelo Work Special|2|3.6|327.3|50|32.1|-36|3|-38\nMISC Starlancer TAC|2|3.35|304.5|48|37.8|-21|6|-26\nMISC Starlancer TAC Wikelo War Special|2|3.35|304.5|48|37.8|-21|6|-26\nMISC Starlite|1|3.3|235.7|110|2.3|-98|-97|-38\nMirai Guardian|2|1.8|163.6|9|7.8|-13|18|-27\nMirai Guardian Wikelo War Special|1|1.8|128.6|9|7.8|-13|18|-27\nMirai Guardian MX|2|1.8|163.6|9|7.8|-13|36|-36\nMirai Guardian MX Wikelo War Special|2|1.8|163.6|9|7.8|-13|36|-36\nMirai Guardian QI|2|1.8|163.6|9|7.8|-13|18|-27\nMirai Guardian QI Wikelo Special|2|1.8|163.6|9|7.8|-13|18|-27\nOrigin 100i|1|1.3|92.9|6.5|1.6|-75|-61|-37\nOrigin 125a|1|1.3|92.9|6.5|1.6|-75|-61|-37\nOrigin 135c|1|1.3|92.9|6.5|1.6|-75|-61|-37\nOrigin 300i|1|1.3|92.9|10.5|1.6|-85|-76|-38\nOrigin 315p|1|1.8|128.6|18|1.8|-90|-76|-59\nOrigin 325a|1|1.3|92.9|18|1.6|-91|-76|-64\nOrigin 350r|1|1.3|92.9|27|1.5|-94|-89|-49\nOrigin 400i|2|3.6|327.3|60|19|-68|-49|-37\nOrigin 600i|2|5.1|463.6|180|41|-77|-64|-38\nOrigin 600i 2951 BIS|2|5.1|463.6|180|41|-77|-64|-38\nOrigin 600i Executive Edition|2|5.1|463.6|180|41|-77|-64|-38\nOrigin 600i Touring|2|5.1|463.6|180|41|-77|-64|-38\nOrigin 85X Limited|1|1|71.4|4.5|1.4|-69|-50|-37\nOrigin 890 Jump|4|14.6|47|1200|58.8|-95|-92|-38\nOrigin M50 Interceptor|1|1|71.4|3|1.6|-47|-7|-43\nOrigin M80|2|1.9|172.7|12.9|7.2|-44|-44|0\nRSI Apollo Medivac|2|4.5|409.1|63|18.9|-70|-52|-38\nRSI Apollo Triage|2|4.35|395.5|63|18.9|-70|-52|-38\nRSI Apollo Triage Wikelo Sneak Special|2|4.35|395.5|63|18.9|-70|-52|-38\nRSI Aurora Mk I CL|1|1.1|78.6|4.5|1.6|-64|-43|-37\nRSI Aurora Mk I ES|1|1.1|78.6|4.5|1.5|-67|-43|-41\nRSI Aurora Mk I LN|1|1.1|78.6|4.5|1.5|-67|-43|-41\nRSI Aurora Mk I LX|1|1.8|128.6|4.5|1.8|-60|-38|-36\nRSI Aurora Mk I MR|1|1.1|78.6|4.5|1.5|-67|-43|-41\nRSI Aurora Mk I SE|1|1.1|78.6|4.5|1.5|-67|-43|-41\nRSI Aurora Mk II|1|1.5|107.1|10|1.5|-85|-76|-38\nRSI Constellation Andromeda|2|4.1|372.7|66|19|-71|-54|-38\nRSI Constellation Aquila|2|5.6|509.1|104.5|22.6|-78|-65|-38\nRSI Constellation Phoenix|2|4.1|372.7|66|19|-71|-54|-38\nRSI Constellation Phoenix Emerald|2|4.1|372.7|66|19|-71|-54|-38\nRSI Constellation Taurus|2|4.1|372.7|66|19|-71|-54|-38\nRSI Constellation Taurus Wikelo War Special|2|4.1|372.7|66|19|-71|-54|-38\nRSI Hermes|2|4.65|422.7|70|18.9|-73|-57|-38\nRSI Mantis|1|1.3|92.9|31.6|4.2|-87|-79|-38\nRSI Meteor|1|1.15|82.1|28.95|4.2|-85|-77|-37\nRSI Meteor PYAM Exec|1|1.15|82.1|28.95|4.2|-85|-77|-37\nRSI Meteor Wikelo Sneak Special|1|1.15|82.1|28.95|4.2|-85|-77|-37\nRSI Perseus|3|7|388.9|400|54.6|-86|-78|-38\nRSI Polaris|3|12.6|700|1100|58.8|-95|-91|-38\nRSI Polaris Wikelo Special|3|12.6|700|1100|58.8|-95|-91|-38\nRSI Salvation|1|1|71.4|25|2.1|-92|-89|-27\nRSI Scorpius|1|1.8|128.6|13.5|8.6|-36|2|-37\nRSI Scorpius Antares|1|1.8|128.6|13.5|8.6|-36|2|-37\nRSI Scorpius Wikelo Sneak Special|1|1.8|128.6|13.5|8.6|-36|2|-37\nRSI Zeus Mk II CL|2|1.8|163.6|66.5|7.3|-89|-83|-34\nRSI Zeus Mk II ES|2|2.6|236.4|93.1|8.8|-91|-85|-37\nRSI Zeus Mk II ES Wikelo Work Special|2|2.6|236.4|93.1|8.8|-91|-85|-37\nEsperia Blade|1|1.1|78.6|8|1.6|-80|-68|-38\nVanduul Blade|1|1.1|78.6|8|1.6|-80|-68|-38\nEsperia Glaive|1|1.3|92.9|9|3.8|-58|-38|-31\nVanduul Glaive|1|1.3|92.9|9|3.8|-58|-38|-31";
+  /* name|size|max speed Mm/s|consumption SCU/Gm  (unchanged between the two builds, all 0%) */
+  var RAW_QD="FoxFire|1|168|12\nLightFire|1|140|10\nSparkFire|2|171|16\nSunFire|2|205|13\nBurst|1|198|12\nFlood|1|138|8\nRush|1|165|10\nCascade|2|168|19\nFlash|2|242|13\nTorrent|2|201|16\nEcho|3|205|31\nFissure|3|246|26\nImpulse|3|295|21\nColossus|1|257|12\nGoliath|1|215|10\nVulcan|1|179|8\nBolon|2|262|16\nHuracan|2|314|13\nYaluk|2|218|19\nAgni|3|383|21\nKama|3|319|26\nVesta|3|266|31\nAllegro|4|512|47\nDrift|1|140|10\nSpectre|1|196|14\nZephyr|1|168|12\nBolt|2|205|13\nNova|2|171|16\nSpicule|2|240|11\nAtlas|1|231|14\nEos|1|165|10\nHyperion|1|198|12\nAither|2|242|13\nHemera|2|282|11\nKhaos|2|201|16\nErebos|3|344|18\nMetis|3|246|26\nTyche|3|295|21\nExpedition|1|165|10\nVoyage|1|198|12\nWayfare|1|138|8\nOdyssey|2|201|16\nQuest|2|168|19\nSojourn|2|242|13\nDrifter|3|205|31\nRanger|3|295|21\nWanderer|3|246|26\nBeacon|1|190|10\nSiren|1|228|12\nVK-00|1|266|14\nCrossfield|2|231|16\nXL-1|2|324|11\nYeager|2|278|13\nBalandin|3|339|21\nPontes|3|282|26\nTS-2|3|395|18\nFrontline|4|718|75";
+  var SHIPS={}, QD={};
+  RAW_SHIPS.split('\n').forEach(function(r){ var p=r.split('|'); if(p.length<9) return;
+    SHIPS[p[0].toLowerCase()]={n:p[0],sz:+p[1],qt:+p[2],gm:+p[3],oh:+p[4],nh:+p[5],hd:+p[6],cd:+p[7],dd:+p[8]}; });
+  RAW_QD.split('\n').forEach(function(r){ var p=r.split('|'); if(p.length<4) return;
+    QD[p[0].toLowerCase()]={n:p[0],sz:+p[1],sp:+p[2],cons:+p[3]}; });
+  function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  /* the tablet writes hull names its own way ("Gladius"), the sheet writes them with the maker
+     ("Aegis Gladius"). Match exact first, then a whole-word contains, longest wins. Never fuzzy
+     enough to pair a Hornet with a Hornet Ghost by accident. */
+  function look(name){
+    if(!name) return null;
+    var k=String(name).toLowerCase().trim();
+    if(SHIPS[k]) return SHIPS[k];
+    var best=null;
+    Object.keys(SHIPS).forEach(function(kk){
+      if(kk===k) { best=SHIPS[kk]; return; }
+      if(kk.indexOf(' '+k)>=0 || kk.indexOf(k+' ')>=0 || kk.endsWith(' '+k)){
+        if(!best || kk.length<best.n.length) best=SHIPS[kk]; }
+    });
+    return best;
+  }
+  function pct(v){ return (v>0?'+':'')+v+'%'; }
+  function col(v){ return v<0?'#ff6b6b':(v>0?'#39d353':'var(--text-mid)'); }
+  window.cgFuelFor=function(ship){ return look(ship); };
+  window.cgQDrive=function(n){ return QD[String(n||'').toLowerCase()]||null; };
+  window.cgFuelMeta=function(){ return {src:SRC,title:SHEET_TITLE,read:READ_ON,edited:SHEET_EDITED,
+    oldBuild:OLD_BUILD,newBuild:NEW_BUILD,ships:Object.keys(SHIPS).length,drives:Object.keys(QD).length}; };
+  window.cgFuelHTML=function(ship){
+    var f=look(ship);
+    if(!f) return '<div class="ld-section" style="margin-top:10px"><div class="ld-section-title">FUEL &amp; ENDURANCE</div>'
+      +'<div style="font-size:10.5px;color:var(--text-dim);line-height:1.55">No row for <b>'+esc(ship)+'</b> in '+esc(SHEET_TITLE)
+      +'. Nothing shown rather than a guessed figure. The sheet is the authority: <a href="'+SRC+'" target="_blank" rel="noopener" style="color:var(--amber2)">open it</a>.</div></div>';
+    return '<div class="ld-section" style="margin-top:10px"><div class="ld-section-title">FUEL &amp; ENDURANCE &middot; '+esc(f.n)+'</div>'
+      +'<div style="border:1px solid rgba(255,176,0,.45);border-left:3px solid var(--amber);border-radius:9px;padding:7px 10px;margin:4px 0 9px;font-size:10.5px;line-height:1.55;color:#ffe9bd;background:rgba(255,176,0,.07)">'
+      +'<b>TEST DATA, NOT LIVE.</b> These are the numbers 4.10 is testing on EPTU, set against what you fly today. '
+      +'They can change before 4.10 ships and CIG has published nothing tying them to a final patch.</div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap">'
+      +cell('QUANTUM TANK',f.qt+' SCU','var(--amber2)')
+      +cell('QUANTUM RANGE',f.gm+' Gm','var(--amber2)')
+      +cell('QT DRIVE SIZE','S'+f.sz,'var(--text-mid)')
+      +cell('HYDROGEN NOW',f.oh+' SCU','#9fd8ff')
+      +cell('HYDROGEN IN 4.10',f.nh+' SCU',col(f.hd))
+      +'</div>'
+      +'<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11.5px;color:var(--text-mid)">'
+      +'<span>Fuel carried <b style="color:'+col(f.hd)+'">'+pct(f.hd)+'</b></span>'
+      +'<span>Burn rate <b style="color:'+col(-f.cd)+'">'+pct(f.cd)+'</b></span>'
+      +'<span>Distance on a tank <b style="color:'+col(f.dd)+'">'+pct(f.dd)+'</b></span></div>'
+      +'<div style="font-size:9.5px;color:var(--text-dim);margin-top:7px;line-height:1.55">'
+      +esc(OLD_BUILD)+' against '+esc(NEW_BUILD)+'. Source: '+esc(SHEET_TITLE)+', sheet last edited '
+      +esc(SHEET_EDITED)+', read '+esc(READ_ON)+'. <a href="'+SRC+'" target="_blank" rel="noopener" style="color:var(--amber2)">Open the sheet</a>. '
+      +'Quantum drive speeds and consumption are unchanged between these two builds.</div></div>';
+  };
+  function cell(l,v,c){ return '<div style="flex:1 1 120px;min-width:110px;border:1px solid var(--border2,#39414d);border-radius:9px;padding:6px 9px;background:var(--bg2,#0d141d)">'
+    +'<div style="font-size:8px;letter-spacing:1.5px;color:var(--text-dim,#8fa1b3);text-transform:uppercase">'+l+'</div>'
+    +'<div style="font-size:15px;font-weight:700;color:'+c+'">'+esc(v)+'</div></div>'; }
+  /* paint it under the ship totals whenever a hull is opened */
+  function paint(){
+    var d=document.getElementById('loadout-detail'); if(!d) return;
+    var nm=(d.querySelector('.ld-name')||{}).textContent; if(!nm) return;
+    var host=document.getElementById('cg-fuel-sec');
+    if(host && host.getAttribute('data-ship')===nm) return;   /* guarded repaint */
+    var tot=d.querySelector('[id^="lt_"]'); if(!tot) return;
+    if(!host){ host=document.createElement('div'); host.id='cg-fuel-sec';
+      tot.parentNode.insertBefore(host, tot.nextSibling); }
+    host.setAttribute('data-ship',nm);
+    host.innerHTML=window.cgFuelHTML(nm);
+  }
+  setInterval(paint,1200);
+  document.addEventListener('click',function(e){
+    if(e.target&&e.target.closest&&e.target.closest('.ship-item')) setTimeout(paint,300); },true);
+})();
+</script>
+<style id="sc-b554-manual-css">/* 2026-07-27 build 554 (T): the living user + setup guide, reachable from the COMMS pill.
+   "one more button below setup that says user manual. make sure it doesn't touch the line of the
+   comms pill" and "the user and setup guide ... in the comms pill along with open and undock".
+   Own row under [OPEN][SET UP][UNDOCK], 14px of clear air below it. Reversible: delete this block,
+   the sc-b554-manual-js twin, and the .cg-comms-btns2 markup in commsFillerEl(). */
+.cg-comms-btns2{display:flex;flex-direction:row;flex-wrap:nowrap;gap:7px;align-items:center;
+  justify-content:center;margin-top:8px;margin-bottom:16px}
+.cg-comms-btns2 button{font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;
+  text-transform:uppercase;cursor:pointer;border-radius:7px;padding:7px 16px;white-space:nowrap}
+.cg-comms-btns2 .cg-comms-man{color:#ffe1a8;background:rgba(200,150,40,.18);border:1px solid rgba(255,207,107,.5)}
+.cg-comms-btns2 .cg-comms-man:hover{color:#fff3d8;background:rgba(220,170,60,.3);border-color:#ffcf6b}
+.cg-comms-btns2{margin-bottom:8px}
+.cg-comms-btns3{display:flex;flex-direction:row;align-items:center;justify-content:center;margin-bottom:16px}
+.cg-comms-btns3 button{font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;
+  text-transform:uppercase;cursor:pointer;border-radius:7px;padding:7px 22px;white-space:nowrap}
+.cg-comms-btns3 .cg-comms-show{color:#d9ccff;background:rgba(120,90,220,.18);border:1px solid rgba(165,140,255,.5)}
+.cg-comms-btns3 .cg-comms-show:hover{color:#f0e9ff;background:rgba(140,110,240,.3);border-color:#a58cff}
+.cg-comms-btns2 .cg-comms-mandock{color:#cdeaff;background:rgba(90,180,220,.14);border:1px solid rgba(130,205,255,.4)}
+.cg-comms-btns2 .cg-comms-mandock:hover{color:#eafaff;background:rgba(90,205,255,.24);border-color:#7fc4de}
+</style>
+<script id="sc-b554-manual-js">
+/* USER MANUAL button + UNDOCK. OPEN puts the guide in its own browser tab. UNDOCK uses the
+   Document Picture-in-Picture API, which is the only web API that genuinely floats a window
+   above other applications - and it exists only in Chromium browsers. Where it is missing we
+   say so in plain words and fall back to a small always-visible popup rather than pretending. */
+(function(){
+  if(window.__cgManual554) return; window.__cgManual554=true;
+  var MAN='CmdGlas_User_Manual.html';
+  function note(msg){ try{ if(window.cgToast) return window.cgToast(msg); }catch(e){}
+    try{ console.log('[CmdGlas] '+msg); }catch(e){} }
+  window.cgOpenManual=function(){
+    var w=window.open(MAN,'cgmanual');
+    if(!w) note('Your browser blocked the manual window. Allow pop-ups for this page and press USER MANUAL again.');
+  };
+  window.cgOpenShowcase=function(){
+    var w=window.open('CmdGlas_Showcase.html','cgshowcase');
+    if(!w) note('Your browser blocked the showcase window. Allow pop-ups for this page and press SHOWCASE again.');
+  };
+  window.cgUndockManual=function(){
+    if(!(window.documentPictureInPicture&&window.documentPictureInPicture.requestWindow)){
+      var w=window.open(MAN,'cgmanualdock','width=560,height=820,menubar=no,toolbar=no');
+      if(!w) note('Your browser blocked the manual window. Allow pop-ups for this page and press UNDOCK again.');
+      else note('This browser has no always-on-top window API, so the guide opened as a normal window instead. Chrome and Edge can float it; Firefox and Safari cannot.');
+      return;
+    }
+    window.documentPictureInPicture.requestWindow({width:560,height:820}).then(function(pw){
+      var d=pw.document;
+      d.title='CmdGlas — User & Setup Guide';
+      var st=d.createElement('style');
+      st.textContent='html,body{margin:0;padding:0;height:100%;background:#070d16;overflow:hidden}'
+        +'iframe{border:0;width:100%;height:100%;display:block}';
+      d.head.appendChild(st);
+      var fr=d.createElement('iframe'); fr.src=MAN; d.body.appendChild(fr);
+    },function(){ note('The always-on-top window was refused. Press UNDOCK again from a direct click.'); });
+  };
+})();
+</script>
+<style id="sc-b554-threattab-css">/* 2026-07-27 build 554 (T): "threat check needs to be a button in the center pill as well to
+   give user quick access. don't destroy the symetry". So it rides the ops pill as its own tab,
+   built from the SAME parts as the Org/Party tab - same body-class ownership of the highlight
+   (never JS, or the core's 1.5 s tab repaint starts a flicker war again), same rounded 3D skin.
+   The two panels are mutually exclusive: opening one closes the other.
+   Reversible: delete this block and its script twin. */
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-th-on > .ops4-body{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-th-on #cg-twitch{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-th-on #cg-orgparty{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-th-on #cg-threat{display:flex}
+#cg-threat{display:none;flex-direction:column;gap:10px;flex:1 1 auto;min-height:0;overflow:auto;padding:2px 3px 4px}
+#cg-threat .th-wrap{border:1px solid rgba(255,207,107,.32);border-radius:13px;padding:4px 10px 10px;
+  background-image:linear-gradient(180deg,rgba(255,207,107,.07),rgba(255,255,255,0) 44%,rgba(0,0,0,.22)),linear-gradient(180deg,rgba(26,22,14,.85),rgba(10,12,18,.9));
+  box-shadow:inset 0 1px 0 rgba(255,225,170,.16),inset 0 -10px 20px rgba(0,0,0,.3),0 6px 14px rgba(0,0,0,.45)}
+#cg-threat .ld-section{border:0 !important;background:transparent !important;padding:0 !important;margin:0 !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-th-on .ops4-tab.on:not([data-v="threat"]){
+  color:#8fb3c8 !important;background:rgba(10,22,34,.6) !important;
+  border-color:rgba(108,180,214,.28) !important;box-shadow:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-th-on .ops4-tab[data-v="threat"]{
+  color:#1a1204 !important;background:linear-gradient(180deg,#ffe9bd,#e6a833) !important;
+  border-color:rgba(255,225,170,.9) !important;box-shadow:0 0 8px rgba(255,200,110,.35) !important}
+</style>
+<script id="sc-b554-threattab-js">
+(function(){
+  if(window.__cgThreatTab554) return; window.__cgThreatTab554=true;
+  var ONKEY='cg_th_glance_on';
+  function on(){ try{ return localStorage.getItem(ONKEY)==='1'; }catch(e){ return false; } }
+  function setOn(v){ try{ localStorage.setItem(ONKEY,v?'1':'0'); }catch(e){} }
+  /* the Org/Party panel owns its own key - closing it from here keeps them mutually exclusive */
+  function closeOrgParty(){ try{ localStorage.setItem('cg_op_glance_on','0'); }catch(e){} }
+  var painted=false;
+  function build(){
+    var pill=document.querySelector('#sc-home-widgets .ops-pill.b385'); if(!pill) return false;
+    var body=pill.querySelector('.pill-body'); if(!body) return false;
+    var tabs=body.querySelector('.ops4-tabs'); if(!tabs) return false;
+    if(!tabs.querySelector('.ops4-tab[data-v="threat"]')){
+      var bt=document.createElement('button'); bt.type='button'; bt.className='ops4-tab';
+      bt.setAttribute('data-v','threat'); bt.textContent='Threat';
+      /* sits immediately after Org/Party so the two command tabs stay together */
+      var op=tabs.querySelector('.ops4-tab[data-v="orgparty"]');
+      if(op&&op.nextSibling) tabs.insertBefore(bt,op.nextSibling); else tabs.appendChild(bt);
+      bt.addEventListener('click',function(e){ e.stopPropagation(); closeOrgParty(); setOn(true); sync(); paint();
+        /* the ops4 core may store 'threat' as ITS view - an invalid value its activeView() regex
+           rejects. Put a valid one back so the core's state never carries our tab name. */
+        setTimeout(function(){ try{ if(localStorage.getItem('sc_ops_pill_view')==='threat') localStorage.setItem('sc_ops_pill_view','status'); }catch(err){} },0); });
+      tabs.addEventListener('click',function(e){ var t=e.target.closest?e.target.closest('.ops4-tab'):null;
+        if(t&&t.getAttribute('data-v')!=='threat') setOn(false); sync(); },true);
+    }
+    if(!document.getElementById('cg-threat')){
+      var ob=body.querySelector('.ops4-body'); if(!ob) return false;
+      var wrap=document.createElement('div'); wrap.id='cg-threat';
+      wrap.innerHTML='<div class="th-wrap" id="cg-th-host"><div style="font:600 12px \'Rajdhani\',sans-serif;color:#8fa6ba;padding:10px 2px">Loading the ship list…</div></div>';
+      ob.parentNode.insertBefore(wrap, ob.nextSibling);
+      /* DEEP DIVE 28 JUL: this fired runThreat('pill') a SECOND time - the ship builder already
+         has a document-level capture listener for [id^="tcgo_"], which catches #tcgo_pill too.
+         Two runs meant two full weapon-catalog passes and a race on the output box. The
+         stopPropagation stays, because the ops4 core has its own body click handlers and this
+         panel must not trip them. */
+      wrap.addEventListener('click',function(e){ e.stopPropagation(); });
+    }
+    return true;
+  }
+  function paint(){
+    if(!on()||painted) return;
+    var host=document.getElementById('cg-th-host'); if(!host) return;
+    if(!window.cgThreatHTML) return;              /* ship builder module not up yet - try again next tick */
+    try{ host.innerHTML=window.cgThreatHTML('pill',''); painted=true; }catch(e){}
+  }
+  function sync(){
+    if(!build()) return;
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body'); if(!body) return;
+    var v=on();
+    if(body.classList.contains('cg-th-on')!==v) body.classList.toggle('cg-th-on',v);
+    if(v) paint();
+  }
+  var tries=0, bi=setInterval(function(){ if(build()||++tries>200) clearInterval(bi); sync(); },400);
+  setInterval(sync, 700);
 })();
 </script>
 </body>
