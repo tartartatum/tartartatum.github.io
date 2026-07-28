@@ -22849,7 +22849,10 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
        (CH-01 · GENERAL / awaiting signal / sign in) is now ONE window carrying the channel name
        alone, kept live from the channel selector - see sc-b553-chname-js. */
     f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Comms</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
-      +'<div class="cg-comms-btns"><button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN</button>'
+      +'<div class="cg-comms-btns">'
+      /* 2026-07-28 T: SCORG leftmost in row 1, directly above USER MANUAL. Gold #d0a838 off scorg.org. New tab - their site refuses embedding. */
+      +'<button type="button" class="cg-comms-scorg" onclick="event.stopPropagation();window.open(\'https://www.scorg.org/\',\'_blank\',\'noopener\')" title="SCORG Manager - org tools site">SCORG</button>'
+      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN</button>'
       +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
       /* T (27 JUL): "one more button below setup that says user manual. make sure it doesn't touch
          the line of the comms pill", and "the user and setup guide ... in the comms pill along with
@@ -26637,6 +26640,8 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
 .cg-comms-btns .cg-comms-open:hover{filter:brightness(1.08)}
 .cg-comms-btns .cg-comms-setup{color:#cdeaff;background:rgba(90,180,220,.18);border:1px solid rgba(130,205,255,.5)}
 .cg-comms-btns .cg-comms-setup:hover{color:#eafaff;background:rgba(90,205,255,.28);border-color:#7fc4de}
+.cg-comms-scorg{color:#ecd58a;background:rgba(208,168,56,.16);border:1px solid rgba(208,168,56,.55)}
+.cg-comms-scorg:hover{color:#ffedb0;background:rgba(208,168,56,.30);border-color:#d0a838}
 .cg-handle-link{cursor:pointer;text-decoration:underline dotted rgba(150,220,255,.5);text-underline-offset:3px}
 .cg-handle-link:hover{color:#eafaff;text-decoration-color:#8fe9ff}
 </style>
