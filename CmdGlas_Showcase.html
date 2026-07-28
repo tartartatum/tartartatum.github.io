@@ -37,7 +37,16 @@ main{padding:8px 26px 60px;max-width:1500px;margin:0 auto}
 .pl li::before{content:'';position:absolute;left:11px;top:16px;width:6px;height:6px;border-radius:50%;
   background:#8fdcff}
 footer{padding:26px;border-top:1px solid rgba(108,180,214,.2);color:#6f8ba0;font-size:13px}
-@media print{nav{position:static} .pan{break-inside:avoid} body{background:#fff;color:#111}}
+/* PRINT / PDF. The first pass flipped the body to white and left the heading in its light
+   blue, which came out nearly invisible on page one. Keep the dark theme for print instead:
+   the panels ARE dark, so a white page around them would look wrong either way. */
+@media print{
+  nav{position:static;background:#0b1420}
+  .pan{break-inside:avoid;page-break-inside:avoid;box-shadow:none}
+  header{background:#0b1420}
+  header h1{color:#eafaff}
+  body{background:#070d16;color:#cfe6f5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style></head><body>
 <header>
   <h1>CmdGlas Showcase</h1>

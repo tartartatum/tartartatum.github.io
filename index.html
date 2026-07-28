@@ -8053,9 +8053,9 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=553;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. */
+window.CMDGLAS_BUILD=555;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
-window.CMDGLAS_BUILD_DATE='2026-07-27';
+window.CMDGLAS_BUILD_DATE='2026-07-28';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
    on top should indicate that it's on that page") ============================================
    The topbar buttons were all identical at all times - ⌂ HOME looked the same whether you were on
@@ -22757,7 +22757,12 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
   function searchFillerEl(){ var f=document.createElement('div'); f.className='searchfill';
     f.innerHTML='<div class="logostage"><span class="oring2"><span class="dot"></span></span><span class="oring"><span class="dot"></span></span><span class="crest"></span></div><div class="cap">Search everything</div>'; return f; }
   function commsFillerEl(){ var f=document.createElement('div'); f.className='commsfill'; var bars=''; for(var i=0;i<11;i++) bars+='<i></i>';
-    f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Org Comms</div><div class="hlog">CH-01 · GENERAL\nawaiting signal...\nsign in to connect</div>'
+    /* T 28 JUL: "remove the word org from org comms on the face of the comms pill" and "just give
+       it one window that says the channel name without the CH-01 - the microphone image, the
+       channel selector and the rest stay as is". So: title COMMS, and the old three-line log
+       (CH-01 · GENERAL / awaiting signal / sign in) is now ONE window carrying the channel name
+       alone, kept live from the channel selector - see sc-b553-chname-js. */
+    f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Comms</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
       +'<div class="cg-comms-btns"><button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN</button>'
       +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
       /* T (27 JUL): "one more button below setup that says user manual. make sure it doesn't touch
@@ -23577,9 +23582,9 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-sec"><h2>Section 7 - Comms</h2><div class="um-purpose">Org chat and channel monitor.</div>',
 '<div class="um-proc">7-1. Read and transmit</div>',
 '<ol class="um-steps"><li>Locate the COMMS window, top-right of Home (below ACCOUNT).</li>',
-'<li>Read the current channel (for example, CH-01 &middot; GENERAL).</li>',
+'<li>Read the current channel name in the face window (for example, GENERAL), or pick one from the channel selector in the header bar.</li>',
 '<li>Tap "TX" (top-right of the window) to transmit.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> COMMS shows "awaiting signal / sign in to connect" until you sign in (Section 4).</div></div>',
+'<div class="um-note"><b>NOTE.</b> Sign in first (Section 4) - COMMS needs your account before it can transmit.</div></div>',
 '<div class="um-sec"><h2>Section 8 - Control Bar</h2><div class="um-purpose">Five grouped-shortcut buttons below the tools. Each expands a tray upward.</div>',
 '<div class="um-proc">8-1. Use a control group</div>',
 '<ol class="um-steps"><li>Locate the row of five buttons below the tools: NAV, MY RIG, LEARN, MISSION CONTROLS, TABLET CONTROLS.</li>',
@@ -27635,16 +27640,26 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
    HONESTY RULE: on any fetch failure it silently keeps the baked text. */
 (function(){
   if(window.__cgDevlog533) return; window.__cgDevlog533=true;
-  var BUILD_STAMP='TABLET UPDATED 27 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
+  var BUILD_STAMP='TABLET UPDATED 28 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
   /* T's order 27 JUL 2026: the two pin/price items below STAY in the ticker until at least
      30 JUL 2026, even as newer items are added above them. Add new NEW items BEFORE these two. */
   /* T 2026-07-27: "update new news banner on the tablet to read: Org Planner and Mission builder
      for Parties and Orgs ready for imminent release. make it shorter but leave the two gather and
      mining." So: the new headline, the two route-planner items kept, the two pin/price items
      retired to keep it short. Bump NOTES_VER whenever this text changes - see forceShow(). */
-  var NOTES_VER='2026-07-27c';
-  var NOTES='COMING: Org Builder and Mission Planner for parties and orgs - imminent release'
-    +' &middot; PLEASE TEST the new Org Builder, Mission Planner and chat features, then tell me what broke'
+  /* T 28 JUL (after the round-5 release went live): "let them know full org builder/planner and
+     party/org chat are now operational and ready for pilots to use. also include in banner the
+     request for pilots to spread the word get people to join so we can group up and play
+     together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
+     operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
+     line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
+  var NOTES_VER='2026-07-28b';
+  var NOTES='LIVE NOW: the full ORG BUILDER, MISSION PLANNER and PARTY &amp; ORG CHAT are operational - ready for pilots to use'
+    +' &middot; SPREAD THE WORD: tell your wingmates and get pilots signed up on cmdglas.com so we can group up and play together'
+    /* T 28 JUL: flag the next build so multicrew captains know it is coming */
+    +' &middot; WORKING ON: SHIP STATION SLOTTING for multicrew - a self-selected MULTICREW SHIP CAPTAIN mode picked'
+    +' during profile setup, giving the captain every ship with 4 or more stations and letting him slot his gunners'
+    +' and crew into named stations'
     +' &middot; NEW: GATHER route planner in the centre pill - one tap builds your mining run on verified yields'
     +' &middot; NEW: BUY route planner in the centre pill - one tap builds your shopping run on live aUEC prices';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
@@ -27683,22 +27698,35 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
     var w=tr.scrollWidth||1200; tr.style.animationDuration=Math.max(45, Math.round(w/32))+'s';
   }
   paint(NOTES);
-  fetch(SB_URL+'/rest/v1/site_news?select=body,created_at&order=created_at.desc&limit=1',
-    {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}})
-    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-    .then(function(d){ if(d&&d[0]&&d[0].body){
-        /* a message pushed from Supabase is new news too - version it by its timestamp so it
-           reopens a hidden strip exactly once, same rule as the baked text */
-        NOTES_VER='sb:'+String(d[0].created_at||'');
-        try{ var seen=localStorage.getItem('cg_devlog_seen')||'';
-          if(seen!==NOTES_VER && localStorage.getItem('cg_devlog_hidden')==='1'){
-            localStorage.setItem('cg_devlog_hidden','0');
-            var e2=document.getElementById('cg-devlog');
-            if(e2){ e2.classList.remove('dl-hidden');
-              var b2=e2.querySelector('.dl-btn'); if(b2) b2.textContent='HIDE NEWS'; } }
-        }catch(e){}
-        paint(esc(d[0].body)); } })
-    .catch(function(){});
+  /* T 28 JUL ("how do we notify the user to refresh"): the site_news read used to run ONCE at
+     boot, so a message pushed from Supabase reached only fresh page loads and every already-open
+     tablet stayed deaf. It is a 10-minute poll now: insert a site_news row and every LIVE tablet's
+     banner reopens once with it - patch notes, "refresh now", maintenance, no republish needed.
+     One tiny read per tablet per 10 min; the reopen-once rule is unchanged. */
+  var _lastNews='';
+  function fetchNews(){
+    fetch(SB_URL+'/rest/v1/site_news?select=body,created_at&order=created_at.desc&limit=1',
+      {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){ if(d&&d[0]&&d[0].body){
+          var key='sb:'+String(d[0].created_at||'');
+          if(key===_lastNews) return;            /* same message - do not repaint the ticker */
+          _lastNews=key;
+          /* a message pushed from Supabase is new news too - version it by its timestamp so it
+             reopens a hidden strip exactly once, same rule as the baked text */
+          NOTES_VER=key;
+          try{ var seen=localStorage.getItem('cg_devlog_seen')||'';
+            if(seen!==NOTES_VER && localStorage.getItem('cg_devlog_hidden')==='1'){
+              localStorage.setItem('cg_devlog_hidden','0');
+              var e2=document.getElementById('cg-devlog');
+              if(e2){ e2.classList.remove('dl-hidden');
+                var b2=e2.querySelector('.dl-btn'); if(b2) b2.textContent='HIDE NEWS'; } }
+          }catch(e){}
+          paint(esc(d[0].body)); } })
+      .catch(function(){});
+  }
+  fetchNews();
+  setInterval(fetchNews, 600000);
 })();
 </script>
 <style id="sc-b535-deck-drag-css">
@@ -28136,13 +28164,81 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       +(ORD_SHORT[sq.task]||String(sq.task).slice(0,4).toUpperCase())+(t?(' '+esc(t)):'')+'</span>'; }
 
   /* one crew member, as a raised tile: light = live, name, what they are, and last contact */
-  function crewTile(m){ var on=isLive(m);
+  /* T 28 JUL: "crew listed as their own callsign but they should be storm 1-1 storm 1-2 etc not
+     have their own callsign." Same NUMBERING GRAMMAR as the COMMS assignment sheet - whoever
+     flies a ship holds a whole number (STORM 1, STORM 2), whoever RIDES a ship carries that
+     ship's number plus a seat suffix (STORM 1-1, STORM 1-2) - but a DIFFERENT DEFAULT, on
+     purpose, and the difference is worth stating because it is easy to misread as a bug:
+       COMMS sheet (ownsShip): no seat set = flies their own ship. Right for a squadron, where
+         an unseated pilot is a pilot.
+       Party (partyOwns):      no seat set = rides the leader. Right for a party, which is
+         normally one ship with the lead flying it - which is exactly what T asked for.
+     So a leader who runs the CALLSIGN MENU on an unseated party STORES STORM 1/2/3 while this
+     panel DISPLAYS STORM 1, 1-1, 1-2. That is intended; the stored value shows on hover.
+     Seat a member as 'pilot' in the COMMS party console (op_role) and they take a whole number
+     here too. crew_of names the ship when set and resolvable; anything else rides the leader.
+     DISPLAY-ONLY - nothing is written. */
+  function partyOwns(m){ if(m.party_role==='leader') return true;
+    return String((m&&m.op_role)||'').trim().toLowerCase()==='pilot'; }
+  function partyManning(mem){
+    /* ROUND 5b: number off a DETERMINISTIC order - leader first, then callsign, then user_id as
+       the tiebreak (duplicate or empty callsigns must not fall back to server row order, which
+       shifts with every heartbeat and differs between two tablets). Plain < comparison, not
+       locale collation, for the same reason. Liveness is deliberately NOT in this sort: a pilot
+       dropping off net must not renumber the party. The base prefix scans this sorted list too,
+       so a mixed-base party (STORM 1 + RED 2) resolves the same base on every client. */
+    var srt=mem.slice().sort(function(a,b){
+      if((a.party_role==='leader')!==(b.party_role==='leader')) return a.party_role==='leader'?-1:1;
+      var ac=String(a.callsign||''), bc=String(b.callsign||'');
+      if(ac!==bc) return ac<bc?-1:1;
+      var au=String(a.user_id||''), bu=String(b.user_id||'');
+      return au<bu?-1:(au>bu?1:0); });
+    var base=''; srt.forEach(function(m){ if(!base&&m.tac_callsign){
+      var mm=/^(.*?)[\s-]*\d+/.exec(String(m.tac_callsign).trim());
+      if(mm&&mm[1].trim()) base=mm[1].trim().toUpperCase(); } });
+    if(!base) return null;               /* no callsigns assigned at all - nothing to number */
+    var ships=srt.filter(partyOwns), crew=srt.filter(function(m){return !partyOwns(m);});
+    var ordered=[], taken={};
+    ships.forEach(function(p){ ordered.push(p);
+      crew.forEach(function(c){ if(c.crew_of===p.user_id&&!taken[c.user_id]){ taken[c.user_id]=1; ordered.push(c); } }); });
+    crew.forEach(function(c){ if(!taken[c.user_id]) ordered.push(c); });
+    var num={}, suffix={}, next=1, out={};
+    ordered.forEach(function(m){ if(partyOwns(m)) num[m.user_id]=next++; });
+    ordered.forEach(function(m){
+      if(partyOwns(m)){ out[m.user_id]=base+' '+num[m.user_id]; return; }
+      var ship=null;
+      if(m.crew_of){ ship=ships.filter(function(p){return p.user_id===m.crew_of&&p.user_id!==m.user_id;})[0]||null;
+        /* ROUND 5c: crew_of SET but pointing at somebody who is not a ship here (another rider,
+           a pilot in a different party, themselves). The COMMS sheet refuses to guess in this
+           case and says so on the row; this panel has no room for a row note, so it keeps the
+           leader fallback - a crewman with a usable callsign beats a blank - and flags it on
+           the tile's hover text instead. Keys cannot collide: user_ids are UUIDs. */
+        if(!ship) out['!bad:'+m.user_id]=1; }
+      /* ROUND 5c: srt, not mem. This one fallback still scanned the RAW list, so a party with
+         TWO leader rows - reachable when a hand-off promotes before the demote lands, or when
+         two pilots both CLAIM PARTY LEAD - picked whichever leader the server happened to
+         return first, and two tablets showed different callsigns for the same crew. */
+      if(!ship){ var ld=srt.filter(function(p){return p.party_role==='leader';})[0];
+        if(ld&&partyOwns(ld)&&ld.user_id!==m.user_id) ship=ld; }
+      if(!ship) ship=ships.filter(function(p){return p.user_id!==m.user_id;})[0]||null;
+      if(!ship||!num[ship.user_id]){ num[m.user_id]=next++; out[m.user_id]=base+' '+num[m.user_id]; return; }
+      suffix[ship.user_id]=(suffix[ship.user_id]||0)+1;
+      out[m.user_id]=base+' '+num[ship.user_id]+'-'+suffix[ship.user_id]; });
+    return out; }
+  function crewTile(m,mp){ var on=isLive(m);
     var role=(m.party_role==='leader')?'party lead':'crew';
-    return '<div class="op-cm'+(on?' on':'')+'" title="'+esc((m.callsign||'CMDR')+' — '+role+' — '+agoTxt(m))+'">'
+    var cs=(mp&&mp[m.user_id])||m.tac_callsign||'';
+    var stored=(m.tac_callsign&&cs!==m.tac_callsign)?(' — assigned '+m.tac_callsign):'';
+    /* ROUND 5c: say so when RIDES WITH points at somebody who is not a ship in this party. The
+       display still rides the leader so the crewman has a usable callsign, but a leader reading
+       the tile should know the stored pointer is wrong rather than wonder at the number. The
+       flag is set by partyManning, which is the only place that knows what resolved. */
+    if(mp&&mp['!bad:'+m.user_id]) stored+=' — RIDES WITH points at somebody who is not flying a ship in this party';
+    return '<div class="op-cm'+(on?' on':'')+'" title="'+esc((m.callsign||'CMDR')+' — '+role+' — '+agoTxt(m)+stored)+'">'
       +'<span class="c-i"></span><span class="c-b">'
       +'<span class="c-nm">'+esc(m.callsign||'CMDR')+(uid&&m.user_id===uid?' (you)':'')+'</span>'
       +'<span class="c-sub">'
-      +(m.tac_callsign?'<span class="cg-op-tac">'+esc(m.tac_callsign)+'</span>':'')
+      +(cs?'<span class="cg-op-tac">'+esc(cs)+'</span>':'')
       +'<span>'+role+'</span>'
       +(m.kia?'<span class="cg-op-kia">KIA</span>':'')
       +(m.rescue?'<span class="cg-op-res">MEDIVAC</span>':'')
@@ -28159,9 +28255,11 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="party">OPEN #PARTY</button></div>';
     var ld=mem.filter(function(m){return m.party_role==='leader';})[0];
     var iLead=!!(mine&&mine.party_role==='leader');
+    /* T 28 JUL: the YOU line reads the same manning-table callsign the tiles show */
+    var _mpHead=partyManning(mem), _myCs=(_mpHead&&_mpHead[mine.user_id])||mine.tac_callsign;
     var h='<div class="op-id"><div class="nm">PARTY '+esc(mine.party_id)+'</div>'
       +'<div class="me">YOU: <b>'+esc((mine.callsign||'CMDR'))+'</b> · '+(iLead?'PARTY LEAD':'party member')
-      +(mine.tac_callsign?(' · callsign '+esc(mine.tac_callsign)):'')+'</div></div>'
+      +(_myCs?(' · callsign '+esc(_myCs)):'')+'</div></div>'
       +tiles(mem,'IN PARTY');
     if(mine.kia||mine.rescue) h+='<div class="op-task"><div class="hd">YOUR STATUS</div><div class="ln">'
       +(mine.kia?'<span class="cg-op-kia">KIA — clear it in COMMS when you are back</span>':'')
@@ -28176,8 +28274,10 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       var ar=(a.party_role==='leader'?0:isLive(a)?1:2), br=(b.party_role==='leader'?0:isLive(b)?1:2);
       if(ar!==br) return ar-br;
       return String(a.callsign||'').localeCompare(String(b.callsign||'')); });
+    /* T 28 JUL: manning-table display callsigns - crew read STORM 1-1, STORM 1-2, never a whole
+       number of their own (see partyManning above; _mpHead computed with the YOU line) */
     h+='<div class="op-h">CREW</div><div class="op-crew">'
-      +crew.map(crewTile).join('')+'</div>';
+      +crew.map(function(m){ return crewTile(m,_mpHead); }).join('')+'</div>';
     var _mc=myConsole();
     h+='<div class="op-actions"><button type="button" class="cg-op-btn" data-oproster="party">FULL ROSTER</button>'
       +(_mc?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the COMMS console that belongs to your rank">'+esc(_mc.lab)+'</button>':'')
@@ -28511,6 +28611,17 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
       +'<div style="font-size:10.5px;color:var(--text-dim);line-height:1.55;margin-bottom:7px">'
       +'Both ships are given the <b style="color:var(--amber2)">best gun in the game</b> for every pilot hardpoint they have. '
       +'Then it is just: who runs out of ship first.</div>'
+      /* T, 28 JUL: say out loud what this number is NOT, so nobody flies into something on the
+         strength of it. */
+      +'<div style="font-size:10px;color:var(--text-dim);line-height:1.6;margin-bottom:8px;'
+      +'border:1px solid rgba(255,176,0,.3);background:rgba(255,176,0,.06);border-radius:9px;padding:8px 10px">'
+      +'<b style="color:var(--amber2);letter-spacing:1px">WHAT THIS DOES NOT KNOW</b><br>'
+      +'This is damage output against shields and hull. Nothing else. It does not know how well '
+      +'either pilot flies, what the loadouts actually are, who saw who first, missiles, range, '
+      +'terrain, or whether anyone brought friends.<br>'
+      +'Flying well closes a small gap. It does not close a large one. If this says RUN AWAY, no '
+      +'amount of stick work in an Aurora is going to save you from something with ten times your '
+      +'guns and shields.</div>'
       +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0">'
       +'<span style="font-size:9px;letter-spacing:1.5px;color:var(--text-dim)">MY SHIP</span>'
       +'<select class="wep-select" id="tcme_'+key+'" style="min-width:200px;border-radius:9px">'
@@ -28710,17 +28821,35 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
 (function(){
   if(window.__cgBuyRoute539) return; window.__cgBuyRoute539=true;
   var BK='sc_ops_buy';
+  /* build 553 (T, 28 JUL): "you must give them the choice of all planetside major home locations,
+     major home location direct station above it ... also need all the major outlaw stations
+     checkmate etc". Each Stanton city is listed with ITS orbital station right under it, then
+     the outlaw/frontier set: GrimHEX for Stanton and the Pyro majors - Ruin plus the seven
+     Rough & Ready posts and the three Citizens for Prosperity posts (roster per
+     starcitizen.tools' Pyro system page; station names unchanged through the 4.x patches so
+     far - if a patch renames or adds one, this list is the only place to touch). The middle
+     token only has to be a substring of the location string in the shop data. */
   var MAJORS=[
     ['Area18 (ArcCorp)','Area18','Stanton'],
+    ['Baijini Point (above Area18)','Baijini Point','Stanton'],
     ['Lorville (Hurston)','Lorville','Stanton'],
+    ['Everus Harbor (above Lorville)','Everus Harbor','Stanton'],
     ['New Babbage (microTech)','New Babbage','Stanton'],
+    ['Port Tressler (above New Babbage)','Tressler','Stanton'],
     ['Orison (Crusader)','Orison','Stanton'],
-    ['GrimHEX','GrimHEX','Stanton'],
-    ['Everus Harbor','Everus Harbor','Stanton'],
-    ['Baijini Point','Baijini Point','Stanton'],
-    ['Seraphim Station','Seraphim','Stanton'],
-    ['Port Tressler','Tressler','Stanton'],
-    ['Ruin Station (Pyro)','Ruin Station','Pyro'],
+    ['Seraphim Station (above Orison)','Seraphim','Stanton'],
+    ['GrimHEX (Stanton outlaw)','GrimHEX','Stanton'],
+    ['Ruin Station (Pyro outlaw)','Ruin Station','Pyro'],
+    ['Checkmate Station (Pyro outlaw)','Checkmate','Pyro'],
+    ['Orbituary (Pyro outlaw)','Orbituary','Pyro'],
+    ['Patch City (Pyro outlaw)','Patch City','Pyro'],
+    ['Gaslight (Pyro outlaw)','Gaslight','Pyro'],
+    ["Rat's Nest (Pyro outlaw)",'Nest','Pyro'],
+    ['Endgame (Pyro outlaw)','Endgame','Pyro'],
+    ['Megumi Refueling (Pyro outlaw)','Megumi','Pyro'],
+    ['Starlight Service Station (Pyro)','Starlight','Pyro'],
+    ["Rod's Fuel 'N Supplies (Pyro)",'Rod','Pyro'],
+    ['Dudley & Daughters (Pyro)','Dudley','Pyro'],
     ['Levski (Nyx)','Levski','Nyx']
   ];
   var IDX=null, IDX_T=0, LOCS={};
@@ -29636,5 +29765,126 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
   setInterval(sync, 700);
 })();
 </script>
+
+<style id="sc-b553-chname-css">/* 2026-07-28 build 553 (T: comms pill face = one window with the
+   channel name, no CH-01 prefix). The old .hlog kept its frame; the single line reads a touch
+   larger so it works as the pill's one status window. Reversible: delete this block + its JS. */
+#cg-comms-chname{font-size:14px;letter-spacing:2.5px;color:#8fd0ea;text-transform:uppercase}
+</style>
+<script id="sc-b553-chname-js">/* build 553: keep the face's channel window in step with the
+   channel selector (#cd-chsel) and with whatever was chosen last session (localStorage). */
+(function(){ if(window.__cgChName553) return; window.__cgChName553=true;
+  var MAP={general:'GENERAL',party:'PARTY',org:'ORG',chan1:'ORGCHAN 1',chan2:'ORGCHAN 2',
+           chan3:'ORGCHAN 3',chan4:'ORGCHAN 4',chan5:'ORGCHAN 5',chan6:'ORGCHAN 6'};
+  function nm(){ var v='general'; try{ v=localStorage.getItem('cg_comms_channel')||'general'; }catch(e){}
+    return MAP[v]||String(v).toUpperCase(); }
+  function apply(){ var el=document.getElementById('cg-comms-chname'); if(el&&el.textContent!==nm()) el.textContent=nm(); }
+  document.addEventListener('change',function(e){ if(e.target&&e.target.id==='cd-chsel') setTimeout(apply,0); },true);
+  var n=0, iv=setInterval(function(){ apply(); if(++n>40) clearInterval(iv); },500); apply();
+})();
+</script>
+
+<style id="sc-b555-chselwide-css">/* 2026-07-28 (T): "The channel selector dropdown must show the
+   entire channel name." Three earlier squeeze patches capped the select at 118/110px with
+   ellipsis; the cap loosens to fit the longest label (ORGCHAN 1..6) whole. Placed after those
+   patches in source order and !important like them, so this wins. Reversible: delete block. */
+#sc-chatdock .cd-head .cd-ch.cd-chsel{max-width:170px !important;width:auto;text-overflow:clip}
+</style>
+<style id="sc-b555-wavesqueeze-css">/* 2026-07-28 (T: "IT'S STILL HIDDEN"): belt and braces for
+   the SHOWCASE row. Build 554 shortened the column for the tested window sizes; this makes it
+   robust at ANY size - in home mode the wave may now SHRINK (flex 0 1 auto, floor 30px) when
+   the pill is short, so squeeze eats decoration first and the button rows always stay inside
+   the frame. Build 522's real concern was per-frame height ANIMATION thrashing layout; the
+   bars animate scaleY (transform) and this is a static flex rule, so that stays honoured.
+   Reversible: delete block. */
+body.sc-home-mode #sc-chatdock .cd-frame .commsfill .wave{flex:0 1 auto;min-height:30px;overflow:hidden}
+/* T 28 JUL, second report ("still outside the pill's bounds"): the real culprit is browser
+   ZOOM. At 125-150% zoom the home page's CSS viewport drops under ~840px and the whole comms
+   pill runs past the bottom of the screen, so its last row draws at the screen edge under the
+   DEV LOG strip - which reads exactly as "outside the pill". Media queries see the ZOOMED
+   viewport, so this rule keys on that: when the usable height is short, the wave graphic goes
+   entirely (it is decoration) and the spacing tightens, pulling the whole pill back inside the
+   screen with the SHOWCASE row comfortably inside the frame. */
+@media (max-height:840px){
+  body.sc-home-mode #sc-chatdock .cd-frame .commsfill .wave{display:none}
+  body.sc-home-mode #sc-chatdock .cd-frame .commsfill{gap:9px;margin-top:6px}
+}
+</style>
+<style id="sc-b555-updnag-css">/* 2026-07-28 (T: "how do we notify the user to refresh his
+   session"): the update strip. Appears top-centre when the published version.json carries a
+   HIGHER build number than the running page - tap reloads with a cache-buster (GitHub Pages
+   caches index.html up to 10 min, a plain reload can re-fetch the stale build), ✕ silences
+   that one build. Never fires when the local copy is NEWER than the site (pre-publish dev).
+   Reversible: delete this block + its JS. */
+#cg-updnag{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:2147483646;display:none;align-items:center;gap:10px;font:800 11px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.6px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:1px solid rgba(170,242,255,.95);border-radius:9px;padding:8px 13px;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.55),0 0 14px rgba(90,190,255,.5)}
+#cg-updnag.show{display:inline-flex}
+#cg-updnag .x{flex:none;font-weight:800;padding:1px 5px;border:1px solid rgba(4,20,29,.35);border-radius:5px}
+#cg-updnag .x:hover{background:rgba(4,20,29,.15)}
+@media(prefers-reduced-motion:no-preference){#cg-updnag.show{animation:cgUpdPulse 2.6s ease-in-out infinite}}
+@keyframes cgUpdPulse{0%,100%{box-shadow:0 6px 24px rgba(0,0,0,.55),0 0 10px rgba(90,190,255,.35)}50%{box-shadow:0 6px 24px rgba(0,0,0,.55),0 0 22px rgba(120,220,255,.8)}}
+</style>
+<script id="sc-b555-updnag-js">
+(function(){ if(window.__cgUpdNag555) return; window.__cgUpdNag555=true;
+  var CUR=parseInt(window.CMDGLAS_BUILD,10);
+  if(!isFinite(CUR)) return;                     /* no build stamp - nothing to compare against */
+  var DK='cg_upd_dismissed';
+  function dismissed(){ try{ return localStorage.getItem(DK)||''; }catch(e){ return ''; } }
+  function el(){ var n=document.getElementById('cg-updnag'); if(n) return n;
+    n=document.createElement('div'); n.id='cg-updnag';
+    n.innerHTML='<span class="t"></span><span class="x" title="Not now (this build only)">&#10005;</span>';
+    document.body.appendChild(n);
+    n.addEventListener('click',function(e){
+      if(e.target&&e.target.classList&&e.target.classList.contains('x')){
+        try{ localStorage.setItem(DK,String(n.getAttribute('data-live')||'')); }catch(err){}
+        n.classList.remove('show'); return; }
+      /* reload with a cache-buster so a CDN- or browser-cached index.html cannot serve the
+         stale build straight back - the exact failure T hit on 28 JUL */
+      try{ var u=new URL(location.href); u.searchParams.set('cb',String(new Date().getTime())); location.href=u.toString(); }
+      catch(err){ location.reload(); }
+    });
+    return n; }
+  function check(){
+    fetch('https://cmdglas.com/version.json',{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        var live=parseInt(d&&d.build,10);
+        if(!isFinite(live)||live<=CUR) return;   /* only nag FORWARD - a dev copy newer than the site stays quiet */
+        if(String(live)===dismissed()) return;
+        var n=el(); n.setAttribute('data-live',String(live));
+        n.querySelector('.t').textContent='UPDATE LIVE — BUILD '+live+' IS ON CMDGLAS.COM · TAP TO RELOAD';
+        n.classList.add('show');
+      },function(){});                            /* offline or file not there yet - silent */
+  }
+  setTimeout(check, 20000);
+  setInterval(check, 300000);                     /* every 5 minutes */
+})();
+</script>
+<style id="sc-b554-commsfit-css">/* 2026-07-28 build 554 (T: "there is a purple button in the comms
+   page that is outside of the pill fix asap"). The purple SHOWCASE row sat flush on the pill's
+   bottom frame line at 100% zoom and crossed it at T's ~1.35 browser zoom - the commsfill column
+   (wave 132px + title + channel window + three button rows) had grown to exactly the pill's
+   height, so the last row had zero real clearance and zoom rounding pushed it over the frame.
+   Home-mode only: the wave gives back 24px of pure decoration and the column gap tightens
+   16->12, buying the SHOWCASE row ~40px of guaranteed clearance inside the frame. The wave
+   keeps flex:0 0 auto (build 522) - still a fixed, non-negotiable box, just a shorter one.
+   Reversible: delete this block. */
+body.sc-home-mode #sc-chatdock .cd-frame .commsfill{gap:12px;margin-top:9px}
+body.sc-home-mode #sc-chatdock .cd-frame .commsfill .wave{height:108px}
+</style>
+<style id="sc-b553-wingcloud-css">/* 2026-07-28 build 553 (T: "make the wing panel opening button
+   cloud from white to dark blue slowly"). The .cd-expand button in the COMMS pill head opens the
+   WING console overlay; its icon and border now breathe from white to dark blue over ~5.5 s and
+   back. Honors prefers-reduced-motion (settles on a steady mid-blue). Reversible: delete this
+   block. */
+@keyframes cgWingCloud{
+  0%   { color:#f4fcff; border-color:rgba(244,252,255,.85); }
+  100% { color:#1c4e82; border-color:rgba(28,78,130,.95); }
+}
+#sc-chatdock .cd-expand{ animation:cgWingCloud 5.5s ease-in-out infinite alternate; }
+#sc-chatdock .cd-expand:hover{ animation-play-state:paused; }
+@media(prefers-reduced-motion:reduce){
+  #sc-chatdock .cd-expand{ animation:none; color:#5f8fc0; border-color:rgba(95,143,192,.6); }
+}
+</style>
 </body>
 </html>
