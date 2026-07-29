@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=560;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=561;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-28';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18421,7 +18421,11 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
             sessionStorage.setItem('cg_forced',String(Date.now())); }catch(e){}
           try{ var u=new URL(location.href); u.searchParams.set('cb',String(new Date().getTime())); location.href=u.toString(); }
           catch(e){ location.reload(); }
-        }).subscribe();
+        });
+        /* 2026-07-29 (T) ASK ALL: opt-in cousin of force_reload. Instead of reloading, pop the
+           existing TAP-TO-RELOAD strip on every open tablet now; each pilot taps OK. */
+        ch.on('broadcast',{event:'ask_update'},function(){ try{ if(window.cgUpdCheck) window.cgUpdCheck(); }catch(e){} });
+        ch.subscribe();
       }catch(e){}
     }
     if(window.supabase&&window.supabase.createClient){ init(); return; }
@@ -29979,6 +29983,7 @@ body.sc-home-mode #sc-chatdock .cd-frame .commsfill .wave{flex:0 1 auto;min-heig
         n.classList.add('show');
       },function(){});                            /* offline or file not there yet - silent */
   }
+  try{ window.cgUpdCheck=check; }catch(e){}
   setTimeout(check, 20000);
   setInterval(check, 300000);                     /* every 5 minutes */
 })();
