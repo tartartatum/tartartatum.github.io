@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=561;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=564;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-28';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -26279,6 +26279,9 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     comms:{sel:'#sc-chatdock', label:'COMMS'}
   };
   var state={};
+  /* 2026-07-29 T: Stream Deck keybinds need a way in - expose the toggle (undock() already
+     restores when floating, so one call = toggle). Keydown wiring lives in sc-b564-pillkeys-js. */
+  window.cgPillToggle=function(k){ try{ undock(k); }catch(e){} };
   var WRAP={leftpill:'sc-home-widgets',ops:'sc-home-widgets',account:'sc-home-widgets',search:'sc-tools-row',comms:'sc-tools-row'};
   function makeHost(key, doc){
     var id=WRAP[key]||'sc-home-widgets';
@@ -26389,7 +26392,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
       if(state[key]) return;
       var node=q(key); if(!node) return;
       if(node.querySelector('.cg-undock-btn[data-pop="'+key+'"]')) return; /* build 525: comms hosts its button INSIDE .cg-comms-btns - a :scope> check would re-add it every 900ms tick */
-      var b=document.createElement('button'); b.type='button'; b.className='cg-undock-btn'; b.setAttribute('data-pop',key); b.textContent='UNDOCK';
+      var b=document.createElement('button'); b.type='button'; b.className='cg-undock-btn'; b.setAttribute('data-pop',key); b.textContent='UNDOCK'; b.title='Ctrl+Alt+'+({ops:1,account:2,leftpill:3,search:4,comms:5}[key]||'');
       b.addEventListener('click',function(e){ e.stopPropagation(); undock(key); });
       /* build 525: the COMMS pill shows one row - [ OPEN ] [ SET UP ] [ UNDOCK ] - so its
          undock goes into that row when it exists. Every other pill is unchanged. */
@@ -30015,5 +30018,85 @@ body.sc-home-mode #sc-chatdock .cd-frame .commsfill .wave{height:108px}
   #sc-chatdock .cd-expand{ animation:none; color:#5f8fc0; border-color:rgba(95,143,192,.6); }
 }
 </style>
+<style id="sc-b562-labfit-css">
+/* 2026-07-29 T: INGAME TOOLS labels collided (BLUEPRINTS ran into CONTRACTS) and CRAFT
+   CALCULATOR's two-line wrap staggered the rows. Root cause: label ink width depends on the
+   loaded font (Bruno Ace is ~70% wider than Rajdhani), the browser's minimum-font-size, and
+   which home layout is active - so no single px value fits all views. This block reserves a
+   consistent two-line label height (kills the stagger); the JS below MEASURES each label's
+   real ink after fonts load and zooms down only labels that overflow their own cell pitch.
+   Views that already fit are untouched. Reversible: delete this style + script. */
+#tab-home .hm-cell .hm-lab-out{display:block !important;white-space:normal !important;max-width:100% !important;width:100% !important;line-height:1.2 !important;text-align:center !important;overflow-wrap:normal !important;word-break:keep-all !important;min-height:2.4em}
+</style>
+<script id="sc-b562-labfit-js">
+(function(){ if(window.__cgLabFit562) return; window.__cgLabFit562=true;
+  function fit(){ try{
+    var rows=[];
+    document.querySelectorAll('#tab-home .hm-cell .hm-lab-out').forEach(function(l){
+      l.style.zoom=''; l.style.transform='';
+      /* 2026-07-29 T (measured from his crop: CRAFT line sat 20px left of CALCULATOR line - his
+         mode defeats stylesheet text-align). Inline !important cannot be overridden. */
+      l.style.setProperty('display','block','important'); /* span stays inline in his mode - inline ignores text-align/width/transform */
+      l.style.setProperty('text-align','center','important');
+      l.style.setProperty('text-indent','0','important');
+      var cell=l.closest('.hm-cell'); if(!cell) return;
+      var cr=cell.getBoundingClientRect(); if(cr.width<=0) return;
+      var rg=document.createRange(); rg.selectNodeContents(l);
+      var ink=rg.getBoundingClientRect(); if(ink.width<=0) return;
+      var pitch=0, sib=cell.nextElementSibling;
+      if(sib && sib.classList && sib.classList.contains('hm-cell')){
+        var sr=sib.getBoundingClientRect(); if(Math.abs(sr.y-cr.y)<8) pitch=sr.x-cr.x;
+      }
+      var allowed=(pitch>10? pitch-12 : cr.width*1.3);
+      var z=(ink.width>allowed)? Math.max(.5, allowed/ink.width) : 1;
+      /* 2026-07-29 T: "make both rows the same size - the smaller". Group by TRAY, not row:
+         every label in the tray shares the single smallest zoom, so both INGAME TOOLS rows
+         always match. */
+      var tray=cell.closest('.hm-tray')||cell.parentElement||document.body;
+      var g=null; for(var i=0;i<rows.length;i++) if(rows[i].t===tray){ g=rows[i]; break; }
+      if(!g){ g={t:tray,z:1,els:[]}; rows.push(g); }
+      g.els.push(l); if(z<g.z) g.z=z;
+    });
+    rows.forEach(function(g){ if(g.z<1) g.els.forEach(function(l){ l.style.zoom=g.z; }); });
+    /* 2026-07-29 T (measured from his screenshot: label ink sat +15..18px right of tile centre
+       in his home mode while emulation measured 0): second pass CENTRES each label under its
+       own tile by measurement - translate by the ink-vs-tile delta. Self-correcting in any
+       layout mode; a no-op (sub-pixel) where the label is already centred. */
+    document.querySelectorAll('#tab-home .hm-cell .hm-lab-out').forEach(function(l){
+      var cell=l.closest('.hm-cell'); if(!cell) return;
+      var tile=cell.querySelector('.hm-tile'); if(!tile) return;
+      l.style.transform='';
+      var tb=tile.getBoundingClientRect(); if(tb.width<=0) return;
+      var rg=document.createRange(); rg.selectNodeContents(l);
+      var ik=rg.getBoundingClientRect(); if(ik.width<=0) return;
+      var d=(tb.left+tb.width/2)-(ik.left+ik.width/2);
+      if(Math.abs(d)>1.5){ var z=parseFloat(l.style.zoom||'1')||1; l.style.transform='translateX('+(d/z).toFixed(2)+'px)'; }
+    });
+  }catch(e){} }
+  try{ if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(fit,80); }); }catch(e){}
+  var n=0, iv=setInterval(function(){ fit(); if(++n>20) clearInterval(iv); },500);
+  window.addEventListener('resize',function(){ clearTimeout(window.__cgLF562t); window.__cgLF562t=setTimeout(fit,250); });
+})();
+</script>
+<script id="sc-b564-pillkeys-js">
+/* 2026-07-29 T: "add keybinds to the undock of each pill so i can set up keybinds for my
+   streamdeck". Ctrl+Alt+digit toggles each pill's float (undock <-> RTB):
+     Ctrl+Alt+1 HUD | Ctrl+Alt+2 ACCOUNT | Ctrl+Alt+3 STATUS | Ctrl+Alt+4 SEARCH | Ctrl+Alt+5 COMMS
+   e.code (Digit1..5) so keyboard layout can't remap it; skipped while typing in an input so an
+   AltGr layout can't trip it mid-sentence. Stream Deck: System > Hotkey with the same combo -
+   the keystroke lands on whichever window has FOCUS, so the tablet must be the focused window.
+   Reversible: delete this block + the cgPillToggle line in sc-b430-popout-js. */
+(function(){ if(window.__cgPillKeys564) return; window.__cgPillKeys564=true;
+  var MAP={Digit1:'ops',Digit2:'account',Digit3:'leftpill',Digit4:'search',Digit5:'comms'};
+  window.addEventListener('keydown',function(e){
+    if(!e.ctrlKey||!e.altKey||e.shiftKey||e.metaKey||e.repeat) return;
+    var k=MAP[e.code]; if(!k) return;
+    var t=e.target;
+    if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable)) return;
+    e.preventDefault(); e.stopPropagation();
+    if(window.cgPillToggle) cgPillToggle(k);
+  },true);
+})();
+</script>
 </body>
 </html>

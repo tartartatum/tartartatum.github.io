@@ -1549,6 +1549,45 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
       +'<div class="oc-cs-bar"><input class="oc-cs-in" data-csbase="'+esc(scope)+'" maxlength="18" placeholder=\'base - e.g. STORM\'>'
       +'<button class="oc-ap" data-tacbase="'+esc(scope)+'">ASSIGN 1-'+members.length+'</button></div>'+rows+'</div>';
   }
+  /* ---- sc-b8-partyvoice: Discord party voice -----------------------------
+     One Discord voice channel per pool party, created on demand by the
+     discord-party Edge Function. VERIFIED DISCORD LIMIT: a bot can only MOVE
+     a member who is ALREADY connected to voice, it can never connect him. So
+     every outcome below states which of the two actually happened instead of
+     claiming success. Nothing here touches the org side. */
+  var dv={loaded:false,busy:false,party:null,configured:false,linked:false,url:null,channel:null,note:''};
+  function dvCall(action,cb){
+    if(!sb||!me){ cb({ok:false,error:'not signed in'}); return; }
+    sb.auth.getSession().then(function(r){
+      var tok=r&&r.data&&r.data.session&&r.data.session.access_token;
+      if(!tok){ cb({ok:false,error:'not signed in'}); return null; }
+      return fetch(SB_URL+'/functions/v1/discord-party',{method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+tok},
+        body:JSON.stringify({action:action})})
+      .then(function(res){ return res.json().catch(function(){ return {ok:false,error:'Discord service returned HTTP '+res.status}; }); })
+      .then(cb);
+    }).catch(function(e){ cb({ok:false,error:String(e&&e.message||e)}); });
+  }
+  function dvApply(j,party){
+    dv.loaded=true; dv.party=party||null;
+    dv.configured=!!(j&&j.configured); dv.linked=!!(j&&j.linked);
+    dv.channel=(j&&j.channel_id)||null; dv.url=(j&&j.url)||null;
+    dv.note=(j&&(j.error||j.note))||'';
+  }
+  function dvStatus(party){
+    if(dv.busy) return; dv.busy=true;
+    dvCall('status',function(j){ dv.busy=false; dvApply(j,party); renderPartyOps(true); });
+  }
+  function dvRowHTML(){
+    if(!dv.loaded) return '<div class="oc-po-row"><span style="font-size:11px;color:var(--txt-dim)">Checking Discord&hellip;</span></div>';
+    if(!dv.configured) return '<div class="oc-po-row"><span style="font-size:11px;color:var(--txt-dim)">Discord party voice is not switched on for this site.</span></div>';
+    var h='<div class="oc-po-row"><button class="oc-btn" data-dvjoin="1">JOIN PARTY VOICE</button>';
+    if(dv.url) h+='<button class="oc-btn ghost" data-dvopen="1">OPEN IN DISCORD</button>';
+    if(!dv.linked) h+='<button class="oc-btn ghost" data-dvlink="1">LINK DISCORD</button>';
+    h+='<span style="font-size:11px;color:var(--txt-dim)">'+(dv.linked?'Discord linked':'Discord not linked')+'</span></div>';
+    if(dv.note) h+='<div class="oc-po-row"><span style="font-size:11px;color:var(--txt-dim)">'+esc(dv.note)+'</span></div>';
+    return h;
+  }
   window.__ocPartySig='';
   function renderPartyOps(force){
     var wrap=document.querySelector('#view-chat .oc-stream-wrap'); if(!wrap||!me) return;
@@ -1565,7 +1604,10 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
        opened #party before the pool landed kept the loading placeholder for the whole session
        and never saw CREATE PARTY / JOIN - the round-3 defect, reintroduced by a rewrite. */
     var sig=JSON.stringify([chName, poolLoaded, !!mine, mine&&mine.party_id, mine&&mine.party_role,
-      partyRows(mine&&mine.party_id||'__none__').map(function(m){return [m.user_id,m.party_role,m.tac_callsign,!!m.kia,!!m.rescue,!!onlineIds[m.user_id],staleCls(m)];})]);
+      partyRows(mine&&mine.party_id||'__none__').map(function(m){return [m.user_id,m.party_role,m.tac_callsign,!!m.kia,!!m.rescue,!!onlineIds[m.user_id],staleCls(m)];}),
+      /* sc-b8: every field the voice row DISPLAYS has to be in the signature,
+         or that row renders once and then never repaints. Render gate rule. */
+      dv.loaded, dv.configured, dv.linked, dv.channel, dv.note]);
     if(!force && sig===window.__ocPartySig) return;   /* guarded write - render gate rule */
     window.__ocPartySig=sig;
     var h='<div class="oc-po-h">PARTY OPS';
@@ -1580,6 +1622,10 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
       keepFields(function(){ host.innerHTML=h; }, host); return;
     }
     var mem=partyRows(mine.party_id);
+    /* sc-b8: first sight of a party (or a switch to a different one) asks the
+       Edge Function what Discord looks like. dvApply always sets loaded, even
+       on failure, so this cannot spin. */
+    if(!dv.busy && (!dv.loaded || dv.party!==mine.party_id)) dvStatus(mine.party_id);
     var leader=mem.filter(function(m){return m.party_role==='leader';})[0];
     var iLead=!!(leader&&leader.user_id===me.id);
     h+=' <span class="oc-po-code">'+esc(mine.party_id)+'</span> &middot; '+mem.length+' pilot'+(mem.length===1?'':'s')
@@ -1589,6 +1635,7 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
       var extra=(m.party_role==='leader'?'<span class="oc-po-lead" title="Party lead">&#9733;</span>':'')
         +(iLead&&m.user_id!==me.id?'<button class="oc-ap" data-phand="'+esc(m.user_id)+'" title="Hand off party lead">&#8644;</button><button class="oc-dn" data-pkick="'+esc(m.user_id)+'" title="Remove from party">&times;</button>':'');
       return pill(m,extra,false); }).join('')+'</div>';
+    h+=dvRowHTML();
     if(!leader) h+='<div class="oc-po-row"><button class="oc-btn" data-pclaim="1">CLAIM PARTY LEAD</button><span style="font-size:11px;color:var(--txt-dim)">the seat is empty - first claim takes it</span></div>';
     if(iLead) h+=csMenuHTML('party', mem);
     h+='</div>';
@@ -1613,6 +1660,40 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     var kk=t.closest('[data-pkick]');
     if(kk){ if(!confirm('Remove this pilot from the party?')) return;
       poolUpd(kk.getAttribute('data-pkick'),{party_id:null}); return; }
+    /* ---- sc-b8-partyvoice buttons ---- */
+    if(t.closest('[data-dvjoin]')){
+      if(dv.busy){ toast('Still working on the last one.'); return; }
+      dv.busy=true; toast('Asking Discord…');
+      dvCall('join',function(j){
+        dv.busy=false; dvApply(j,mine.party_id);
+        if(!j || j.ok===false){ toast('Discord: '+((j&&j.error)||'no answer')); renderPartyOps(true); return; }
+        if(!j.configured){ toast('Discord party voice is not switched on for this site.'); renderPartyOps(true); return; }
+        if(!j.party_id){ toast('You are not in a party yet.'); renderPartyOps(true); return; }
+        if(j.moved) toast('Moved you into the party voice channel.');
+        else if(j.reason==='not-linked') toast('Link Discord first, then this button can move you.');
+        else if(j.reason==='not-in-voice'){ toast('You are not connected to voice, so nothing could move you. Opening the channel in Discord.'); if(j.url) window.open(j.url,'_blank','noopener'); }
+        else if(j.reason==='not-in-guild') toast('Your Discord account is not in the CmdGlas server yet.');
+        else if(j.reason==='no-permission') toast('Discord refused the move. The bot lacks Move Members, or its role sits below yours.');
+        else if(j.error) toast('Discord: '+j.error);
+        else toast(j.note||'Party voice channel is ready.');
+        renderPartyOps(true);
+      });
+      return; }
+    if(t.closest('[data-dvopen]')){
+      if(dv.url) window.open(dv.url,'_blank','noopener');
+      else toast('No channel yet. Press JOIN PARTY VOICE first.');
+      return; }
+    if(t.closest('[data-dvlink]')){
+      if(!sb || !sb.auth || typeof sb.auth.linkIdentity!=='function'){ toast('This comms library cannot link Discord.'); return; }
+      /* Manual identity linking has to be enabled on the Supabase project. If
+         it is not, say exactly what Supabase said rather than quietly creating
+         a second account for the same pilot. */
+      try{
+        var p=sb.auth.linkIdentity({provider:'discord'});
+        if(p&&p.then) p.then(function(r){ if(r&&r.error) toast('Discord link refused: '+r.error.message); })
+                       .catch(function(er){ toast('Discord link failed: '+String(er&&er.message||er)); });
+      }catch(er2){ toast('Discord link failed: '+String(er2&&er2.message||er2)); }
+      return; }
     tacClick(e);
   }
   /* shared callsign-menu click handling. scope 'party' = pool party; scope 'org:<squadron-id>'
@@ -2060,6 +2141,7 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
       +'<span class="pnm'+staleCls(m)+'">'+tacChip(m)+kiaName(m)+(me&&m.user_id===me.id?' (you)':'')+'</span>'+pirateChip(m.user_id)
       +(showRk&&RK_ABBR[m.role]?'<span class="rk" title="'+esc(rankName(m.role))+'">'+RK_ABBR[m.role]+'</span>':'')
       +(m.rescue?'<span class="oc-resq">MEDIVAC</span>':'')
+      +((on&&me&&m.user_id!==me.id)?'<span class="oc-jmp" data-j="join" data-u="'+m.user_id+'" data-n="'+esc(m.callsign||'')+'" title="Ask to join their channel (they must OK it)">⤷</span><span class="oc-jmp" data-j="invite" data-u="'+m.user_id+'" data-n="'+esc(m.callsign||'')+'" title="Invite them to your channel (they must OK it)">⤏</span>':'')
       +(extra||'')+'</span>'; }
   /* elements first-class: lead + their pilots inside one dashed group, everyone else loose */
   function elemGroupsHTML(mem,pillFn){
@@ -2855,7 +2937,7 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
   }
   function slotHTML(m,extra){ var on=!!onlineIds[m.user_id]; var mine=me&&m.user_id===me.id;
     /* ORG_BUILD 8: tac chip + KIA flip + offline-grace flash on every slot */
-    return '<div class="oc-slot'+(on?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div><span class="snm'+staleCls(m)+'">'+tacChip(m)+kiaName(m)+(mine?' (you)':'')+' — '+esc(rankName(m.role))+'</span>'+pirateChip(m.user_id)+(m.rescue?'<span class="oc-resq">MEDIVAC</span>':'')+(extra||'')+'</div>';
+    return '<div class="oc-slot'+(on?' on':'')+'"><span class="sdot"></span><div class="sav">'+esc(initials(m.callsign))+'</div><span class="snm'+staleCls(m)+'">'+tacChip(m)+kiaName(m)+(mine?' (you)':'')+' — '+esc(rankName(m.role))+'</span>'+pirateChip(m.user_id)+(m.rescue?'<span class="oc-resq">MEDIVAC</span>':'')+((on&&me&&!mine)?'<span class="oc-jmp" data-j="join" data-u="'+m.user_id+'" data-n="'+esc(m.callsign||'')+'" title="Ask to join their channel (they must OK it)">⤷</span><span class="oc-jmp" data-j="invite" data-u="'+m.user_id+'" data-n="'+esc(m.callsign||'')+'" title="Invite them to your channel (they must OK it)">⤏</span>':'')+(extra||'')+'</div>';
   }
   /* ORG_BUILD 8 (T): compact roster - squadron sections of content-sized pills, elements grouped */
   function renderMemberRoster(box,approved){ box.className='oc-roster';
@@ -4229,6 +4311,89 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     var dd=t.closest('[data-supdone]'); if(dd){ supUpd(dd.getAttribute('data-supdone'),{state:'done'}); return; }
     var cx=t.closest('[data-supcxl]'); if(cx){ supUpd(cx.getAttribute('data-supcxl'),{state:'cancelled'}); return; } }
   /* ================= end SUPPORT NET ======================================== */
+
+  /* ================= MEMBER JUMP (phase 9, 2026-07-29 T) =====================
+     "freely jump between members ... one button push ... by acknowledgement only."
+     kind='join'  : I ask to join THEM. On their ACK their channel is recorded and
+                    I swap to it (tablet now; Discord voice via discord-jump if the
+                    phase-8 bot is deployed).
+     kind='invite': I ask them to join ME. On their ACK they swap to my channel.
+     Consent is the gate: nothing moves until the target presses ACKNOWLEDGE.
+     Tier 1 = phase-9 SQL alone (tablet swap). Tier 2 = phase-8 bot (voice too).
+     Reversible: remove this block, the two .oc-jmp button insertions, and the
+     phase-9 SQL. */
+  (function(){ var s=document.createElement('style'); s.textContent=
+    '.oc-jmp{cursor:pointer;margin-left:4px;opacity:.7;font-size:12px;line-height:1}'
+    +'.oc-jmp:hover{opacity:1;color:#7fd2ff;text-shadow:0 0 6px rgba(90,190,255,.8)}'
+    +'#oc-jumpbar{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;gap:10px;align-items:center;background:rgba(8,22,32,.97);border:1px solid #33b5e6;border-radius:9px;padding:9px 14px;font:700 12px Rajdhani,sans-serif;letter-spacing:1px;color:#cdeaff;box-shadow:0 8px 30px rgba(0,0,0,.6)}'
+    +'#oc-jumpbar button{font:800 11px Rajdhani,sans-serif;letter-spacing:1px;cursor:pointer;border-radius:7px;padding:6px 12px}'
+    +'#oc-jumpbar .jb-ok{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:1px solid rgba(170,242,255,.9)}'
+    +'#oc-jumpbar .jb-no{color:#cdeaff;background:rgba(90,180,220,.14);border:1px solid rgba(130,205,255,.4)}';
+    document.head.appendChild(s); })();
+  var _jmpSeen={}, _jmpBar=null;
+  function jmpMyCallsign(){ var r=(roster||[]).filter(function(x){return me&&x.user_id===me.id;})[0]; return (r&&r.callsign)||'A pilot'; }
+  function cgJump(kind,uid,name){
+    if(!sb||!me){ toast('Sign in first.'); return; }
+    var row={org_id:ORG_ID||'cmdglas',kind:kind,from_user:me.id,to_user:uid,from_callsign:jmpMyCallsign(),to_callsign:name||''};
+    if(kind==='invite') row.tab_channel=curChannel;
+    sb.from('org_jump_requests').insert(row).then(function(res){
+      if(res.error){ toast('Could not send ('+res.error.message+')'); return; }
+      toast(kind==='join'?('Join request sent to '+(name||'them')+' - waiting for their OK.'):('Invite sent to '+(name||'them')+' - waiting for their OK.'));
+    });
+  }
+  document.addEventListener('click',function(e){
+    var bj=e.target&&e.target.closest&&e.target.closest('.oc-jmp'); if(!bj) return;
+    e.preventDefault(); e.stopPropagation();
+    cgJump(bj.getAttribute('data-j'),bj.getAttribute('data-u'),bj.getAttribute('data-n'));
+  },true);
+  function jmpBanner(row){
+    if(_jmpBar) return;
+    var d=document.createElement('div'); d.id='oc-jumpbar'; _jmpBar=d;
+    var txt=(row.kind==='join')?(esc(row.from_callsign||'A pilot')+' asks to JOIN your channel'):(esc(row.from_callsign||'A pilot')+' INVITES you to their channel');
+    d.innerHTML='<span>'+txt+'</span><button type="button" class="jb-ok">ACKNOWLEDGE</button><button type="button" class="jb-no">DECLINE</button>';
+    document.body.appendChild(d);
+    d.querySelector('.jb-ok').onclick=function(){
+      var patch={status:'accepted',acted_at:new Date().toISOString()};
+      if(row.kind==='join') patch.tab_channel=curChannel;
+      sb.from('org_jump_requests').update(patch).eq('id',row.id).then(function(res){
+        d.remove(); _jmpBar=null;
+        if(res.error){ toast('Could not acknowledge: '+res.error.message); return; }
+        if(row.kind==='invite'&&row.tab_channel){ selectChannel(row.tab_channel); toast('Swapped to '+esc(row.from_callsign||'their')+"'s channel."); }
+        else toast('Acknowledged - '+esc(row.from_callsign||'they')+' is joining your channel.');
+      });
+    };
+    d.querySelector('.jb-no').onclick=function(){
+      sb.from('org_jump_requests').update({status:'declined',acted_at:new Date().toISOString()}).eq('id',row.id).then(function(){});
+      d.remove(); _jmpBar=null;
+    };
+  }
+  function jmpPoll(){
+    if(!sb||!me) return;
+    var cutoff=new Date(Date.now()-5*60000).toISOString();
+    sb.from('org_jump_requests').select('*').eq('to_user',me.id).eq('status','pending').gt('created_at',cutoff)
+      .order('created_at',{ascending:false}).limit(1).then(function(res){
+        if(res.error||!res.data||!res.data.length) return;
+        jmpBanner(res.data[0]);
+      },function(){});
+    sb.from('org_jump_requests').select('*').eq('from_user',me.id).in('status',['accepted','done','failed']).gt('created_at',cutoff)
+      .order('created_at',{ascending:false}).limit(3).then(function(res){
+        if(res.error||!res.data) return;
+        res.data.forEach(function(row){
+          var k=row.id+':'+row.status; if(_jmpSeen[k]) return; _jmpSeen[k]=1;
+          if(row.status==='failed'){ toast('Jump failed: '+(row.note||'unknown')); return; }
+          if(row.kind==='join'){
+            if(row.status==='accepted'||row.status==='done'){
+              if(row.tab_channel&&!_jmpSeen['sw:'+row.id]){ _jmpSeen['sw:'+row.id]=1; selectChannel(row.tab_channel); }
+              toast(row.note==='moved'?('You are with '+esc(row.to_callsign||'them')+' - tablet and Discord.'):('Swapped to '+esc(row.to_callsign||'their')+"'s channel."+(row.note&&row.note!=='moved'?' '+row.note:'')));
+            }
+          } else if(row.status==='done'){
+            toast(row.note==='moved'?(esc(row.to_callsign||'They')+' joined you - Discord moved too.'):(esc(row.to_callsign||'They')+' acknowledged.'+(row.note?' '+row.note:'')));
+          }
+        });
+      },function(){});
+  }
+  setInterval(jmpPoll, 8000);
+  /* ================= end MEMBER JUMP ======================================== */
 
   setInterval(function(){ if(sb&&me) heartbeat(); }, 60000);
   /* ORG_BUILD 8 boot: every repaint below is sig-guarded (render gate rule) - the only
