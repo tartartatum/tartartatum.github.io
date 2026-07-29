@@ -8059,9 +8059,9 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=564;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=569;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
-window.CMDGLAS_BUILD_DATE='2026-07-28';
+window.CMDGLAS_BUILD_DATE='2026-07-29';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
    on top should indicate that it's on that page") ============================================
    The topbar buttons were all identical at all times - ⌂ HOME looked the same whether you were on
@@ -17123,7 +17123,7 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
       +'<div class="hm-col">'+(function(){ /* 2026-07-19 user: GENERAL tiles ALPHABETICAL by their SHOWN label (HLAB-applied), with the Help tile included in the sort instead of pinned last. */ var items=pages('tabs-general').map(function(p){return {lab:(HLAB[p.id]||p.label),html:tile(p,true)};}); items.push({lab:'Help',html:'<button type="button" class="hm-tile hm-noico" onclick="event.stopPropagation();window.scHelpOpen&&scHelpOpen()" title="Search the tablet - every page, every tip"><span class="hm-lab">Help</span></button>'}); items.sort(function(a,b){var A=(a.lab||'').toUpperCase(),B=(b.lab||'').toUpperCase();return A<B?-1:A>B?1:0;}); return ''; /* 2026-07-19 T: General row removed from home - it now lives in the left rail */ })()+'</div></div>'
       +'<div class="hm-sub-hint">'+(HOV?'Hover a tile for a preview &middot; click to open the page':'Tap a tile for a preview &middot; tap the preview to open the page')+'</div>' /* 2026-07-18 user: hint sits above the credit line */
       +'<div class="hm-foot">Command Glass <span class="hm-appver">v'+(window.CMDGLAS_VERSTR?window.CMDGLAS_VERSTR():(window.CMDGLAS_VERSION||'?'))+'</span> &middot; unofficial Star Citizen companion &middot; not affiliated with Cloud Imperium Games</div>'
-      +'<div style="text-align:center;margin-top:12px;margin-bottom:4px"><a href="https://discord.gg/R5v6bPZb" target="_blank" rel="noopener" title="Join the CmdGlas Discord server" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:12px;background:#5865F2;color:#fff;text-decoration:none;font-size:11px;letter-spacing:1.5px;font-weight:700;box-shadow:0 4px 12px rgba(88,101,242,.35)"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>JOIN THE DISCORD</a></div>'
+      +'<div style="text-align:center;margin-top:12px;margin-bottom:4px"><a href="https://discord.gg/dkBvyyYNHj" target="_blank" rel="noopener" title="Join the CmdGlas Discord server" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:12px;background:#5865F2;color:#fff;text-decoration:none;font-size:11px;letter-spacing:1.5px;font-weight:700;box-shadow:0 4px 12px rgba(88,101,242,.35)"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>JOIN THE DISCORD</a></div>'
       +'<div style="margin-top:6px;text-align:center;font-size:9px;letter-spacing:4px;color:#4a5c72">HOME PAGE</div>'
       +'</div>'
       +'<div id="hm-pop-back"><div id="hm-pop"></div></div>';
@@ -22856,7 +22856,7 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
        alone, kept live from the channel selector - see sc-b553-chname-js. */
     f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Comms</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
       +'<div class="cg-comms-btns">'
-      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')">OPEN</button>'
+      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')" title="Party up in game - add friends on Spectrum, pick your org job, set a meeting point">PARTY UP</button>'
       +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
       /* T (27 JUL): "one more button below setup that says user manual. make sure it doesn't touch
          the line of the comms pill", and "the user and setup guide ... in the comms pill along with
@@ -23425,7 +23425,7 @@ body.sc-home-mode .cg-footer-hidden{ display:none !important; }
 <script id="sc-b363-moreinfo-js">
 (function(){
   if(window.__moreInfo363) return; window.__moreInfo363=true;
-  var DURL='https://discord.gg/R5v6bPZb';
+  var DURL='https://discord.gg/dkBvyyYNHj';
   function build(){
     var wrap=document.querySelector('#tab-home .hm-wrap'); if(!wrap) return;
     if(document.getElementById('cg-moreinfo-wrap')) return;
@@ -27107,7 +27107,7 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     +'<ol class="cg-w-steps"><li>Open the <b>center pill</b> and pick the <b>STREAM</b> tab.</li><li>Type a channel, press <b>WATCH</b>. Press <b>CHAT</b> to show or hide chat.</li></ol>'
     +'<h4>Notepad</h4>'
     +'<ol class="cg-w-steps"><li>Set the <b>top-left pill</b> to <b>Notepad</b>.</li><li>What you type also shows in <b>OPS → NOTES</b> and on the <b>NAV</b> button.</li><li>Use the box at the top to send a line to <b>Inventory, Gather, or Notes</b>.</li></ol>'
-    +'<div class="cg-w-foot">Free &amp; unofficial. Not made by CIG.<br><a href="https://cmdglas.com" target="_blank" rel="noopener">cmdglas.com</a> &middot; <a href="https://discord.gg/R5v6bPZb" target="_blank" rel="noopener">discord.gg/R5v6bPZb</a></div>';
+    +'<div class="cg-w-foot">Free &amp; unofficial. Not made by CIG.<br><a href="https://cmdglas.com" target="_blank" rel="noopener">cmdglas.com</a> &middot; <a href="https://discord.gg/dkBvyyYNHj" target="_blank" rel="noopener">discord.gg/dkBvyyYNHj</a></div>';
   function zoom(){ var z=parseFloat(document.documentElement.style.zoom); return (z&&z>0)?z:1; }
   var panel;
   function build(){
@@ -27523,7 +27523,70 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
     if(chev) head.insertBefore(btn, chev); else head.appendChild(btn);
     return true;
   }
+  /* build 565: the wide ENTER COMMS button in the COMMS pill drives this same overlay.
+     Exposed as a global because the bottom NAV pill is a cloneNode copy and clones do
+     NOT carry addEventListener handlers - the build 501 lesson. */
+  window.cgCommsMaxOpen=open_;
   var n=0, iv=setInterval(function(){ if(addBtn()||++n>80) clearInterval(iv); }, 300); addBtn();
+})();
+</script>
+<style id="sc-b565-entercomms-css">/* 2026-07-29 T: "pull that button out and put it as a single button
+   above the open/setup/undock row in the comms pill. make it a wide button and call it ENTER COMMS."
+   MEASURED CAUSE: the old control was a 20x20px icon button in the chat dock head (.cd-expand), sat
+   between TX and the chevron, with no text. Nothing named the thing it opened. It is HIDDEN here,
+   not deleted, so the build 494 overlay logic is untouched and this is a one-line revert.
+   Reversible: delete this style + the script below. */
+#sc-chatdock .cd-expand{display:none !important}
+.cg-comms-enter{display:block;box-sizing:border-box;width:calc(100% - 14px);margin:6px 7px 5px;padding:8px 10px;
+  background:linear-gradient(180deg,rgba(22,66,98,.92),rgba(10,30,50,.92));
+  border:1px solid rgba(120,200,240,.6);border-radius:7px;color:#c6ecff;
+  font:800 12px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2.5px;text-align:center;cursor:pointer}
+.cg-comms-enter:hover{color:#fff;border-color:#8fd6f2;background:linear-gradient(180deg,rgba(32,96,138,.96),rgba(14,44,70,.96))}
+/* 2026-07-29 T: "push the two current rows of buttons down ... don't change spacing" and then
+   "put it onto the bottom instead of on top. let that enter comms button set close to the bottom
+   line of the pill". .commsfill is a centred flex column; an auto top margin on the FIRST row of
+   the group beats justify-content:center and drops the whole group to the bottom. The gap BETWEEN
+   the two existing rows is their own margin and is untouched. ENTER COMMS is last and carries a
+   small bottom margin so it rides just inside the pill frame. */
+.commsfill .cg-comms-btns{margin-top:auto}
+.commsfill .cg-comms-btns2{margin-bottom:0}
+.commsfill .cg-comms-enter{margin-top:0;margin-bottom:6px}
+/* 2026-07-29 T: "open and setup lead to the same thing. pick one and remove the other."
+   VERIFIED: both call the same function - cgOpenComms(sec) opens ONE overlay and only switches
+   tab, 'party' vs 'setup'. SET UP is already a tab inside the page OPEN lands on, so OPEN is kept
+   and SET UP is hidden. The row is justify-content:center, so two buttons recentre on their own.
+   Reversible: delete this one rule. */
+.cg-comms-btns .cg-comms-setup{display:none !important}
+</style>
+<script id="sc-b565-entercomms-js">
+(function(){ if(window.__cgEnterComms565) return; window.__cgEnterComms565=true;
+  /* DELEGATED, capture phase. The NAV menu holds a cloneNode(true) copy of this pill and clones
+     lose addEventListener handlers (build 501). Delegation fires for the original AND the clone. */
+  document.addEventListener('click', function(e){
+    var t=e.target; if(!t||!t.closest) return;
+    var b=t.closest('.cg-comms-enter'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(typeof window.cgCommsMaxOpen==='function'){ window.cgCommsMaxOpen(); return; }
+    var hid=document.querySelector('#sc-chatdock .cd-expand');   /* hidden but still functional */
+    if(hid){ hid.click(); }
+  }, true);
+  function add(){
+    var rows=document.querySelectorAll('.cg-comms-btns');
+    for(var i=0;i<rows.length;i++){
+      var row=rows[i], par=row.parentNode; if(!par) continue;
+      if(par.querySelector(':scope > .cg-comms-enter')) continue;
+      var b=document.createElement('button'); b.type='button'; b.className='cg-comms-enter';
+      b.textContent='ENTER COMMS';
+      b.title='Open the full COMMS page - party voice, org chat, consoles';
+      /* T: last element in the pill, under BOTH existing rows. The second row is added by the
+         same filler markup, so anchor on it when it is there and fall back to the first. */
+      var row2=par.querySelector(':scope > .cg-comms-btns2');
+      var after=row2||row;
+      if(after.nextSibling) par.insertBefore(b, after.nextSibling); else par.appendChild(b);
+    }
+  }
+  setInterval(add, 900); add();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',add);
 })();
 </script>
 <script id="sc-b501-clearnote-js">/* 2026-07-25 build 501 (user: "clear note does not clear note").
@@ -27730,6 +27793,33 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
 @keyframes cgCmdlogScroll{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
 @media(prefers-reduced-motion:reduce){#cg-cmdlog .dl-track{animation:none;left:12px}}
 </style>
+<style id="sc-b568-credit-css">/* 2026-07-29 T: "add designed by human built by AI in the banner to
+   always show. I don't care that it turns some people off."
+   ALWAYS SHOW means it cannot ride the scrolling track (it would leave the screen every loop) and
+   it cannot live inside #cg-cmdlog (that element is display:none until the ticker has text, and it
+   goes transparent when a pilot presses HIDE NEWS). So it is its own fixed strip element, pinned
+   bottom LEFT, mirroring the HIDE NEWS chip on the right, with an opaque background so the ticker
+   text passes behind it rather than through it. pointer-events:none - it can never block a tap.
+   Reversible: delete this style + the script below. */
+#cg-credit{position:fixed;bottom:env(safe-area-inset-bottom,0px);left:0;height:14px;z-index:2147483621;
+  display:flex;align-items:center;padding:0 10px;pointer-events:none;user-select:none;
+  font:700 8px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.6px;color:#54708a;
+  background:rgba(3,8,14,.88);border-right:1px solid rgba(108,180,214,.12)}
+#cg-credit b{color:#7fa8c2;font-weight:800}
+@media(max-width:520px){#cg-credit{letter-spacing:1px;padding:0 7px}}
+</style>
+<script id="sc-b568-credit-js">
+(function(){ if(window.__cgCredit568) return; window.__cgCredit568=true;
+  function add(){ if(document.getElementById('cg-credit')) return true;
+    if(!document.body) return false;
+    var d=document.createElement('div'); d.id='cg-credit';
+    /* One span, not loose nodes: #cg-credit is display:flex and flex layout DROPS the
+       whitespace-only text nodes between items, which ran the words together. */
+    d.innerHTML='<span>DESIGNED BY <b>HUMAN</b> &middot; BUILT BY <b>AI</b></span>';
+    document.body.appendChild(d); return true; }
+  if(!add()){ var n=0, iv=setInterval(function(){ if(add()||++n>60) clearInterval(iv); },300); }
+})();
+</script>
 <script id="sc-b533-cmdlog-js">
 /* COMMAND LOG ticker. Text = baked notes below (updated each build) + the build stamp.
    If public.site_news exists in Supabase (optional cmdglas_news.sql), its newest row
@@ -27893,7 +27983,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important} /* 2026-07-28 T: the
     if(!row){ row=document.createElement('div'); row.id='cg-social-row';
       row.innerHTML='<a class="cg-sbtn" href="https://robertsspaceindustries.com/community-hub/user/Razvyn" target="_blank" rel="noopener" title="Razvyn on the RSI Community Hub"><span class="rsi-m"></span></a>'
         +'<a class="cg-sbtn" href="https://x.com/Cmdglas" target="_blank" rel="noopener" title="CmdGlas on X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a>'
-        +'<a class="cg-sbtn" href="https://discord.gg/R5v6bPZb" target="_blank" rel="noopener" title="CmdGlas Discord"><svg viewBox="0 0 24 24"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>DISCORD</a>'
+        +'<a class="cg-sbtn" href="https://discord.gg/dkBvyyYNHj" target="_blank" rel="noopener" title="CmdGlas Discord"><svg viewBox="0 0 24 24"><path d="M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>DISCORD</a>'
         +'<a class="cg-sbtn" id="cg-sbtn-fb" href="#" target="_blank" rel="noopener" title="CmdGlas on Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>FACEBOOK</a>';
       var fb=row.querySelector('#cg-sbtn-fb'); if(CG_FB_URL){ fb.href=CG_FB_URL; } }
     if(row.previousElementSibling!==tr || row.parentNode!==tr.parentNode){ tr.parentNode.insertBefore(row, tr.nextSibling); }

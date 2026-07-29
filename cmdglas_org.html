@@ -1555,7 +1555,8 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
      a member who is ALREADY connected to voice, it can never connect him. So
      every outcome below states which of the two actually happened instead of
      claiming success. Nothing here touches the org side. */
-  var dv={loaded:false,busy:false,party:null,configured:false,linked:false,url:null,channel:null,note:''};
+  var dv={loaded:false,busy:false,party:null,configured:false,linked:false,url:null,channel:null,note:'',
+           in_guild:null,invite:null,pool:null,moved:null,reason:''};
   function dvCall(action,cb){
     if(!sb||!me){ cb({ok:false,error:'not signed in'}); return; }
     sb.auth.getSession().then(function(r){
@@ -1573,6 +1574,13 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     dv.configured=!!(j&&j.configured); dv.linked=!!(j&&j.linked);
     dv.channel=(j&&j.channel_id)||null; dv.url=(j&&j.url)||null;
     dv.note=(j&&(j.error||j.note))||'';
+    /* sc-b8b: in_guild is deliberately THREE valued. true = Discord confirmed the
+       pilot is a member, false = Discord said unknown member, null = we could not
+       get an answer. The wizard shows "not sure" for null instead of guessing. */
+    dv.in_guild=(j&&typeof j.in_guild==='boolean')?j.in_guild:null;
+    dv.invite=(j&&j.invite_url)||null;
+    dv.pool=(j&&j.party_id)||null;
+    if(j&&typeof j.moved==='boolean'){ dv.moved=j.moved; dv.reason=j.reason||''; }
   }
   function dvStatus(party){
     if(dv.busy) return; dv.busy=true;
@@ -1584,10 +1592,216 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     var h='<div class="oc-po-row"><button class="oc-btn" data-dvjoin="1">JOIN PARTY VOICE</button>';
     if(dv.url) h+='<button class="oc-btn ghost" data-dvopen="1">OPEN IN DISCORD</button>';
     if(!dv.linked) h+='<button class="oc-btn ghost" data-dvlink="1">LINK DISCORD</button>';
+    h+='<button class="oc-btn ghost" data-shopen="party">GUIDED SETUP</button>';
     h+='<span style="font-size:11px;color:var(--txt-dim)">'+(dv.linked?'Discord linked':'Discord not linked')+'</span></div>';
     if(dv.note) h+='<div class="oc-po-row"><span style="font-size:11px;color:var(--txt-dim)">'+esc(dv.note)+'</span></div>';
     return h;
   }
+  /* ================= sc-b8c-starthere : START HERE guided setup =================
+     T (29 Jul): "a guided setup for everything ... a popup that says start here, enter
+     your discord, enter your rsi gamertag etc. a lot of gamers are older and don't use
+     Discord." So: one popup, two tracks, every step ticked by REAL state. Discord is
+     OPTIONAL - I DON'T USE DISCORD greys its steps and the checklist still completes.
+     The wizard never duplicates an existing flow; where the page already has the right
+     control it sends the pilot there. One store, many views. */
+  var sh={open:false, track:'party', built:false, auto:false};
+  function shNoDiscord(){ try{ return localStorage.getItem('cg_no_discord')==='1'; }catch(e){ return false; } }
+  function shSetNoDiscord(v){ try{ localStorage.setItem('cg_no_discord', v?'1':'0'); }catch(e){} }
+  function shSeen(){ try{ return localStorage.getItem('cg_sh_seen')==='1'; }catch(e){ return true; } }
+  function shMarkSeen(){ try{ localStorage.setItem('cg_sh_seen','1'); }catch(e){} }
+  function shOrgRow(){ if(!me) return null; try{ return roster.filter(function(m){return m.user_id===me.id;})[0]||null; }catch(e){ return null; } }
+  function shMyRow(){ return shOrgRow()||myPoolRow(); }
+
+  function shCommon(){
+    var r=shMyRow()||{};
+    return [
+      {t:'Sign in to CmdGlas', d:'You are signed in, or you would not be reading this.', s:(me?'ok':'no')},
+      {t:'Your callsign', d:(r.callsign?'You are '+esc(r.callsign)+'.':'The name your wing sees. Short, like RAZVYN.'),
+       s:(r.callsign?'ok':'no'), f:{k:'callsign', v:(r.callsign||''), l:'callsign', max:24}},
+      {t:'Your RSI handle', d:(r.handle?'@'+esc(r.handle):'Your Star Citizen account name, exactly as it appears on the RSI site. This is what friends search for in game.'),
+       s:(r.handle?'ok':'no'), f:{k:'handle', v:(r.handle||''), l:'RSI handle', max:40}}
+    ];
+  }
+  function shPartySteps(){
+    var skip=shNoDiscord(), st=shCommon();
+    st.push({t:'Be in a party',
+      d:(dv.pool?'You are in party '+esc(dv.pool)+'.':'Open the party channel, then CREATE PARTY, or JOIN with a code from your party lead.'),
+      s:(dv.pool?'ok':'no'), b:(dv.pool?null:{a:'shgoparty', l:'GO TO PARTY'})});
+    if(skip){
+      st.push({t:'Discord voice', s:'skip',
+        d:'You chose not to use Discord. Everything above still works: chat, party, callsigns and the org. You will not get voice.',
+        b:{a:'shusediscord', l:'ACTUALLY, I DO USE DISCORD'}});
+      return st;
+    }
+    st.push({t:'Link your Discord account',
+      d:'Ties your Discord to this CmdGlas account so the bot knows who you are.',
+      s:(dv.linked?'ok':'no'),
+      b:(dv.linked?null:{a:'dvlink', l:'LINK DISCORD'}),
+      b2:(dv.linked?null:{a:'shnodiscord', l:"I DON'T USE DISCORD"})});
+    st.push({t:'Join the CmdGlas Discord server',
+      d:(dv.in_guild===false?'Discord says you are not in the server yet.'
+         :dv.in_guild===null?'Cannot check this until Discord is linked.'
+         :'Discord confirmed you are a member.'),
+      s:(dv.in_guild===true?'ok':dv.in_guild===false?'no':'unk'),
+      b:(dv.in_guild===true?null:(dv.invite?{a:'dvinvite', l:'OPEN INVITE'}:null)),
+      n:(dv.in_guild!==true&&!dv.invite?'No invite link is saved yet. Ask your commander for one.':'')});
+    st.push({t:'Connect to voice, then press JOIN PARTY VOICE',
+      d:(dv.moved===true?'Done. Discord moved you into the party channel.'
+         :dv.reason==='not-in-voice'?'You were not connected to voice, so nothing could move you. Join any voice channel in Discord first.'
+         :dv.reason==='no-permission'?'Discord refused the move. The bot lacks Move Members, or its role sits below yours.'
+         :dv.reason==='not-in-guild'?'Discord says your account is not in the server.'
+         :'Open Discord, connect to any voice channel in the CmdGlas server, then press the button.'),
+      s:(dv.moved===true?'ok':'no'), b:{a:'dvjoin', l:'JOIN PARTY VOICE'}});
+    return st;
+  }
+  function shOrgSteps(){
+    var st=shCommon(), r=shOrgRow(), status=(r&&r.status)||null;
+    st.push({t:'Find an org',
+      d:'The ORG page lists every org that is recruiting, what it does, and the charter its commander wrote. Read before you apply.',
+      s:(ORG_ID?'ok':'no'), b:{a:'shgoorg', l:'OPEN ORG DIRECTORY'}});
+    st.push({t:'Send your application',
+      d:(status?'Application sent.':'On the ORG page press JOIN AN ORG, pick the org, and send it. Your callsign and RSI handle above are what the commander sees.'),
+      s:(status?'ok':'no'), b:(status?null:{a:'shgoorg', l:'OPEN ORG DIRECTORY'})});
+    st.push({t:'Wait for approval',
+      d:(status==='approved'?'You are approved.'
+         :status==='pending'?'Sent. Your commander has to approve you. Nothing you can do from here but wait.'
+         :'Nothing to wait for yet.'),
+      s:(status==='approved'?'ok':status==='pending'?'unk':'no')});
+    st.push({t:'Your squadron',
+      d:((r&&r.squadron)?'You are in '+esc(r.squadron)+'.':'Your commander assigns this after approval. It decides which flight you fly with.'),
+      s:((r&&r.squadron)?'ok':'no')});
+    st.push({t:'Your tactical callsign',
+      d:((r&&r.tac_callsign)?'You are '+esc(r.tac_callsign)+'.':'Your flight lead sets this, for example STORM 1-2. It is the name used on comms during an op.'),
+      s:((r&&r.tac_callsign)?'ok':'no')});
+    return st;
+  }
+  function shSteps(){ return sh.track==='org'?shOrgSteps():shPartySteps(); }
+
+  function shHTML(){
+    var st=shSteps(), done=0, total=0;
+    /* A skipped step counts toward BOTH numbers. Counting it as done while leaving it
+       out of the total read as "4 of 4" with a step still outstanding. */
+    st.forEach(function(x){ total++; if(x.s==='ok'||x.s==='skip') done++; });
+    var h='<div class="sh-card">'
+      +'<div class="sh-head"><span class="sh-t">START HERE</span>'
+      +'<button class="oc-dn" data-shclose="1">CLOSE</button></div>'
+      +'<div class="sh-sub">Two things to set up. Do them in any order. Every tick below is checked against what is really true, so nothing here can tell you that you are set up when you are not.</div>'
+      +'<div class="sh-tabs">'
+      +'<button class="sh-tab'+(sh.track==='party'?' on':'')+'" data-shtrack="party">SET UP MY PARTY</button>'
+      +'<button class="sh-tab'+(sh.track==='org'?' on':'')+'" data-shtrack="org">SET UP MY ORG</button>'
+      +'<span class="sh-count">'+done+' of '+total+' done</span></div><div class="sh-body">';
+    st.forEach(function(x,i){
+      var g=(x.s==='ok'?'&#10003;':x.s==='unk'?'?':x.s==='skip'?'&#8212;':'&#9679;');
+      var c=(x.s==='ok'?'#6fe08a':x.s==='unk'?'#e8c46a':x.s==='skip'?'#6f8496':'#8fbcd2');
+      h+='<div class="sh-step"><span class="sh-g" style="color:'+c+'">'+g+'</span><div class="sh-c">'
+        +'<div class="sh-st">'+(i+1)+'. '+esc(x.t)+'</div>'
+        +'<div class="sh-sd">'+x.d+'</div>'
+        +(x.n?'<div class="sh-warn">'+esc(x.n)+'</div>':'');
+      if(x.f) h+='<div class="sh-row"><input class="oc-cs-in" data-shin="'+x.f.k+'" maxlength="'+x.f.max+'" placeholder="'+esc(x.f.l)+'" value="'+esc(x.f.v)+'">'
+                 +'<button class="oc-ap" data-shsave="'+x.f.k+'">SAVE</button></div>';
+      if(x.b||x.b2){ h+='<div class="sh-row">';
+        if(x.b)  h+='<button class="oc-btn ghost" data-'+x.b.a+'="1">'+x.b.l+'</button>';
+        if(x.b2) h+='<button class="oc-btn ghost" data-'+x.b2.a+'="1">'+x.b2.l+'</button>';
+        h+='</div>'; }
+      h+='</div></div>';
+    });
+    h+='</div>';
+    if(sh.track==='party') h+='<div class="sh-foot">Discord can only move someone who is already connected to voice. It cannot connect you. That is a limit of Discord, not of CmdGlas.</div>';
+    else h+='<div class="sh-foot">Approval, squadron and tactical callsign are set by your commander, not by you. Steps 6 to 8 go green on their own when he does it.</div>';
+    h+='</div>';
+    return h;
+  }
+  function shBuild(){
+    var el=document.getElementById('oc-starthere');
+    if(el) return el;
+    el=document.createElement('div'); el.id='oc-starthere';
+    el.innerHTML='<div class="sh-wrap"></div>';
+    document.body.appendChild(el);
+    el.addEventListener('click', shClick);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') shClose(); });
+    var css=document.createElement('style');
+    css.textContent='#oc-starthere{position:fixed;inset:0;z-index:2147483600;display:none;align-items:flex-start;justify-content:center;background:rgba(2,7,13,.72);padding:4vh 12px;overflow:auto}'
+      +'#oc-starthere.on{display:flex}'
+      +'#oc-starthere .sh-card{width:min(720px,96vw);background:#08151f;border:1px solid rgba(120,200,240,.4);border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.65);padding:16px 18px}'
+      +'#oc-starthere .sh-head{display:flex;align-items:center;gap:10px}'
+      +'#oc-starthere .sh-t{font-weight:800;letter-spacing:4px;font-size:15px;color:#eafaff}'
+      +'#oc-starthere .sh-head .oc-dn{margin-left:auto}'
+      +'#oc-starthere .sh-sub{font-size:11.5px;color:var(--txt-dim);line-height:1.5;margin:6px 0 12px}'
+      +'#oc-starthere .sh-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}'
+      +'#oc-starthere .sh-count{margin-left:auto;font-size:11px;color:var(--txt-dim)}'
+      +'#oc-starthere .sh-tab{font:800 11px/1 Rajdhani,\'Segoe UI\',sans-serif;letter-spacing:2px;text-transform:uppercase;padding:9px 16px;border-radius:8px;cursor:pointer;color:#bfe4f7;background:rgba(90,180,220,.12);border:1px solid rgba(120,200,240,.4)}'
+      +'#oc-starthere .sh-tab:hover{color:#fff;border-color:#7fc4de;background:rgba(90,205,255,.22)}'
+      +'#oc-starthere .sh-tab.on{color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border-color:rgba(170,242,255,.9)}'
+      +'#oc-starthere .sh-step{display:flex;gap:10px;align-items:flex-start;margin-top:11px}'
+      +'#oc-starthere .sh-g{width:14px;flex:0 0 14px;text-align:center;font-weight:800}'
+      +'#oc-starthere .sh-c{flex:1 1 auto;min-width:0}'
+      +'#oc-starthere .sh-st{font-size:12.5px;font-weight:700;color:var(--txt)}'
+      +'#oc-starthere .sh-sd{font-size:11.5px;color:var(--txt-dim);line-height:1.5}'
+      +'#oc-starthere .sh-warn{font-size:11.5px;color:#e8c46a;line-height:1.5}'
+      +'#oc-starthere .sh-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}'
+      +'#oc-starthere .sh-foot{font-size:10.5px;color:var(--txt-dim);line-height:1.5;margin-top:14px;border-top:1px solid rgba(120,200,240,.18);padding-top:9px}';
+    document.head.appendChild(css);
+    return el;
+  }
+  function shRender(){
+    var el=shBuild(); var w=el.querySelector('.sh-wrap');
+    /* Guarded like every other repaint here: if the pilot is typing his handle, a
+       blind innerHTML would eat it. Only rewrite when the rendered text changed. */
+    var html=shHTML();
+    if(w.__last!==html){ w.__last=html; keepFields(function(){ w.innerHTML=html; }, w); }
+  }
+  function shOpen(track){ if(track) sh.track=track; sh.open=true; shBuild().classList.add('on'); shMarkSeen();
+    if(dv.loaded===false || !dv.busy) dvStatus((myPoolRow()||{}).party_id||null);
+    shRender(); }
+  function shClose(){ sh.open=false; var el=document.getElementById('oc-starthere'); if(el) el.classList.remove('on'); }
+  function shClick(e){
+    var t=e.target; if(!t||!t.closest) return;
+    if(t.id==='oc-starthere'){ shClose(); return; }
+    if(t.closest('[data-shclose]')){ shClose(); return; }
+    var tr=t.closest('[data-shtrack]'); if(tr){ sh.track=tr.getAttribute('data-shtrack'); shRender(); return; }
+    if(t.closest('[data-shnodiscord]')){ shSetNoDiscord(true); shRender(); return; }
+    if(t.closest('[data-shusediscord]')){ shSetNoDiscord(false); shRender(); return; }
+    if(t.closest('[data-shgoparty]')){ shClose(); setMode('chat'); selectChannel('party'); return; }
+    if(t.closest('[data-shgoorg]')){ shClose(); setMode('org'); return; }
+    var sv=t.closest('[data-shsave]');
+    if(sv){ var k=sv.getAttribute('data-shsave');
+      var inp=shBuild().querySelector('[data-shin="'+k+'"]'); if(!inp) return;
+      var v=(inp.value||'').trim(); if(!v){ toast('Type it first.'); return; }
+      var f={}; f[k]=v;
+      poolUpd(me.id,f,function(){ toast(k==='handle'?'RSI handle saved.':'Callsign saved.');
+        try{ inp.removeAttribute('data-cgdirty'); }catch(e2){}
+        setTimeout(shRender,600); });
+      if(typeof ORG_ID!=='undefined' && ORG_ID && ORG_ID!==GAMERPOOL) orgUpd(me.id,f);
+      return; }
+    /* the Discord buttons are the same ones PARTY OPS uses - one implementation */
+    if(t.closest('[data-dvlink],[data-dvjoin],[data-dvopen],[data-dvinvite]')){
+      partyClick(e); setTimeout(shRender,1200); return; }
+  }
+  /* Auto-open ONCE, only when there is something left to do. Never nags again. */
+  var shTries=0, shIv=setInterval(function(){
+    if(++shTries>60){ clearInterval(shIv); return; }
+    if(!me || !poolLoaded) return;
+    clearInterval(shIv);
+    if(shSeen()) return;
+    var r=shMyRow()||{};
+    if(r.callsign && r.handle) { shMarkSeen(); return; }
+    sh.auto=true; shOpen('party');
+  }, 1200);
+  window.cgStartHere=function(track){ shOpen(track||'party'); };
+  /* A permanent way back in. Older pilots close things by accident and the button has to
+     still be there afterwards. */
+  (function(){ var n=0, iv=setInterval(function(){
+      var m=document.getElementById('mode-chat');
+      if(!m){ if(++n>40) clearInterval(iv); return; }
+      clearInterval(iv);
+      if(document.getElementById('oc-sh-btn')) return;
+      var b=document.createElement('button'); b.id='oc-sh-btn'; b.type='button';
+      b.className=m.className; b.classList.remove('active');
+      b.textContent='START HERE';
+      b.addEventListener('click',function(){ shOpen('party'); });
+      m.parentNode.insertBefore(b, m);
+    }, 400); })();
+
   window.__ocPartySig='';
   function renderPartyOps(force){
     var wrap=document.querySelector('#view-chat .oc-stream-wrap'); if(!wrap||!me) return;
@@ -1607,7 +1821,8 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
       partyRows(mine&&mine.party_id||'__none__').map(function(m){return [m.user_id,m.party_role,m.tac_callsign,!!m.kia,!!m.rescue,!!onlineIds[m.user_id],staleCls(m)];}),
       /* sc-b8: every field the voice row DISPLAYS has to be in the signature,
          or that row renders once and then never repaints. Render gate rule. */
-      dv.loaded, dv.configured, dv.linked, dv.channel, dv.note]);
+      dv.loaded, dv.configured, dv.linked, dv.channel, dv.note,
+      dv.in_guild, dv.invite, dv.pool, dv.moved, dv.reason]);
     if(!force && sig===window.__ocPartySig) return;   /* guarded write - render gate rule */
     window.__ocPartySig=sig;
     var h='<div class="oc-po-h">PARTY OPS';
@@ -1678,6 +1893,12 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
         else toast(j.note||'Party voice channel is ready.');
         renderPartyOps(true);
       });
+      return; }
+    var so=t.closest('[data-shopen]');
+    if(so){ shOpen(so.getAttribute('data-shopen')||'party'); return; }
+    if(t.closest('[data-dvinvite]')){
+      if(dv.invite) window.open(dv.invite,'_blank','noopener');
+      else toast('No server invite is saved yet. Ask your commander for one.');
       return; }
     if(t.closest('[data-dvopen]')){
       if(dv.url) window.open(dv.url,'_blank','noopener');
