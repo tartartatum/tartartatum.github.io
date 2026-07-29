@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=571;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=573;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-29';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18424,11 +18424,39 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
           || (oauth ? '' : (md.username||md.name||''))
           || (u.email||'user').split('@')[0];
     return {name:nm,email:u.email}; }
+  var SBUSER=null;   /* build 571b: the raw Supabase user, kept so the pill can be re-derived
+                        once the roster answers with a real callsign. */
   function setCurrent(u){ CURRENT=u; try{ if(u) localStorage.setItem(LS,JSON.stringify(u)); else localStorage.removeItem(LS); }catch(e){} renderPill(); }
+  /* build 571b (T: "nope, now it's showing TTHOMAS.clark557.. my email address line").
+     The email fallback was still wrong. The tablet has a Supabase client and a session, so it
+     can read the pilot's OWN roster row and use his real callsign and RSI handle instead of
+     waiting for the COMMS page to mirror them. Row level security already limits this to rows
+     he is allowed to see. Failure is silent: if the query errors the previous fallback stands. */
+  function pullIdentity(uid){
+    if(!sb||!uid) return;
+    try{
+      sb.from('org_members').select('callsign,handle,org_id').eq('user_id',uid).limit(20)
+        .then(function(r){
+          var rows=(r&&r.data)||[]; if(!rows.length) return;
+          var pick=null;
+          for(var i=0;i<rows.length;i++){ if(rows[i].org_id==='gamerpool' && (rows[i].callsign||rows[i].handle)){ pick=rows[i]; break; } }
+          if(!pick) for(var j=0;j<rows.length;j++){ if(rows[j].callsign||rows[j].handle){ pick=rows[j]; break; } }
+          if(!pick) return;
+          var changed=false;
+          try{
+            if(pick.handle){   localStorage.setItem('cg_rsi_handle', String(pick.handle).trim());   changed=true; }
+            if(pick.callsign){ localStorage.setItem('cg_callsign',   String(pick.callsign).trim()); changed=true; }
+          }catch(e){}
+          if(changed && SBUSER) setCurrent(userFromSb(SBUSER));
+        }, function(){});
+    }catch(e){}
+  }
   window.scAuthUser=function(){ if(CURRENT) return CURRENT; if(!sb){ try{ return JSON.parse(localStorage.getItem(LS)||'null'); }catch(e){} } return null; };
 
   try{ CURRENT=JSON.parse(localStorage.getItem(LS)||'null'); }catch(e){} /* last-known shows instantly; the live Supabase session overrides once loaded */
-  function wireSession(){ if(!sb) return; sb.auth.getSession().then(function(r){ setCurrent(userFromSb(r&&r.data&&r.data.session&&r.data.session.user)); }).catch(function(){}); sb.auth.onAuthStateChange(function(_e,session){ setCurrent(userFromSb(session&&session.user)); if(_e==='PASSWORD_RECOVERY'){ try{ scAuthNewPwOpen(); }catch(e){} } }); }
+  function wireSession(){ if(!sb) return;
+    sb.auth.getSession().then(function(r){ var su=r&&r.data&&r.data.session&&r.data.session.user; SBUSER=su||null; setCurrent(userFromSb(su)); if(su) pullIdentity(su.id); }).catch(function(){});
+    sb.auth.onAuthStateChange(function(_e,session){ var su=session&&session.user; SBUSER=su||null; setCurrent(userFromSb(su)); if(su) pullIdentity(su.id); if(_e==='PASSWORD_RECOVERY'){ try{ scAuthNewPwOpen(); }catch(e){} } }); }
   (function loadSB(){
     function init(){ try{ if(window.supabase&&window.supabase.createClient){ sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}}); wireSession(); subFleet(); } }catch(e){ console.warn('Supabase init failed',e); } }
     /* T (28 JUL): FORCE UPDATE ALL. Every open tablet listens on a realtime broadcast channel;
@@ -27561,10 +27589,17 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
    not deleted, so the build 494 overlay logic is untouched and this is a one-line revert.
    Reversible: delete this style + the script below. */
 #sc-chatdock .cd-expand{display:none !important}
-/* build 570 (T): GUIDED SETUP joins row two, first position, ahead of USER MANUAL.
-   Same size and shape as its neighbours; cyan so it reads as the "start here" one. */
-.cg-comms-btns2 .cg-comms-guide{color:#cdefff;background:rgba(60,150,200,.22);border:1px solid rgba(140,215,255,.6)}
-.cg-comms-btns2 .cg-comms-guide:hover{color:#fff;background:rgba(80,185,240,.32);border-color:#8fd6f2}
+/* build 573 (T: "the buttons are outside of the pills display"). MEASURED CAUSE: build 570 put
+   GUIDED SETUP as a fourth button in .cg-comms-btns2, which is flex-wrap:nowrap inside a pill
+   that clips its overflow. On a narrower pill the row ran off BOTH ends.
+   FIX, two parts: (a) GUIDED SETUP gets its own row directly above USER MANUAL, (b) both button
+   rows are allowed to wrap, so no future button can ever clip at any pill width. */
+.cg-comms-btns, .cg-comms-btns2, .cg-comms-btnsg{flex-wrap:wrap !important}
+.cg-comms-btnsg{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:7px;margin-top:8px;margin-bottom:0}
+.cg-comms-btnsg .cg-comms-guide{font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;
+  text-transform:uppercase;cursor:pointer;border-radius:7px;padding:7px 16px;white-space:nowrap;
+  color:#cdefff;background:rgba(60,150,200,.22);border:1px solid rgba(140,215,255,.6)}
+.cg-comms-btnsg .cg-comms-guide:hover{color:#fff;background:rgba(80,185,240,.32);border-color:#8fd6f2}
 .cg-comms-enter{display:block;box-sizing:border-box;width:calc(100% - 14px);margin:6px 7px 5px;padding:8px 10px;
   background:linear-gradient(180deg,rgba(22,66,98,.92),rgba(10,30,50,.92));
   border:1px solid rgba(120,200,240,.6);border-radius:7px;color:#c6ecff;
@@ -27616,13 +27651,16 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
       var row2=par.querySelector(':scope > .cg-comms-btns2');
       var after=row2||row;
       if(after.nextSibling) par.insertBefore(b, after.nextSibling); else par.appendChild(b);
-      /* build 570: GUIDED SETUP, first button in row two. Delegated click, same as
-         ENTER COMMS, because the NAV pill is a cloneNode copy and clones lose handlers. */
-      if(row2 && !row2.querySelector(':scope > .cg-comms-guide')){
+      /* build 573: GUIDED SETUP on its OWN row, directly above the USER MANUAL row, so four
+         buttons can never share one nowrap line again. Delegated click, same as ENTER COMMS,
+         because the NAV pill is a cloneNode copy and clones lose handlers. */
+      if(row2 && !par.querySelector(':scope > .cg-comms-btnsg')){
+        var gr=document.createElement('div'); gr.className='cg-comms-btnsg';
         var g=document.createElement('button'); g.type='button'; g.className='cg-comms-guide';
         g.textContent='GUIDED SETUP';
         g.title='Walk me through setting up my party and my org, step by step';
-        row2.insertBefore(g, row2.firstChild);
+        gr.appendChild(g);
+        par.insertBefore(gr, row2);
       }
     }
   }
