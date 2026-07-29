@@ -921,7 +921,23 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     if(_cm && ['chat','org','wing','pcmd','ocmd','lfg'].indexOf(_cm[1].toLowerCase())>=0) BOOT_CMD=_cm[1].toLowerCase(); }catch(e){}
   var $=function(id){return document.getElementById(id);};
   function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{}; return m.username||m.callsign||(u.email?String(u.email).split('@')[0]:'CMDR'); }
+  /* ---- sc-b8e-nameleak (T, 29 JUL): "there's a privacy breach, other players see me as
+   thomas.clark557 in the orgs and pilots list."
+   MEASURED CAUSE: this helper ended with u.email.split('@')[0], and its result is written into
+   org_members.callsign when a pilot's row is first created. That column is PUBLIC - it is what
+   the pilots list, the org roster and every chat line show. So any pilot who never set a callsign
+   was published under the local part of his email address, which on a firstname.lastname address
+   is a real name.
+   FIX: a callsign is never derived from an email address, and never from an OAuth provider's
+   username either (that is where a Discord handle would land). Only an explicitly chosen name
+   counts. Everyone else gets a neutral, non-identifying default until they choose one, and the
+   guided setup's callsign step stays red until they do. */
+function cgNeutralCallsign(u){
+  var id=String((u&&u.id)||''), t=id.replace(/[^0-9a-fA-F]/g,'').slice(0,4).toUpperCase();
+  return 'PILOT-'+(t||'0000');
+}
+function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
+  return m.callsign || cgNeutralCallsign(u); }
   function initials(n){ n=(n||'?').trim(); var p=n.split(/[\s_.-]+/).filter(Boolean); return ((p[0]||'?')[0]+((p[1]||'')[0]||'')).toUpperCase(); }
   function fmtTime(iso){ try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
   function ago(iso){ try{var s=Math.floor((Date.now()-new Date(iso).getTime())/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago';}catch(e){return '';} }
@@ -3080,7 +3096,17 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     if(ORG_ID){ loadSquadrons(function(){loadRoster();}); loadObjectives(); loadPlans(); loadJoints(); } else { squadrons=[]; roster=[]; renderOrg(); renderWing(); }
     subMembers(); if(isAdmin) subOrgs();
   }
-  function heartbeat(){ if(!sb||!me)return; sb.from('org_members').update({callsign:callsign(me),last_seen:new Date().toISOString()}).eq('user_id',me.id).then(function(){},function(){}); }
+  /* ---- sc-b8f-heartbeat (T, 29 JUL) --------------------------------------------
+   MEASURED CAUSE of three separate symptoms: this heartbeat wrote
+   {callsign: callsign(me), last_seen: ...} on EVERY beat. callsign(me) used to be derived
+   from the email address, so every open tab continuously forced a pilot's public callsign
+   back to his email name. That is why a callsign typed into the guided setup "did not save",
+   why a SQL repair of the leaked names reverted within seconds, and why the leak returned
+   after being fixed. It would also have overwritten every pilot's CHOSEN callsign with the
+   new neutral default, which would have been worse than the bug it replaced.
+   A heartbeat says "I am here". It has no business touching identity. It now writes
+   last_seen and nothing else. */
+function heartbeat(){ if(!sb||!me)return; sb.from('org_members').update({last_seen:new Date().toISOString()}).eq('user_id',me.id).then(function(){},function(){}); }
 
   // ---- data ----
   function loadSquadrons(cb){ if(!sb||!me||!ORG_ID){ if(cb)cb(); return; }
