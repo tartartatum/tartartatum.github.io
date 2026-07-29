@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=579;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=580;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-29';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -28046,11 +28046,11 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
-  var NOTES_VER='2026-07-29b';   /* bumped: reopens the strip ONCE for anyone who hid it */
+  var NOTES_VER='2026-07-29c';   /* bumped: reopens the strip ONCE for anyone who hid it */
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Created on the spot, nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, superior functionality and ease of use, GTFO and go use SCORG, the button is in the COMMS pill. This tool is free. Built the normal way it would take a team of five about eight months and cost between $450,000 and $850,000. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Created on the spot, nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, superior functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. Built the normal way it would take a team of five about eight months and cost between $450,000 and $850,000. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
