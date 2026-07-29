@@ -1448,6 +1448,15 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
      field guard). This page never grants anything: the database refuses what the UI should not
      have offered. */
   function myPoolRow(){ if(!me) return null; return poolRoster.filter(function(r){return r.user_id===me.id;})[0]||null; }
+  /* build 571: the tablet cannot see org_members, so it cannot know a pilot's callsign or RSI
+     handle. Mirror both into localStorage from here, same origin, so the tablet's account pill
+     shows RAZVYN and not a Discord handle. Written on every pool load; harmless if unchanged. */
+  function shMirrorIdentity(){ try{
+    var r=(typeof roster!=='undefined' && me ? roster.filter(function(m){return m.user_id===me.id;})[0] : null) || myPoolRow();
+    if(!r) return;
+    if(r.callsign) localStorage.setItem('cg_callsign', String(r.callsign).trim());
+    if(r.handle)   localStorage.setItem('cg_rsi_handle', String(r.handle).trim());
+  }catch(e){} }
   function partyRows(pid){ return poolRoster.filter(function(r){return r.party_id===pid;})
     .sort(function(a,b){ if((a.party_role==='leader')!==(b.party_role==='leader')) return a.party_role==='leader'?-1:1;
       return String(a.callsign||'').toLowerCase()<String(b.callsign||'').toLowerCase()?-1:1; }); }
@@ -1609,6 +1618,7 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
   function shSetNoDiscord(v){ try{ localStorage.setItem('cg_no_discord', v?'1':'0'); }catch(e){} }
   function shSeen(){ try{ return localStorage.getItem('cg_sh_seen')==='1'; }catch(e){ return true; } }
   function shMarkSeen(){ try{ localStorage.setItem('cg_sh_seen','1'); }catch(e){} }
+  setInterval(shMirrorIdentity, 4000);
   function shOrgRow(){ if(!me) return null; try{ return roster.filter(function(m){return m.user_id===me.id;})[0]||null; }catch(e){ return null; } }
   function shMyRow(){ return shOrgRow()||myPoolRow(); }
 
@@ -1788,6 +1798,17 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     sh.auto=true; shOpen('party');
   }, 1200);
   window.cgStartHere=function(track){ shOpen(track||'party'); };
+  /* The tablet's GUIDED SETUP button opens this page with &start=1. Force the popup
+     open in that case even for a pilot who has already dismissed it once. */
+  (function(){ try{
+    if(/[?&]start=1(&|$)/.test(location.search)){
+      var n=0, iv=setInterval(function(){
+        if(++n>60){ clearInterval(iv); return; }
+        if(!me) return;
+        clearInterval(iv); shOpen('party');
+      }, 900);
+    }
+  }catch(e){} })();
   /* A permanent way back in. Older pilots close things by accident and the button has to
      still be there afterwards. */
   (function(){ var n=0, iv=setInterval(function(){

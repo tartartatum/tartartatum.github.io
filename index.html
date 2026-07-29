@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=569;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=571;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-29';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18402,7 +18402,28 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   var reEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   function setErr(id,msg,ok){ var e=document.getElementById(id); if(e){ e.textContent=msg||''; e.style.color=ok?'var(--green2,#39d353)':'var(--red2,#ff6b6b)'; } }
-  function userFromSb(u){ if(!u) return null; var nm=(u.user_metadata&&(u.user_metadata.username||u.user_metadata.name))||(u.email||'user').split('@')[0]; return {name:nm,email:u.email}; }
+  /* build 571 (T, 29 JUL): "nothing there should say ttomtatta. this shouldn't happen to me
+     or other players." MEASURED CAUSE: this function used to read
+     user_metadata.username || user_metadata.name. Supabase copies the OAuth provider's fields
+     into user_metadata, so the moment a pilot signs in with Discord his DISCORD handle became
+     his CmdGlas identity everywhere the account pill is read: the top bar, the green state
+     line, and the gamertag under his avatar.
+     FIX: a provider handle can never win. Order is now
+       1. the RSI handle he typed into COMMS   (his gaming name)
+       2. his CmdGlas callsign, mirrored into localStorage by the COMMS page
+       3. the name he chose at signup, and ONLY when no OAuth provider is attached
+       4. the local part of his email
+     user_metadata.username / .name are deliberately NOT consulted when an OAuth identity
+     exists, because that is precisely where Discord lands. */
+  function userFromSb(u){ if(!u) return null;
+    var md=u.user_metadata||{}, ls=function(k){ try{ return (localStorage.getItem(k)||'').trim(); }catch(e){ return ''; } };
+    var oauth=false;
+    try{ var ids=u.identities||[]; for(var i=0;i<ids.length;i++){ if(ids[i].provider && ids[i].provider!=='email' && ids[i].provider!=='phone'){ oauth=true; break; } } }catch(e){}
+    var nm = ls('cg_rsi_handle')
+          || ls('cg_callsign')
+          || (oauth ? '' : (md.username||md.name||''))
+          || (u.email||'user').split('@')[0];
+    return {name:nm,email:u.email}; }
   function setCurrent(u){ CURRENT=u; try{ if(u) localStorage.setItem(LS,JSON.stringify(u)); else localStorage.removeItem(LS); }catch(e){} renderPill(); }
   window.scAuthUser=function(){ if(CURRENT) return CURRENT; if(!sb){ try{ return JSON.parse(localStorage.getItem(LS)||'null'); }catch(e){} } return null; };
 
@@ -27513,8 +27534,11 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close_(); });
     return o;
   }
-  function open_(){ var o=overlay(); var f=o.querySelector('iframe'); var ch='general'; try{ ch=localStorage.getItem('cg_comms_channel')||'general'; }catch(e){}
-    f.src='cmdglas_org.html?ch='+encodeURIComponent(ch)+'&cb='+(new Date().getTime()); o.classList.add('open'); }
+  function open_(qs){ var o=overlay(); var f=o.querySelector('iframe'); var ch='general'; try{ ch=localStorage.getItem('cg_comms_channel')||'general'; }catch(e){}
+    /* build 570: an optional extra query string, so GUIDED SETUP can open the COMMS
+       page straight into the START HERE popup instead of just landing on the page. */
+    if(typeof qs!=='string') qs='';
+    f.src='cmdglas_org.html?ch='+encodeURIComponent(ch)+qs+'&cb='+(new Date().getTime()); o.classList.add('open'); }
   function close_(){ var o=document.getElementById('cg-comms-max'); if(o){ o.classList.remove('open'); var f=o.querySelector('iframe'); if(f) f.src='about:blank'; } }
   function addBtn(){ var head=document.querySelector('#sc-chatdock .cd-head'); if(!head) return false; if(head.querySelector('.cd-expand')) return true;
     var chev=head.querySelector('.cd-chev'); var btn=document.createElement('button'); btn.type='button'; btn.className='cd-expand'; btn.title='Expand COMMS - WING console + hierarchy';
@@ -27537,6 +27561,10 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
    not deleted, so the build 494 overlay logic is untouched and this is a one-line revert.
    Reversible: delete this style + the script below. */
 #sc-chatdock .cd-expand{display:none !important}
+/* build 570 (T): GUIDED SETUP joins row two, first position, ahead of USER MANUAL.
+   Same size and shape as its neighbours; cyan so it reads as the "start here" one. */
+.cg-comms-btns2 .cg-comms-guide{color:#cdefff;background:rgba(60,150,200,.22);border:1px solid rgba(140,215,255,.6)}
+.cg-comms-btns2 .cg-comms-guide:hover{color:#fff;background:rgba(80,185,240,.32);border-color:#8fd6f2}
 .cg-comms-enter{display:block;box-sizing:border-box;width:calc(100% - 14px);margin:6px 7px 5px;padding:8px 10px;
   background:linear-gradient(180deg,rgba(22,66,98,.92),rgba(10,30,50,.92));
   border:1px solid rgba(120,200,240,.6);border-radius:7px;color:#c6ecff;
@@ -27564,6 +27592,11 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
      lose addEventListener handlers (build 501). Delegation fires for the original AND the clone. */
   document.addEventListener('click', function(e){
     var t=e.target; if(!t||!t.closest) return;
+    var g=t.closest('.cg-comms-guide');
+    if(g){ e.preventDefault(); e.stopPropagation();
+      if(typeof window.cgCommsMaxOpen==='function'){ window.cgCommsMaxOpen('&start=1'); return; }
+      var hg=document.querySelector('#sc-chatdock .cd-expand'); if(hg) hg.click();
+      return; }
     var b=t.closest('.cg-comms-enter'); if(!b) return;
     e.preventDefault(); e.stopPropagation();
     if(typeof window.cgCommsMaxOpen==='function'){ window.cgCommsMaxOpen(); return; }
@@ -27583,6 +27616,14 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
       var row2=par.querySelector(':scope > .cg-comms-btns2');
       var after=row2||row;
       if(after.nextSibling) par.insertBefore(b, after.nextSibling); else par.appendChild(b);
+      /* build 570: GUIDED SETUP, first button in row two. Delegated click, same as
+         ENTER COMMS, because the NAV pill is a cloneNode copy and clones lose handlers. */
+      if(row2 && !row2.querySelector(':scope > .cg-comms-guide')){
+        var g=document.createElement('button'); g.type='button'; g.className='cg-comms-guide';
+        g.textContent='GUIDED SETUP';
+        g.title='Walk me through setting up my party and my org, step by step';
+        row2.insertBefore(g, row2.firstChild);
+      }
     }
   }
   setInterval(add, 900); add();
