@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=580;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=582;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-29';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -26368,7 +26368,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   var state={};
   /* 2026-07-29 T: Stream Deck keybinds need a way in - expose the toggle (undock() already
      restores when floating, so one call = toggle). Keydown wiring lives in sc-b564-pillkeys-js. */
-  window.cgPillToggle=function(k){ try{ undock(k); }catch(e){} };
+  window.cgPillToggle=function(k){ try{ if(k!=='ops') return; undock(k); }catch(e){} };
   var WRAP={leftpill:'sc-home-widgets',ops:'sc-home-widgets',account:'sc-home-widgets',search:'sc-tools-row',comms:'sc-tools-row'};
   function makeHost(key, doc){
     var id=WRAP[key]||'sc-home-widgets';
@@ -26417,9 +26417,33 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
       try{ win.document.documentElement.className=document.documentElement.className; }catch(_){}
       win.document.body.className='sc-home-mode';
       win.document.body.style.margin='0'; win.document.body.style.background='#0a0f18';
+      /* build 581: the cloned page stylesheets can carry their own zoom/transform, and applying
+         ours on top of that is what made the window open oversized in July. Neutralize theirs
+         first, then set ours once, on the root only. */
+      try{
+        var zr=win.document.createElement('style');
+        zr.textContent='html,body{zoom:1 !important;transform:none !important;}'
+          +'.cg-pop-host{zoom:1 !important;transform:none !important;}';
+        win.document.head.appendChild(zr);
+      }catch(_){}
       try{ win.document.documentElement.style.setProperty('zoom', st.z, 'important'); }catch(_){}
       var host=makeHost(key, win.document); win.document.body.appendChild(host); host.appendChild(st.node);
-      try{ host.style.width=st.lw+'px'; host.style.height=st.lh+'px'; st.node.style.width='100%'; st.node.style.height='100%'; }catch(_){}
+      /* build 581: Chrome does not reliably honour the size asked for, and it remembers the last
+         size a pilot dragged the window to. Measured at 1920x1080 when 300-odd was requested.
+         So stop chasing an exact pixel size: the detached HUD FILLS the window it is given, and
+         the pilot resizes the window itself. Any size then looks intentional instead of leaving a
+         small pill stranded in a large dark rectangle. */
+      try{
+        var fill=win.document.createElement('style');
+        fill.textContent='html,body{width:100%;height:100%;overflow:hidden}'
+          +'.cg-pop-host{width:100% !important;height:100% !important;display:flex !important;'
+          +'align-items:center !important;justify-content:center !important}'
+          /* fill the width, keep the pill's own height, and centre it. A window taller than the
+             pill then reads as framing rather than as a void under the content. */
+          +'.cg-pop-host>*:not(style){width:100% !important;max-height:100% !important}';
+        win.document.head.appendChild(fill);
+      }catch(_){}
+      try{ st.node.style.width='100%'; st.node.style.height='100%'; }catch(_){}
       /* build 440: Chrome remembers the last pop-out window size, so a DocPiP/popup can open far larger than the pill and strand the content in a huge dark window. After the content lays out, snap the window down to the pill's real rendered size. Retried because DocPiP may not honor resizeTo until the frame settles. */
       try{ fitWindow(win, host); }catch(_){}
     }catch(e){ restore(key); return; }
@@ -26452,12 +26476,41 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     var lw=node.offsetWidth||Math.round(r.width), lh=node.offsetHeight||Math.round(r.height);
     var z=lw?(r.width/lw):1; if(!(z>0.2&&z<3)) z=1;
     var st={ node:node, parent:node.parentNode, next:node.nextSibling, lw:lw, lh:lh, z:z, rw:Math.round(r.width), rh:Math.round(r.height), g:{w:Math.max(200,Math.round(r.width)), h:Math.max(160,Math.round(r.height))} };
-    var ph=document.createElement('div'); ph.className='cg-pop-ph'; ph.innerHTML='<div class="cg-pop-ph-in">'+PILLS[key].label+' UNDOCKED<br><button type="button" class="cg-pop-rtb">RTB / DOCK</button></div>';
+    var ph=document.createElement('div'); ph.className='cg-pop-ph'; ph.innerHTML='<div class="cg-pop-ph-in">'+PILLS[key].label+' UNDOCKED'
+      +(key==='ops'
+        ? '<div style="font-size:9px;letter-spacing:.6px;line-height:1.5;color:#7d93a8;margin:5px 0 7px;max-width:230px">Drag the window onto your game or a second monitor. Set the game to <b style="color:#9fd8ff">BORDERLESS</b> windowed so it can show on top. Exclusive fullscreen hides every other window.</div>'
+        : '<br>')
+      +'<button type="button" class="cg-pop-rtb">RTB / DOCK</button></div>';
     st.parent.insertBefore(ph, node); st.placeholder=ph;
     ph.querySelector('.cg-pop-rtb').onclick=function(){ restore(key); };
     state[key]=st;
-    /* 2026-07-28 T: every pill floats IN-PAGE now, sized to its own bounds. The DocPiP/popup window opened oversized (page zoom got applied a second time) and Chrome remembered stale sizes. The in-page float is exact and confined - HUD and all other pills. */
-    floatFallback(key); updateBtns();
+    /* build 581: the HUD leaves the page. Document Picture-in-Picture first, because MDN states
+       plainly that "the Picture-in-Picture window floats on top of other windows" - that is the
+       only mechanism a browser has for sitting over a running game. A plain popup window second,
+       which a pilot can drag to a second monitor but which will NOT float over a fullscreen game.
+       The in-page float last, which is what every pill did before today.
+       The 2026-07-28 retreat from PiP was a sizing bug, not a dead end: the window opened
+       oversized because the page zoom was applied twice. intoWindow now neutralizes any cloned
+       zoom before applying its own, and the window is asked for in VISUAL px. */
+    if(!(DETACHABLE[key] && tryPiP(key))){ if(!(DETACHABLE[key] && tryPopup(key))) floatFallback(key); }
+    updateBtns();
+  }
+  function tryPiP(key){
+    var st=state[key]; if(!st) return false;
+    var dp=window.documentPictureInPicture;
+    if(!dp || typeof dp.requestWindow!=='function') return false;   /* Firefox, Safari */
+    var w=Math.max(220,Math.min(Math.round(st.rw)+6, 1600));
+    var h=Math.max(160,Math.min(Math.round(st.rh)+6, 1200));
+    try{
+      dp.requestWindow({width:w, height:h}).then(function(win){
+        if(!state[key]){ try{ win.close(); }catch(e){} return; }
+        intoWindow(key, win);
+      }).catch(function(){
+        /* refused: not a secure context, no user gesture, or the user declined */
+        if(state[key] && !state[key].win){ if(!tryPopup(key)) floatFallback(key); }
+      });
+      return true;
+    }catch(e){ return false; }
   }
   function tryPopup(key){
     var st=state[key]; if(!st) return;
@@ -26474,12 +26527,24 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
       [].forEach.call(btns,function(b){ b.textContent=floating?(PILLS[key].label+' RTB'):'UNDOCK'; b.classList.toggle('cg-is-docked',floating); });
     });
   }
+  /* build 581 (T): only the HUD detaches now. A browser can put exactly ONE window on top of a
+     running game, Chrome's Document Picture-in-Picture window, and there is one per tab. Spending
+     it on the HUD is the whole point, so the other four undock buttons are switched off rather
+     than offering four things that cannot do what the button implies. */
+  var DETACHABLE={ops:1};
   function addBtns(){
     Object.keys(PILLS).forEach(function(key){
+      if(!DETACHABLE[key]) return;
       if(state[key]) return;
       var node=q(key); if(!node) return;
       if(node.querySelector('.cg-undock-btn[data-pop="'+key+'"]')) return; /* build 525: comms hosts its button INSIDE .cg-comms-btns - a :scope> check would re-add it every 900ms tick */
-      var b=document.createElement('button'); b.type='button'; b.className='cg-undock-btn'; b.setAttribute('data-pop',key); b.textContent='UNDOCK'; b.title='Ctrl+Alt+'+({ops:1,account:2,leftpill:3,search:4,comms:5}[key]||'');
+      var b=document.createElement('button'); b.type='button'; b.className='cg-undock-btn'; b.setAttribute('data-pop',key); b.textContent='UNDOCK';
+      /* build 582 (T): say the borderless requirement on the control itself. An always-on-top
+         window sits over a game running BORDERLESS windowed. Exclusive fullscreen takes the
+         display and hides every other window, including this one. */
+      b.title=(key==='ops'
+        ? 'Detach the HUD into a floating always-on-top window. Ctrl+Alt+1. Set the game to BORDERLESS windowed for it to show over the game - exclusive fullscreen hides all other windows.'
+        : 'Ctrl+Alt+'+({ops:1,account:2,leftpill:3,search:4,comms:5}[key]||''));
       b.addEventListener('click',function(e){ e.stopPropagation(); undock(key); });
       /* build 525: the COMMS pill shows one row - [ OPEN ] [ SET UP ] [ UNDOCK ] - so its
          undock goes into that row when it exists. Every other pill is unchanged. */
