@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=576;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=578;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-29';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18454,6 +18454,18 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
   window.scAuthUser=function(){ if(CURRENT) return CURRENT; if(!sb){ try{ return JSON.parse(localStorage.getItem(LS)||'null'); }catch(e){} } return null; };
 
   try{ CURRENT=JSON.parse(localStorage.getItem(LS)||'null'); }catch(e){} /* last-known shows instantly; the live Supabase session overrides once loaded */
+  /* build 578 (T changed his callsign in the guided setup and the pill did not move).
+     MEASURED CAUSE: the display name was only ever recomputed on load and on an auth event, so
+     a callsign edited in COMMS could not appear until a refresh. Now it re-derives every 5s from
+     the values already in localStorage, which is free, and re-reads the roster every 60s.
+     Both only write when the name actually changed, so there is no repaint churn. */
+  function identityTick(){
+    if(!SBUSER) return;
+    var u=userFromSb(SBUSER);
+    if(u && (!CURRENT || CURRENT.name!==u.name)) setCurrent(u);
+  }
+  setInterval(identityTick, 5000);
+  setInterval(function(){ if(SBUSER) pullIdentity(SBUSER.id); }, 60000);
   function wireSession(){ if(!sb) return;
     sb.auth.getSession().then(function(r){ var su=r&&r.data&&r.data.session&&r.data.session.user; SBUSER=su||null; setCurrent(userFromSb(su)); if(su) pullIdentity(su.id); }).catch(function(){});
     sb.auth.onAuthStateChange(function(_e,session){ var su=session&&session.user; SBUSER=su||null; setCurrent(userFromSb(su)); if(su) pullIdentity(su.id); if(_e==='PASSWORD_RECOVERY'){ try{ scAuthNewPwOpen(); }catch(e){} } }); }
@@ -18574,7 +18586,21 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
   };
 
   function hideMenu(){ var m=document.getElementById('sca-usermenu'); if(m) m.classList.remove('sca-open'); }
-  function showMenu(anchor){ var m=document.getElementById('sca-usermenu'); if(!m) return; var r=anchor.getBoundingClientRect(); m.style.top=(r.bottom+6)+'px'; m.style.right=Math.max(6,(window.innerWidth-r.right))+'px'; m.classList.add('sca-open'); }
+  function showMenu(anchor){ var m=document.getElementById('sca-usermenu'); if(!m) return;
+    var r=anchor.getBoundingClientRect();
+    m.style.left=''; m.style.top=(r.bottom+6)+'px';
+    m.style.right=Math.max(6,(window.innerWidth-r.right))+'px';
+    m.classList.add('sca-open');
+    /* build 577: right-anchoring alone put the menu at x=-63 when the anchor sits near the left
+       edge, measured in a real browser. Clamp it back on screen after it has a box, both axes. */
+    try{
+      var b=m.getBoundingClientRect();
+      if(b.left < 6){ m.style.right=''; m.style.left='6px'; }
+      else if(b.right > window.innerWidth-6){ m.style.right='6px'; m.style.left=''; }
+      var b2=m.getBoundingClientRect();
+      if(b2.bottom > window.innerHeight-6){ m.style.top=Math.max(6,(r.top-b2.height-6))+'px'; }
+    }catch(e){}
+  }
   document.addEventListener('click',function(e){ var m=document.getElementById('sca-usermenu'); if(m&&m.classList.contains('sca-open')&&!m.contains(e.target)&&!(e.target.closest&&e.target.closest('#sca-pill'))) hideMenu(); });
 
   function buildPill(){
@@ -22752,7 +22778,19 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
       +'<div class="lg-msg">Live preview - lights up with your real status IF CIG Link connects.</div>'
       +'<button type="button" class="lg-btn" id="lg-btn">SIGN IN</button>'
       +'</div>';
-    var btn=card.querySelector('#lg-btn'); if(btn) btn.onclick=function(){ var p=document.getElementById('sca-pill'); if(p) p.click(); };
+    /* build 577 (T: "when i click on account nothing happens"). MEASURED CAUSE, reproduced in a
+       real browser: this handler calls .click() on #sca-pill, which opens the account menu, but
+       the ORIGINAL click is still bubbling. The document-level outside-click closer then sees a
+       click that is not inside #sca-pill, and shuts the menu in the same event. Net effect: the
+       menu opens and closes instantly, with no error, which reads as a dead button.
+       FIX: stop this click from bubbling, and open the menu on the next tick so the original
+       event is finished before the menu exists. */
+    var btn=card.querySelector('#lg-btn');
+    if(btn) btn.onclick=function(ev){
+      if(ev){ try{ ev.preventDefault(); ev.stopPropagation(); }catch(e){} }
+      var p=document.getElementById('sca-pill');
+      if(p) setTimeout(function(){ p.click(); }, 0);
+    };
     /* CrimeStat morph: cross-fade through the series with matching glow colour */
     var badge=card.querySelector('#cg-cs-badge'), frame=card.querySelector('#cg-cs-frame'), word=card.querySelector('#cg-cs-word');
     var els=badge?badge.querySelectorAll('img'):[];
@@ -27995,7 +28033,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
    HONESTY RULE: on any fetch failure it silently keeps the baked text. */
 (function(){
   if(window.__cgCmdlog533) return; window.__cgCmdlog533=true;
-  var BUILD_STAMP='TABLET UPDATED 28 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
+  var BUILD_STAMP='TABLET UPDATED 29 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
   /* T's order 27 JUL 2026: the two pin/price items below STAY in the ticker until at least
      30 JUL 2026, even as newer items are added above them. Add new NEW items BEFORE these two. */
   /* T 2026-07-27: "update new news banner on the tablet to read: Org Planner and Mission builder
@@ -28008,8 +28046,11 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
-  var NOTES_VER='2026-07-28e';
-  var NOTES='COMING SOON: DISCORD AUTO-SYNC - assign a pilot to a squadron or party in the tablet and their Discord roles and voice channel set themselves, so org and large-party ops run themselves instead of hand-stamping roles. &middot; SECURE BY DESIGN - it only ever touches the roles you map, never removes anything you set by hand, never touches the game, and the bot keys stay server-side so nothing sensitive ever lives in the tablet.';
+  var NOTES_VER='2026-07-29a';   /* bumped: reopens the strip ONCE for anyone who hid it */
+  /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
+     what actually shipped; org voice is named as NEXT and not claimed, because squadron
+     channels and role mirroring do not exist yet. */
+  var NOTES='DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Created on the spot, nothing to set up, no download. &middot; TESTERS WANTED - press it and tell me exactly what happened, especially when it breaks. discord.gg/dkBvyyYNHj &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
