@@ -1721,6 +1721,20 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     h+='</div>';
     return h;
   }
+  /* ---- sc-b8d-btnfix: primary buttons were unreadable ----------------------
+     MEASURED CAUSE: .oc-btn sets its fill with the `background` shorthand, which also sets
+     background-COLOR to transparent. A later theme rule then paints a gloss over
+     .oc-btn via background-IMAGE, replacing that gradient. What is left is a transparent
+     button carrying color:#04141d, dark text chosen for a light fill that is no longer there.
+     Every non-ghost .oc-btn on this page reads as disabled, including JOIN PARTY VOICE.
+     FIX: give them a real background-color. The gloss then sits on top of something. */
+  (function(){ if(document.getElementById('cg-btnfix')) return;
+    var st=document.createElement('style'); st.id='cg-btnfix';
+    st.textContent='.oc-btn:not(.ghost){background-color:#2a84ac !important;color:#04141d !important;'
+      +'border-color:rgba(150,215,240,.85) !important;font-weight:700}'
+      +'.oc-btn:not(.ghost):hover{background-color:#3aa0cc !important;color:#02121a !important}';
+    (document.head||document.documentElement).appendChild(st);
+  })();
   function shBuild(){
     var el=document.getElementById('oc-starthere');
     if(el) return el;
