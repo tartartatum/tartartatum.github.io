@@ -8059,7 +8059,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='0.9.2';
-window.CMDGLAS_BUILD=558;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=560;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-28';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -21115,7 +21115,7 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
    dissolving toward the bottom); shrink the blueprints/inventory/starmap art for edge padding. */
 #tab-home .hm-tile{border-color:rgba(100,205,255,.6) !important;border-bottom-color:rgba(100,205,255,.05) !important}
 #tab-home .hm-tile::before{-webkit-mask:linear-gradient(180deg,#000 0%,#000 38%,transparent 82%) !important;mask:linear-gradient(180deg,#000 0%,#000 38%,transparent 82%) !important;border-color:rgba(185,232,255,.45) !important}
-#tab-home .hm-tile.hm-img[data-tab="blueprints"] .hm-timg,#tab-home .hm-tile.hm-img[data-tab="inventory"] .hm-timg,#tab-home .hm-tile.hm-img[data-tab="starmap"] .hm-timg{width:80% !important;height:80% !important}
+#tab-home .hm-tile.hm-img[data-tab="inventory"] .hm-timg,#tab-home .hm-tile.hm-img[data-tab="starmap"] .hm-timg{width:80% !important;height:80% !important}#tab-home .hm-tile.hm-img[data-tab="blueprints"] .hm-timg{width:90% !important;height:90% !important}
 </style>
 <style id="sc-tile-3d-css">
 /* 2026-07-20 T (build 269): inner tile outline made concentric with the outer corner (tile radius
@@ -27297,10 +27297,10 @@ html.cmdglas-public #tab-system.active{display:flex !important}
 /* build 478 (user: live PILOTS ONLINE counter). Heartbeats to the CmdGlas Cloudflare worker and shows how many tablets are active in the last 2 minutes. No login / no personal data - just a random per-browser id. Reversible: delete this block + sc-b478-pilots-css. */
 (function(){
   if(window.__cgPilots478) return; window.__cgPilots478=true;
-  var API='https://cmdglas-pilots.razvyn.workers.dev';
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co', SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   var id; try{ id=localStorage.getItem('cg_sid'); if(!id){ id=Date.now().toString(36)+Math.random().toString(36).slice(2,8); localStorage.setItem('cg_sid',id);} }catch(e){ id='anon'+Math.random().toString(36).slice(2,8); }
   function show(n){ var el=document.getElementById('cg-pilots'); if(!el||typeof n!=='number') return; var num=el.querySelector('.cgp-num'), lbl=el.querySelector('.cgp-lbl'); if(num) num.textContent=n.toLocaleString(); if(lbl) lbl.textContent=(n===1?'PILOT ONLINE':'PILOTS ONLINE'); el.style.display='inline-flex'; var w=document.getElementById('cg-pilots-wrap'); if(w) w.style.display=''; }
-  function beat(){ fetch(API+'/beat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})}).then(function(r){return r.json();}).then(function(d){ if(d&&typeof d.online==='number') show(d.online); }).catch(function(){}); }
+  function beat(){ fetch(SB_URL+'/rest/v1/rpc/cg_beat',{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY},body:JSON.stringify({p_id:id})}).then(function(r){return r.json();}).then(function(d){ var n=(typeof d==='number')?d:(Array.isArray(d)?d[0]:(d&&typeof d.cg_beat==='number'?d.cg_beat:(d&&typeof d.online==='number'?d.online:null))); if(typeof n==='number') show(n); }).catch(function(){}); }
   function place(){ if(document.getElementById('cg-pilots-wrap')) return; /* build 479 (user: counter right of SQ42) - a wrap the onebar collects into the right flank; stays hidden until a count arrives */ var home=document.getElementById('tab-home'); var right=document.querySelector('#cg-onebar .cg-ob-right'); if(!home&&!right) return; var wrap=document.createElement('div'); wrap.id='cg-pilots-wrap'; wrap.style.display='none'; var el=document.createElement('div'); el.id='cg-pilots'; el.title='Tablets active in the last 2 minutes'; el.innerHTML='<span class="cgp-dot"></span><span class="cgp-num">0</span>&nbsp;<span class="cgp-lbl">PILOTS ONLINE</span>'; wrap.appendChild(el); (right||home).appendChild(wrap); beat(); setInterval(beat, 45000); }
   try{ new MutationObserver(place).observe(document.body,{childList:true,subtree:true}); }catch(e){}
   var n=0, iv=setInterval(function(){ place(); if(++n>150) clearInterval(iv); }, 400);
