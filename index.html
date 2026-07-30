@@ -8525,7 +8525,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=596;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=597;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -32103,5 +32103,43 @@ document.addEventListener('click',function(e){
 },true);
 })();
 </script>
+
+<style id="sc-b597-topanchor-touch-css">
+/* ══ build 597 — THE TOP GAP ON TOUCH. MEASURED, NAMED, KILLED. ═════════════════════════
+   T, repeatedly: "the same gap on the top", "i think you forgot to remove the top gap
+   inside the tablet." He was right - I had not touched it. Here is what it actually was.
+
+   MEASURED at 1366x1024 on an iPad UA, in the live DOM:
+       DIV.hm-wrap   margin-top: 179.444px      <- the gap, to the pixel
+       first pill top: 181px  (179.444 + .hm-cols' own 16px, minus rounding)
+   That margin is not authored anywhere as a number. It is what `margin-top:auto` RESOLVES
+   to: .hm-wrap's content is 917px inside a container filled to --sc-touchfill (1274px), so
+   auto margins split the 357px of slack evenly - 179 above, 179 below.
+
+   WHO SETS IT: build 389's touch rule,
+       body.sc-home-mode:not([data-portable="1"]) #home-scroll > .hm-wrap{
+         margin-top:auto !important; margin-bottom:auto !important }
+   Desktop already had this argument and settled it. Build 361 centred it, build 364
+   TOP-ANCHORED it because centring "left a gap above the pills" - T's words then, the same
+   words now - and build 365 re-centred it again for "even top/bottom space". Every one of
+   those rules is `@media (pointer:fine)`. TOUCH never got the 364 treatment, so the iPad has
+   been sitting on the centred version this whole time.
+
+   FIX: top-anchor on touch, exactly as 364 did for desktop. margin-bottom stays auto so the
+   slack pools below, and auto margins collapse to 0 when the content is TALLER than the
+   container - so on a short screen this cannot push anything off the top edge.
+   Reversible: delete this block and the iPad goes back to centred.
+   ═══════════════════════════════════════════════════════════════════════════════════════ */
+@media (pointer:coarse){
+  body.sc-home-mode:not([data-portable="1"]) #home-scroll > .hm-wrap{
+    margin-top:0 !important;
+    margin-bottom:auto !important;
+  }
+  /* the same flex-column slack pooling desktop uses, so the tiles do not drift back down */
+  body.sc-home-mode #home-scroll > .hm-wrap{ display:flex !important; flex-direction:column !important; }
+  body.sc-home-mode #home-scroll > .hm-wrap > .hm-cols{ margin-top:0 !important; }
+  body.sc-home-mode #home-scroll > .hm-wrap > #cg-social-row{ margin-top:auto !important; margin-bottom:0 !important; }
+}
+</style>
 </body>
 </html>
