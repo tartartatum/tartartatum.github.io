@@ -3141,7 +3141,11 @@ function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
    new neutral default, which would have been worse than the bug it replaced.
    A heartbeat says "I am here". It has no business touching identity. It now writes
    last_seen and nothing else. */
-function heartbeat(){ if(!sb||!me)return; sb.from('org_members').update({last_seen:new Date().toISOString()}).eq('user_id',me.id).then(function(){},function(){}); }
+function heartbeat(){ if(!sb||!me)return;
+  /* GHOST MODE: the beat is what makes you read as ONLINE to everyone else. Not writing it
+     is the whole mechanism — within 3 minutes you age out of every ONLINE list there is. */
+  if(cgGhostOn()) return;
+  sb.from('org_members').update({last_seen:new Date().toISOString()}).eq('user_id',me.id).then(function(){},function(){}); }
 
   // ---- data ----
   function loadSquadrons(cb){ if(!sb||!me||!ORG_ID){ if(cb)cb(); return; }
@@ -3430,11 +3434,82 @@ function heartbeat(){ if(!sb||!me)return; sb.from('org_members').update({last_se
     if(t.hasAttribute&&t.hasAttribute('data-objpri')){ objUpd(t.getAttribute('data-objpri'),{priority:t.value}); return; }
   }
 
-  // ---- presence + live members ----
+  
+/* ══ GHOST MODE — build 1.1, 30 JUL 2026 ═══════════════════════════════════════════════
+   T: "i need a way to hide myself from other players one single switch that keeps me
+   invisible from everybody. build it into the command console."
+
+   WHAT MAKES YOU VISIBLE TO OTHER PILOTS — measured, all three, nothing else:
+     1. heartbeat()      writes org_members.last_seen every 60 s. Other clients call you
+                         ONLINE if that stamp is under 3 minutes old.
+     2. rtPresence.track() puts you on the Supabase realtime presence channel. THIS is the
+                         live green dot. It is stronger and faster than last_seen.
+     3. party_id / party_role / tac_callsign / kia / rescue on your org_members row — the
+                         party ops board and squadron sheet read these directly.
+
+   THE DESIGN RULE: HIDING IS NOT FILTERING. A switch that merely told other clients not to
+   draw you would be theatre — anyone reading the REST endpoint straight would still see you
+   sitting there. So ghost mode STOPS THE WRITES. There is nothing to filter because there is
+   nothing to read. That is the only version of this worth shipping.
+
+   WHAT IT CANNOT DO, AND THE SWITCH SAYS SO ON ITS FACE:
+   It cannot hide you inside Star Citizen. Not your ship, not your name, not your position,
+   not your org tag. Nothing running in a browser can. This hides you from CmdGlas — roster,
+   party ops, chat presence, squadron boards, the console's PILOTS ONLINE count. In game you
+   are exactly as visible as you were before.
+
+   YOU STAY ABLE TO SEE EVERYONE ELSE. Hidden, not blind — the presence channel is still
+   subscribed, you simply stop announcing yourself on it.
+
+   The flag lives in localStorage, which is shared across every CmdGlas page on this origin,
+   so the switch in the Command Console reaches this page with no server round trip. The
+   storage event carries it to any tab already open, live.
+   ═══════════════════════════════════════════════════════════════════════════════════════ */
+function cgGhostOn(){ try{ return localStorage.getItem('cg_ghost')==='1'; }catch(e){ return false; } }
+function cgGhostBadge(){
+  var el=document.getElementById('cg-ghost-badge');
+  if(!cgGhostOn()){ if(el) el.remove(); return; }
+  if(!el){
+    el=document.createElement('div'); el.id='cg-ghost-badge';
+    el.style.cssText='position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:2147483640;'
+      +'padding:3px 14px;border:1px solid #6f7bff;border-top:none;border-radius:0 0 10px 10px;'
+      +'background:rgba(18,22,48,.96);color:#aab4ff;font:700 10px/1 \'Rajdhani\',sans-serif;'
+      +'letter-spacing:2px;pointer-events:none;user-select:none';
+    document.body.appendChild(el);
+  }
+  el.textContent='● GHOST MODE - HIDDEN FROM OTHER PILOTS (NOT FROM THE GAME)';
+}
+function cgGhostApply(){
+  cgGhostBadge();
+  try{
+    if(!rtPresence) return;
+    if(cgGhostOn()){
+      /* untrack removes you from the channel immediately — no waiting for a stamp to age out */
+      if(typeof rtPresence.untrack==='function') rtPresence.untrack();
+    } else if(me){
+      if(typeof rtPresence.track==='function')
+        rtPresence.track({user_id:me.id,callsign:callsign(me),online_at:new Date().toISOString()});
+    }
+  }catch(e){}
+}
+window.cgGhostApply=cgGhostApply;
+/* exported so the Command Console, the tablet and a test harness can all read the same
+   answer instead of each re-deriving it from localStorage and drifting apart */
+window.cgGhostOn=cgGhostOn; window.cgGhostBadge=cgGhostBadge;
+try{
+  window.addEventListener('storage',function(ev){ if(ev && ev.key==='cg_ghost') cgGhostApply(); });
+}catch(e){}
+setInterval(cgGhostBadge,4000);
+
+// ---- presence + live members ----
   function subPresence(){ if(!sb||!me)return; try{if(rtPresence)sb.removeChannel(rtPresence);}catch(e){}
     rtPresence=sb.channel('org-presence-'+GAMERPOOL,{config:{presence:{key:me.id}}}); /* ORG_BUILD 5: one pool-wide presence channel - org members must be visible in the REGISTERED PILOTS list too */
     rtPresence.on('presence',{event:'sync'},function(){ var st=rtPresence.presenceState(); onlineIds={}; Object.keys(st).forEach(function(k){onlineIds[k]=1;}); renderOrg(); renderWing(); });
-    rtPresence.subscribe(function(status){ if(status==='SUBSCRIBED'){ rtPresence.track({user_id:me.id,callsign:callsign(me),online_at:new Date().toISOString()}); } });
+    rtPresence.subscribe(function(status){ if(status==='SUBSCRIBED'){
+      /* GHOST MODE: still SUBSCRIBE, so you keep seeing everyone else, but do not track()
+         yourself onto the channel. Hidden, not blind. */
+      if(cgGhostOn()){ cgGhostBadge(); return; }
+      rtPresence.track({user_id:me.id,callsign:callsign(me),online_at:new Date().toISOString()}); } });
   }
   var _rl=null;
   function subMembers(){ if(!sb||!me)return; try{if(rtMembers)sb.removeChannel(rtMembers);}catch(e){}
