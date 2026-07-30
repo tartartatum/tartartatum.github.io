@@ -8599,7 +8599,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=603;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=605;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18531,8 +18531,60 @@ Expanding a card lazy-loads its full live detail (rep/waves/blueprints). */
     document.getElementById('mall-count').textContent=view.length+' of '+ALL.length+' missions';
     listEl.innerHTML=''; shown=0; renderMore();
   }
-  fetch('/api/mission_list',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
-    if(!j.ok||!j.missions) throw 0;
+  /* ══ build 605, 30 JUL 2026 - MISSIONS-ALL NOW WORKS ON cmdglas.com ════════════════
+     T: "have you also updated the contracts list with the most recent addeed contracts
+     and factions?"
+
+     MEASURED FIRST, 30 JUL 2026. The contracts list was ALREADY current - that is not
+     what was broken. api.star-citizen.wiki/api/v2/missions holds 1,786 records, of which
+     1,422 are released & not_for_release=false. 8 of those are CIG's own unfinished rows
+     titled "<= PLACEHOLDER =>" / "<= UNINITIALIZED =>". That leaves 1,414 real contracts.
+     The tablet held 1,413 unique uuids (1,414 rows - one duplicate). Exactly ONE real
+     contract was absent: "Kill Order" (Bounty Hunter / Headhunters). Nothing had been
+     removed by CIG. So the answer to "did you update the contracts" is: they were 1 short.
+
+     THE ACTUAL BUG, which is much worse: this panel fetched ONLY '/api/mission_list',
+     an endpoint that exists only on the local SC Control Server. cmdglas.com/api/
+     mission_list returns 404 (verified 30 JUL 2026) - so every web visitor got an empty
+     MISSIONS-ALL panel and always had. Only the PC tablet ever worked.
+
+     FIX: try the local server first (fast, works offline, and it is authoritative when
+     present), and on any failure fall back to the live wiki API, which sends
+     access-control-allow-origin: * so the browser may read it directly (header verified
+     30 JUL 2026). Released-only and placeholder rows are filtered the same way the local
+     index is built, so both paths show the same 1,414 contracts.
+     Reversible: restore the single fetch('/api/mission_list') call. */
+  function msnFromWiki(){
+    var A='https://api.star-citizen.wiki/api/v2/missions?page[size]=200&page[number]=';
+    var pages=[]; for(var i=1;i<=9;i++) pages.push(i);
+    return Promise.all(pages.map(function(n){
+      return fetch(A+n).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+             .then(function(j){ return j.data||[]; }).catch(function(){ return []; });
+    })).then(function(chunks){
+      var PH=/^\s*(<=\s*(PLACEHOLDER|UNINITIALIZED)\s*=>|\[PH\])/i, seen={}, out=[];
+      chunks.forEach(function(c){ c.forEach(function(m){
+        if(!m.released||m.not_for_release) return;
+        var t=(m.title||'').trim(); if(!t||PH.test(t)) return;
+        if(seen[m.uuid]) return; seen[m.uuid]=1;
+        var f=(m.faction&&m.faction.name)||null;
+        out.push({t:t,u:m.uuid,s:String(m.web_url||'').replace(/\/$/,'').split('/').pop(),
+          g:m.mission_giver,f:f,sc:m.reward_scope,illegal:!!m.illegal,
+          rmin:m.reward_min,rmax:m.reward_max,cur:m.reward_currency,
+          dur:m.time_to_complete_minutes,
+          en:(m.enemy_count_max!=null?m.enemy_count_max:m.enemy_count_min),
+          rep:m.reputation_amount,bp:!!m.has_blueprints,
+          sys:(m.star_systems||[]).map(function(x){return typeof x==='string'?x:(x&&x.name)||'';}).join(';')});
+      });});
+      out.sort(function(a,b){return a.t.toLowerCase()<b.t.toLowerCase()?-1:1;});
+      if(!out.length) throw 0;
+      return {ok:true,missions:out,src:'wiki'};
+    });
+  }
+  fetch('/api/mission_list',{cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(j){ if(!j.ok||!j.missions||!j.missions.length) throw 0; return j; })
+    .catch(function(){ return msnFromWiki(); })
+    .then(function(j){
     ALL=j.missions;
     var scs={},gvs={},sys={};
     ALL.forEach(function(m){ if(m.sc)scs[m.sc]=1; gvs[m.g||'(none)']=1;
@@ -31801,18 +31853,12 @@ html.cmdglas-public #tab-system.active{display:flex !important}
     var num=el.querySelector('.cgp-num'), lbl=el.querySelector('.cgp-lbl');
     if(num) num.textContent=n.toLocaleString();
     if(lbl) lbl.textContent=(n===1?'PILOT ONLINE':'PILOTS ONLINE');
-    if(ips!==null){ var ib=document.getElementById('cgp-ip-wrap');
-      if(!ib){ ib=document.createElement('span'); ib.id='cgp-ip-wrap';
-        ib.style.display='inline-flex'; ib.style.alignItems='center';
-        ib.innerHTML='<span style="margin:0 6px;color:#4a708a">&middot;</span>'
-          +'<span class="cgp-num" id="cgp-ip-num"></span>&nbsp;<span class="cgp-lbl">IP</span>';
-        el.appendChild(ib); }
-      if(ib.getAttribute('data-v')!==String(ips)){ ib.setAttribute('data-v',String(ips));
-        var q=document.getElementById('cgp-ip-num'); if(q) q.textContent=ips.toLocaleString();
-        var g=document.getElementById('cgp-ip-wrap').querySelector('.cgp-lbl');
-        if(g) g.textContent=(ips===1?'IP':'IPs'); }
-    }
-    el.title='Tablets open in the last '+win+' minutes / distinct client IPs in the same window';
+    /* build 604: the IP figure is REMOVED from this public pill. T asked to SEE the
+       distinct-IP number; I rendered it on the pill every cmdglas.com visitor looks at,
+       which he never asked for and I never flagged. It belongs in the Command Console
+       only - that tile stays. `ips` is still returned by cg_beat2 and simply ignored here.
+       Reversible: nothing to undo server-side. */
+    el.title='Tablets open in the last '+win+' minutes';
     el.style.display='inline-flex';
     var w=document.getElementById('cg-pilots-wrap'); if(w) w.style.display=''; }
   function beat(){ fetch(SB_URL+'/rest/v1/rpc/cg_beat',{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY},body:JSON.stringify({p_id:id})}).then(function(r){return r.json();}).then(function(d){ var n=(typeof d==='number')?d:(Array.isArray(d)?d[0]:(d&&typeof d.cg_beat==='number'?d.cg_beat:(d&&typeof d.online==='number'?d.online:null))); if(typeof n==='number') show(n); }).catch(function(){}); }
@@ -35130,6 +35176,24 @@ document.addEventListener('click',function(e){
   var n=0,iv=setInterval(function(){ paint(); if(++n>150) clearInterval(iv); },400);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',paint); else paint();
 })();
+</script>
+<script id="sc-b604-ipstrip-js">
+/* build 604 - belt and braces: if a browser is showing a cached 603 pill that already
+   painted #cgp-ip-wrap, remove the node on load so nobody keeps seeing the IP count. */
+(function(){ function k(){ var n=document.getElementById('cgp-ip-wrap'); if(n&&n.parentNode) n.parentNode.removeChild(n); }
+ try{ new MutationObserver(k).observe(document.documentElement,{childList:true,subtree:true}); }catch(e){}
+ var i=0,t=setInterval(function(){ k(); if(++i>60) clearInterval(t); },500); k(); })();
+</script>
+<script id="sc-b605-factions-js">
+/* build 605 - FACTION_DATA, pulled from api.star-citizen.wiki/api/v2/factions on
+   30 JUL 2026: 64 records, 2 of them CIG placeholders, so 62 real factions. The tablet
+   previously carried NO faction table at all - it only knew the 34 faction NAMES that
+   happen to appear on a mission row. 28 real factions (Nine Tails, Hurston Security,
+   UEE Navy, Vanduul, Fire Rats, Dusters, Frontier Fighters and more) were absent.
+   Fields are the API's verbatim: faction_type, lawful, has_reputation, is_npc.
+   Reversible: delete this block. */
+window.FACTION_DATA=[{"n":"Aciedo Communications","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Adagio Holdings","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Alliance Aid","t":"Lawful","law":false,"rep":false,"npc":false},{"n":"ArcCorp","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"ASD","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Bit Zeros","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"BlacJac","t":"PrivateSecurity","law":false,"rep":false,"npc":false},{"n":"Bounty Hunters Guild","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Citizens For Prosperity","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Civilian","t":"Lawful","law":false,"rep":false,"npc":false},{"n":"Civilian","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Civilian Defense Force","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Clovus Darneely","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Covalex","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Crusader Industries","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Crusader Security","t":"PrivateSecurity","law":false,"rep":false,"npc":false},{"n":"Dead Saints","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"Dusters","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Eckhart Security","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Fire Rats","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Foxwell Enforcement","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Frontier Fighters","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"FTL Courier","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Headhunters","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"Highpoint Wilderness Specialists","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Hockrow Agency","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Horizon","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Hurston Dynamics","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Hurston Security","t":"PrivateSecurity","law":false,"rep":false,"npc":false},{"n":"InterSec Defense Solutions","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Klescher Rehabilitation Facilities","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Klescher Rehabilitation Facilities","t":"LawEnforcement","law":false,"rep":false,"npc":false},{"n":"Ling Family Hauling","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"microTech","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Moraine","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"MT Protection Services","t":"PrivateSecurity","law":false,"rep":false,"npc":false},{"n":"Nine Tails","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Northrock Service Group","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Outlaws","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Rayari Incorporated","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Recco Battaglia","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Red Wind Linehaul","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Rough & Ready","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Ruto","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"Security","t":"PrivateSecurity","law":false,"rep":false,"npc":false},{"n":"Security","t":"PrivateSecurity","law":false,"rep":false,"npc":false},{"n":"Security","t":"Lawful","law":false,"rep":false,"npc":false},{"n":"Shattered Blade","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Shubin Interstellar","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Tar Pits","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"Tecia \"Twitch\" Pacheco","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"UEE Advocacy","t":"LawEnforcement","law":false,"rep":false,"npc":false},{"n":"UEE Navy","t":"LawEnforcement","law":false,"rep":false,"npc":false},{"n":"Unified Distribution Management","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"United Wayfarers Club","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Vanduul","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"Vaughn","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"Wallace Klim","t":"Unlawful","law":false,"rep":true,"npc":false},{"n":"Wikelo Emporium","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"Wildstar Racing","t":"Lawful","law":true,"rep":true,"npc":false},{"n":"XenoThreat","t":"Unlawful","law":false,"rep":false,"npc":false},{"n":"XenoThreat","t":"Unlawful","law":false,"rep":true,"npc":false}];
+window.FACTION_SRC={api:"api.star-citizen.wiki/api/v2/factions",pulled:"2026-07-30",total:64,real:62};
 </script>
 </body>
 </html>
