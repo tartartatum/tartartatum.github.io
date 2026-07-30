@@ -27,7 +27,7 @@ window.HM_ICON_DATA={"mining":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPA
 
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-store">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"><!-- build 594: maximum-scale + user-scalable=no. Safari can override user-scalable for accessibility, which is exactly why the gesture guards in sc-b594-fit-js exist as well - either one alone still leaves the page draggable. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"><!-- build 595: blocks pinch-zoom, which is what lets the page be dragged. Safari can override user-scalable for accessibility, so sc-b595-lock-js refuses the gesture events too - either alone is not enough. -->
 <meta name="apple-mobile-web-app-capable" content="yes"><!-- build 487: Add to Home Screen -> fullscreen, no address bar (iOS) -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -8525,7 +8525,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=594;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=596;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -31931,171 +31931,78 @@ body.sc-home-mode #sc-chatdock .cd-frame .commsfill .wave{height:108px}
 })();
 </script>
 
-<style id="sc-b594-fit-css">
-/* ══ build 594 — ONE TABLET VIEW, NO PLAY ═══════════════════════════════════════════════
-   T: "it needs to all be confined to the screen. I can still move the ipad locally around
-   inside the tablet. i don't want any play. everyting fits into one tablet view. nothing is
-   coverd by andything else." and "the tablet needs to adjust to the screen it's displayed
-   on. maybe collect all common tablet sizes and then give the user the option to select
-   his/her tablet size."
+<style id="sc-b595-lock-css">
+/* ══ build 595 — STOP THE PAGE BEING DRAGGED. THAT IS ALL IT DOES. ══════════════════════
+   T: "I can still move the ipad locally around inside the tablet. i don't want any play."
+   and, on Chrome for iPad, "it still lets me move around the tablet display with my finger."
 
-   MEASURED CAUSE OF THE PLAY, on a real iPad-Mini-sized viewport (1133x744):
-     zoom 0.658 - and SC-FIT computes that from WIDTH ONLY: clamp(innerWidth/1700,0.5,1.8).
-     Height is never in the sum. #content ends up 1131 CSS px tall inside a 744 px window,
-     body is overflow:hidden auto, so the page SCROLLS. That scroll is the "play".
-   Fitting on one axis cannot make a two-axis box fit. This fits BOTH:
-       z = min(W / designW, H / designH)
-   and then hard-locks the scroll ports so there is nothing left to drag even by a pixel.
+   BUILD 594 TRIED TO DO MORE AND BROKE THE LAYOUT. It recomputed the zoom as
+   min(width/1700, height/contentHeight) to force everything into one screen. Every scalar
+   check passed - overflowY 0, canScroll false - and the SCREENSHOT showed a ~220px dead band
+   above the top row of pills with the bottom row of INGAME TOOLS tiles, SEARCH and COMMS
+   clipped off the bottom. T: "huge gap on the top of the tablet and everything below the
+   lowest pill is completely squished." Numbers said fixed, the picture said broken.
+   594 is withdrawn. This build changes NO zoom maths and forces NO heights. The layout
+   renders exactly as it did in 593, which was correct.
+
+   The drag and the fit were always two separate problems. I conflated them. This is the
+   drag one, on its own:
+     - the page cannot scroll or rubber-band
+     - Safari/Chrome-iOS pinch zoom is refused, because once you pinch, the visual viewport
+       is bigger than the layout viewport and the page can be dragged inside it - that is the
+       play that survives every CSS fix, and touch-action cannot stop it
+     - anything that genuinely scrolls keeps scrolling, untouched
+   Reversible: delete this <style> and the <script> below.
    ═══════════════════════════════════════════════════════════════════════════════════════ */
-/* touch-action:none, NOT pan-x pan-y. On iOS the page itself must refuse to pan or the
-   finger drags the whole tablet around inside the window - exactly what T reported on the
-   smaller iPad. Panning is handed back, deliberately, only to the panels that scroll. */
-html.cg-fit-lock, html.cg-fit-lock body{ overflow:hidden !important; overscroll-behavior:none !important;
-  touch-action:none !important; height:100% !important; max-height:100% !important;
-  position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
-  width:100% !important; }
-html.cg-fit-lock #content{ overflow:hidden !important; }
-/* panels keep their OWN inner scrolling - locking the page must not trap content */
-html.cg-fit-lock .scrollbox, html.cg-fit-lock .p-body, html.cg-fit-lock #loadout-detail,
-html.cg-fit-lock #hangar-scroll, html.cg-fit-lock #bp-cards, html.cg-fit-lock textarea,
-html.cg-fit-lock select, html.cg-fit-lock .oc-scroll, html.cg-fit-lock [data-scroll]{
-  overflow-y:auto !important; -webkit-overflow-scrolling:touch; touch-action:pan-y !important; }
-#cg-size-wrap{ display:flex; align-items:center; gap:5px; margin:6px auto 2px; justify-content:center; }
-#cg-size-wrap label{ font-size:7.5px; letter-spacing:1.5px; color:var(--text-dim); }
-#cg-size{ font-size:9px; padding:3px 5px; max-width:150px; background:var(--steel,#131c29);
-  color:var(--amber2,#9fd8ff); border:1px solid var(--amber-dim,#1d4d70); border-radius:6px; }
+/* ══ 596 CORRECTION TO THE 595 LOCK ═════════════════════════════════════════════════════
+   595 set overflow:hidden on the page. MEASURED afterwards: at 1366x1024 the HOME page needs
+   1274 CSS px of height. Locking the page did stop the dragging, but it also made the last
+   ~250px - the social row, and on shorter screens the bottom button row - UNREACHABLE and
+   drawn underneath the fixed ticker. Trading a nuisance for hidden content is a bad trade
+   and it is what T was seeing as "everything below the lowest pill is covered".
+   The play he objects to is FREE-FORM PANNING - the two-axis drag you get after a pinch.
+   Straight vertical scrolling is not that. So: vertical scroll stays, everything else goes.
+   pan-y only - no horizontal pan, no pinch, no rubber-band. */
+html.cg-lock, html.cg-lock body{ overflow-x:hidden !important; overscroll-behavior:none !important;
+  touch-action:pan-y !important; }
+/* give panning back, deliberately, to every real scroller - locking the page must never cost
+   you the ability to read a long list */
+html.cg-lock .scrollbox, html.cg-lock .p-body, html.cg-lock #loadout-detail,
+html.cg-lock #hangar-scroll, html.cg-lock #bp-cards, html.cg-lock textarea,
+html.cg-lock select, html.cg-lock .oc-scroll, html.cg-lock [data-scroll]{
+  touch-action:pan-y !important; -webkit-overflow-scrolling:touch; }
 </style>
-<script id="sc-b594-fit-js">
+<script id="sc-b595-lock-js">
 (function(){
-if(window.__cgFit594) return; window.__cgFit594=true;
-/* CSS viewport sizes in PORTRAIT (w x h). Landscape is the same numbers swapped, which the
-   fit does automatically - it reads the larger side as the long edge.
-   SOURCE: screensizechecker.com iPad viewport table, read 30 JUL 2026, cross-checked against
-   the Wikipedia model pages. The Android/Surface entries are the widely published CSS
-   viewports for those devices and are marked so - verify yours with AUTO first.
-   AUTO is the default and is the honest option: it measures the window you are actually in.
-   A preset only helps when the browser reports a viewport you do not want to fit to (Safari
-   toolbars, a split-screen pane, a desktop window you want to preview a tablet in). */
-var CG_TABLETS=[
- {k:'auto', n:'AUTO - fit this screen', w:0, h:0},
- {k:'ipad-mini',   n:'iPad mini (A17 / 2021) 744x1133',    w:744,  h:1133},
- {k:'ipad-10',     n:'iPad 10th gen / Air 11" 820x1180',   w:820,  h:1180},
- {k:'ipad-pro11',  n:'iPad Pro 11" (2022) 834x1194',       w:834,  h:1194},
- {k:'ipad-pro11m4',n:'iPad Pro 11" (M4) 834x1210',         w:834,  h:1210},
- {k:'ipad-13',     n:'iPad Air 13" / Pro 12.9" 1024x1366', w:1024, h:1366},
- {k:'ipad-pro13m4',n:'iPad Pro 13" (M4) 1032x1376',        w:1032, h:1376},
- {k:'tab-s',       n:'Galaxy Tab S (common) 800x1280',     w:800,  h:1280},
- {k:'surface',     n:'Surface Pro (common) 912x1368',      w:912,  h:1368},
- {k:'fire-hd10',   n:'Fire HD 10 (common) 800x1280',       w:800,  h:1280}
-];
-var DESIGN_W=1700;                       /* the width this layout was drawn at - SC-FIT's own number */
-var KEY='cg_tablet_size';
-function pick(){ try{ return localStorage.getItem(KEY)||'auto'; }catch(e){ return 'auto'; } }
+if(window.__cgLock595) return; window.__cgLock595=true;
 function coarse(){ try{ return matchMedia('(pointer:coarse)').matches; }catch(e){ return false; } }
-function target(){
-  var k=pick(), t=null;
-  CG_TABLETS.forEach(function(x){ if(x.k===k) t=x; });
-  var W=innerWidth, H=innerHeight;
-  if(t && t.w){
-    /* orient the preset the way the window is oriented */
-    var lw=Math.max(t.w,t.h), sw=Math.min(t.w,t.h);
-    if(W>=H){ return {w:lw,h:sw}; } return {w:sw,h:lw};
-  }
-  return {w:W,h:H};
-}
-var busy=false, passes=0;
-function fit(){
-  if(busy) return; busy=true; passes++;
-  try{
-    var de=document.documentElement, ct=document.getElementById('content');
-    if(!ct){ busy=false; return; }
-    var t=target();
-    /* measure what the layout NEEDS at zoom 1, without thrashing: scrollHeight is reported in
-       the element's own CSS px, which is already zoom-independent for this purpose. */
-    /* MEASURE THE NATURAL HEIGHT, NOT THE ONE WE JUST IMPOSED.
-       First cut of this read ct.scrollHeight while ct.style.height was still set from the
-       previous pass, so every pass fed its own output back in: needH climbed, z fell, and
-       after two preset switches zoom had walked all the way down to the 0.30 clamp and stuck
-       there. Caught on the second verification run. Clear the imposed height, force one
-       reflow, read the real requirement, then apply. One extra reflow per fit, not per frame. */
-    var prev=parseFloat(de.style.zoom||'1')||1;
-    ct.style.height=''; ct.style.maxHeight='';
-    void ct.offsetHeight;                        /* forces the reflow before we read */
-    var needH=Math.max(1, ct.scrollHeight);
-    var zw=t.w/DESIGN_W;
-    var zh=t.h/needH;                            /* both now in the same CSS-px space */
-    var z=Math.min(zw,zh);
-    if(!isFinite(z)||z<=0) z=zw;
-    z=Math.max(0.30, Math.min(1.8, z)); /* floor lowered from 0.50: on a mini, 0.50 was the
-                                           clamp that made height impossible to satisfy */
-    z=Math.round(z*1000)/1000;
-    if(Math.abs(z-prev)>0.002) de.style.zoom=String(z);
-    /* the content box now maps 1:1 onto the visible window - no surplus to drag */
-    de.style.setProperty('--sc-vpfill', innerHeight+'px');
-    de.style.setProperty('--sc-touchfill', Math.round(innerHeight/z)+'px');
-    ct.style.height=Math.round(innerHeight/z)+'px';
-    ct.style.maxHeight=Math.round(innerHeight/z)+'px';
-    if(coarse()) de.classList.add('cg-fit-lock'); else de.classList.remove('cg-fit-lock');
-    try{ window.scrollTo(0,0); }catch(e){}
-  }catch(e){}
-  busy=false;
-}
-var t1=null;
-function fitSoon(){ clearTimeout(t1); t1=setTimeout(function(){ fit(); setTimeout(fit,180); },90); }
-window.cgFit=fit; window.cgFitSoon=fitSoon; window.CG_TABLETS=CG_TABLETS;
-window.cgSetTabletSize=function(k){ try{ localStorage.setItem(KEY,k); }catch(e){} fitSoon(); };
-function buildPicker(){
-  if(document.getElementById('cg-size')) return true;
-  var host=document.getElementById('sc-zoom-bar') || document.getElementById('topbar');
-  if(!host) return false;
-  var w=document.createElement('div'); w.id='cg-size-wrap';
-  w.innerHTML='<label for="cg-size">TABLET</label><select id="cg-size" title="Fit the layout to a specific tablet. AUTO measures the screen you are actually on."></select>';
-  host.appendChild(w);
-  var sel=w.querySelector('#cg-size');
-  sel.innerHTML=CG_TABLETS.map(function(x){ return '<option value="'+x.k+'"'+(x.k===pick()?' selected':'')+'>'+x.n+'</option>'; }).join('');
-  sel.addEventListener('change',function(){ window.cgSetTabletSize(sel.value); });
-  return true;
-}
-function boot(){ if(!buildPicker()) setTimeout(boot,600); fitSoon(); }
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
-addEventListener('resize',fitSoon);
-addEventListener('orientationchange',function(){ setTimeout(fitSoon,250); });
-document.addEventListener('visibilitychange',function(){ if(!document.hidden) fitSoon(); });
-/* tab switches change the tallest panel, so re-fit after one */
-document.addEventListener('click',function(e){
-  var t=e.target; if(t && t.closest && (t.closest('.tab')||t.closest('.tabsel')||t.closest('[data-tab]'))) fitSoon();
-},true);
-setTimeout(fitSoon,1200); setTimeout(fitSoon,3000);
-
-/* ── iOS-ONLY GUARDS ────────────────────────────────────────────────────────────────
-   touch-action alone does not finish the job in Safari:
-     - PINCH ZOOM runs on Safari's own gesture stack and ignores touch-action entirely.
-       Once the user pinches, the VISUAL viewport is larger than the layout viewport and
-       the page can be dragged inside it. That is the "play" that survives every CSS fix.
-     - RUBBER-BAND still fires on a touchmove that no scroller consumed.
-   So: refuse the gesture events, and swallow a touchmove that is not inside something that
-   genuinely scrolls. A touch that IS inside a scrollable panel is left completely alone -
-   locking the page must never cost you the ability to read a long list. */
+function apply(){ try{ document.documentElement.classList.toggle('cg-lock', coarse()); }catch(e){} }
+apply(); addEventListener('resize',apply); addEventListener('orientationchange',apply);
 function inScroller(node){
   for(var el=node; el && el!==document.body; el=el.parentNode){
     if(!el.getBoundingClientRect) break;
     try{
       var cs=getComputedStyle(el);
       if((cs.overflowY==='auto'||cs.overflowY==='scroll') && el.scrollHeight>el.clientHeight+2) return true;
+      if((cs.overflowX==='auto'||cs.overflowX==='scroll') && el.scrollWidth>el.clientWidth+2) return true;
       if(el.tagName==='TEXTAREA'||el.tagName==='SELECT'||el.tagName==='INPUT') return true;
     }catch(e){}
   }
   return false;
 }
+/* pinch runs on WebKit's own gesture stack and ignores touch-action entirely. Chrome on iPad
+   is WebKit underneath, so this covers Chrome and Safari both - it keys on pointer:coarse,
+   never on the user-agent string. */
 ['gesturestart','gesturechange','gestureend'].forEach(function(ev){
   document.addEventListener(ev,function(e){ if(coarse()) e.preventDefault(); },{passive:false});
 });
 document.addEventListener('touchmove',function(e){
   if(!coarse()) return;
-  if(e.touches && e.touches.length>1){ e.preventDefault(); return; }   /* two fingers = pinch */
-  if(!inScroller(e.target)) e.preventDefault();
+  /* two fingers is always a pinch - refuse it, that is the gesture that creates the free
+     two-axis drag. A single finger is a scroll and is left alone: 596 measured that blocking
+     it hid the bottom of the home page instead of just stopping the wobble. */
+  if(e.touches && e.touches.length>1){ e.preventDefault(); return; }
 },{passive:false});
-/* double-tap zoom also shifts the viewport */
 var _lastTap=0;
 document.addEventListener('touchend',function(e){
   if(!coarse()) return;
@@ -32103,6 +32010,97 @@ document.addEventListener('touchend',function(e){
   if(t-_lastTap<320 && !inScroller(e.target)) e.preventDefault();
   _lastTap=t;
 },{passive:false});
+addEventListener('scroll',function(){ if(coarse()&&(scrollY||scrollX)) try{ scrollTo(0,0); }catch(e){} },{passive:true});
+})();
+</script>
+
+<style id="sc-b596-dock-css">
+/* ══ build 596 — INGAME TOOLS LABELS + THE BOTTOM STRIP ═════════════════════════════════
+   T's iPad 12.9 screenshot, 30 JUL 2026. Two faults, both visible in it, both measured:
+
+   1. TILE LABELS BLEED INTO THEIR NEIGHBOURS. Measured at 1366x1024: a cell is 72px wide,
+      the label box is 72px, but the TEXT renders at 11px Bruno Ace - "BLUEPRINTS" is about
+      85px of glyphs. Build 561 tried to fix this and set overflow:VISIBLE, which is what
+      lets the surplus spill sideways over the next tile. On his screen the result reads
+      "BLUEPRINTSCONTRACTSCRAFT" with three labels stacked on top of each other.
+      Wrapping alone cannot save it either: BLUEPRINTS is one word with word-break:keep-all.
+      FIX: clip the box, allow a long word to break, and shrink the type to fit - see the
+      auto-fit script below, which measures each label against its own cell.
+
+   2. THE BOTTOM STRIP IS THREE THINGS IN ONE 14px BAND. #cg-cmdlog (ticker) and #cg-credit
+      (DESIGNED BY HUMAN) are both position:fixed at the same bottom:0 with 14px height, and
+      the home button row (REPORT ISSUE / USER MANUAL / SETUP / SQ42 / DOWNLOAD SC) sits at
+      the very bottom of normal flow with no clearance. Measured: buttons at y=980..1000,
+      fixed band at y=1010, on a 1024 viewport - about 10px of margin, and none at all once
+      the labels wrap to two lines. On his iPad they are drawn straight through each other.
+      FIX: reserve the band. Nothing in flow may enter the bottom 30px.
+   Reversible: delete this <style> and the <script> below.
+   ═══════════════════════════════════════════════════════════════════════════════════════ */
+#tab-home .hm-lab, #tab-home .hm-lab-out{
+  overflow:hidden !important;          /* 561 set this VISIBLE - that was the bleed */
+  max-width:100% !important; width:100% !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;   /* CALCULATOR may break; keep-all forbade it */
+  word-break:normal !important;
+  text-align:center !important;
+  line-height:1.15 !important;
+  display:block !important;
+}
+/* Reserve the fixed bottom band. The padding has to sit on the SCROLLER, not on #tab-home:
+   the home page scrolls inside #home-scroll, so padding on the outer tab reserved nothing at
+   all once that box was scrolled to the end - which is exactly when the last row (the X /
+   DISCORD / FACEBOOK buttons, measured 43px past the band) slid under the ticker. */
+#tab-home{ box-sizing:border-box; }
+#tab-home #home-scroll, #tab-home .scrollbox{ padding-bottom:38px !important; box-sizing:border-box; }
+#tab-home .hm-cols{ padding-bottom:6px; }
+</style>
+<script id="sc-b596-dock-js">
+(function(){
+if(window.__cgDock596) return; window.__cgDock596=true;
+/* AUTO-FIT: shrink each tile label until its widest line fits the cell it belongs to.
+   Measured, not assumed - it reads scrollWidth against clientWidth and steps down. Floor of
+   6px so it can never become unreadable; if a label still will not fit at 6px the CSS above
+   clips it rather than letting it cover the next tile. Runs on load, on resize, and after a
+   zoom change, which is when cell widths actually move. */
+function fitLabels(){
+  var labs=document.querySelectorAll('#tab-home .hm-lab, #tab-home .hm-lab-out');
+  for(var i=0;i<labs.length;i++){
+    var el=labs[i], cell=el.closest ? el.closest('.hm-cell') : null;
+    if(!cell) continue;
+    var box=cell.clientWidth; if(!box) continue;
+    /* setProperty(...,'important') - NOT el.style.fontSize. A stylesheet !important beats a
+       PLAIN inline declaration, and this file has one pinning these labels to 11px. The first
+       cut used the plain form, so every assignment was silently discarded and the labels stayed
+       at 11px measuring 87px of text in an 80px cell. Same trap that hides mono behind the
+       global Bruno Ace rule. */
+    el.style.removeProperty('font-size');       /* start from the stylesheet value each time */
+    var size=parseFloat(getComputedStyle(el).fontSize)||11;
+    var guard=0;
+    while(size>6 && guard++<16 && (el.scrollWidth>box+0.5 || el.scrollHeight>el.clientHeight+0.5)){
+      size=Math.round((size-0.5)*10)/10;
+      el.style.setProperty('font-size', size+'px', 'important');
+    }
+  }
+}
+window.cgFitLabels=fitLabels;
+function run(){ try{ fitLabels(); }catch(e){} }
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
+/* THE DOCK IS BUILT AT RUNTIME, AFTER the start page is dismissed. A fixed set of timers
+   fired before the tiles existed and the fit silently did nothing - caught on the first
+   verification run, where every label still measured 11px and 87px of text in a 61px cell.
+   Watch the DOM instead of guessing at a delay: fit whenever #tab-home gains nodes. */
+try{
+  var _dob=null;
+  new MutationObserver(function(){ clearTimeout(_dob); _dob=setTimeout(run,120); })
+    .observe(document.documentElement,{childList:true,subtree:true});
+}catch(e){}
+/* belt and braces for the first 20 s, then stop - no permanent timer */
+var _n=0, _iv=setInterval(function(){ run(); if(++_n>25) clearInterval(_iv); },800);
+addEventListener('resize',function(){ clearTimeout(window.__dt596); window.__dt596=setTimeout(run,150); });
+addEventListener('orientationchange',function(){ setTimeout(run,320); });
+document.addEventListener('click',function(e){
+  var t=e.target; if(t&&t.closest&&(t.closest('.tab')||t.closest('[data-tab]'))) setTimeout(run,220);
+},true);
 })();
 </script>
 </body>
