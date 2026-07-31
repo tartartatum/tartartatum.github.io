@@ -8599,7 +8599,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=616;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=618;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -35297,233 +35297,43 @@ window.bpImgTag=bpImgTag;
   backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
 #bp-cards .bp-cover .bp-ico{position:relative;z-index:1;opacity:.30;}
 </style>
-<style id="sc-b610-flatbg-topfix-css">
-/* ══ build 610, 30 JUL 2026 - FLAT HOME BACKGROUND + iPAD PHANTOM SCROLL ═══════════════
 
-   (1) T: "on pc local tablet and the tablet background colour is two differnet shades of
-       blue. make it all the dark blue hue that's underneath all the pills"
-   MEASURED at 1920x1080: html and body are rgb(7,13,22) - the dark blue under the pills -
-   but body.sc-home-mode #tab-home paints
-       radial-gradient(1200px 620px at 50% 8%, rgba(22,35,58,.55) 0%, rgba(15,23,34,.28) 42%, transparent 68%)
-   That is a large LIGHTER steel-blue glow over the top-centre. It is the second shade.
-   Flattened to the page base here. Uses var(--bg) so it tracks the theme instead of
-   hardcoding, with the measured rgb(7,13,22) as the fallback.
 
-   (2) T: "i'm still able to scroll up on the local glas display ipad. and the top pills are
-       still touching the top and there's still a gap betwen rsi row and the official star
-       citizen companion"
-   MEASURED on iPad-sized touch viewports (1133x744 / 1180x820 / 1366x1024):
-       .hm-wrap computed margin-bottom = 282.99px / 322.03px / 365.90px
-       document overflow              = 387px  / 362px  / 250px
-       #home-scroll overflow          = 0  (the inner scroller FITS - it is not the culprit)
-   Build 597's touch rule set `margin-bottom:auto`. In that flex column `auto` resolves to
-   all the leftover space and dumps it BELOW the content, which makes the DOCUMENT taller
-   than the window. That surplus is the thing he can still drag. Pinning it to 0 removes
-   the surplus, which also stops the content being shoved down.
+<style id="sc-b618-onetone-css">
+/* ══ build 618, 31 JUL 2026 - ONE BACKGROUND TONE, AND NOTHING ELSE ═══════════════════
+   T: "just fix the two tone colors on everything now" and, after three failed layout
+   attempts, "revert it back to where at least it could be moved to see the whole screen".
 
-   NOT using overflow:hidden - build 595 tried that and it made the bottom ~250px
-   unreachable. The inner #home-scroll keeps its own scrolling; only the document's
-   phantom surplus is removed.
-   Reversible: delete this block. ═══════════════════════════════════════════════════ */
-/* build 613 FIX: 610 set this to var(--bg), which resolves to #080c12 - but the page
-   body paints rgb(7,13,22) = #070d16. Two values three units apart still read as two
-   tones on an OLED iPad. Measured 30 JUL 2026:
-       html  rgb(7,13,22)      body  rgb(7,13,22)      --bg  #080c12
-   So do not paint a colour here AT ALL. transparent lets the single body colour show
-   through, which makes a mismatch impossible by construction rather than by matching
-   two hex values and hoping they stay in sync. */
-body.sc-home-mode #tab-home{
+   THIS BUILD = build 609 + this colour fix. Every layout change I made today is REMOVED:
+     sc-b610-flatbg-topfix-css  (flat bg attempt + hm-wrap margin)   DELETED
+     sc-b612-touchfit-js        (touch fit, and the 615/616 scroll locks inside it) DELETED
+   So the PC local tablet, the iPad, and cmdglas.com all return to the sizing behaviour
+   they had BEFORE I started, which T confirmed was at least usable and scrollable.
+
+   THE ACTUAL TWO-TONE, measured in real WebKit - every surface over 120k px2 whose
+   background differs from the body:
+       body / html        rgb(7,13,22)     <- the one true tone
+       DIV.hm-tray        rgb(0,0,0)       <- PURE BLACK, 263k px2.  THE CULPRIT.
+       DIV#sc-qa-panel    linear-gradient(rgb(14,22,34), rgb(10,15,24))  497k px2, lighter
+   .hm-tray is the tray the INGAME TOOLS pills sit in - exactly the area T kept pointing at.
+   Pure BLACK against a dark BLUE body reads as two tones on an OLED iPad while looking
+   identical on a desk monitor. I missed it repeatedly because I was hunting for a second
+   BLUE and the offender was black.
+
+   Painting nothing on these lets the single body colour through, so a mismatch is
+   impossible by construction instead of by hand-matching hex values.
+   PILLS AND PANELS UNTOUCHED - only the full-bleed trays behind them are flattened.
+   Reversible: delete this <style>. ══════════════════════════════════════════════════ */
+#tab-home .hm-tray, .hm-tray{
   background:transparent !important;
+  background-color:transparent !important;
   background-image:none !important;
 }
-/* ── the iPad drag ──────────────────────────────────────────────────────────────────
-   HONEST NOTE ON THE MEASUREMENT. My first read said the document overflowed by 387px.
-   That was WRONG - a unit error. #content is 1131 CSS px at zoom 0.658, and
-   1131 x 0.658 = 744.2 = exactly innerHeight. scrollHeight is unzoomed, innerHeight is
-   not, so comparing them under CSS zoom is meaningless. In Chromium the page fits
-   exactly and does not scroll. T still reports a drag on a real iPad, and iOS Safari's
-   visual-viewport handling differs from Chromium's, so I cannot reproduce it here.
-
-   Rather than tune against a number I cannot trust, this locks the DOCUMENT itself on
-   coarse pointers and gives the scrolling job to #content, which is the element that
-   actually knows how tall its tab is. Whatever the surplus is - rounding, toolbar
-   inset, rubber-band - it has nowhere to go now.
-
-   WHY THIS IS NOT BUILD 595's MISTAKE: 595 put overflow:hidden on the document AND left
-   nothing else scrollable, so the bottom ~250px of tall tabs became unreachable.
-   Here #content gets overflow-y:auto, so every tab can still be scrolled to its end.
-   Verified after this change that the tallest tab remains fully reachable. */
-@media (pointer:coarse){
-  body.sc-home-mode:not([data-portable="1"]) #home-scroll > .hm-wrap{
-    margin-top:0 !important;
-    margin-bottom:0 !important;
-  }
-  html, html body{
-    overflow:hidden !important;
-    overscroll-behavior:none !important;
-    height:100% !important;
-    max-height:100% !important;
-    position:relative !important;
-  }
-  #content{
-    overflow-y:auto !important;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior:contain !important;
-  }
+#sc-qa-panel{
+  background:transparent !important;
+  background-color:transparent !important;
+  background-image:none !important;
 }
 </style>
-<script id="sc-b612-touchfit-js">
-/* ══ build 612, 30 JUL 2026 - TOUCH FIT, REBUILT ON THE PC's PROVEN METHOD ════════════
-   T: "both ipad pro 12.9 is bad and the regular ipad format is bad. pc is good" and
-   "before you start changing things come up with a different solution ... you've wasted
-   days on this issue". He is right. Every previous attempt patched a symptom.
-
-   WHY PC WORKS AND TOUCH NEVER DID - the real difference, found by reading SC-FIT:
-       if(matchMedia('(pointer:coarse)').matches) return;      <-- touch bails out
-       z = min(innerWidth/1700, innerHeight/1130)
-       body.style.minWidth = body.style.maxWidth = 1700px      <-- width PINNED
-   Two things the PC gets that touch never got:
-     1. The body is PINNED to the 1700px design width, so the layout CANNOT reflow. That
-        is what makes a one-shot 2D fit valid. Unpinned, height is a function of the zoom
-        you are choosing - circular, which is why build 594 ran away to its clamp.
-     2. A height term at all.
-   And a third problem neither had: DESIGN_H is hardcoded 1130, which is the PC height.
-   Measured at the same 1700px body width, the coarse-pointer CSS builds a TALLER home:
-        PC 1130 css px   ·   iPad 1274 css px
-   So even 594's formula was dividing by the wrong constant on touch.
-
-   THIS BLOCK: pin the width, clear any imposed height, MEASURE the real css height, then
-   fit both axes against that measured number. One pass, no iteration, no circularity -
-   because a pinned width cannot reflow. Re-asserted on resize/orientation/tab change.
-
-   HONESTY ON VERIFICATION: I could not confirm this in my own tooling. Chromium's mobile
-   emulation does not apply CSS zoom to getBoundingClientRect the way iOS Safari does - on
-   the emulated iPad the rendered height came back identical to the unzoomed height, while
-   on desktop it scaled correctly. That gap is why the last two attempts looked green here
-   and failed on the real device. So this build also ships a diagnostic: load
-        cmdglas.com/?fitdebug=1
-   on the iPad and screenshot the panel. It prints the REAL numbers from the real browser.
-   Reversible: delete this block. */
-(function(){
-if(window.__touchFit612) return; window.__touchFit612=true;
-var D_W=1700, MIN_Z=0.30, MAX_Z=1.8, measured=0, busy=false;
-function coarse(){ try{ return matchMedia('(pointer:coarse)').matches; }catch(e){ return false; } }
-function portable(){ try{ return document.body.getAttribute('data-portable')==='1'; }catch(e){ return false; } }
-
-function measure(){
-  var de=document.documentElement, bd=document.body, c=document.getElementById('content');
-  if(!c) return 0;
-  var z0=de.style.zoom;
-  bd.style.minWidth=D_W+'px'; bd.style.maxWidth=D_W+'px';
-  bd.style.marginLeft='auto'; bd.style.marginRight='auto';
-  c.style.height=''; c.style.maxHeight='';
-  de.style.zoom='1';
-  void bd.offsetHeight;                       /* force reflow before reading */
-  var h=Math.max(1, c.scrollHeight);          /* scrollHeight is css px, zoom-independent */
-  de.style.zoom=z0;
-  return h;
-}
-function apply(){
-  if(busy) return; busy=true;
-  try{
-    if(!coarse()||portable()){ busy=false; return; }   /* PC keeps its own proven path */
-    var de=document.documentElement;
-    measured=measure();
-    if(!measured){ busy=false; return; }
-    var vv=window.visualViewport;
-    var VW=(vv&&vv.width)?vv.width:innerWidth;
-    var VH=(vv&&vv.height)?vv.height:innerHeight;
-    var z=Math.min(VW/D_W, VH/measured);
-    z=Math.round(Math.max(MIN_Z,Math.min(MAX_Z,z))*1000)/1000;
-    de.style.zoom=String(z);
-    /* ── build 616: the iPad drag, fixed WITHOUT the clamp that broke 615 ──────────────
-       THE BUG (reproduced in real WebKit at T's exact 1376x888):
-         WebKit computes the document SCROLL EXTENT from the PRE-ZOOM layout size. The page
-         fits exactly - 1130 css x 0.786 = 888 = innerHeight - yet stays draggable by the
-         un-zoomed surplus, 1130-888 = 242. Not a layout overflow, which is why no CSS fix
-         ever touched it and why Chromium never showed it.
-
-       WHY 615 CLIPPED HIS SCREEN - reproduced too. 615 clamped html/body to a FIXED PIXEL
-       height computed from innerHeight at that instant. Chrome on iOS grows and shrinks the
-       viewport as its toolbars hide and show. Fit at 1010 tall, then let the toolbar appear:
-             viewport 1010 -> 888   but html stayed clamped at a STALE 1248px
-       Content laid out for 1248 css px inside an 888 physical viewport, with overflow:hidden
-       over it, put everything below the NAV / MY RIG row past the fold and unreachable. The
-       drag even came back. That is exactly what T reported.
-
-       THE FIX: height:100% instead of a computed pixel value. Percentages re-resolve against
-       the live viewport on every toolbar change, so the clamp CANNOT go stale. Verified after
-       a 1010->888 resize: html resolves to 888px and CAN_DRAG is false.
-       No max-height on #content either - that was 615's second risk and it buys nothing.
-       #content keeps overflow-y:auto so tall tabs still reach their end. */
-    var bd=document.body;
-    de.style.setProperty('overflow','hidden','important');
-    bd.style.setProperty('overflow','hidden','important');
-    de.style.setProperty('overscroll-behavior','none','important');
-    bd.style.setProperty('overscroll-behavior','none','important');
-    de.style.setProperty('height','100%','important');
-    bd.style.setProperty('height','100%','important');
-    de.style.setProperty('max-height','100%','important');
-    bd.style.setProperty('max-height','100%','important');
-    var ct=document.getElementById('content');
-    if(ct){ ct.style.setProperty('overflow-y','auto','important');
-            ct.style.setProperty('overscroll-behavior','contain','important'); }
-    de.setAttribute('data-fit612', z+'|'+measured+'|'+Math.round(VW)+'x'+Math.round(VH));
-    try{ window.scrollTo(0,0); }catch(e){}
-  }catch(e){}
-  busy=false;
-}
-var t=null;
-function soon(){ clearTimeout(t); t=setTimeout(function(){ apply(); setTimeout(apply,260); },110); }
-window.cgTouchFit=apply;
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',soon); else soon();
-addEventListener('resize',soon);
-addEventListener('orientationchange',function(){ setTimeout(soon,260); });
-if(window.visualViewport){ visualViewport.addEventListener('resize',soon); }
-document.addEventListener('click',function(e){
-  var el=e.target; if(el&&el.closest&&(el.closest('[data-tab]')||el.closest('.tab'))) soon();
-},true);
-setTimeout(soon,1400); setTimeout(soon,3200);
-
-/* ---- ?fitdebug=1 : ground truth from the REAL browser ---------------------------- */
-if(/[?&]fitdebug=1/.test(location.search)){
-  var show=function(){
-    var d=document.getElementById('fit612dbg');
-    if(!d){ d=document.createElement('div'); d.id='fit612dbg';
-      d.style.cssText='position:fixed;left:8px;top:8px;z-index:2147483647;background:rgba(3,8,14,.95);'+
-        'color:#7dffb0;font:11px/1.55 ui-monospace,Menlo,monospace;padding:10px 12px;border:1px solid #4fd2ff;'+
-        'border-radius:8px;max-width:92vw;white-space:pre;pointer-events:none';
-      document.body.appendChild(d); }
-    var de=document.documentElement, c=document.getElementById('content');
-    var vv=window.visualViewport, cr=c?c.getBoundingClientRect():{};
-    d.textContent=
-      'CMDGLAS FIT DEBUG  build '+(window.CMDGLAS_BUILD||'?')+'\n'+
-      'inner        '+innerWidth+' x '+innerHeight+'\n'+
-      'visualVP     '+(vv?Math.round(vv.width)+' x '+Math.round(vv.height)+'  scale '+vv.scale.toFixed(3):'n/a')+'\n'+
-      'screen       '+screen.width+' x '+screen.height+'  dpr '+devicePixelRatio+'\n'+
-      'coarse ptr   '+coarse()+'   portable '+portable()+'\n'+
-      'zoom applied '+(de.style.zoom||'(none)')+'\n'+
-      'measured H   '+measured+' css px\n'+
-      'content rect '+Math.round(cr.width||0)+' x '+Math.round(cr.height||0)+'\n'+
-      'content bot  '+Math.round(cr.bottom||0)+'   vs innerH '+innerHeight+'\n'+
-      /* build 614: the old two lines compared UNZOOMED rect values against the ZOOMED
-         viewport and cried wolf. Safari (like Chromium) reports getBoundingClientRect in
-         pre-zoom css px, so the honest comparison multiplies by the zoom first. The scroll
-         line now DRAGS the document and reports whether it actually moved. */
-      'PHYSICAL H   '+Math.round((cr.height||0)*(parseFloat(de.style.zoom)||1))+' vs innerH '+innerHeight+'\n'+
-      'VERTICAL FIT '+(Math.round((cr.height||0)*(parseFloat(de.style.zoom)||1))<=innerHeight+3 ? 'OK'
-                       : 'OVER by '+Math.round((cr.height||0)*(parseFloat(de.style.zoom)||1)-innerHeight))+'\n'+
-      'CAN DRAG?    '+(function(){ try{
-           var y0=window.scrollY||de.scrollTop||0; window.scrollTo(0,200);
-           var y1=window.scrollY||de.scrollTop||0; window.scrollTo(0,y0);
-           return (y1>y0+1) ? 'YES - still draggable ('+y1+')' : 'NO - locked';
-         }catch(e){ return 'err'; } })()+'\n'+
-      'body width   '+getComputedStyle(document.body).width+'\n'+
-      'data-fit612  '+(de.getAttribute('data-fit612')||'-');
-  };
-  setInterval(show,900); setTimeout(show,1500);
-}
-})();
-</script>
 </body>
 </html>
