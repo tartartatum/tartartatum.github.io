@@ -5156,7 +5156,10 @@ html{scrollbar-gutter:stable}
       }
       var bd=document.getElementById("ops-buy");
       if(bd){
-        if(!b.length)bd.innerHTML="<div style='font-size:11px;color:var(--text-dim)'>Empty. From Ship Loadouts, push weapons/components here to build a purchase route.</div>";
+        /* build 629 (T): was dim and named no control, while the gather box beside it named
+           both of its controls in bright amber. Same standard now - the tool AND the exact
+           button to press, so an empty buy list tells you how to fill it. */
+        if(!b.length)bd.innerHTML="<div style='font-size:11px;color:var(--text-dim)'>Empty. Open <b style='color:var(--amber2)'>Ship Loadouts</b> and tap the <b style='color:var(--amber2)'>&#128722; cart</b> on any slot or component to send that part here. Tap the cart again to recall it.</div>";
         else bd.innerHTML=b.map(function(it){var ne=String(it.name).replace(/&/g,"&amp;").replace(/'/g,"\\'").replace(/"/g,"&quot;");return "<div style='display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text);padding:3px 0;border-bottom:1px solid var(--border)'><b style='color:var(--amber2)'>"+it.name+"</b>"+((window.cgBuyRoute&&window.cgBuyRoute.gradeChip)?window.cgBuyRoute.gradeChip(it.name):"")+" <span style='color:var(--text-dim);font-size:10px'>"+(it.kind||"")+(it.from?(" &middot; "+it.from):"")+"</span><button type=\"button\" onclick=\"opsRecallBuy('"+ne+"')\" title=\"Remove from the buy list\" style=\"margin-left:auto;background:none;border:1px solid var(--border2);color:var(--red2,#ff6b6b);border-radius:4px;padding:1px 7px;font-size:11px;cursor:pointer\">&times;</button></div>";}).join("")+"<div style='font-size:9px;color:var(--text-dim);margin-top:6px'>Pick a START AT below and hit PLAN ROUTE for purchase locations, listed aUEC prices and the fewest-stops run.</div>";/* build 539: the old 'wiring UEX data next' promise note - replaced by the planner actually existing */
       }
     }
@@ -8683,7 +8686,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=627;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=630;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -29595,7 +29598,8 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
     return bph+'<div class="ops4-head">'+g.length+' materials · '+nb+' blueprint'+(nb===1?'':'s')+'</div>'+plan+rows+more;
   }
   function renderBuy(){
-    var b=getArr('sc_ops_buy'); if(!b.length) return '<div class="ops4-empty">No buy items - push weapons/components from Ship Loadouts to build a purchase route.</div>';
+    /* build 629: same wording as the full page, so the HUD and the page teach the same thing */
+    var b=getArr('sc_ops_buy'); if(!b.length) return '<div class="ops4-empty">No buy items yet. Open <b style="color:var(--amber2)">Ship Loadouts</b> and tap the <b style="color:var(--amber2)">&#128722; cart</b> on any slot or component to send it here.</div>';
     var top=b.slice(0,120), more=b.length>120?'<div class="ops4-more">+'+(b.length-120)+' more</div>':'';  /* build 444: fill the expanded view */
     var rows=top.map(function(it){ var gc=(window.cgBuyRoute&&cgBuyRoute.gradeChip)?cgBuyRoute.gradeChip(it.name||''):''; return '<div class="ops4-row"><span class="ops4-mat">'+esc(it.name||it.material||'?')+gc+'</span><span class="ops4-qty">'+esc(it.kind||'')+'</span></div>'; }).join('');
     /* build 542 (T's screenshots): THIS pill tab is where the buy list lives day-to-day, so the
@@ -29641,9 +29645,25 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
     return '<div class="ops4-status"><div class="ops4-srow"><span class="ops4-clk">'+clk+'</span><span class="ops4-patch">'+(patch?('SC '+esc(patch)):'PATCH ?')+' · '+esc(dateStr)+'</span></div><div class="ops4-sgrid">'+grid+'</div></div>';
   }
   var LSK='sc_ops_pill_view';
-  var VIEWS=[{k:'gather',label:'Gather'},{k:'buy',label:'Buy'},{k:'notes',label:'Notes'},{k:'status',label:'Status'}];
-  function activeView(){ try{ var v=localStorage.getItem(LSK); return /^(gather|buy|notes|status)$/.test(v||'')?v:'status'; }catch(e){ return 'status'; } }/* build 457 (user): STREAM (the 'status' slot, renamed Stream) is the default top-centre landing pill */
-  function renderView(v){ return v==='buy'?renderBuy():v==='notes'?renderNotes():v==='status'?renderStatus():renderGather(); }
+  /* build 628 (T): Gather and Buy were two tabs pointing at one page, so they are one tab now.
+     The 'buy' KEY is deliberately still valid everywhere else - only its tab button is gone. */
+  var VIEWS=[{k:'gather',label:'Gather & Buy'},{k:'notes',label:'Notes'},{k:'status',label:'Status'}];
+  function activeView(){ try{ var v=localStorage.getItem(LSK)||'';
+    /* build 628: a tablet that still has 'buy' saved would open on a tab that no longer has a
+       button, leaving the pill looking blank. Fold it into the merged tab on read. */
+    if(v==='buy'){ v='gather'; try{ localStorage.setItem(LSK,v); }catch(_){} }
+    return /^(gather|notes|status)$/.test(v)?v:'status'; }catch(e){ return 'status'; } }/* build 457 (user): STREAM (the 'status' slot, renamed Stream) is the default top-centre landing pill */
+  /* build 628: one tab, both lists, each under its own heading so it is still obvious which is
+     which. Gather first - it is the one that fills up from mining, harvestables, blueprints and
+     the craft calculator, so it is what a pilot checks most. */
+  function sectionHead(t){ return '<div style="font:800 8.5px \'Rajdhani\',sans-serif;letter-spacing:2px;'
+    +'color:#ffcf6b;text-transform:uppercase;margin:2px 0 5px;padding-bottom:3px;'
+    +'border-bottom:1px solid rgba(255,207,107,.28)">'+t+'</div>'; }
+  function renderBoth(){
+    return sectionHead('Gather - crafting &amp; mining materials')+renderGather()
+      +'<div style="height:9px"></div>'
+      +sectionHead('Buy - ship loadout parts')+renderBuy(); }
+  function renderView(v){ return v==='notes'?renderNotes():v==='status'?renderStatus():renderBoth(); }
   var pill,body,tabsEl,contentEl;
   function ensure(){
     pill=document.querySelector('#sc-home-widgets .ops-pill'); if(!pill) return false;
@@ -35711,7 +35731,7 @@ window.bpImgTag=bpImgTag;
      is worse than no button. */
   var MAP={
     gather:   {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},
-    buy:      {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},
+    buy:      {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},/* build 628: merged into 'gather', kept as a safety net */
     contracts:{page:'missions',label:'SOURCE - CONTRACTS PAGE'},
     orgparty: {page:'orgpage', label:'SOURCE - ORG / PARTY PAGE'}
   };
@@ -35791,6 +35811,116 @@ window.bpImgTag=bpImgTag;
   }
   function tick(){ syncSrc(); syncBars(); }
   var n=0, iv=setInterval(function(){ tick(); if(++n>400) { clearInterval(iv); setInterval(tick,1200); } },400);
+  tick();
+})();
+</script>
+
+<style id="sc-b629-builtfrom-css">/* build 629 (T): jump straight from the GATHER & BUY page to the
+   tool that feeds it. Sits under the RETURN TO HUD bar so it reads as navigation, not as another
+   control that edits the lists. Every button uses the SAME bright treatment - T: "ship loadouts
+   should be in brighter colors just like craft calculator" - so no tool looks second-class.
+   Reversible: delete this block and its script twin. */
+.cg-bf-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 10px 6px;padding:8px 12px;
+  border:1px solid rgba(108,180,214,.30);border-left:3px solid #4fd2ff;border-radius:11px;
+  background-image:linear-gradient(180deg,rgba(120,200,235,.06),rgba(255,255,255,0) 46%,rgba(0,0,0,.20)),linear-gradient(180deg,rgba(14,24,36,.85),rgba(10,12,18,.9))}
+.cg-bf-bar .cg-bf-l{font:700 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;color:#7fb8d8;text-transform:uppercase;flex:0 0 auto}
+.cg-bf-bar button{display:inline-flex;align-items:center;gap:6px;font:800 10px 'Rajdhani',sans-serif;
+  letter-spacing:1.2px;text-transform:uppercase;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);
+  border:1px solid rgba(170,242,255,.9);border-radius:7px;padding:7px 12px;cursor:pointer;white-space:nowrap;
+  box-shadow:0 0 8px rgba(120,220,255,.28)}
+.cg-bf-bar button:hover{filter:brightness(1.10)}
+.cg-bf-bar button:active{transform:translateY(1px)}
+.cg-bf-bar button i{font-style:normal;font-weight:800;font-size:8px;letter-spacing:.8px;
+  padding:1px 5px;border-radius:4px;background:rgba(4,20,29,.26)}
+</style>
+<script id="sc-b629-builtfrom-js">
+(function(){
+  if(window.__cgBuiltFrom629) return; window.__cgBuiltFrom629=true;
+  /* ids are exactly what setActiveTabById() expects - the same call the in-game tools tiles
+     make, so each button lands on the normal page a pilot navigates to. */
+  var SRC=[
+    {id:'blueprints', label:'Blueprints',       feeds:'GATHER', title:'Blueprints - tap a card’s → PUSH TO GATHER and its materials land in the gather list'},
+    {id:'craftcalc',  label:'Craft Calculator', feeds:'GATHER', title:'Craft Calculator - every blueprint you select here is merged into the gather list automatically'},
+    {id:'mining',     label:'Mining',           feeds:'GATHER', title:'Mining - the BASIC-mode material picker adds your picks to the gather list'},
+    {id:'harvest',    label:'Harvestables',     feeds:'WHERE',  title:'Harvest Atlas - where to collect the harvestables the gather list is asking for'},
+    {id:'loadout',    label:'Ship Loadouts',    feeds:'BUY',    title:'Ship Loadouts - tap the 🛒 cart on any slot or component to send that part to the buy list'}
+  ];
+  function bar(){
+    var d=document.createElement('div'); d.className='cg-bf-bar';
+    var h=document.createElement('span'); h.className='cg-bf-l'; h.textContent='Built from';
+    d.appendChild(h);
+    SRC.forEach(function(s){
+      var b=document.createElement('button'); b.type='button'; b.title=s.title;
+      b.innerHTML=s.label.replace(/&/g,'&amp;')+' <i>'+s.feeds+'</i>';
+      b.addEventListener('click',function(e){
+        e.stopPropagation();
+        try{ if(typeof setActiveTabById==='function') setActiveTabById(s.id); }catch(err){}
+      });
+      d.appendChild(b);
+    });
+    return d;
+  }
+  function tick(){
+    var p=document.getElementById('tab-myops'); if(!p) return;
+    if(p.querySelector(':scope > .cg-bf-bar')) return;
+    var rtb=p.querySelector(':scope > .cg-rtb-bar');
+    if(rtb && rtb.nextSibling) p.insertBefore(bar(), rtb.nextSibling);
+    else if(rtb) p.appendChild(bar());
+    else p.insertBefore(bar(), p.firstChild);
+  }
+  var n=0, iv=setInterval(function(){ tick(); if(++n>400){ clearInterval(iv); setInterval(tick,1500); } },400);
+  tick();
+})();
+</script>
+
+<script id="sc-b630-hudbridge-js">
+/* build 630 (T): "i want to be able to open it with voice through voice attack and stream deck".
+   Polls CmdGlas_HUD_Bridge.py (port 8421) and drives the SAME toggle Ctrl+Alt+1 uses.
+   Reversible: delete this block. The Ctrl+Alt+1 hotkey keeps working either way. */
+(function(){
+  if(window.__cgHudBridge630) return; window.__cgHudBridge630=true;
+  /* localhost only - see the note in patch630. Never runs for cmdglas.com visitors. */
+  var h=(location.hostname||'').toLowerCase();
+  if(!(h==='localhost'||h==='127.0.0.1'||h==='::1'||h===''||/^192\.168\./.test(h)||/^10\./.test(h))) return;
+
+  var URL='http://127.0.0.1:8421/state';
+  var seq=null;             /* null = we have not adopted a baseline yet */
+  var live=false, misses=0, timer=null;
+
+  function act(cmd){
+    try{
+      var floating=!!document.querySelector('.cg-pop-float')||!!document.querySelector('.cg-pop-ph');
+      if(cmd==='open'  && floating) return;      /* already out */
+      if(cmd==='close' && !floating) return;     /* already docked */
+      if(typeof window.cgPillToggle==='function') window.cgPillToggle('ops');
+    }catch(e){}
+  }
+  function poll(){
+    fetch(URL,{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        if(!d||typeof d.seq!=='number') throw 0;
+        if(!live){ live=true; misses=0; window.CG_HUD_BRIDGE=true; }
+        if(seq===null){ seq=d.seq; return; }     /* adopt, do not replay */
+        if(d.seq!==seq){ seq=d.seq; act(String(d.cmd||'toggle')); }
+      })
+      .catch(function(){
+        /* bridge not running - that is a normal state, not an error. Back off quietly so a
+           pilot who never starts it pays almost nothing, and pick it up again if it appears. */
+        if(live){ live=false; window.CG_HUD_BRIDGE=false; }
+        misses++;
+      });
+  }
+  function tick(){ poll(); schedule(); }
+  function schedule(){
+    clearTimeout(timer);
+    /* 500ms while the bridge is answering (voice/deck should feel instant);
+       back off to 10s after a run of misses so an unused bridge costs nothing. */
+    var ms = live ? 500 : (misses>6 ? 10000 : 1500);
+    timer=setTimeout(tick, ms);
+  }
+  /* manual re-check hook, e.g. after starting the bridge mid-session */
+  window.cgHudBridgePoll=function(){ misses=0; clearTimeout(timer); tick(); };
   tick();
 })();
 </script>
