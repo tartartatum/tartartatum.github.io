@@ -8599,7 +8599,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=613;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=615;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -35436,7 +35436,31 @@ function apply(){
     var z=Math.min(VW/D_W, VH/measured);
     z=Math.round(Math.max(MIN_Z,Math.min(MAX_Z,z))*1000)/1000;
     de.style.zoom=String(z);
-    de.setAttribute('data-fit612', z+'|'+measured+'|'+Math.round(VW)+'x'+Math.round(VH));
+    /* ── build 615: THE ACTUAL iPAD BUG, reproduced in real WebKit at T's exact
+       1376x888 viewport on 30 JUL 2026:
+             zoom 0.786 -> physical height 888 == innerHeight 888  (FITS)
+             but CAN_DRAG = true, draggedTo 242,  and 1130 - 888 = 242
+       WebKit computes the document's SCROLL EXTENT from the PRE-ZOOM layout size. The
+       page fits perfectly and is still draggable by exactly the un-zoomed surplus. That
+       is why this survived every CSS fix - it is not a layout overflow, and Chromium
+       never reproduced it. Build 611 put overflow:hidden in a (pointer:coarse) media
+       block and lost a specificity fight; setting it inline here cannot be overridden.
+       The scroll job stays with #content so nothing is trapped. */
+    var bd=document.body;
+    de.style.setProperty('overflow','hidden','important');
+    bd.style.setProperty('overflow','hidden','important');
+    de.style.setProperty('overscroll-behavior','none','important');
+    bd.style.setProperty('overscroll-behavior','none','important');
+    var cssVH=Math.round(VH/z);                 /* the viewport expressed in pre-zoom css px */
+    de.style.setProperty('height',cssVH+'px','important');
+    bd.style.setProperty('height',cssVH+'px','important');
+    de.style.setProperty('max-height',cssVH+'px','important');
+    bd.style.setProperty('max-height',cssVH+'px','important');
+    var ct=document.getElementById('content');
+    if(ct){ ct.style.setProperty('max-height',cssVH+'px','important');
+            ct.style.setProperty('overflow-y','auto','important');
+            ct.style.setProperty('overscroll-behavior','contain','important'); }
+    de.setAttribute('data-fit612', z+'|'+measured+'|'+Math.round(VW)+'x'+Math.round(VH)+'|vh'+cssVH);
     try{ window.scrollTo(0,0); }catch(e){}
   }catch(e){}
   busy=false;
@@ -35474,8 +35498,18 @@ if(/[?&]fitdebug=1/.test(location.search)){
       'measured H   '+measured+' css px\n'+
       'content rect '+Math.round(cr.width||0)+' x '+Math.round(cr.height||0)+'\n'+
       'content bot  '+Math.round(cr.bottom||0)+'   vs innerH '+innerHeight+'\n'+
-      'VERTICAL FIT '+((cr.bottom||0)<=innerHeight+2 ? 'OK' : 'OVER by '+Math.round((cr.bottom||0)-innerHeight))+'\n'+
-      'doc scrolls  '+(de.scrollHeight>de.clientHeight+2)+'  (scrollH '+de.scrollHeight+' clientH '+de.clientHeight+')\n'+
+      /* build 614: the old two lines compared UNZOOMED rect values against the ZOOMED
+         viewport and cried wolf. Safari (like Chromium) reports getBoundingClientRect in
+         pre-zoom css px, so the honest comparison multiplies by the zoom first. The scroll
+         line now DRAGS the document and reports whether it actually moved. */
+      'PHYSICAL H   '+Math.round((cr.height||0)*(parseFloat(de.style.zoom)||1))+' vs innerH '+innerHeight+'\n'+
+      'VERTICAL FIT '+(Math.round((cr.height||0)*(parseFloat(de.style.zoom)||1))<=innerHeight+3 ? 'OK'
+                       : 'OVER by '+Math.round((cr.height||0)*(parseFloat(de.style.zoom)||1)-innerHeight))+'\n'+
+      'CAN DRAG?    '+(function(){ try{
+           var y0=window.scrollY||de.scrollTop||0; window.scrollTo(0,200);
+           var y1=window.scrollY||de.scrollTop||0; window.scrollTo(0,y0);
+           return (y1>y0+1) ? 'YES - still draggable ('+y1+')' : 'NO - locked';
+         }catch(e){ return 'err'; } })()+'\n'+
       'body width   '+getComputedStyle(document.body).width+'\n'+
       'data-fit612  '+(de.getAttribute('data-fit612')||'-');
   };
