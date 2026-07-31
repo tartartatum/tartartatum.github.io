@@ -8599,7 +8599,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=618;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=621;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -35335,5 +35335,110 @@ window.bpImgTag=bpImgTag;
   background-image:none !important;
 }
 </style>
+<style id="sc-b619-buildbadge-css">
+/* ══ build 619, 31 JUL 2026 - ALWAYS-VISIBLE BUILD BADGE ══════════════════════════════
+   T: "there is no indication on the ipad as to what patch it's on. i've told yo uabout
+   this numerous times as well."  He is right, and it has cost us both real time - most of
+   today's confusion was not knowing which build a screenshot came from.
+
+   MEASURED: #ver-chip exists and IS on-screen, but it reads "game patch unknown" (it only
+   fills in when the control server or the API answers) and it never shows the CMDGLAS
+   BUILD at all. The string "BUILD 618" exists in the page text on PC but not anywhere a
+   tablet user would look.
+
+   This badge is deliberately dumb and cannot fail: fixed to the bottom-left corner,
+   pointer-events:none so it can never intercept a tap, tiny, and it reads the build
+   straight out of window.CMDGLAS_BUILD with no network call and no dependency on anything
+   that can be "unknown". It renders identically on PC, iPad and the local server.
+   Reversible: delete this block + sc-b619-buildbadge-js. */
+#cg-buildbadge{
+  /* build 620: T - "might be coverd by the designed by human built by ai. if so move it
+     up a little bit". My emulator showed that corner empty, his screen does not. Trusting
+     his screen. Raised clear of the DESIGNED BY HUMAN / BUILT BY AI row and the news
+     ticker that sit along the bottom edge. */
+  position:fixed; left:6px; bottom:46px; z-index:2147483000;
+  font:700 9px/1.25 ui-monospace,Menlo,Consolas,monospace;
+  letter-spacing:.6px; color:#7dffb0;
+  background:rgba(3,8,14,.78); border:1px solid rgba(79,210,255,.42);
+  border-radius:5px; padding:2px 6px; pointer-events:none;
+  white-space:nowrap; opacity:.92;
+}
+#cg-buildbadge b{color:#4fd2ff; font-weight:800}
+</style>
+<script id="sc-b619-buildbadge-js">
+(function(){
+  if(window.__cgBadge619) return; window.__cgBadge619=true;
+  function paint(){
+    var el=document.getElementById('cg-buildbadge');
+    if(!el){ el=document.createElement('div'); el.id='cg-buildbadge';
+      (document.body||document.documentElement).appendChild(el); }
+    var v=(typeof window.CMDGLAS_VERSION!=='undefined')?window.CMDGLAS_VERSION:'';
+    var b=(typeof window.CMDGLAS_BUILD!=='undefined')?window.CMDGLAS_BUILD:'?';
+    var patch='';
+    try{ var c=document.getElementById('ver-chip');
+         var t=c?(c.textContent||'').trim():'';
+         if(t && !/unknown/i.test(t)) patch=' · '+t.replace(/^[^0-9]*/,'').slice(0,22);
+    }catch(e){}
+    /* build 621: the update signal lives here now instead of in a popup strip */
+    var up='';
+    try{ var lv=window.cgLiveBuild&&window.cgLiveBuild();
+         if(lv){ up=' <i>· UPDATE '+lv+' READY</i>'; } }catch(e){}
+    if(up) el.classList.add('upd'); else el.classList.remove('upd');
+    var want='<b>CMDGLAS '+(v?('v'+v+' '):'')+'BUILD '+b+'</b>'+patch+up;
+    if(el.innerHTML!==want) el.innerHTML=want;
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',paint); else paint();
+  var n=0, iv=setInterval(function(){ paint(); if(++n>120) clearInterval(iv); }, 1000);
+  window.cgBuildBadge=paint;
+})();
+</script>
+<style id="sc-b621-quietupdate-css">
+/* ══ build 621, 31 JUL 2026 - PUBLISHING NO LONGER INTERRUPTS ANYONE ══════════════════
+   T: "everytime i push publish to website it makes the people using it reload. i don't
+   want that"
+
+   MEASURED CAUSE: nothing force-reloads. Every location.reload() in this file is behind a
+   user-pressed button (the REFRESH rail button). What actually happens is sc-b555-updnag-js
+   (build 555): it polls cmdglas.com/version.json every few minutes and, whenever the live
+   build is HIGHER than the running one, throws a pulsing strip across the top-centre of
+   every open tablet - "UPDATE LIVE - BUILD N IS ON CMDGLAS.COM - TAP TO RELOAD".
+   That was fine when publishing was rare. Today it fired on every one of a dozen builds,
+   so from a user's seat it reads as being nagged to reload constantly.
+
+   FIX: the strip never shows again. The signal is not lost - it moves into the build badge
+   in the corner, which is passive, silent, unanimated and pointer-events:none. Anyone who
+   wants to know can look; nobody gets interrupted, and they pick up the new build on their
+   next natural reload.
+   The build 555 code is left intact and simply suppressed, so this is one line to undo.
+   Reversible: delete this block. ══════════════════════════════════════════════════════ */
+#cg-updnag, #cg-updnag.show{
+  display:none !important;
+  visibility:hidden !important;
+  animation:none !important;
+  pointer-events:none !important;
+}
+#cg-buildbadge.upd{ border-color:rgba(255,176,0,.55) !important; }
+#cg-buildbadge.upd i{ color:#ffb000; font-style:normal; font-weight:800; }
+</style>
+<script id="sc-b621-quietupdate-js">
+(function(){
+  if(window.__cgQuiet621) return; window.__cgQuiet621=true;
+  var CUR=parseInt(window.CMDGLAS_BUILD,10);
+  if(!isFinite(CUR)) return;
+  var live=null;
+  function check(){
+    fetch('https://cmdglas.com/version.json',{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        var n=parseInt(d&&d.build,10);
+        if(isFinite(n)&&n>CUR){ live=n; }
+        if(window.cgBuildBadge) window.cgBuildBadge();
+      },function(){});
+  }
+  window.cgLiveBuild=function(){ return live; };
+  setTimeout(check,9000);
+  setInterval(check,600000);          /* every 10 min, silent */
+})();
+</script>
 </body>
 </html>
