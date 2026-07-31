@@ -1479,6 +1479,13 @@ html{scrollbar-gutter:stable}
 <style id="sc-b561-traylabel">/* 2026-07-28 T: INGAME TOOLS labels rendered at 11px nowrap with no width cap, so the long ones (BLUEPRINTS, INVENTORY, CONTRACTS) overflowed their tiles and ran into the next label. Fit each label to its own cell so none overlap. Reversible: delete this block. */
 #tab-home .hm-cols .hm-col .hm-cell .hm-lab{font-size:7.5px !important;letter-spacing:0 !important;text-indent:0 !important;padding-left:0 !important;white-space:normal !important;line-height:1.2 !important;max-width:100% !important;width:100% !important;overflow:visible !important;text-align:center !important;overflow-wrap:normal !important;word-break:keep-all !important}
 </style>
+<!-- build 631 (T: "is there any way to hide the cmdglas.com address bar"): the PWA manifest.
+     Must live in <head> - this was in <body> since it was added and was therefore ignored.
+     With this + cmdglas.webmanifest served at the site root, Chrome offers "Install page as
+     app" (own window, no address bar, no tab strip) and iPad Safari "Add to Home Screen" runs
+     it standalone. Standalone also has no WKWebView outer scroll view, which is the structural
+     cause of the iPad phantom-drag - untested on the real device, so not claimed as fixed. -->
+<link rel="manifest" href="/cmdglas.webmanifest">
 </head>
 <body>
 <!-- WIPE-RESET-INJECTED -->
@@ -1752,8 +1759,11 @@ html{scrollbar-gutter:stable}
      BAR button explains this rather than pretending it can strip its own chrome.
      display:standalone (not fullscreen) is deliberate: the user asked for no address bar WITHOUT
      going fullscreen, and F11 already covers fullscreen from the topbar. -->
-<link rel="manifest" href="/cmdglas.webmanifest">
-<meta name="theme-color" content="#080c12">
+<!-- build 631: the manifest link MOVED FROM HERE into <head>. MEASURED 31 JUL 2026:
+     </head> is at line 1482 and this sat at 1755 - 272 lines inside <body>. Chrome only reads
+     <link rel="manifest"> from the HEAD, so DevTools > Application > Manifest reported
+     "no manifest detected" and no install button was ever offered, even with the file live and
+     returning 200. The theme-color meta went with it (a duplicate already existed in head). -->
 <style id="fm-noarrow-css">/* 2026-07-14 user: remove ALL arrows from Space Manual (and other) collapsibles */#content summary{list-style:none}#content summary::-webkit-details-marker{display:none}#content summary::marker{content:""}.mtip-arrow{display:none!important}
 /* 2026-07-14 user: make Space Manual / collapsible headers read clearly as BUTTONS */
 /* 2026-07-15 user: "reduce the space manual buttons clickeable area. just make it as wide as
@@ -8686,7 +8696,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=630;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=631;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
