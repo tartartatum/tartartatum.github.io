@@ -1617,6 +1617,17 @@ html{scrollbar-gutter:stable}
   <div class="logo" style="text-transform:none;letter-spacing:1.5px"><em id="ver-logo" style="font-size:8px;color:var(--amber2);margin-left:4px">—</em></div><!-- 2026-07-16: was the literal "4.8.3 LIVE" - see the ver-chip note. applyVersion() fills this from the live feed. NOTE: the 8px here is clamped to 14px by Chrome's minimum-font-size setting (measured 2026-07-16), so this renders larger than written; that is a browser setting, not this file. -->
   <div id="tabs">
     <button type="button" class="tab active" data-tab="home">[ Home ]</button><!-- HOMEPAGE 2026-07-15: landing tab (user order) -->
+    <!-- build 627 (T: "bring into tablet"): the ORG/PARTY page used to open in a new BROWSER tab.
+         setActiveTabById() navigates by clicking `.tab[data-tab="<id>"]`, so the page needs a
+         button to exist at all - but it is hidden, because this is reached from the HUD's SOURCE
+         button, not from the top bar. No <option> is added anywhere, so per the build-475 note
+         above this creates NO home tile. Reversible: delete this button + #tab-orgpage. -->
+    <button type="button" class="tab" data-tab="orgpage" style="display:none">[ Org / Party ]</button>
+    <!-- build 627: MY OPS (the GATHER & BUY page) had NO .tab button anywhere - MEASURED, and it is
+         why SOURCE from the Gather/Buy tabs did nothing. It is in the build-360 SHEET list, so it was
+         always meant to be reachable; nothing ever gave setActiveTabById() a button to click. Hidden,
+         same as the org page - reached from the HUD's SOURCE button, and no <option> so no home tile. -->
+    <button type="button" class="tab" data-tab="myops" style="display:none">[ Gather &amp; Buy ]</button>
     <!-- 2026-07-16: TROUBLESHOOT needs a .tab button to exist AT ALL, because setActiveTabById()
          works by finding `.tab[data-tab="<id>"]` and clicking it - no button, no navigation. The
          topbar button appeared to do nothing without this.
@@ -1802,6 +1813,10 @@ html{scrollbar-gutter:stable}
   <!-- HOMEPAGE 2026-07-15 (user order): mobiGlas-style landing page. Dock tiles are built by the
        HOME DOCK module (end of file) FROM the two nav dropdowns — no hand-typed page list, so new
        pages appear automatically. System page is one tile away; it no longer loads at startup. -->
+  <!-- build 627: ORG / PARTY page, iframed in-tablet (same pattern as tab-allkb / tab-kbref /
+       tab-system). Keeps the RETURN TO HUD round-trip inside one window instead of throwing the
+       pilot into a second browser tab. -->
+  <div class="panel-page" id="tab-orgpage"><iframe id="cg-orgframe" src="cmdglas_org.html" style="width:100%;height:calc(100vh - 96px);min-height:640px;border:0;background:#0a0f16" title="CmdGlas Org &amp; Party"></iframe></div>
   <div class="panel-page active" id="tab-home">
     <div class="scrollbox p-body" id="home-scroll" style="padding:0"></div>
 </div>
@@ -8668,7 +8683,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=626;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=627;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -27839,8 +27854,8 @@ body.sc-home-mode #cg-hometitle b{ -webkit-text-fill-color:transparent !importan
   if(window.__cgOverlayNav358) return; window.__cgOverlayNav358=true;
   /* build 360: FULL overlay rollout — every navigable content page opens as a sheet over Home (Home stays the base; 'yield' is removed/hidden so it's excluded). LARGE = wide/dense/iframe pages (uncapped width); the rest use the standard sheet. */
   /* 'ships' excluded for now: its live Ship-DB loader re-renders the page async and doesn't relocate cleanly — it keeps transporting; follow-up. */
-  var LARGE={blueprints:1,craftcalc:1,loadout:1,mining:1,salvage:1,starmap:1,missions:1,trading:1,inventory:1,harvest:1,allkb:1,system:1,shard:1,streamdeck:1,deckbuilder:1,myops:1};
-  var SHEET={blueprints:1,craftcalc:1,loadout:1,mining:1,salvage:1,starmap:1,missions:1,trading:1,inventory:1,harvest:1,allkb:1,system:1,shard:1,streamdeck:1,deckbuilder:1,myops:1,peripherals:1,mypc:1,notepad:1,spacemanuals:1,console:1,trouble:1,reputation:1,cap:1,guide:1,patch:1,voice:1};
+  var LARGE={blueprints:1,craftcalc:1,loadout:1,mining:1,salvage:1,starmap:1,missions:1,trading:1,inventory:1,harvest:1,allkb:1,system:1,shard:1,streamdeck:1,deckbuilder:1,myops:1,orgpage:1};/* build 627: the in-tablet org page is a full-width iframe - LARGE, like the other iframe pages */
+  var SHEET={blueprints:1,craftcalc:1,loadout:1,mining:1,salvage:1,starmap:1,missions:1,trading:1,inventory:1,harvest:1,allkb:1,system:1,shard:1,streamdeck:1,deckbuilder:1,myops:1,peripherals:1,mypc:1,notepad:1,spacemanuals:1,console:1,trouble:1,reputation:1,cap:1,guide:1,patch:1,voice:1,orgpage:1};/* build 627: open the org page as a sheet over Home like every other page, instead of a hard page switch */
   function titleFor(id){ var t=document.querySelector('.tab[data-tab="'+id+'"]'); if(t){ var s=(t.textContent||'').replace(/[\[\]]/g,'').trim(); if(s) return s; } return id.charAt(0).toUpperCase()+id.slice(1); }
   function openSheet(id){ if(typeof window.cgSheetOpenTab!=='function') return false; var ok=!!window.cgSheetOpenTab(id,{large:!!LARGE[id],title:titleFor(id)}); if(ok){ try{ var h=document.getElementById('tab-home'); if(h) h.classList.add('active'); }catch(e){} } return ok; }
   /* build 360: BUBBLE phase — let the .tab click's own switch handler AND any lazy-loader (ships/trading build their rows on the first .tab click) run first, THEN relocate the now-active page into the sheet and re-show Home underneath. All in the same click dispatch, so the browser paints only the final state (no full-screen flash). Catches setActiveTabById callers too — they dispatch a .tab click that bubbles here. */
@@ -35663,6 +35678,120 @@ window.bpImgTag=bpImgTag;
   var tries=0, bi=setInterval(function(){ if(build()||++tries>200) clearInterval(bi); sync(); },400);
   setInterval(sync, 700);
   addEventListener('storage',function(e){ if(e&&e.key===KEY) paint(); });
+})();
+</script>
+
+<style id="sc-b627-source-css">/* build 627 (T): SOURCE opens the full page behind whatever HUD tab
+   is showing; RETURN TO HUD comes back and re-opens the SAME tab you left from. Reversible:
+   delete this block and its script twin, plus the #tab-orgpage panel and its hidden .tab button. */
+#cg-hudsrc{display:none;flex:0 0 auto;margin-top:5px}
+#sc-home-widgets .ops-pill.b385 .pill-body #cg-hudsrc.on{display:block}
+#cg-hudsrc button{width:100%;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.6px;
+  text-transform:uppercase;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);
+  border:1px solid rgba(170,242,255,.9);border-radius:7px;padding:6px 8px;cursor:pointer}
+#cg-hudsrc button:hover{filter:brightness(1.08)}
+#cg-hudsrc button:active{transform:translateY(1px)}
+/* RETURN TO HUD - deliberately loud, T asked for "clearly marked" */
+.cg-rtb-bar{display:flex;align-items:center;gap:10px;margin:8px 10px 2px;padding:8px 12px;
+  border:1px solid rgba(255,207,107,.45);border-left:3px solid #ffcf6b;border-radius:11px;
+  background-image:linear-gradient(180deg,rgba(255,207,107,.10),rgba(255,255,255,0) 50%,rgba(0,0,0,.22)),linear-gradient(180deg,rgba(26,22,14,.7),rgba(10,12,18,.85))}
+.cg-rtb-bar .cg-rtb-l{font:700 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;color:#c9a86a;text-transform:uppercase}
+.cg-rtb-bar button{margin-left:auto;font:800 10px 'Rajdhani',sans-serif;letter-spacing:1.8px;text-transform:uppercase;
+  color:#2a1a02;background:linear-gradient(180deg,#ffe0a0,#ffb000);border:1px solid rgba(255,224,160,.9);
+  border-radius:8px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+.cg-rtb-bar button:hover{filter:brightness(1.07)}
+.cg-rtb-bar button:active{transform:translateY(1px)}
+</style>
+<script id="sc-b627-source-js">
+(function(){
+  if(window.__cgSource627) return; window.__cgSource627=true;
+  var RET='cg_hud_return';
+  /* which full page sits behind each HUD tab. Threat/Notes/Stream are intentionally absent -
+     T asked for Gather, Buy, Contracts and Org/Party, and a SOURCE button that leads nowhere
+     is worse than no button. */
+  var MAP={
+    gather:   {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},
+    buy:      {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},
+    contracts:{page:'missions',label:'SOURCE - CONTRACTS PAGE'},
+    orgparty: {page:'orgpage', label:'SOURCE - ORG / PARTY PAGE'}
+  };
+  function ls(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
+  function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  /* the open tab is whichever glance panel owns the body, else the ops4 core's own view */
+  function activeTab(){
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body');
+    if(!body) return null;
+    if(body.classList.contains('cg-ct-on')) return 'contracts';
+    if(body.classList.contains('cg-op-on')) return 'orgparty';
+    if(body.classList.contains('cg-th-on')) return 'threat';
+    var v=ls('sc_ops_pill_view','status');
+    return /^(gather|buy|notes|status)$/.test(v)?v:'status';
+  }
+  function go(page,fromTab){
+    set(RET, fromTab||'');
+    try{ if(typeof setActiveTabById==='function') setActiveTabById(page); }catch(e){}
+  }
+  /* Put the pill back on the tab the pilot left from, THEN go Home - order matters, the panels
+     read their flags when Home paints. */
+  window.cgReturnToHud=function(){
+    var t=ls(RET,'');
+    try{
+      set('cg_ct_glance_on', t==='contracts'?'1':'0');
+      set('cg_op_glance_on', t==='orgparty' ?'1':'0');
+      set('cg_th_glance_on', t==='threat'   ?'1':'0');
+      if(/^(gather|buy|notes|status)$/.test(t)) set('sc_ops_pill_view', t);
+    }catch(e){}
+    /* MEASURED: build 360 opens content pages as a SHEET OVER Home, and openSheet() deliberately
+       re-adds .active to #tab-home - so Home is ALREADY active underneath and setActiveTabById('home')
+       alone leaves the sheet sitting on top. Closing the sheet is the real "return", and it is the
+       same call the sheet's own Back and X buttons make. Fall back to a tab switch if no sheet is up. */
+    var closed=false;
+    try{ if(typeof window.cgSheetClose==='function'){ window.cgSheetClose(); closed=true; } }catch(e){}
+    if(!closed){ try{ if(typeof setActiveTabById==='function') setActiveTabById('home'); }catch(e){} }
+  };
+
+  /* ---- the SOURCE button: ONE node, sibling of .ops4-body so the core's repaint cannot eat it */
+  function buildSrc(){
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body'); if(!body) return null;
+    var el=document.getElementById('cg-hudsrc');
+    if(!el){
+      el=document.createElement('div'); el.id='cg-hudsrc';
+      el.innerHTML='<button type="button"></button>';
+      body.appendChild(el);
+      el.querySelector('button').addEventListener('click',function(e){
+        e.stopPropagation();
+        var t=activeTab(), m=MAP[t]; if(!m) return;
+        go(m.page,t);
+      });
+    }
+    return el;
+  }
+  function syncSrc(){
+    var el=buildSrc(); if(!el) return;
+    var t=activeTab(), m=MAP[t];
+    var want=!!m;
+    if(el.classList.contains('on')!==want) el.classList.toggle('on',want);
+    if(m){ var b=el.querySelector('button'); if(b&&b.textContent!==m.label) b.textContent=m.label; }
+  }
+
+  /* ---- RETURN TO HUD bars on the three destination pages ---------------------------------- */
+  var PAGES={'tab-myops':'GATHER & BUY','tab-missions':'CONTRACTS','tab-orgpage':'ORG / PARTY'};
+  function bar(label){
+    var d=document.createElement('div'); d.className='cg-rtb-bar';
+    d.innerHTML='<span class="cg-rtb-l">'+label+'</span><button type="button">&#8592; RETURN TO HUD</button>';
+    d.querySelector('button').addEventListener('click',function(e){ e.stopPropagation(); window.cgReturnToHud(); });
+    return d;
+  }
+  function syncBars(){
+    Object.keys(PAGES).forEach(function(id){
+      var p=document.getElementById(id); if(!p) return;
+      if(p.querySelector(':scope > .cg-rtb-bar')) return;
+      p.insertBefore(bar(PAGES[id]), p.firstChild);
+    });
+  }
+  function tick(){ syncSrc(); syncBars(); }
+  var n=0, iv=setInterval(function(){ tick(); if(++n>400) { clearInterval(iv); setInterval(tick,1200); } },400);
+  tick();
 })();
 </script>
 <style id="sc-b622-flatbg-css">
