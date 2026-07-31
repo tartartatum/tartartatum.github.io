@@ -8696,7 +8696,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=631;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=638;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -19275,7 +19275,7 @@ live list and the photo reference; choice persists (sc_kbview). */
   'tab-harvest':'Harvestable & mineable atlas. Card decks with a live type-search up top; DECKS/TABLES toggle switches to the full source tables. Jump dropdowns skip straight to an item, section or location.',
   'tab-inventory':'Add gear with the CATEGORY / ITEM / QTY / QUALITY / LOCATION row, or type lines on the Notepad page (name x qty q quality @ location). Views: item list, by location, associations.',
   'tab-meta':'The best craftable pick per weapon/armor slot, with materials, mining locations and a confidence pill. Tap a row or [ MORE INFO ] for the full reasoning and source. 4.9 WATCH note at top flags incoming changes.',
-  'tab-missions':'Top: filter and sort ALL live contracts, LEGAL/ILLEGAL toggle, type, giver, system, payout sort, search. Nothing shows until you pick a filter. Expand a card for rep gained, required standing, payout, enemy waves and blueprint drops. Below: your curated checklist and the gear-prep checklist, both collapsed.',
+  'tab-missions':'Every live contract, cleaned of placeholder rows. Filter and sort by type, giver, system and LEGAL/ILLEGAL, or search - the search also looks at the CARGO and HARVESTABLES a contract asks for, so typing a material name finds the job that wants it. Cards tagged UNCONFIRMED are ones CIG has not flagged live yet. Press [ TRACK ] on any card and it appears in the CONTRACTS tab of the centre pill.',
   'tab-mining':'Top: rig builder - pick ship, pick a laser head per slot (only compatible sizes shown), SAVE LOADOUT. Below: pin reference and laser/module data.',
   'tab-salvage':'Salvage rig builder. Heads (Baler / Salvation, S2) go on the arms; Abrade / Cinch / Trawler / ReadyGrip are S1 MODULES that slot INTO each head. Pick ship → heads → modules → SAVE LOADOUT.',
   'tab-notepad':'Free-form notes. Lines under ## INVENTORY parse automatically into the Inventory tracker.',
@@ -28269,10 +28269,16 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Tap the selector.</li>',
 '<li>Choose any of the 16 modules: Blueprints, Clock, Contracts, Hauling, Inventory, Keybinds, Media Player, Mining, Nav / Starmap, Notepad, Pinned, Reputation, Salvage, Shard Health, Ship Loadouts, Wikelo.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> There is no STATUS module here any more - the server and rig lamps moved onto the CLOCK module, and the live operational readout is the STREAM tab of the centre pill (Section 3).</div></div>',
-'<div class="um-sec"><h2>Section 3 - Centre Pill</h2><div class="um-purpose">The centre pill (top-centre of Home) holds six tabs, left to right: GATHER and BUY (the lists every tool pushes into), NOTES, ORG/PARTY (your roster, live status and assigned objective), THREAT, and STREAM (the Twitch player - this tab was called STATUS on older builds).</div>',
+'<div class="um-sec"><h2>Section 3 - Centre Pill</h2><div class="um-purpose">The centre pill (top-centre of Home) is the HUD. Six tabs, left to right: <b>GATHER &amp; BUY</b> (the lists every tool pushes into, both on one tab), <b>NOTES</b>, <b>CONTRACTS</b> (the contracts you have tracked), <b>ORG/PARTY</b> (your roster, live status and assigned objective), THREAT, and STREAM (the Twitch player - this tab was called STATUS on older builds).</div>',
 '<div class="um-proc">3-1. Switch tabs</div>',
 '<ol class="um-steps"><li>Locate the centre pill (top-centre of Home).</li>',
-'<li>Tap <b>GATHER</b>, <b>BUY</b>, <b>NOTES</b>, <b>ORG/PARTY</b>, <b>THREAT</b>, or <b>STREAM</b> across the top of the pill.</li></ol>',
+'<li>Tap <b>GATHER &amp; BUY</b>, <b>NOTES</b>, <b>CONTRACTS</b>, <b>ORG/PARTY</b>, <b>THREAT</b>, or <b>STREAM</b> across the top of the pill.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> GATHER and BUY used to be two tabs. They opened the same page, so they are one tab now and both lists show together, each under its own heading.</div>',
+'<div class="um-proc">3-2. Open the full page behind a tab</div>',
+'<ol class="um-steps"><li>Open GATHER &amp; BUY, CONTRACTS, or ORG/PARTY in the pill.</li>',
+'<li>Locate <b>SOURCE</b> at the bottom of the pill, beside UNDOCK.</li>',
+'<li>Tap it - the full page opens.</li>',
+'<li>Tap <b>&#8592; RETURN TO HUD</b> at the top of that page to come back to the same tab you left from.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> Blueprints, Craft Calculator, Mining, Harvestables and Ship Loadouts push your picks into the centre pill\'s GATHER and BUY lists.</div></div>',
 '<div class="um-sec"><h2>Section 4 - Account</h2><div class="um-purpose">Sign in to sync gear, loadouts, and org comms across devices.</div>',
 '<div class="um-proc">4-1. Sign in</div>',
@@ -28332,7 +28338,13 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Return via any BACK control (Section 9).</li></ol>',
 '<div class="um-note"><b>NOTE.</b> This manual covers the TABLET. For in-game subjects, use LEARN &rarr; SPACE MANUALS or SEARCH &rarr; BY TOPIC.</div></div>',
 /* 2026-07-23 build 390 — ADD-TO-HOME-SCREEN section. Added after verifying (caniuse/MDN + Gadget Hacks/Chrome Help) that the no-address-bar window is controlled by the tablet's display:standalone MANIFEST, not the browser: Safari AND Chrome both work on iPadOS 16.4+. Reversible: delete from this comment through the END-b390 marker. */
-'<div class="um-sec"><h2>Section 12 - Add Tablet to Home Screen (iPad / Android)</h2><div class="um-purpose">Pin the tablet to the Home Screen so it opens in one tap. Whether the address bar can be hidden depends on the browser: on iPhone and iPad, only <b>Safari</b> can open the tablet as a clean, no-address-bar window. Apple does not let Chrome or any other iOS browser do it, so in <b>Chrome on an iPad you will always see the address bar</b>. On an <b>Android</b> tablet, Chrome can hide it.</div>',
+'<div class="um-sec"><h2>Section 12 - Install the Tablet as an App (no address bar)</h2><div class="um-purpose">The tablet installs like a real app - its own window and icon, no address bar, no tabs. Works on PC, iPad and Android. On iPhone and iPad, only <b>Safari</b> can open the tablet as a clean, no-address-bar window. Apple does not let Chrome or any other iOS browser do it, so in <b>Chrome on an iPad you will always see the address bar</b>. On an <b>Android</b> tablet, Chrome can hide it.</div>',
+'<div class="um-proc">12-0. PC - Chrome</div>',
+'<ol class="um-steps"><li>Open the tablet.</li>',
+'<li>Look at the right end of the address bar for the <b>install icon</b> - a small monitor with a down-arrow.</li>',
+'<li>Tap it, then tap <b>Install</b>. If there is no icon, open the <b>&#8942;</b> menu (top-right) &rarr; <b>Cast, save and share</b> &rarr; <b>Install page as app</b>.</li>',
+'<li>The tablet opens in its own window and gets a taskbar icon.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> If the install option is missing or greyed out, hard-refresh with <b>Ctrl + Shift + R</b> first - browsers cache the old page and will not re-check until forced.</div>',
 '<div class="um-proc">12-1. iPad / iPhone - Safari (the only way to hide the bar)</div>',
 '<ol class="um-steps"><li>Open the tablet in <b>Safari</b> - not Chrome.</li>',
 '<li>Tap the Share button - top bar, the square-with-up-arrow icon.</li>',
@@ -28364,6 +28376,40 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Close the black server window when you are done for the session.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> No control server needed for everyday use, everything except the live/PC-only features works by just opening the tablet in any browser at cmdglas.com.</div>',
 '<div class="um-note"><b>NO DANGER.</b> The control server runs only on your own PC and serves the tablet to your browser. It does not touch the game and is unrelated to anti-cheat.</div>',
+'<div class="um-sec"><h2>Section 14 - Gather &amp; Buy Page</h2><div class="um-purpose">The full version of the pill&#39;s GATHER &amp; BUY tab. Everything you push from the tools lands here.</div>',
+'<div class="um-proc">14-1. Open it</div>',
+'<ol class="um-steps"><li>Open the <b>GATHER &amp; BUY</b> tab in the centre pill.</li>',
+'<li>Tap <b>SOURCE</b> at the bottom of the pill.</li></ol>',
+'<div class="um-proc">14-2. Jump to the tool that fills a list</div>',
+'<ol class="um-steps"><li>Locate the <b>BUILT FROM</b> row near the top of the page.</li>',
+'<li>Tap <b>Blueprints</b>, <b>Craft Calculator</b>, <b>Mining</b>, <b>Harvestables</b> or <b>Ship Loadouts</b>.</li>',
+'<li>The tag on each button says which list it feeds.</li></ol>',
+'<div class="um-proc">14-3. How things get onto the lists</div>',
+'<div class="um-zone"><b>Blueprints</b><span>Tap a card&#39;s &rarr; PUSH TO GATHER.</span><b>Craft Calculator</b><span>Anything you select lands on the gather list automatically.</span><b>Mining</b><span>Pick materials in BASIC mode.</span><b>Ship Loadouts</b><span>Tap the &#128722; cart on any slot or component; tap again to recall it.</span></div>',
+'<div class="um-proc">14-4. Clear a list</div>',
+'<ol class="um-steps"><li>Tap <b>CLEAR</b> beside GATHER LIST or BUY LIST.</li>',
+'<li>A confirmation window opens.</li>',
+'<li>Tap <b>CLEAR</b> in that window <b>twice</b> - the first tap arms it, the second carries it out.</li></ol>',
+'<div class="um-caution"><b>CAUTION.</b> Clearing cannot be undone. The gather list also wipes your Craft Calculator and mining picks, because all three feed the same list. CANCEL, Escape, or a tap outside backs out safely.</div></div>',
+'<div class="um-sec"><h2>Section 15 - Put the HUD Over Your Game (PC)</h2><div class="um-purpose">The centre pill can leave the page and float on top of Star Citizen while you fly.</div>',
+'<div class="um-proc">15-1. Pop it out</div>',
+'<ol class="um-steps"><li>Open the tablet on your PC and click it once so it is the active window.</li>',
+'<li>Press <b>Ctrl + Alt + 1</b>. The pill becomes a small floating window - drag it where you want it.</li>',
+'<li>Press <b>Ctrl + Alt + 1</b> again to put it back.</li></ol>',
+'<div class="um-caution"><b>CAUTION.</b> Set Star Citizen to <b>BORDERLESS WINDOWED</b> (Settings &rarr; Graphics &rarr; Display Mode). Exclusive fullscreen hides every other window, including this one. That is a Windows rule, not a tablet setting.</div>',
+'<div class="um-proc">15-2. Pop it out by voice or Stream Deck</div>',
+'<ol class="um-steps"><li>Ctrl + Alt + 1 only reaches the tablet when the tablet is the active window - while flying, the game is.</li>',
+'<li>Run <b>5 - HUD BRIDGE.bat</b> and leave that window open.</li>',
+'<li>Open the tablet from your PC, not from cmdglas.com.</li>',
+'<li>Point a Stream Deck <b>System &rarr; Website</b> key (tick <b>Access in background</b>) or a VoiceAttack command at <b>http://127.0.0.1:8421/toggle</b>.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> PC only. A secure website is not allowed to talk to your own machine, so the bridge does not work from cmdglas.com.</div></div>',
+'<div class="um-sec"><h2>Section 16 - Open a Page Directly by Link</h2><div class="um-purpose">Any page can be opened straight from a link, bookmark or Stream Deck key.</div>',
+'<div class="um-proc">16-1. Build the link</div>',
+'<ol class="um-steps"><li>Take the tablet address and add <b>?tab=</b> plus the page name.</li>',
+'<li>Example: <b>cmdglas.com/?tab=mining</b></li></ol>',
+'<div class="um-proc">16-2. Page names</div>',
+'<div class="um-zone"><b>mining</b><span>Mining</span><b>blueprints</b><span>Blueprints</span><b>contracts</b><span>Contracts</span><b>craftcalc</b><span>Craft Calculator</span><b>harvest</b><span>Harvestables</span><b>loadout</b><span>Ship Loadouts</span><b>hauling</b><span>Hauling</span><b>gather</b><span>Gather &amp; Buy</span><b>party</b><span>Org / Party</span></div>',
+'<div class="um-note"><b>NOTE.</b> Spelling is forgiving - missions, shiploadouts, trading and craft all work too.</div></div>',
 /* END-b390 */
 '<div class="um-end">END OF MANUAL &middot; TM-CMDGLAS-10</div>'
   ].join('');
@@ -29590,7 +29636,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   function renderGather(){
     var bph=bpsChips();
     var g=gatherList(); if(!g.length) return (bph||'<div class="ops4-empty">No crafting materials yet - pick blueprints in the Craft Calculator (they land here) or push from a Blueprints card.</div>')
-      +(window.cgSamples?cgSamples.gatherSample():'');/* build 548: empty list -> labelled sample of what PLAN MINING RUN builds */
+      ;/* build 632 (T: "ther's a huge block in ther that says sample preview. get rid of it"): the build-548 gather sample is gone from the pill - it filled the whole body with mock rows on an empty list, exactly when the pill should be smallest. window.cgSamples is left intact. */
     g.sort(function(a,b){ return (b.qty||0)-(a.qty||0); });
     /* build 444 (user: the expanded view left dead space below — fill it). Show the whole list; ops4-body has overflow:auto so it scrolls when docked and fills the tall pop-out. */
     var nb=uniqFroms(g), top=g.slice(0,120);
@@ -29627,7 +29673,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
         +'<button type="button" class="ops4-go" id="ops4-br-plan" style="padding:6px 12px;flex:0 0 auto" title="Build the fewest-stops shopping run for every item above, with listed aUEC prices">'+(cbr.pillBusy?'PLANNING…':'PLAN ROUTE')+'</button>'
         +'</div>'
         +'<div style="font-size:8.5px;color:#8ba0b5;line-height:1.4;margin-bottom:5px">Pick where you are launching from, then PLAN ROUTE builds the fewest-stops shopping run from there with listed aUEC prices.</div>';
-      if(window.cgSamples && cgSamples.srvDown()){
+      if(false && window.cgSamples && cgSamples.srvDown()){/* build 632 (T): same SAMPLE PREVIEW, buy side. Disabled not deleted - one word to undo. */
         /* build 548: no control server reachable - show the labelled mockup so visitors see what
            the planner does and exactly what it takes to get it (T's order) */
         plan+=cgSamples.buySample();
@@ -29760,15 +29806,39 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   function apply(){
     var tr=document.getElementById('sc-tools-row'), hw=document.getElementById('sc-home-widgets');
     if(!tr||!hw) return false;
-    var h=Math.round(tr.getBoundingClientRect().height);
+    /* build 636: was getBoundingClientRect().height - VISUAL px, which under CSS zoom does not
+       match the LAYOUT px that min-height/max-height are measured in, and did not match the
+       offsetHeight that sc-b406 writes to the same elements. Measured 403 vs 347 live on the
+       same pill. offsetHeight is the right unit here and is what sc-b406 already uses. */
+    var h=tr.offsetHeight;
     if(h<140) return false; /* tools row not laid out yet */
     if(hw.style.minHeight!==h+'px') hw.style.minHeight=h+'px'; /* grow the grid CONTAINER — that is the real height constraint */
+    /* build 636: remember what this pass measured so the caller can tell when it has settled */
+    apply.lastH=h;
     /* build 450 (user: do NOT shrink the pills/badges — just make it fit). Cap the HEIGHT only on the OPS pill (its long gather list scrolls inside instead of stretching the row). Clock + Account get min-height only, so they sit at the row height with full-size content and never scroll. Pinning max-height on THEM was what clipped the Account pill into a scroll. */
     [].forEach.call(hw.querySelectorAll('.wg'),function(w){ var isOps=w.classList.contains('ops-pill'); var mh=isOps?(h+'px'):''; if(w.style.minHeight!==h+'px') w.style.minHeight=h+'px'; if(w.style.maxHeight!==mh) w.style.maxHeight=mh; });
     return true;
   }
-  var n=0, iv=setInterval(function(){ if(apply()){ clearInterval(iv); setTimeout(apply,450); } else if(++n>60) clearInterval(iv); }, 400);
+  /* build 636 (T: "i have to click on the hud pill to make it snap into place fully expanded").
+     MEASURED: min-height 403px and max-height 347px were live on the ops pill at the same time -
+     written by two runs that measured the tools row at different moments while it was still
+     settling. max wins, so the pill rendered 56px short until a click forced a repaint.
+     Now it keeps measuring until the SAME height comes back twice in a row, so both values are
+     always written from one settled measurement. */
+  var n=0, stable=0, lastSeen=null;
+  var iv=setInterval(function(){
+    var ok=apply();
+    if(ok){
+      if(apply.lastH===lastSeen){ stable++; } else { stable=0; lastSeen=apply.lastH; }
+      if(stable>=2){ clearInterval(iv); setTimeout(apply,400); return; }   /* settled */
+    }
+    if(++n>60){ clearInterval(iv); setTimeout(apply,400); }
+  }, 250);
   window.addEventListener('resize', function(){ setTimeout(apply,150); });
+  /* web fonts change the tools row's height when they land - that is one of the two moments the
+     old code could measure mid-flight. Re-apply when they are ready, and again at full load. */
+  try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(apply,60); }); }catch(e){}
+  addEventListener('load', function(){ setTimeout(apply,120); setTimeout(apply,700); });
 })();
 </script>
 <style id="sc-b389-touchfit-css">/* 2026-07-23 build 389 (touch VERTICAL-fill companion to the touch zoom script below). When build 389 applies SC-FIT zoom on touch (z<1 on the iPad), #content's calc(100vh-…) height is measured against the UNZOOMED viewport then scaled by z, so it renders SHORT and leaves a dead band below the dashboard — the exact squish b361 fixed for pointer:fine. b361's fix is gated to (pointer:fine) and hard-codes touch zoom=1, so it does NOT cover touch. This mirrors that fix for touch (EXCLUDING compact mode via :not([data-portable="1"])), consuming --sc-touchfill (= innerHeight/zoom) set by the script. Reversible: delete this block AND the sc-b389-touchfit-js script. */
@@ -30435,9 +30505,9 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
 #sc-home-widgets .ops-pill.b385 .pill-body.cg-tw-on #cg-twitch{display:flex;}
 #cg-twitch .cg-tw-bar{display:flex;gap:5px;align-items:center;flex:0 0 auto;}
 #cg-twitch .cg-tw-in{flex:1 1 auto;min-width:0;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;color:#dfeaf2;font:600 11px 'Rajdhani','Segoe UI',sans-serif;padding:5px 8px;}
-#cg-twitch .cg-tw-go{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:6px 11px;cursor:pointer;text-transform:uppercase;}.cg-tw-clear{flex:0 0 auto;font:800 11px 'Rajdhani','Segoe UI',sans-serif;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;padding:5px 9px;cursor:pointer;line-height:1;}.cg-tw-clear:hover{color:#ff8080;border-color:rgba(255,128,128,.5);}
+#cg-twitch .cg-tw-go{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:none;border-radius:6px;padding:6px 11px;cursor:pointer;text-transform:uppercase;}.cg-tw-open{flex:0 0 auto;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#e5d5ff;background:rgba(145,70,255,.22);border:1px solid rgba(169,112,255,.65);border-radius:6px;padding:6px 9px;cursor:pointer;text-transform:uppercase;}.cg-tw-open:hover{color:#fff;background:rgba(145,70,255,.42);border-color:#a970ff;}.cg-tw-clear{flex:0 0 auto;font:800 11px 'Rajdhani','Segoe UI',sans-serif;color:#8ba0b5;background:rgba(4,10,18,.5);border:1px solid rgba(108,180,214,.3);border-radius:6px;padding:5px 9px;cursor:pointer;line-height:1;}.cg-tw-clear:hover{color:#ff8080;border-color:rgba(255,128,128,.5);}
 #cg-twitch .cg-tw-frame{flex:1 1 auto;min-height:70px;position:relative;border-radius:8px;overflow:hidden;background:#000;border:1px solid rgba(108,180,214,.2);clip-path:inset(0 round 8px);}/* build 521: WebKit does not reliably clip composited iframes with overflow+radius alone - clip-path does *//* build 505: was #0a0f16 — pure black so any letterbox around the video matches the player, not a lighter ring */
-#cg-twitch .cg-tw-frame iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.012);border:0;background:#000;color-scheme:light;}/* build 546 (T: "the white outline is on the left and right side of a shrunken display area inside the pill"). ROOT CAUSE: the iframe filled the whole (non-16:9) frame, so the PLAYER drew pillarbox bars beside the video - and on iPad WebKit those bars paint the iframe's white canvas before/around the player skin. FIX: sc-b546-twfit-js sizes the iframe to an EXACT 16:9 contain-fit of the frame (ResizeObserver), centered - there is no bar area left for anything to paint. The 1.2% scale swallows hairline seams; the frame's own #000 fills the leftover pill space. *//* build 521 (user: white rim on iPad STILL there after 505): the iframe edge now always sits OUTSIDE the visible clip, so no half-pixel seam can show. 2px of player edge is cropped - invisible. *//* build 505 (user: white border around the streamed content on iPad). An iframe with no background paints the browser's default WHITE canvas until/around the player's video area — visible as a white rim on iOS. Force black; color-scheme:light stops dark-mode double-inversion white flashes on WebKit. */
+#cg-twitch .cg-tw-frame iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.012);border:0;background:#000;color-scheme:dark;}/* build 632 (T: "fix the twitch panel"): was color-scheme:light, on a build-505 theory about "double-inversion white flashes". That theory is backwards - color-scheme decides what the browser paints the iframe's OWN CANVAS, and light means WHITE. It IS the white. Any moment Twitch's document is not covering its full box (loading, the offline card, a blocked embed) that white canvas shows through. Twitch's page cannot be styled cross-origin, but this canvas is ours. dark = those states read black. *//* build 546 (T: "the white outline is on the left and right side of a shrunken display area inside the pill"). ROOT CAUSE: the iframe filled the whole (non-16:9) frame, so the PLAYER drew pillarbox bars beside the video - and on iPad WebKit those bars paint the iframe's white canvas before/around the player skin. FIX: sc-b546-twfit-js sizes the iframe to an EXACT 16:9 contain-fit of the frame (ResizeObserver), centered - there is no bar area left for anything to paint. The 1.2% scale swallows hairline seams; the frame's own #000 fills the leftover pill space. *//* build 521 (user: white rim on iPad STILL there after 505): the iframe edge now always sits OUTSIDE the visible clip, so no half-pixel seam can show. 2px of player edge is cropped - invisible. *//* build 505 (user: white border around the streamed content on iPad). An iframe with no background paints the browser's default WHITE canvas until/around the player's video area — visible as a white rim on iOS. Force black; color-scheme:light stops dark-mode double-inversion white flashes on WebKit. */
 @media (pointer:coarse){#cg-twitch .cg-tw-frame{border-color:#000;}}/* build 521: the faint cyan 1px border reads as a white hairline on a bright iPad panel - black on touch, desktop keeps the accent */
 #cg-twitch .cg-tw-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8ba0b5;font-size:11px;padding:10px;line-height:1.4;}
 </style>
@@ -30526,7 +30596,7 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
     if(!tw){
       var ob=body.querySelector('.ops4-body'); if(!ob) return null;
       tw=document.createElement('div'); tw.id='cg-twitch';
-      tw.innerHTML='<div class="cg-tw-bar"><input class="cg-tw-in" placeholder="twitch channel..." spellcheck="false" autocapitalize="off"><button type="button" class="cg-tw-go">WATCH</button><button type="button" class="cg-tw-clear" title="Clear channel - back to banner">✕</button></div><div class="cg-tw-frame"><div class="cg-tw-ph" style="flex-direction:column;gap:7px"><div style="font-family:Iceland,Rajdhani,sans-serif;font-size:30px;line-height:1;letter-spacing:1px;color:#dfeaf2">Command <b style="color:#a6f2ff;font-weight:700">Glass</b></div><div style="font:700 9px Rajdhani,sans-serif;letter-spacing:3px;color:#6f8ba0;text-transform:uppercase">Stream · standing by</div></div></div>';
+      tw.innerHTML='<div class="cg-tw-bar"><input class="cg-tw-in" placeholder="twitch channel..." spellcheck="false" autocapitalize="off"><button type="button" class="cg-tw-go">WATCH</button><button type="button" class="cg-tw-open" title="Open this channel on twitch.tv in a new tab - watch there on DROPS days so the watch time is credited to your Twitch account">TWITCH</button><button type="button" class="cg-tw-clear" title="Clear channel - back to banner">✕</button></div><div class="cg-tw-frame"><div class="cg-tw-ph" style="flex-direction:column;gap:7px"><div style="font-family:Iceland,Rajdhani,sans-serif;font-size:30px;line-height:1;letter-spacing:1px;color:#dfeaf2">Command <b style="color:#a6f2ff;font-weight:700">Glass</b></div><div style="font:700 9px Rajdhani,sans-serif;letter-spacing:3px;color:#6f8ba0;text-transform:uppercase">Stream · standing by</div></div></div>';
       ob.parentNode.insertBefore(tw, ob.nextSibling);
       var inp=tw.querySelector('.cg-tw-in'), go=tw.querySelector('.cg-tw-go'); var clr=tw.querySelector('.cg-tw-clear'); if(clr){ clr.addEventListener('click',function(e){ e.stopPropagation(); inp.value=''; setCh(''); render(); }); }
       inp.value=getCh();
@@ -32694,7 +32764,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='CONTRACTS PAGE FIXED - the contract list was showing raw placeholder rows (&quot;[Contractor|BountyTitle]&quot;) and hiding real work. Those are gone, template contracts now read properly, and every contract that asks for cargo or harvestables now LISTS AND SEARCHES what it wants - so &quot;sunset berries&quot; finally finds the contract that needs them. Contracts CIG has not marked live are shown too, tagged UNCONFIRMED. Press [ TRACK ] on any contract and it appears in the new CONTRACTS tab of the centre pill. &middot; BLUEPRINTS UPDATED TO 4.9 - the craft list was two patches behind and missing 1,115 blueprints. All of them are in now: 657 new rows across armour, ship and FPS weapons, and every vehicle component. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Created on the spot, nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. Built the normal way it would take a team of five about eight months and cost between $450,000 and $850,000. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the centre pill. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the centre pill floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -35714,8 +35784,16 @@ window.bpImgTag=bpImgTag;
 <style id="sc-b627-source-css">/* build 627 (T): SOURCE opens the full page behind whatever HUD tab
    is showing; RETURN TO HUD comes back and re-opens the SAME tab you left from. Reversible:
    delete this block and its script twin, plus the #tab-orgpage panel and its hidden .tab button. */
-#cg-hudsrc{display:none;flex:0 0 auto;margin-top:5px}
-#sc-home-widgets .ops-pill.b385 .pill-body #cg-hudsrc.on{display:block}
+/* build 632 (T: "place the source gather buy page next to undock. center both buttons on pill"):
+   SOURCE was a full-width bar under the tab body, which ate a whole row of pill height. It now sits on
+   the SAME line as UNDOCK and the PAIR is centred - UNDOCK pushed left of the midline, SOURCE right of
+   it. Only the ops pill has an undock button (DETACHABLE={ops:1}), so no other pill is affected. */
+#cg-hudsrc{display:none}
+#sc-home-widgets .ops-pill > #cg-hudsrc.on{display:block;position:absolute;left:50%;bottom:8px;z-index:21;transform:translateX(4px)}
+#sc-home-widgets .ops-pill .cg-undock-btn{transform:translateX(calc(-100% - 4px)) !important}
+#cg-hudsrc button{font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif !important;letter-spacing:1.4px;
+  padding:6px 15px !important;border-radius:7px;white-space:nowrap;width:max-content;
+  box-shadow:0 2px 8px rgba(0,0,0,.4)}
 #cg-hudsrc button{width:100%;font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.6px;
   text-transform:uppercase;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);
   border:1px solid rgba(170,242,255,.9);border-radius:7px;padding:6px 8px;cursor:pointer}
@@ -35739,11 +35817,15 @@ window.bpImgTag=bpImgTag;
   /* which full page sits behind each HUD tab. Threat/Notes/Stream are intentionally absent -
      T asked for Gather, Buy, Contracts and Org/Party, and a SOURCE button that leads nowhere
      is worse than no button. */
+  /* build 632: the label is just SOURCE now. MEASURED: the long labels made this button 178px
+     against UNDOCK's 67px, which threw the centred PAIR 56px off the pill's midline - exactly
+     (178-67)/2. Equal-width buttons centre correctly with no JS. Which page it opens moved to
+     the tooltip, where it costs nothing. */
   var MAP={
-    gather:   {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},
-    buy:      {page:'myops',   label:'SOURCE - GATHER & BUY PAGE'},/* build 628: merged into 'gather', kept as a safety net */
-    contracts:{page:'missions',label:'SOURCE - CONTRACTS PAGE'},
-    orgparty: {page:'orgpage', label:'SOURCE - ORG / PARTY PAGE'}
+    gather:   {page:'myops',   label:'SOURCE', tip:'Open the full GATHER & BUY page'},
+    buy:      {page:'myops',   label:'SOURCE', tip:'Open the full GATHER & BUY page'},/* build 628: merged into gather, kept as a safety net */
+    contracts:{page:'missions',label:'SOURCE', tip:'Open the full CONTRACTS page'},
+    orgparty: {page:'orgpage', label:'SOURCE', tip:'Open the full ORG / PARTY page'}
   };
   function ls(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
   function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
@@ -35787,7 +35869,11 @@ window.bpImgTag=bpImgTag;
     if(!el){
       el=document.createElement('div'); el.id='cg-hudsrc';
       el.innerHTML='<button type="button"></button>';
-      body.appendChild(el);
+      /* build 632: append to the PILL, not .pill-body. MEASURED: .pill-body is itself positioned,
+         so a child of it resolved bottom:8px against the body box while UNDOCK resolved against
+         the .wg pill - the two landed 31px apart. Same parent = same containing block = one row. */
+      var pillEl=body.closest('.wg')||body;
+      pillEl.appendChild(el);
       el.querySelector('button').addEventListener('click',function(e){
         e.stopPropagation();
         var t=activeTab(), m=MAP[t]; if(!m) return;
@@ -35801,7 +35887,9 @@ window.bpImgTag=bpImgTag;
     var t=activeTab(), m=MAP[t];
     var want=!!m;
     if(el.classList.contains('on')!==want) el.classList.toggle('on',want);
-    if(m){ var b=el.querySelector('button'); if(b&&b.textContent!==m.label) b.textContent=m.label; }
+    if(m){ var b=el.querySelector('button');
+      if(b&&b.textContent!==m.label) b.textContent=m.label;
+      if(b&&b.title!==m.tip) b.title=m.tip; }
   }
 
   /* ---- RETURN TO HUD bars on the three destination pages ---------------------------------- */
@@ -35932,6 +36020,341 @@ window.bpImgTag=bpImgTag;
   /* manual re-check hook, e.g. after starting the bridge mid-session */
   window.cgHudBridgePoll=function(){ misses=0; clearTimeout(timer); tick(); };
   tick();
+})();
+</script>
+
+<script id="sc-b632-twopen-js">
+/* build 632 (T): "is the user actually logged into their own twitch account or is it just a
+   guest. is there a way to build a login to twitch so user gets credit for watching during
+   drops days".
+   Honest position, and why this is a BUTTON and not a login:
+   - The embed is not a separate session. It carries whatever twitch.tv cookies the browser
+     already has, so a pilot logged into Twitch in the same browser is logged in inside it too -
+     but only while third-party cookies are allowed, and browsers are steadily removing that.
+     This page cannot log anyone into Twitch, and must never ask for Twitch credentials - that
+     is exactly what a phishing page does.
+   - Whether an EMBED earns DROPS could NOT be verified from Twitch's own docs (their help page
+     would not load), so nothing is claimed either way. What is certain is that watching on
+     twitch.tv itself counts. So: one tap to the real page, and no promise about the embed.
+   Reversible: delete this block + the .cg-tw-open button and its CSS. */
+(function(){
+  if(window.__cgTwOpen632) return; window.__cgTwOpen632=true;
+  function ch(){ try{ return (localStorage.getItem('cg_twitch_ch')||'').trim(); }catch(e){ return ''; } }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('#cg-twitch .cg-tw-open'); if(!b) return;
+    e.stopPropagation(); e.preventDefault();
+    var c=ch();
+    var url=c?('https://www.twitch.tv/'+encodeURIComponent(c)):'https://www.twitch.tv/directory/category/star-citizen';
+    try{ window.open(url,'_blank','noopener'); }catch(_){}
+  },true);
+})();
+</script>
+
+<script id="sc-b633-deeplink-js">
+/* build 633 (T): "i need hotlink buttons for ingame tools mining, blueprints, contracts, craft
+   calculator harvest and ship loadouts and hauling. so i need url's for those".
+   MEASURED FIRST: the tablet had NO url handling of any kind - the only thing reading
+   location.search was the Spotify callback. So every link landed on Home and the pilot had to
+   navigate by hand. This adds ?tab= (and #tab), nothing else.
+
+   Navigation goes through setActiveTabById, the same call the in-game tools tiles make, so a
+   link opens exactly the page a pilot sees when navigating there normally - as a sheet over
+   Home, per build 360.
+
+   The nav buttons are created late by other scripts, so this retries until the target exists
+   rather than firing once and missing. Gives up after ~12s instead of spinning forever.
+   Reversible: delete this block. Links then simply land on Home. */
+(function(){
+  if(window.__cgDeepLink633) return; window.__cgDeepLink633=true;
+
+  /* friendly name -> the data-tab value setActiveTabById expects. Left side is what a human
+     would type in a URL; right side is what this file actually calls the page. */
+  var ALIAS={
+    mining:'mining', mine:'mining',
+    blueprints:'blueprints', blueprint:'blueprints', bp:'blueprints',
+    contracts:'missions', missions:'missions', mission:'missions',
+    craftcalc:'craftcalc', craft:'craftcalc', craftcalculator:'craftcalc', calculator:'craftcalc',
+    harvest:'harvest', harvestables:'harvest', harvestable:'harvest',
+    loadout:'loadout', loadouts:'loadout', shiploadouts:'loadout', ships:'loadout',
+    hauling:'trading', trading:'trading', cargo:'trading',
+    salvage:'salvage', starmap:'starmap', nav:'starmap',
+    inventory:'inventory', notepad:'notepad', notes:'notepad',
+    myops:'myops', gather:'myops', buy:'myops', gatherbuy:'myops',
+    orgpage:'orgpage', org:'orgpage', party:'orgpage',
+    reputation:'reputation', shard:'shard', keybinds:'allkb', allkb:'allkb',
+    system:'system', trouble:'trouble', manuals:'spacemanuals', spacemanuals:'spacemanuals',
+    home:'home'
+  };
+
+  function want(){
+    var v='';
+    try{
+      var m=/[?&]tab=([^&#]+)/.exec(location.search||'');
+      if(m) v=decodeURIComponent(m[1]);
+      else if(location.hash && location.hash.length>1) v=decodeURIComponent(location.hash.slice(1));
+    }catch(e){}
+    v=String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    if(!v) return '';
+    return ALIAS[v] || (/^[a-z0-9]+$/.test(v) ? v : '');
+  }
+
+  var target=want();
+  if(!target || target==='home') return;
+
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    var btn=document.querySelector('.tab[data-tab="'+target+'"]');
+    if(btn && typeof setActiveTabById==='function'){
+      clearInterval(iv);
+      /* one frame later so any lazy page builder attached to that tab has settled */
+      setTimeout(function(){ try{ setActiveTabById(target); }catch(e){} }, 60);
+      return;
+    }
+    if(tries>60){ clearInterval(iv); }   /* ~12s, then stop and leave the pilot on Home */
+  }, 200);
+})();
+</script>
+
+<script id="sc-b634-selfheal-js">
+/* build 634 (T): "my wife on her ipad running safari opened cmdglas.com and all the ingame tools
+   writing was still from a long time ago. chrome is perfect. safari is messing up now"
+
+   MEASURED 31 JUL 2026:
+     cmdglas.com sends cache-control: max-age=600 (GitHub Pages default) - ten minutes, which
+     cannot explain a page weeks old. There is no service worker (sw.js and service-worker.js
+     both 404) and no appcache. The INGAME TOOLS labels are baked into the HTML (var HLAB), not
+     read from storage - so she was not seeing stale STATE, she was seeing a stale DOCUMENT.
+   WHY SAFARI AND NOT CHROME: iOS Safari keeps tabs suspended for weeks and restores the last
+     RENDERED page on reopen rather than refetching. A tab opened before a change and never
+     closed will happily show that old build indefinitely. Chrome on the desktop refetches.
+
+   WHY THIS IS NOT A BANNER: build 621 removed the "UPDATE LIVE - TAP TO RELOAD" strip because
+   it interrupted everyone on every publish, and T does not want it back. So this never asks.
+   It reloads ONLY while the pilot is not looking - the tab is hidden - and only when the live
+   build is genuinely newer. Come back to the tab, it is current. Nothing flashes, nothing is
+   clicked, nothing is lost mid-typing because a hidden tab is not being typed into.
+
+   SAFETY: refuses to reload if anything is focused for input, and waits until the tab has been
+   hidden a full 20s so a quick app-switch never triggers it. Everything the tablet holds is
+   written to localStorage as it changes, so a reload costs nothing.
+   Reversible: delete this block. */
+(function(){
+  if(window.__cgSelfHeal634) return; window.__cgSelfHeal634=true;
+  var CUR=parseInt(window.CMDGLAS_BUILD,10); if(!isFinite(CUR)) return;
+  var stale=false, hiddenSince=0, done=false;
+
+  function check(){
+    if(done) return;
+    fetch('version.json?_='+Date.now(),{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        var n=parseInt(d&&d.build,10);
+        if(isFinite(n)&&n>CUR){ stale=true; window.CG_STALE_BUILD=n; maybe(); }
+      },function(){});
+  }
+  function typing(){
+    var a=document.activeElement;
+    return !!(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.isContentEditable));
+  }
+  function maybe(){
+    if(done||!stale) return;
+    if(!document.hidden) return;                 /* never while they are looking */
+    if(typing()) return;
+    if(!hiddenSince || (Date.now()-hiddenSince) < 20000) return;   /* not a quick app-switch */
+    done=true;
+    try{ location.reload(); }catch(e){}
+  }
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){ hiddenSince=Date.now(); setTimeout(maybe,21000); }
+    else { hiddenSince=0; check(); }             /* returning to the tab = good moment to ask */
+  });
+  /* pageshow fires when iOS restores a suspended tab from the back/forward cache - the exact
+     case that produced a weeks-old page. Re-check immediately. */
+  addEventListener('pageshow',function(e){ if(e.persisted){ CUR=parseInt(window.CMDGLAS_BUILD,10); check(); } });
+  setTimeout(check, 6000);
+  setInterval(check, 300000);
+  setInterval(maybe, 15000);
+})();
+</script>
+
+<style id="sc-b638-scanline-css">/* build 638 (T): "scanline for every button in the current
+   tablet". Option 6 from the samples, at the turned-up intensity, on EVERY control.
+   A band sweeps top to bottom for 5 seconds after a press, plus a lit outline so the button
+   still reads as active between sweeps.
+
+   overflow:hidden is scoped to the pressed state ONLY, so a button's normal rendering is never
+   clipped - it exists purely to keep the sweeping band inside the button's own shape.
+   No size, no position, no margin: a pulsing button cannot move anything around it. */
+@keyframes cgScan{
+  0%   { transform:translateY(-130%); }
+  100% { transform:translateY(330%); }
+}
+.cg-pressed{
+  position:relative !important;
+  overflow:hidden !important;
+  outline:2px solid var(--cg-pp,#7dffb0) !important;
+  outline-offset:2px;
+  box-shadow:0 0 24px 5px var(--cg-pp-soft,rgba(125,255,176,.8)) !important;
+  filter:brightness(1.2);
+  z-index:5;
+}
+.cg-pressed::after{
+  content:'';
+  position:absolute; left:0; right:0; height:38%;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--cg-pp-band,rgba(190,255,220,1)),transparent);
+  animation:cgScan 1.05s linear infinite;
+  mix-blend-mode:screen;
+  z-index:1;
+}
+@media (prefers-reduced-motion:reduce){
+  .cg-pressed::after{ animation:none; opacity:.35; }
+}
+</style>
+<script id="sc-b638-scanline-js">
+(function(){
+  if(window.__cgScan638) return; window.__cgScan638=true;
+  var HOLD=5000;
+  var timers=new WeakMap();
+
+  /* EVERY button in the tablet. Anything clickable that is not a text field, a link out, or a
+     scrollable region. Kept as one list so there is a single place to look when something is
+     missed. */
+  var SEL='button,[role=button],input[type=button],input[type=submit],input[type=reset],summary,'
+        +'.panel-btn,.tab,.ops4-tab,.hm-tile,.be-btn,.op-sw,.cg-undock-btn,.cg-sbtn,'
+        +'.cg-tw-go,.cg-tw-open,.cg-tw-clear,.cg-tw-chat-btn,.mall-track,.mall-lbtn,.syc-btn,'
+        +'.ct-x,.ct-clear,.cg-c2-go,.cg-c2-cancel,.cg-pop-rtb,.cg-pop-fdock,.bp-ops,'
+        +'.cg-comms-open,.cg-comms-scorg,.cg-comms-btns button,.rp-send,.rp-cancel,'
+        +'.cgcp-tabs button,.cg-w-btn,.scr-btn,.sc-rail-btn,.hm-pop-btn,.dl-btn,'
+        +'a.panel-btn,a.cg-sbtn,.cg-bf-bar button,.cg-rtb-bar button,#cg-hudsrc button,.pill-sel';
+
+  /* pulse in the control's own accent so a red button scans red and a green one green */
+  function tint(el){
+    try{
+      var cs=getComputedStyle(el), c=cs.borderTopColor;
+      if(!c||/rgba?\(0, 0, 0, 0\)/.test(c)||c==='transparent') c=cs.outlineColor;
+      if(!c||/rgba?\(0, 0, 0, 0\)/.test(c)||c==='transparent') c=cs.color;
+      var m=c.match(/[\d.]+/g); if(!m) return null;
+      var r=+m[0],g=+m[1],b=+m[2];
+      /* a very dark border would give an invisible band - fall back to the house green */
+      if(r+g+b < 150) return null;
+      return {solid:'rgb('+r+','+g+','+b+')',
+              soft:'rgba('+r+','+g+','+b+',.8)',
+              band:'rgba('+Math.min(255,r+60)+','+Math.min(255,g+60)+','+Math.min(255,b+60)+',1)'};
+    }catch(e){ return null; }
+  }
+
+  function pulse(el){
+    if(!el||el.disabled) return;
+    var t=timers.get(el); if(t) clearTimeout(t);
+    var c=tint(el);
+    if(c){
+      el.style.setProperty('--cg-pp',c.solid);
+      el.style.setProperty('--cg-pp-soft',c.soft);
+      el.style.setProperty('--cg-pp-band',c.band);
+    }
+    el.classList.add('cg-pressed');
+    timers.set(el,setTimeout(function(){
+      el.classList.remove('cg-pressed');
+      el.style.removeProperty('--cg-pp');
+      el.style.removeProperty('--cg-pp-soft');
+      el.style.removeProperty('--cg-pp-band');
+      timers.delete(el);
+    },HOLD));
+  }
+  window.cgPressPulse=pulse;
+
+  /* capture phase, so it still fires when a handler stops propagation */
+  document.addEventListener('pointerdown',function(e){
+    var el=e.target&&e.target.closest?e.target.closest(SEL):null;
+    if(!el) return;
+    var tag=el.tagName;
+    if(tag==='INPUT'&&!/^(button|submit|reset)$/i.test(el.type||'')) return;
+    if(tag==='TEXTAREA') return;
+    pulse(el);
+  },true);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'&&e.key!==' ') return;
+    var a=document.activeElement;
+    if(!a||!a.closest) return;
+    var el=a.closest(SEL); if(el) pulse(el);
+  },true);
+})();
+</script>
+
+<style id="sc-b637-contrast-css">/* build 637 (T): "some of the contrast in the hud makes the words
+   hard to read you hvse to be extremely close. there are buttons like that all over the tablet."
+
+   MEASURED, not guessed: a WCAG relative-luminance sweep over every visible text node on Home
+   at 1920x1080, comparing each element's colour against the first real background painted behind
+   it. 4.5:1 is the AA floor for body text; small 8-9px labels need more than that to be
+   comfortable, which is exactly the "have to be extremely close" complaint.
+
+   FIXED HERE - every one of these was BELOW the 4.5 floor on a genuinely dark background:
+       ratio  was        element
+       1.68   #22394a    .dl-sep      the // separators in the news ticker
+       1.91   #39424b    .etch        the C M D G L A S bezel engraving
+       2.27   #3f566b    .cg-cs-pic   "+ADD PHOTO / MAX 2MB"
+       2.63   #4a5763    .cg-sbtn     the X / Discord / RSI icons in the bezel
+       2.76   #4a5c72    START PAGE   under the start-page button
+       3.55   #4f6a80    .dl-btn      HIDE NEWS
+       3.89   #54708a    DESIGNED BY HUMAN / BUILT BY AI
+   Each is lifted to a tone already used elsewhere in the tablet, so nothing new enters the
+   palette - they were simply set darker than the rest of the dim text.
+
+   DELIBERATELY NOT TOUCHED: the sweep also flagged .ns-title, .cd-title, .ns-acc and the SEARCH /
+   BY TOPIC toggle. Those sit on the glowing panel BORDER gradients, and the measuring script
+   averaged the gradient instead of the dark panel the text actually sits on - they are false
+   positives. Changing them would have "fixed" text that is already legible.
+   Colour only. No size, no weight, no layout. Reversible: delete this block. */
+
+/* the news ticker strip */
+#cg-cmdlog .dl-sep{ color:#6f8ba0 !important; }
+#cg-cmdlog .dl-btn, .dl-btn{ color:#9fb6c8 !important; }
+
+/* the bezel engraving and its social icons */
+#sc-bezel .etch{ color:#6f8ba0 !important; }
+#sc-bezel .cg-soc{ color:#8fb0c8 !important; }
+#sc-bezel .cg-soc:hover{ color:#eafaff !important; }
+a.cg-sbtn{ color:#8fb0c8 !important; }
+a.cg-sbtn:hover{ color:#eafaff !important; }
+
+/* credit line under Home */
+#cg-credit, .cg-credit, .cg-madeby{ color:#8fa6ba !important; }
+
+/* the photo picker prompt */
+.cg-cs-pic{ color:#8fa6ba !important; }
+
+/* dated rows in the quick-answer list */
+.qa-d{ color:#9fb6c8 !important; }
+</style>
+<script id="sc-b637-contrast-js">
+/* Two of the offenders carry their colour as an INLINE style written by the script that builds
+   them, and an inline colour beats any stylesheet rule. Rather than fight that with more
+   specificity, lift them where they are written. Idempotent - it only writes when the value is
+   still one of the measured-too-dark tones. */
+(function(){
+  if(window.__cgContrast637) return; window.__cgContrast637=true;
+  var DARK={'rgb(74, 92, 114)':'#7f97ab',   /* START PAGE      2.76 */
+            'rgb(84, 112, 138)':'#8fa6ba',  /* DESIGNED BY ... 3.89 */
+            'rgb(74, 87, 99)':'#8fb0c8',    /* social icons    2.63 */
+            'rgb(57, 66, 75)':'#6f8ba0',    /* bezel etch      1.91 */
+            'rgb(34, 57, 74)':'#6f8ba0',    /* ticker //       1.68 */
+            'rgb(63, 86, 107)':'#8fa6ba'};  /* +ADD PHOTO      2.27 */
+  function fix(){
+    try{
+      var all=document.querySelectorAll('#sc-bezel *, #cg-cmdlog *, [style*="color"]');
+      [].forEach.call(all,function(el){
+        var c=getComputedStyle(el).color;
+        var up=DARK[c];
+        if(up && (el.textContent||'').trim().length){ el.style.setProperty('color',up,'important'); }
+      });
+    }catch(e){}
+  }
+  var n=0, iv=setInterval(function(){ fix(); if(++n>30) clearInterval(iv); }, 500);
+  fix();
 })();
 </script>
 <style id="sc-b622-flatbg-css">
