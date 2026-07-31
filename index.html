@@ -20,6 +20,64 @@
 
 <html lang="en">
 <head>
+
+<!-- ══ build 623, 31 JUL 2026 - TWO-STEP "ARE YOU SURE?" CONFIRM (T: "gather and buy both need a
+     Clear all button that behaves the following way. after selecting clear once another window
+     opens up saying Are You Sure? and then they have to click it twice to confirm.")
+     Generic, reusable: window.cgConfirm2({title,message,label}, onConfirm). Click 1 arms the
+     button (relabels + brightens red, 5s auto-disarm so an armed dialog does not sit forever);
+     click 2, while armed, fires onConfirm and closes. CANCEL / backdrop click / Escape always
+     bail out with zero side effects. Wired to GATHER and BUY's [CLEAR] buttons only this build -
+     see opsClear() below. ══════════════════════════════════════════════════════════════ -->
+<style id="sc-b623-confirm2-css">
+.cg-c2-bg{position:fixed;inset:0;z-index:2147483400;background:rgba(4,8,14,.72);display:flex;align-items:center;justify-content:center;}
+.cg-c2-box{width:min(360px,92vw);background:#0c141f;border:1px solid rgba(255,120,120,.45);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.7);padding:20px 20px 16px;}
+.cg-c2-t{font:800 15px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;color:#ff9a9a;text-transform:uppercase;margin-bottom:8px;}
+.cg-c2-m{font:600 12.5px 'Rajdhani','Segoe UI',sans-serif;color:#cfe6f5;line-height:1.5;margin-bottom:16px;}
+.cg-c2-row{display:flex;gap:8px;justify-content:flex-end;}
+.cg-c2-cancel{font:800 10.5px 'Rajdhani',sans-serif;letter-spacing:1.2px;color:#9fb3c4;background:rgba(108,180,214,.12);border:1px solid rgba(108,180,214,.35);border-radius:7px;padding:9px 14px;cursor:pointer;text-transform:uppercase;}
+.cg-c2-cancel:hover{color:#eafaff;border-color:#7fc4de;}
+.cg-c2-go{font:800 10.5px 'Rajdhani',sans-serif;letter-spacing:1.2px;color:#2a0505;background:linear-gradient(180deg,#ff9a9a,#e14b4b);border:1px solid rgba(255,170,170,.9);border-radius:7px;padding:9px 16px;cursor:pointer;text-transform:uppercase;transition:filter .15s;}
+.cg-c2-go:hover{filter:brightness(1.08);}
+.cg-c2-go.armed{background:linear-gradient(180deg,#ffd479,#ff6b4b);color:#2a0a00;box-shadow:0 0 14px rgba(255,120,80,.55);}
+</style>
+<script id="sc-b623-confirm2-js">
+(function(){
+  if(window.cgConfirm2) return;
+  window.cgConfirm2=function(opts, onConfirm){
+    opts=opts||{};
+    var bg=document.createElement('div'); bg.className='cg-c2-bg';
+    var box=document.createElement('div'); box.className='cg-c2-box';
+    var t=document.createElement('div'); t.className='cg-c2-t'; t.textContent=opts.title||'ARE YOU SURE?';
+    var m=document.createElement('div'); m.className='cg-c2-m'; m.textContent=opts.message||'This cannot be undone.';
+    var row=document.createElement('div'); row.className='cg-c2-row';
+    var cancel=document.createElement('button'); cancel.type='button'; cancel.className='cg-c2-cancel'; cancel.textContent='CANCEL';
+    var go=document.createElement('button'); go.type='button'; go.className='cg-c2-go';
+    var label=opts.label||'CLEAR';
+    go.textContent=label;
+    var armed=false, armTimer=null;
+    function close(){ try{ if(armTimer) clearTimeout(armTimer); }catch(e){} try{ bg.parentNode&&bg.parentNode.removeChild(bg); }catch(e){} document.removeEventListener('keydown', onKey); }
+    function onKey(e){ if(e.key==='Escape') close(); }
+    go.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(!armed){
+        armed=true; go.classList.add('armed'); go.textContent='CLICK AGAIN TO CONFIRM';
+        armTimer=setTimeout(function(){ armed=false; go.classList.remove('armed'); go.textContent=label; }, 5000);
+        return;
+      }
+      close();
+      try{ onConfirm&&onConfirm(); }catch(err){}
+    });
+    cancel.addEventListener('click', function(e){ e.stopPropagation(); close(); });
+    bg.addEventListener('click', function(e){ if(e.target===bg) close(); });
+    document.addEventListener('keydown', onKey);
+    row.appendChild(cancel); row.appendChild(go);
+    box.appendChild(t); box.appendChild(m); box.appendChild(row);
+    bg.appendChild(box); document.body.appendChild(bg);
+    try{ go.focus(); }catch(e){}
+  };
+})();
+</script>
 <!-- ══ build 599, 30 JUL 2026 - PRESENCE COUNT: BEAT EARLY, COUNT IPs ══════════════════
      T: "the tablet online counter is still showing the incorrect number. i know 10 users
      that are on cmdglas.com right now not signed in but using the tablet. it shows 0 on the
@@ -4812,7 +4870,9 @@ html{scrollbar-gutter:stable}
     }catch(e){}
     function get(k){try{return JSON.parse(localStorage.getItem(k)||"[]");}catch(e){return [];}}
     function setL(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-    window.opsClear=function(w){
+    /* build 623: this used to wipe the instant [CLEAR] was clicked. Real logic unchanged - just
+       renamed - and gated behind window.cgConfirm2's two-click "ARE YOU SURE?" modal. */
+    function opsClearReal(w){
       if(w==="buy"){ setL(BK,[]); opsRender(); return; }
       /* 2026-07-18 user: "the clear button in the gather list doesn't work." It is fed by GK (mining
          + blueprint pushes) AND by the Craft Calculator selection (CC_SEL / sccmd_overlay_craft) AND
@@ -4825,6 +4885,15 @@ html{scrollbar-gutter:stable}
       if(typeof ccRender==='function'){ try{ ccRender(); }catch(e){} }
       if(window.scBeRefresh){ try{ window.scBeRefresh(); }catch(e){} }
       opsRender();
+    }
+    window.opsClear=function(w){
+      var isBuy=(w==='buy');
+      if(!window.cgConfirm2){ opsClearReal(w); return; }  /* fail-open only if the modal script somehow did not load */
+      window.cgConfirm2({
+        title:'ARE YOU SURE?',
+        message:isBuy?'This wipes the entire BUY LIST. This cannot be undone.':'This wipes the entire GATHER LIST (mining/harvest materials, Craft Calculator picks and pushed blueprints). This cannot be undone.',
+        label:'CLEAR'
+      }, function(){ opsClearReal(w); });
     };
     /* 2026-07-18 user: remove a single item from the gather list, and ERASE IT ON ITS SOURCE PAGE
        too (everything mirrored). Raw ores/harvestables live in GK + basic-mining; a crafting
@@ -8599,7 +8668,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=622;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=626;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18004,8 +18073,21 @@ their own rules) and COMPACT MODE (its layout is intentionally small). */
          is smaller than MIN_W*z physical px, the body keeps MIN_W and a scrollbar appears — the
          layout stays intact instead of squishing/breaking. */
       document.body.style.minWidth=MIN_W+'px';
-      /* build 472 (user: top-center pill still resizes on window drag): also CAP the width at the design width and center it, so wide/short windows letterbox horizontally instead of stretching the fluid grid. Reversible: delete the next 4 lines. */
-      document.body.style.maxWidth=MIN_W+'px';
+      /* build 472 (user: top-center pill still resizes on window drag): CAP the width and centre it,
+         so wide/short windows letterbox instead of stretching the fluid grid.
+         build 625 (T: "sides and bottoms no more then 15px from the last text/pill on that side"):
+         the cap is no longer a hard 1700. It grows to whatever the window can show AT THE CURRENT
+         ZOOM, less a 4px physical margin, so the letterbox closes instead of being thrown away.
+         The zoom line above is deliberately untouched - nothing changes SIZE, the grid just stops
+         being squeezed into 1700 design px on a screen that can show ~2000.
+         EDGE is 4 and not 15 because #content adds its own 12px design padding inside this
+         box; 4 here MEASURED OUT to a 17px real gap at 1920x1080, which is the 15px T asked for.
+         Quantised to 20 design px so a window drag cannot make the width crawl (build 472's
+         actual complaint). Floor = MIN_W so this can never make the layout NARROWER than today.
+         Reversible: replace the three lines below with `document.body.style.maxWidth=MIN_W+'px';` */
+      var EDGE=4, CAP=2100;
+      var wDesign=Math.max(MIN_W, Math.min(CAP, Math.floor(((window.innerWidth-2*EDGE)/z)/20)*20));
+      document.body.style.maxWidth=wDesign+'px';
       document.body.style.marginLeft='auto';
       document.body.style.marginRight='auto';
       document.documentElement.style.background='#070d16';/* build 498 (user chose Option A: make the letterbox side bars blend). Was #0f1722 (a lighter blue that read as "odd bars"); now matches the tablet body background (#070d16) so the letterbox reads as an extension of the tablet edge, not a separate bar. */
@@ -18467,16 +18549,28 @@ Expanding a card lazy-loads its full live detail (rep/waves/blueprints). */
       +(m.g?'<span class="syc-sub">'+esc(m.g)+'</span>':'')
       +(m.rep?'<span class="ml-chip">+'+esc(m.rep)+' REP</span>':'')
       +(m.illegal?'<span class="syc-pill" style="color:#ff6b6b">ILLEGAL</span>':'')
+      /* build 626: CIG flags this one unreleased/not-for-release. Those flags go stale on live
+         event content, so it is shown - but never silently, because some of them genuinely
+         never ship. */
+      +(m.unrel?'<span class="syc-pill" style="color:#ffb000;border-color:rgba(255,176,0,.5)" title="CIG\'s own mission data flags this as unreleased or not-for-release. Those flags go stale - live event contracts sit in here - but some of these may not appear in game.">UNCONFIRMED</span>':'')
+      +'<button type="button" class="panel-btn mall-track" data-u="'+esc(m.u||'')+'">'+(window.cgCtHas&&cgCtHas(m.u)?'[ TRACKED ]':'[ TRACK ]')+'</button>'/* build 626: send to the HUD's CONTRACTS tab */
       +'<button type="button" class="panel-btn syc-btn">[ MORE INFO ]</button></div>'
       +'<div class="syc-d">'
       +(pay?'<div class="syc-f"><div class="syc-l">Payout</div><div class="syc-v">'+esc(pay)+'</div></div>':'')
       +(m.sys?'<div class="syc-f"><div class="syc-l">Systems</div><div class="syc-v">'+esc(m.sys)+'</div></div>':'')
       +((m.en&&m.en[0]!=null)?'<div class="syc-f"><div class="syc-l">Enemies</div><div class="syc-v">'+esc(m.en[0]+' - '+m.en[1])+'</div></div>':'')
+      +((m.gd&&m.gd.length)?'<div class="syc-f"><div class="syc-l">Goods / harvestables</div><div class="syc-v">'+esc(m.gd.join(', '))+'</div></div>':'')/* build 626: the 222 commodity names that used to be thrown away */
       +(m.bp?'<div class="syc-f"><div class="syc-l">Blueprints</div><div class="syc-v">drops blueprints - expand for the pool</div></div>':'')
       +'<div class="mall-live"><span class="ml-dim">loading live details...</span></div></div>';
     var d=el.querySelector('.syc-d'),b=el.querySelector('.syc-btn'),loaded=false;
+    /* build 626: TRACK toggles this contract into the HUD's CONTRACTS tab. stopPropagation so
+       it never also expands the card. */
+    var tb=el.querySelector('.mall-track');
+    if(tb) tb.addEventListener('click',function(ev){ ev.stopPropagation();
+      var now=window.cgCtToggle?cgCtToggle(m):false; tb.textContent=now?'[ TRACKED ]':'[ TRACK ]'; });
     el.querySelector('.syc-h').addEventListener('click',function(ev){
       if(ev.target.tagName==='A')return;
+      if(ev.target.classList&&ev.target.classList.contains('mall-track'))return;
       var on=!d.classList.contains('on'); d.classList.toggle('on',on); b.textContent=on?'[ HIDE ]':'[ MORE INFO ]';
       if(on&&!loaded){loaded=true;
         fetch('/api/mission_info?slug='+encodeURIComponent(m.s||'')+'&name='+encodeURIComponent(m.t||''),{cache:'no-store'})
@@ -18505,7 +18599,11 @@ Expanding a card lazy-loads its full live detail (rep/waves/blueprints). */
       if(sc&&m.sc!==sc)return false;
       if(gv&&(m.g||'(none)')!==gv)return false;
       if(sy&&(m.sys||'').indexOf(sy)<0)return false;
-      if(q&&((m.t||'')+' '+(m.g||'')+' '+(m.f||'')+' '+(m.sc||'')).toLowerCase().indexOf(q)<0)return false;
+      /* build 626: search the GOODS and the debug name too. Typing "sunset berries" now
+         finds "Additional Resources For Research", which is the only way anyone would ever
+         find it - the goods name is not in the title. */
+      if(q&&((m.t||'')+' '+(m.g||'')+' '+(m.f||'')+' '+(m.sc||'')+' '
+             +((m.gd||[]).join(' '))+' '+(m.dn||'')).toLowerCase().indexOf(q)<0)return false;
       return true;
     });
     var so=(document.getElementById('mall-sort')||{}).value||'az';
@@ -18561,18 +18659,51 @@ Expanding a card lazy-loads its full live detail (rep/waves/blueprints). */
       return fetch(A+n).then(function(r){ if(!r.ok) throw 0; return r.json(); })
              .then(function(j){ return j.data||[]; }).catch(function(){ return []; });
     })).then(function(chunks){
-      var PH=/^\s*(<=\s*(PLACEHOLDER|UNINITIALIZED)\s*=>|\[PH\])/i, seen={}, out=[];
+      /* build 626: placeholder rows still go (CIG's own unfinished stubs, and a title like
+         "[TargetName]" is not something a pilot can accept). But `released`/`not_for_release`
+         no longer EXCLUDE - they only mark. Measured 31 JUL 2026: that pair was hiding 355
+         missions including live XenoThreat event content. */
+      /* build 626: JUNK catches CIG's unfinished stubs AND "< = TEST NAME = >" style rows.
+         KEYONLY catches a title that is ONLY a localisation key - [Contractor|BountyTitle] -
+         which is what filled T's screenshot. Both are dropped outright. */
+      var JUNK=/^\s*(<\s*=|<=|\[PH\]|\(|test\b)/i, KEYONLY=/^\s*\[[^\]]*\]\s*$/;
+      /* A token INSIDE a sentence is a real contract with a substituted value, so it is kept
+         and the token is rendered as a readable slot word instead of raw brackets. */
+      function slot(tok){ var s=String(tok||'').split('|')[0].toLowerCase();
+        if(/location|destination|planet|city|outpost|system/.test(s)) return 'Location';
+        if(/target|creature|enemy|suspect|person|name/.test(s))       return 'Target';
+        if(/ship|vehicle/.test(s))                                    return 'Ship';
+        if(/contractor|client|giver|org|faction/.test(s))             return 'Client';
+        return ''; }
+      function tidy(t){ return String(t||'').replace(/\[([^\]]+)\]/g,function(_,k){return slot(k);})
+        .replace(/\s{2,}/g,' ').replace(/\s+([,.:;!?])/g,'$1').replace(/#\s*/g,'')
+        .replace(/^[\s:\-\u2013|]+|[\s:\-\u2013|]+$/g,''); }
+      var seen={}, dkey={}, out=[];
       chunks.forEach(function(c){ c.forEach(function(m){
-        if(!m.released||m.not_for_release) return;
-        var t=(m.title||'').trim(); if(!t||PH.test(t)) return;
+        var t0=(m.title||'').trim(); if(!t0||JUNK.test(t0)||KEYONLY.test(t0)) return;
+        var t=tidy(t0); if(t.length<3||JUNK.test(t)) return;
         if(seen[m.uuid]) return; seen[m.uuid]=1;
+        /* build 626: THE fix for "missing a ton of contracts". 418 missions name their actual
+           goods ONLY in hauling_summary (222 distinct commodities/harvestables). Without this
+           the words "Sunset Berries" exist nowhere searchable and the contract is invisible
+           to anyone looking for it by what it asks you to fetch. */
+        var gd=[];
+        try{ (m.hauling_summary||[]).forEach(function(h){
+               var n=h&&h.name; if(n&&gd.indexOf(n)<0) gd.push(n); }); }catch(e){}
         var f=(m.faction&&m.faction.name)||null;
+        /* build 626: merge rows that are byte-identical once cleaned (111 of them), but key on
+           the GOODS too - two harvestable contracts can share a generic title and differ only
+           by what they ask you to fetch, and collapsing those loses real contracts. */
+        var dk=[t,m.reward_scope,m.mission_giver,m.reward_min,m.reward_max,gd.join('|')].join('\u0001');
+        if(dkey[dk]) return; dkey[dk]=1;
         out.push({t:t,u:m.uuid,s:String(m.web_url||'').replace(/\/$/,'').split('/').pop(),
           g:m.mission_giver,f:f,sc:m.reward_scope,illegal:!!m.illegal,
           rmin:m.reward_min,rmax:m.reward_max,cur:m.reward_currency,
           dur:m.time_to_complete_minutes,
           en:(m.enemy_count_max!=null?m.enemy_count_max:m.enemy_count_min),
           rep:m.reputation_amount,bp:!!m.has_blueprints,
+          gd:gd, dn:m.debug_name||null,
+          unrel:(!m.released||!!m.not_for_release),
           sys:(m.star_systems||[]).map(function(x){return typeof x==='string'?x:(x&&x.name)||'';}).join(';')});
       });});
       out.sort(function(a,b){return a.t.toLowerCase()<b.t.toLowerCase()?-1:1;});
@@ -28095,7 +28226,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
       '<ol class="um-steps"><li>Do <b>NOT</b> double-click <b>New_SC_CMD_TabletV2.html</b> to open the tablet, opening the raw file gives a red Server light and breaks the Twitch player.</li><li>Do <b>NOT</b> type <b>cmdglas.com</b> on your own PC - red light, no local features.</li><li>Do <b>NOT</b> use the old <b>Stream Deck "Open SC CMD Tablet"</b> button - it opens an outdated copy.</li><li>On your PC, the <b>only</b> thing you double-click to open the tablet is <b>Launch Tablet (No Chrome UI)</b>.</li></ol></div>',
       '<div class="um-sec"><h2>Section 1 - Home Screen Layout</h2><div class="um-purpose">Orient to the home screen. Home is the base of operations; every page opens from here and returns here.</div>',
 '<div class="um-proc">1-1. Home zones</div>',
-'<div class="um-zone"><b>Top-left</b><span>STATUS window, local time, live patch, and server/rig lamps.</span>',
+'<div class="um-zone"><b>Top-left</b><span>SELECTABLE window - lands on CLOCK (local time, live patch, server/rig lamps) and can be switched to any of 16 modules.</span>',
 '<b>Top-center</b><span>OPS panel - shows the CMD &middot; GLS mark; opens the OPS board.</span>',
 '<b>Top-right</b><span>ACCOUNT - sign in for cross-device sync.</span>',
 '<b>Left</b><span>SEARCH window - search everything, or browse By Topic.</span>',
@@ -28104,15 +28235,16 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<b>Lower</b><span>CONTROL BAR - five grouped-shortcut buttons.</span>',
 '<b>Bottom</b><span>MORE INFO, then USER MANUAL (this document).</span></div>',
 '<div class="um-note"><b>NOTE.</b> On a phone the zones stack top-to-bottom. Positions below are for the tablet / desktop layout.</div></div>',
-'<div class="um-sec"><h2>Section 2 - Status Window</h2><div class="um-purpose">At-a-glance server and rig status, plus quick-reference widgets. Does not navigate away from Home.</div>',
+'<div class="um-sec"><h2>Section 2 - Left Window (selectable)</h2><div class="um-purpose">A single window you point at whatever you want on screen. Lands on CLOCK - local time, live patch, and the server/rig lamps. Does not navigate away from Home.</div>',
 '<div class="um-proc">2-1. Change what the window shows</div>',
-'<ol class="um-steps"><li>Locate the selector reading "STATUS &#9662;" at the top-right corner of the STATUS window (top-left of Home).</li>',
+'<ol class="um-steps"><li>Locate the drop-down selector at the top-right corner of the LEFT window (top-left of Home). It reads whatever module is loaded - on a fresh tablet that is <b>CLOCK</b>.</li>',
 '<li>Tap the selector.</li>',
-'<li>Choose one: Status, Clock, Media Player, Notepad, or Pinned.</li></ol></div>',
-'<div class="um-sec"><h2>Section 3 - Centre Pill</h2><div class="um-purpose">The centre pill (top-centre of Home) holds four tabs: STREAM (a Twitch player), GATHER and BUY (lists the tools push into), and NOTES.</div>',
+'<li>Choose any of the 16 modules: Blueprints, Clock, Contracts, Hauling, Inventory, Keybinds, Media Player, Mining, Nav / Starmap, Notepad, Pinned, Reputation, Salvage, Shard Health, Ship Loadouts, Wikelo.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> There is no STATUS module here any more - the server and rig lamps moved onto the CLOCK module, and the live operational readout is the STREAM tab of the centre pill (Section 3).</div></div>',
+'<div class="um-sec"><h2>Section 3 - Centre Pill</h2><div class="um-purpose">The centre pill (top-centre of Home) holds six tabs, left to right: GATHER and BUY (the lists every tool pushes into), NOTES, ORG/PARTY (your roster, live status and assigned objective), THREAT, and STREAM (the Twitch player - this tab was called STATUS on older builds).</div>',
 '<div class="um-proc">3-1. Switch tabs</div>',
 '<ol class="um-steps"><li>Locate the centre pill (top-centre of Home).</li>',
-'<li>Tap <b>GATHER</b>, <b>BUY</b>, <b>NOTES</b>, or <b>STREAM</b> across the top of the pill.</li></ol>',
+'<li>Tap <b>GATHER</b>, <b>BUY</b>, <b>NOTES</b>, <b>ORG/PARTY</b>, <b>THREAT</b>, or <b>STREAM</b> across the top of the pill.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> Blueprints, Craft Calculator, Mining, Harvestables and Ship Loadouts push your picks into the centre pill\'s GATHER and BUY lists.</div></div>',
 '<div class="um-sec"><h2>Section 4 - Account</h2><div class="um-purpose">Sign in to sync gear, loadouts, and org comms across devices.</div>',
 '<div class="um-proc">4-1. Sign in</div>',
@@ -29041,7 +29173,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   var GOALS=[
    {id:'first', gi:'🧭', label:'I am brand new', blurb:'Never played. Start here — from waking up to your first payday.', steps:[
      {t:'Get your bearings on the tablet.', w:'Tablet: Home screen. Read the zones, then open USER MANUAL (bottom of Home).',
-      h:'Home is your base. Top-left is STATUS (time, patch, server lamps), top-center is OPS (your active job), left is SEARCH, the center tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
+      h:'Home is your base. Top-left is a SELECTABLE window that lands on CLOCK (time, patch, server lamps), top-centre is the CENTRE PILL (Gather, Buy, Notes, Org/Party, Threat, Stream), left is SEARCH, the centre tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
      {go:'spacemanuals', t:'Read the New Player Orientation.', w:'Tablet: CONTROL BAR > LEARN > SPACE MANUALS > SR-4 NEW PLAYER ORIENTATION (or SEARCH > BY TOPIC).',
       h:'SR-4 walks you from the bed you wake up in to your first payday: where you are, how to leave the station, and what to do first. Start in <b>Stanton</b> (monitored, service-rich), not Pyro (lawless).'},
      {go:'inventory', t:'Check your suit and grab MedPens.', w:'In game: your habitation room / personal inventory. Tablet: INVENTORY tool.',
@@ -32517,7 +32649,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='BLUEPRINTS UPDATED TO 4.9 - the craft list was two patches behind and missing 1,115 blueprints. All of them are in now: 657 new rows across armour, ship and FPS weapons, and every vehicle component. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Created on the spot, nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, superior functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. Built the normal way it would take a team of five about eight months and cost between $450,000 and $850,000. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='CONTRACTS PAGE FIXED - the contract list was showing raw placeholder rows (&quot;[Contractor|BountyTitle]&quot;) and hiding real work. Those are gone, template contracts now read properly, and every contract that asks for cargo or harvestables now LISTS AND SEARCHES what it wants - so &quot;sunset berries&quot; finally finds the contract that needs them. Contracts CIG has not marked live are shown too, tagged UNCONFIRMED. Press [ TRACK ] on any contract and it appears in the new CONTRACTS tab of the centre pill. &middot; BLUEPRINTS UPDATED TO 4.9 - the craft list was two patches behind and missing 1,115 blueprints. All of them are in now: 657 new rows across armour, ship and FPS weapons, and every vehicle component. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Created on the spot, nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. Built the normal way it would take a team of five about eight months and cost between $450,000 and $850,000. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -35335,63 +35467,19 @@ window.bpImgTag=bpImgTag;
   background-image:none !important;
 }
 </style>
-<style id="sc-b619-buildbadge-css">
-/* ══ build 619, 31 JUL 2026 - ALWAYS-VISIBLE BUILD BADGE ══════════════════════════════
-   T: "there is no indication on the ipad as to what patch it's on. i've told yo uabout
-   this numerous times as well."  He is right, and it has cost us both real time - most of
-   today's confusion was not knowing which build a screenshot came from.
-
-   MEASURED: #ver-chip exists and IS on-screen, but it reads "game patch unknown" (it only
-   fills in when the control server or the API answers) and it never shows the CMDGLAS
-   BUILD at all. The string "BUILD 618" exists in the page text on PC but not anywhere a
-   tablet user would look.
-
-   This badge is deliberately dumb and cannot fail: fixed to the bottom-left corner,
-   pointer-events:none so it can never intercept a tap, tiny, and it reads the build
-   straight out of window.CMDGLAS_BUILD with no network call and no dependency on anything
-   that can be "unknown". It renders identically on PC, iPad and the local server.
-   Reversible: delete this block + sc-b619-buildbadge-js. */
-#cg-buildbadge{
-  /* build 620: T - "might be coverd by the designed by human built by ai. if so move it
-     up a little bit". My emulator showed that corner empty, his screen does not. Trusting
-     his screen. Raised clear of the DESIGNED BY HUMAN / BUILT BY AI row and the news
-     ticker that sit along the bottom edge. */
-  position:fixed; left:6px; bottom:46px; z-index:2147483000;
-  font:700 9px/1.25 ui-monospace,Menlo,Consolas,monospace;
-  letter-spacing:.6px; color:#7dffb0;
-  background:rgba(3,8,14,.78); border:1px solid rgba(79,210,255,.42);
-  border-radius:5px; padding:2px 6px; pointer-events:none;
-  white-space:nowrap; opacity:.92;
-}
-#cg-buildbadge b{color:#4fd2ff; font-weight:800}
-</style>
-<script id="sc-b619-buildbadge-js">
-(function(){
-  if(window.__cgBadge619) return; window.__cgBadge619=true;
-  function paint(){
-    var el=document.getElementById('cg-buildbadge');
-    if(!el){ el=document.createElement('div'); el.id='cg-buildbadge';
-      (document.body||document.documentElement).appendChild(el); }
-    var v=(typeof window.CMDGLAS_VERSION!=='undefined')?window.CMDGLAS_VERSION:'';
-    var b=(typeof window.CMDGLAS_BUILD!=='undefined')?window.CMDGLAS_BUILD:'?';
-    var patch='';
-    try{ var c=document.getElementById('ver-chip');
-         var t=c?(c.textContent||'').trim():'';
-         if(t && !/unknown/i.test(t)) patch=' · '+t.replace(/^[^0-9]*/,'').slice(0,22);
-    }catch(e){}
-    /* build 621: the update signal lives here now instead of in a popup strip */
-    var up='';
-    try{ var lv=window.cgLiveBuild&&window.cgLiveBuild();
-         if(lv){ up=' <i>· UPDATE '+lv+' READY</i>'; } }catch(e){}
-    if(up) el.classList.add('upd'); else el.classList.remove('upd');
-    var want='<b>CMDGLAS '+(v?('v'+v+' '):'')+'BUILD '+b+'</b>'+patch+up;
-    if(el.innerHTML!==want) el.innerHTML=want;
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',paint); else paint();
-  var n=0, iv=setInterval(function(){ paint(); if(++n>120) clearInterval(iv); }, 1000);
-  window.cgBuildBadge=paint;
-})();
-</script>
+<!-- build 625, 31 JUL 2026 - #cg-buildbadge REMOVED at T's request:
+     "we have 2 different version readouts in the bottom left of the tablet. there's a
+      v1.1.xxx outside of a pill and then there's a cutt off pill with cmdglas. remove
+      that pill and it's contents"
+     The badge (build 619/620) was the pill. The survivor is #scv-build near line 23,600,
+     which prints v1.1.<build> bottom-left on every device - MEASURED as "v1.1.624" at
+     (21,1046) on 1920x1080 - so the build number is still on screen in every screenshot.
+     KNOWN LOSS, stated plainly: the passive "UPDATE <n> READY" suffix that build 621 moved
+     out of the pop-up nag and into this badge no longer has anywhere to paint. The nag
+     itself stays suppressed (that lives in sc-b621-quietupdate-css, untouched) and the
+     poller still runs behind a guarded call, so nothing throws - the update hint is simply
+     not shown. Say the word and it can be grafted onto #scv-build instead.
+     Reversible: restore the sc-b619-buildbadge-css / -js pair from the build 624 file. -->
 <style id="sc-b621-quietupdate-css">
 /* ══ build 621, 31 JUL 2026 - PUBLISHING NO LONGER INTERRUPTS ANYONE ══════════════════
    T: "everytime i push publish to website it makes the people using it reload. i don't
@@ -35438,6 +35526,143 @@ window.bpImgTag=bpImgTag;
   window.cgLiveBuild=function(){ return live; };
   setTimeout(check,9000);
   setInterval(check,600000);          /* every 10 min, silent */
+})();
+</script>
+
+<style id="sc-b626-contracts-css">/* build 626 (T): "I also want a contracts tab in the HUD that
+   shows currently selected contracts". Built from the SAME parts as the Org/Party and Threat
+   tabs - the body class owns the highlight (never JS: the ops4 core repaints tabs every 1.5 s
+   and a JS highlight starts a flicker war), same rounded skin, and all three panels are
+   mutually exclusive. Reversible: delete this block and its script twin. */
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on > .ops4-body{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on #cg-twitch{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on #cg-orgparty{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on #cg-threat{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on #cg-contracts{display:flex}
+#cg-contracts{display:none;flex-direction:column;gap:7px;flex:1 1 auto;min-height:0;overflow:auto;padding:2px 3px 4px}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on .ops4-tab.on:not([data-v="contracts"]){
+  color:#8fb3c8 !important;background:rgba(10,22,34,.6) !important;border-color:rgba(108,180,214,.28) !important;box-shadow:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-ct-on .ops4-tab[data-v="contracts"]{
+  color:#04141d !important;background:linear-gradient(180deg,#a6f2ff,#33b5e6) !important;
+  border-color:rgba(170,242,255,.9) !important;box-shadow:0 0 8px rgba(120,220,255,.35) !important}
+#cg-contracts .ct-row{border:1px solid rgba(108,180,214,.30);border-radius:11px;padding:7px 9px;
+  background-image:linear-gradient(180deg,rgba(120,200,235,.06),rgba(255,255,255,0) 46%,rgba(0,0,0,.20)),linear-gradient(180deg,rgba(14,24,36,.85),rgba(10,12,18,.9))}
+#cg-contracts .ct-t{font:700 12px 'Rajdhani','Segoe UI',sans-serif;color:#eafaff;letter-spacing:.5px;display:block}
+#cg-contracts .ct-m{font:600 10px 'Rajdhani',sans-serif;color:#8fd0ea;margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#cg-contracts .ct-m .ill{color:#ff8f8f}
+#cg-contracts .ct-m .unc{color:#ffb000}
+#cg-contracts .ct-g{font:600 10px 'Rajdhani',sans-serif;color:#cfe6f5;margin-top:3px}
+#cg-contracts .ct-x{margin-left:auto;font:800 9px 'Rajdhani',sans-serif;letter-spacing:1px;color:#ff9a9a;
+  background:rgba(255,120,120,.12);border:1px solid rgba(255,120,120,.4);border-radius:6px;padding:3px 7px;cursor:pointer}
+#cg-contracts .ct-x:hover{color:#fff;background:rgba(255,120,120,.3)}
+#cg-contracts .ct-empty{font:600 11px 'Rajdhani',sans-serif;color:#8ba0b5;line-height:1.5;text-align:center;padding:14px 6px}
+#cg-contracts .ct-head{display:flex;align-items:center;gap:8px;font:800 8.5px 'Rajdhani',sans-serif;letter-spacing:1.6px;color:#ffcf6b;text-transform:uppercase}
+#cg-contracts .ct-clear{margin-left:auto;font:800 8.5px 'Rajdhani',sans-serif;letter-spacing:1px;color:#9fb3c4;
+  background:rgba(108,180,214,.12);border:1px solid rgba(108,180,214,.32);border-radius:6px;padding:3px 8px;cursor:pointer}
+</style>
+<script id="sc-b626-contracts-js">
+(function(){
+  if(window.__cgContracts626) return; window.__cgContracts626=true;
+  var KEY='sc_ops_contracts', ONKEY='cg_ct_glance_on';
+  function list(){ try{ var a=JSON.parse(localStorage.getItem(KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+  function save(a){ try{ localStorage.setItem(KEY,JSON.stringify(a)); }catch(e){} }
+  function on(){ try{ return localStorage.getItem(ONKEY)==='1'; }catch(e){ return false; } }
+  function setOn(v){ try{ localStorage.setItem(ONKEY,v?'1':'0'); }catch(e){} }
+  function closeOthers(){ try{ localStorage.setItem('cg_op_glance_on','0'); localStorage.setItem('cg_th_glance_on','0'); }catch(e){} }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  /* public API the MISSIONS-ALL cards call */
+  window.cgCtHas=function(u){ if(!u) return false; return list().some(function(r){return r.u===u;}); };
+  window.cgCtToggle=function(m){
+    if(!m||!m.u) return false;
+    var a=list(), i=-1;
+    a.forEach(function(r,ix){ if(r.u===m.u) i=ix; });
+    if(i>=0){ a.splice(i,1); save(a); paint(); return false; }
+    a.push({u:m.u,t:m.t,sc:m.sc,g:m.g,rmin:m.rmin,rmax:m.rmax,cur:m.cur,
+            illegal:!!m.illegal,unrel:!!m.unrel,gd:(m.gd||[]).slice(0,6),sys:m.sys||''});
+    save(a); paint(); return true;
+  };
+
+  function rowHTML(r){
+    var pay=(r.rmin||r.rmax)?((r.rmin?Number(r.rmin).toLocaleString():'?')
+      +((r.rmax&&r.rmax!==r.rmin)?(' - '+Number(r.rmax).toLocaleString()):'')+' '+(r.cur||'aUEC')):'';
+    return '<div class="ct-row"><span class="ct-t">'+esc(r.t||'contract')+'</span>'
+      +'<div class="ct-m">'+(r.sc?'<span>'+esc(r.sc)+'</span>':'')
+      +(pay?'<span>'+esc(pay)+'</span>':'')
+      +(r.sys?'<span>'+esc(r.sys)+'</span>':'')
+      +(r.illegal?'<span class="ill">ILLEGAL</span>':'')
+      +(r.unrel?'<span class="unc">UNCONFIRMED</span>':'')
+      +'<button type="button" class="ct-x" data-u="'+esc(r.u)+'">DROP</button></div>'
+      +((r.gd&&r.gd.length)?'<div class="ct-g">'+esc(r.gd.join(', '))+'</div>':'')
+      +'</div>';
+  }
+  function paint(){
+    var host=document.getElementById('cg-contracts'); if(!host) return;
+    var a=list();
+    var html=a.length
+      ? '<div class="ct-head">'+a.length+' contract'+(a.length===1?'':'s')+' tracked<button type="button" class="ct-clear">CLEAR ALL</button></div>'+a.map(rowHTML).join('')
+      : '<div class="ct-empty">No contracts tracked yet.<br>Open <b>CONTRACTS</b> from the tools, find a contract, and press <b>[ TRACK ]</b> on its card.</div>';
+    if(host.__last!==html){ host.innerHTML=html; host.__last=html; }
+  }
+  document.addEventListener('click',function(e){
+    var x=e.target.closest&&e.target.closest('#cg-contracts .ct-x');
+    if(x){ e.stopPropagation(); var u=x.getAttribute('data-u');
+      save(list().filter(function(r){return r.u!==u;})); paint(); return; }
+    var c=e.target.closest&&e.target.closest('#cg-contracts .ct-clear');
+    if(c){ e.stopPropagation();
+      if(window.cgConfirm2) window.cgConfirm2({title:'ARE YOU SURE?',
+        message:'This drops every tracked contract from the HUD. The contracts themselves are not affected.',
+        label:'CLEAR'},function(){ save([]); paint(); });
+      else { save([]); paint(); }
+      return; }
+  },true);
+
+  function build(){
+    var pill=document.querySelector('#sc-home-widgets .ops-pill.b385'); if(!pill) return false;
+    var body=pill.querySelector('.pill-body'); if(!body) return false;
+    var tabs=body.querySelector('.ops4-tabs'); if(!tabs) return false;
+    if(!tabs.querySelector('.ops4-tab[data-v="contracts"]')){
+      var bt=document.createElement('button'); bt.type='button'; bt.className='ops4-tab';
+      bt.setAttribute('data-v','contracts'); bt.textContent='Contracts';
+      /* after Notes, before Org/Party - keeps the two command tabs adjacent */
+      var op=tabs.querySelector('.ops4-tab[data-v="orgparty"]');
+      if(op) tabs.insertBefore(bt,op); else tabs.appendChild(bt);
+      /* MEASURED 31 JUL: Org/Party is injected by its own script on its own timer, so on a cold
+         load it does not exist yet when this runs and the tab landed at the END of the row.
+         place() re-asserts the position on every sync, so whichever script wins the race the
+         order settles to Gather | Buy | Notes | Contracts | Org/Party | ... */
+      bt.addEventListener('click',function(e){ e.stopPropagation(); closeOthers(); setOn(true); sync(); paint();
+        /* the ops4 core may store 'contracts' as ITS view - a value its activeView() regex
+           rejects. Put a valid one back so the core never carries our tab name. */
+        setTimeout(function(){ try{ if(localStorage.getItem('sc_ops_pill_view')==='contracts') localStorage.setItem('sc_ops_pill_view','status'); }catch(err){} },0); });
+      tabs.addEventListener('click',function(e){ var t=e.target.closest?e.target.closest('.ops4-tab'):null;
+        if(t&&t.getAttribute('data-v')!=='contracts') setOn(false); sync(); },true);
+    }
+    if(!document.getElementById('cg-contracts')){
+      var ob=body.querySelector('.ops4-body'); if(!ob) return false;
+      var wrap=document.createElement('div'); wrap.id='cg-contracts';
+      ob.parentNode.insertBefore(wrap, ob.nextSibling);
+      paint();
+    }
+    return true;
+  }
+  function place(){
+    var tabs=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-tabs'); if(!tabs) return;
+    var me=tabs.querySelector('.ops4-tab[data-v="contracts"]'); if(!me) return;
+    var op=tabs.querySelector('.ops4-tab[data-v="orgparty"]'); if(!op) return;
+    if(me.nextSibling!==op) tabs.insertBefore(me,op);
+  }
+  function sync(){
+    if(!build()) return;
+    place();
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body'); if(!body) return;
+    var v=on();
+    if(body.classList.contains('cg-ct-on')!==v) body.classList.toggle('cg-ct-on',v);
+    if(v) paint();
+  }
+  var tries=0, bi=setInterval(function(){ if(build()||++tries>200) clearInterval(bi); sync(); },400);
+  setInterval(sync, 700);
+  addEventListener('storage',function(e){ if(e&&e.key===KEY) paint(); });
 })();
 </script>
 <style id="sc-b622-flatbg-css">
