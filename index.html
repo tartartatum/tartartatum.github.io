@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=642;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=650;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -31883,6 +31883,9 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     +'<h4>Step 2 - put it on your iPad</h4>'
     +'<ol class="cg-w-steps"><li>In that same folder, <b>double-click "Serve Tablet to iPad."</b> It shows an address like <b>192.168.1.50:8420</b>.</li><li>On your iPad, open <b>Safari</b> and type that address into the bar.</li><li>Tap <b>Share → Add to Home Screen</b> for a full-screen app.</li></ol>'
     +'<div class="cg-w-sub">Your PC and iPad must be on the same Wi-Fi.</div>'
+    +'<h4 class="cg-w-pcrun">Running it on your PC - which window is which</h4>'
+    +'<ol class="cg-w-steps">'+'<li><b>5 - HUD BRIDGE.bat</b> - start this FIRST if you want the Stream Deck or voice to pop the HUD out. Leave its black window open while you play.</li>'+'<li><b>1 - OPEN TABLET.bat</b> - opens the tablet as its own app window with no address bar. <b>This is the window to use.</b></li>'+'<li>If the control server was not already running, that same launcher starts it. The server used to also open a SECOND tablet in your default browser, so you got two. That auto-open is now switched off. If you still see two, the extra one is an ordinary browser tab - close it and keep the app window.</li>'+'<li>Only the app window from <b>1 - OPEN TABLET.bat</b> can float the HUD over your game. It runs on <b>localhost:8420</b>, which is what Chrome requires before it will hand out a floating Picture-in-Picture window.</li>'+'<li><b>6 - CMDGLAS APP</b> opens the public site instead. The HUD bridge is switched off there by design, so the deck and voice buttons will not move the HUD from that window.</li>'+'<li>UNDOCK works on the <b>HUD / OPS</b> pill only. The other pills have it switched off on purpose - a browser can float exactly one window, and the HUD gets it.</li>'+'</ol>'
+    +'<div class="cg-w-sub">On the iPad use <b>http://YOUR-PC-IP:8420/New_SC_CMD_TabletV2.html</b>. To get the exact address, open <b>localhost:8420/api/server_info</b> on the PC and read <b>ipad_url</b>.</div>'
     +'<h4>Your keybinds</h4>'
     +'<ol class="cg-w-steps"><li>In the game, <b>export your controls</b> from the keybindings menu.</li><li>Put that file in the tablet folder, named <b>MASTER_KEYBINDS.json</b>.</li><li>Open <b>KEYBINDS → LIVE LIST</b>.</li></ol>'
     +'<h4>Music</h4>'
@@ -32762,11 +32765,11 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
-  var NOTES_VER='2026-07-30a';   /* bumped: reopens the strip ONCE for anyone who hid it */
+  var NOTES_VER='2026-08-01a';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the centre pill. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the centre pill floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now - they were scrolling to a hidden card. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the centre pill. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the centre pill floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -36959,5 +36962,515 @@ body.sc-home-mode #tab-home,
 })();
 
 </script>
+
+<script id="sc-b644-accfix-js">
+/* sc-b644-accfix-js  -  1 AUG 2026.  Dead collapsible sections.
+
+   T: "harvestable has a couple of none funcitoning buttons."
+   MEASURED, not guessed. Six sections across five tabs open correctly - the wrapper gets
+   .open and .sc-acc-b renders display:block - but show nothing, because the body's DIRECT
+   CHILD carries an inline style="display:none" left over from an older show/hide mechanism.
+   Inline style beats every stylesheet rule, so the content sits there invisible:
+
+       harvest    SELL DATA NOTES               5,660 chars hidden
+       mining     QUICK CRACK CHECK             1,591
+       mining     ROCKS REF                       702
+       mining     COMPATIBILITY                   679
+       salvage    MOLE TURRET + MODULE PLANNER  1,736
+       craftcalc  BLUEPRINT CATALOG            44,591
+
+   This also un-breaks JUMP TO ITEM / JUMP TO SECTION on Harvestables: those handlers open the
+   target's accordion and then call scrollIntoView, and scrollIntoView on a display:none element
+   does nothing - which is why the page never moved.
+
+   DIRECT CHILDREN ONLY. Sweeping every descendant could reveal something another block hides
+   on purpose. Reversible: delete this block.  */
+(function(){
+  if(window.__cgAccFix644) return; window.__cgAccFix644=true;
+
+
+  /* JUMP TO ITEM on Harvestables never moved the page. MEASURED CAUSE, and it is not this file:
+     the handler reads  localStorage.getItem("sc_harv_view") || "decks"  - so a browser that has
+     never set that key resolves the target to a CARD. Build 537 made all three deck/table pages
+     TABLES ONLY and hides .hv-deck-wrap, so the card it finds is display:none, and
+     scrollIntoView() on a hidden element does nothing. Same bug the 2026-07-16 note describes,
+     re-created by the tables-only change.
+     Store the view the tablet actually renders. One key, and the pilot can still change it. */
+  try{
+    var V=localStorage.getItem('sc_harv_view');
+    if(V===null || V==='decks') localStorage.setItem('sc_harv_view','tables');
+  }catch(e){}
+
+  function unhide(acc){
+    var body=null, kids=acc.children, i;
+    for(i=0;i<kids.length;i++){ if(kids[i].classList.contains('sc-acc-b')){ body=kids[i]; break; } }
+    if(!body) return 0;
+    var n=0, c=body.children;
+    for(i=0;i<c.length;i++){
+      if(c[i].style && c[i].style.display==='none'){ c[i].style.removeProperty('display'); n++; }
+    }
+    return n;
+  }
+  /* Four of the six are hidden one level UP: the .sc-acc wrapper itself carries inline
+     display:none, so the whole section - header included - never appears. The accordion
+     builder wraps by child index, and a target that was display:none when it was wrapped
+     leaves the wrapper hidden. Only un-hide a wrapper whose body actually holds content,
+     so an empty placeholder section is never resurrected. */
+  function unhideWrap(acc){
+    if(!acc.style || acc.style.display!=='none') return false;
+    var body=null, kids=acc.children, i;
+    for(i=0;i<kids.length;i++){ if(kids[i].classList.contains('sc-acc-b')){ body=kids[i]; break; } }
+    if(!body) return false;
+    if((body.textContent||'').trim().length < 200) return false;
+    acc.style.removeProperty('display');
+    return true;
+  }
+
+  function sweep(root){
+    var all=(root||document).querySelectorAll('.sc-acc');
+    for(var j=0;j<all.length;j++) unhideWrap(all[j]);
+    var list=(root||document).querySelectorAll('.sc-acc.open');
+    for(var i=0;i<list.length;i++) unhide(list[i]);
+  }
+
+  /* class changes catch both a pilot's click and a programmatic open (the JUMP handlers) */
+  try{
+    new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var t=muts[i].target;
+        if(t.nodeType===1 && t.classList && t.classList.contains('sc-acc') && t.classList.contains('open')) unhide(t);
+      }
+    }).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['class']});
+  }catch(e){}
+
+  document.addEventListener('click',function(e){
+    var h=e.target && e.target.closest ? e.target.closest('.sc-acc-h') : null;
+    if(!h) return;
+    var acc=h.closest('.sc-acc');
+    if(acc) setTimeout(function(){ unhide(acc); },0);
+  }, true);
+
+  /* pages are built lazily, so sweep for a while after load, then occasionally */
+  var n=0, iv=setInterval(function(){ sweep(); if(++n>120) { clearInterval(iv); setInterval(sweep,3000); } },500);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ sweep(); });
+  else sweep();
+})();
+
+</script>
+
+<style id="sc-b645-pushhud-css">
+/* sc-b645-pushhud-css */
+.cg-ph-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 10px 6px;padding:7px 12px;
+  border:1px solid rgba(108,180,214,.30);border-left:3px solid #4fd2ff;border-radius:11px;
+  background-image:linear-gradient(180deg,rgba(120,200,235,.06),rgba(255,255,255,0) 46%,rgba(0,0,0,.20)),
+                   linear-gradient(180deg,rgba(14,24,36,.85),rgba(10,12,18,.9))}
+.cg-ph-bar .cg-ph-l{font:700 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;color:#7fb8d8;
+  text-transform:uppercase;flex:0 0 auto}
+.cg-ph-bar .cg-ph-btn{font:800 10px 'Rajdhani',sans-serif;letter-spacing:1.2px;text-transform:uppercase;
+  color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:1px solid rgba(170,242,255,.9);
+  border-radius:7px;padding:7px 14px;cursor:pointer;white-space:nowrap;box-shadow:0 0 8px rgba(120,220,255,.28)}
+.cg-ph-bar .cg-ph-btn:hover{filter:brightness(1.10)}
+.cg-ph-bar .cg-ph-btn:active{transform:translateY(1px)}
+.cg-ph-bar .cg-ph-tip{font:600 10px 'Rajdhani',sans-serif;letter-spacing:.6px;color:#5f7688}
+#cg-ph-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);
+  background:rgba(8,18,28,.96);border:1px solid rgba(120,220,255,.55);border-radius:9px;
+  color:#cfe6f8;font:800 11px 'Rajdhani',sans-serif;letter-spacing:1.1px;padding:9px 16px;
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:2147483600}
+#cg-ph-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+</style>
+<script id="sc-b645-pushhud-js">
+/* sc-b645-pushhud-js  -  PUSH TO HUD.  1 AUG 2026.
+   T: "everytyhing that can be sent to the HUD. must have a push to Hud button."
+
+   MEASURED FIRST: no page had one. The build-627 SOURCE button is one-way (HUD -> page) and
+   covers four destinations only. This is the reverse trip.
+
+   WHAT IT PUSHES: the rows you are actually looking at - after your filter, after your search -
+   capped at 8, written into the same store the Notepad and OPS > NOTES already share
+   (localStorage sc_notepad, mirrored into #np-textarea). Nothing is invented and nothing is
+   summarised: the text pushed is the text on screen.
+   Then it switches the HUD pill to NOTES and returns you to the HUD.
+   Reversible: delete this block and its style twin. */
+(function(){
+  if(window.__cgPushHud645) return; window.__cgPushHud645=true;
+
+  var PAGES={
+    'tab-harvest':'HARVEST','tab-mining':'MINING','tab-salvage':'SALVAGE',
+    'tab-trading':'HAULING','tab-missions':'CONTRACTS','tab-blueprints':'BLUEPRINTS',
+    /* b648 - Craft Calculator removed: its table rows are numbered lines, so a push sent
+       "1 2 3 4 5" to the gather list. That page already feeds the gather list natively. */
+    'tab-inventory':'INVENTORY','tab-loadout':'SHIP LOADOUT',
+    'tab-ships':'SHIP DB','tab-starmap':'STARMAP','tab-reputation':'REPUTATION',
+    'tab-myops':'GATHER & BUY'
+  };
+  function vis(el){ var r=el.getBoundingClientRect(); return r.width>0 && r.height>0; }
+
+  function harvest(page){
+    var out=[], seen={};
+    var rows=page.querySelectorAll('table tbody tr');
+    for(var i=0;i<rows.length && out.length<8;i++){
+      var tr=rows[i];
+      if(!vis(tr)) continue;
+      var c=tr.children, bits=[];
+      for(var j=0;j<c.length && j<3;j++){
+        var t=(c[j].textContent||'').replace(/\s+/g,' ').trim();
+        if(t) bits.push(t);
+      }
+      var line=bits.join(' · ');
+      if(line && !seen[line]){ seen[line]=1; out.push(line); }
+    }
+    if(!out.length){
+      /* no table on this page - fall back to the checked/selected controls, still on-screen text */
+      var picks=[];
+      page.querySelectorAll('select').forEach(function(s){
+        var o=s.options[s.selectedIndex];
+        if(o && o.value && !/^JUMP|^ALL /i.test(o.textContent)) picks.push(o.textContent.trim());
+      });
+      page.querySelectorAll('input[type=text],input[type=search]').forEach(function(i2){
+        if(i2.value && i2.value.trim()) picks.push(i2.value.trim());
+      });
+      out=picks.slice(0,8);
+    }
+    return out;
+  }
+
+  /* b647: the destination is the HUD's GATHER & BUY list - localStorage sc_ops_gather,
+     entries {material, qty, from:[]}, the exact shape the pill already reads. */
+  function names(page){
+    var out=[];
+    try{
+      if(typeof window.cgPickNames==='function') out=window.cgPickNames(page.id)||[];
+    }catch(e){}
+    if(out.length) return out;
+    var rows=page.querySelectorAll('table tbody tr'), seen={};
+    for(var i=0;i<rows.length && out.length<12;i++){
+      var tr=rows[i], r=tr.getBoundingClientRect();
+      if(!(r.width>0 && r.height>0)) continue;
+      var c=tr.children[0]; if(!c) continue;
+      var t=(c.textContent||'').replace(/\s+/g,' ').trim().slice(0,48);
+      if(t && !seen[t]){ seen[t]=1; out.push(t); }
+    }
+    return out;
+  }
+  function push(page, label){
+    var items=names(page);
+    if(!items.length){ toast('Nothing picked - click a row first'); return; }
+    var added=0;
+    try{
+      var g=[]; try{ g=JSON.parse(localStorage.getItem('sc_ops_gather')||'[]'); }catch(e){ g=[]; }
+      if(!Array.isArray(g)) g=[];
+      var have={}; g.forEach(function(x){ if(x&&x.material) have[String(x.material).toLowerCase()]=1; });
+      items.forEach(function(n){
+        if(have[n.toLowerCase()]) return;
+        g.push({material:n, qty:1, from:[]}); have[n.toLowerCase()]=1; added++;
+      });
+      localStorage.setItem('sc_ops_gather', JSON.stringify(g));
+      try{ window.dispatchEvent(new StorageEvent('storage',{key:'sc_ops_gather'})); }catch(e){}
+    }catch(e){}
+    try{ localStorage.setItem('sc_ops_pill_view','gather'); }catch(e){}
+    toast(added ? ('PUSHED TO HUD · GATHER & BUY  (' + added + ')')
+                : 'ALREADY ON THE HUD · GATHER & BUY');
+    /* back to the HUD the same way RETURN TO HUD does it */
+    setTimeout(function(){
+      try{ if(typeof window.cgSheetClose==='function'){ window.cgSheetClose(); return; } }catch(e){}
+      try{ if(typeof setActiveTabById==='function') setActiveTabById('home'); }catch(e){}
+    }, 260);
+  }
+
+  function toast(msg){
+    var t=document.getElementById('cg-ph-toast');
+    if(!t){ t=document.createElement('div'); t.id='cg-ph-toast'; document.body.appendChild(t); }
+    t.textContent=msg; t.classList.add('on');
+    clearTimeout(t.__h); t.__h=setTimeout(function(){ t.classList.remove('on'); }, 2200);
+  }
+
+  function bar(id,label){
+    var page=document.getElementById(id);
+    if(!page) return false;
+    if(page.querySelector(':scope > .cg-ph-bar')) return true;
+    var d=document.createElement('div'); d.className='cg-ph-bar';
+    d.innerHTML='<span class="cg-ph-l">'+label+'</span>'
+      +'<button type="button" class="cg-ph-btn">PUSH TO HUD →</button>'
+      +'<span class="cg-ph-tip">sends your picked rows to HUD &middot; GATHER &amp; BUY</span>';
+    d.querySelector('.cg-ph-btn').addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation(); push(page,label);
+    });
+    page.insertBefore(d, page.firstChild);
+    return true;
+  }
+  function sweep(){ Object.keys(PAGES).forEach(function(k){ bar(k,PAGES[k]); }); }
+  var n=0, iv=setInterval(function(){ sweep(); if(++n>120){ clearInterval(iv); setInterval(sweep,3000); } },500);
+  sweep();
+})();
+
+</script>
+
+<style id="sc-b646-picklist-css">
+/* sc-b646-picklist-css */
+.cg-pk-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 10px 8px;padding:7px 12px;
+  border:1px solid rgba(255,176,0,.34);border-left:3px solid #ffb000;border-radius:11px;
+  background:linear-gradient(180deg,rgba(30,24,8,.85),rgba(12,10,6,.9))}
+.cg-pk-bar .cg-pk-l{font:800 10px 'Rajdhani',sans-serif;letter-spacing:1.4px;color:#ffd479;flex:0 0 auto}
+.cg-pk-bar .cg-pk-chips{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 auto;min-width:120px}
+.cg-pk-bar .cg-pk-empty{font:600 10.5px 'Rajdhani',sans-serif;letter-spacing:.6px;color:#7f6a3a}
+.cg-pk-bar .cg-pk-chip{display:inline-flex;align-items:center;gap:6px;background:#241c06;
+  border:1px solid #6a5420;border-radius:12px;padding:3px 8px 3px 10px}
+.cg-pk-bar .cg-pk-chip b{font:800 10.5px 'Rajdhani',sans-serif;letter-spacing:.8px;color:#ffd479}
+.cg-pk-bar .cg-pk-chip i{font-style:normal;font:800 10px 'Rajdhani',sans-serif;color:#c99;cursor:pointer;
+  padding:0 3px;border-radius:8px}
+.cg-pk-bar .cg-pk-chip i:hover{background:#4a1f1f;color:#ffb3b3}
+.cg-pk-bar .cg-pk-clear{font:800 9.5px 'Rajdhani',sans-serif;letter-spacing:1.2px;color:#ffd479;
+  background:#1b1608;border:1px solid #6a5420;border-radius:7px;padding:5px 10px;cursor:pointer}
+tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background:rgba(255,176,0,.10) !important}
+
+</style>
+<script id="sc-b646-picklist-js">
+/* sc-b646-picklist-js  -  1 AUG 2026.
+   T: "i selected prota. double clicked it (should have pulled out the name PROTA and populated
+   a small pill that shows everything the user has selected from the list)".
+
+   Click any table row on a tool page to pick it. Picked names appear as chips in a pill bar at
+   the top of that page, they survive a reload, and PUSH TO HUD sends THE PICKED LIST when there
+   is one - which is also why PUSH TO HUD looked dead: with every section collapsed there were no
+   visible rows, so it pushed nothing and said so in a toast that is easy to miss.
+
+   Clicks on a button, link, input, select or the +/- controls are ignored, so nothing that
+   already worked on these rows changes. Reversible: delete this block and its style twin. */
+(function(){
+  if(window.__cgPick646) return; window.__cgPick646=true;
+
+  var PAGES={'tab-harvest':'HARVEST','tab-mining':'MINING','tab-salvage':'SALVAGE',
+             'tab-trading':'HAULING','tab-blueprints':'BLUEPRINTS',
+             /* b648: no PICKED pill on the Craft Calculator - T: "there shouldn't be a picked
+                pill like in the harvestable. so it needs to go" */
+             'tab-inventory':'INVENTORY','tab-missions':'CONTRACTS','tab-ships':'SHIP DB'};
+  function key(id){ return 'cg_pick_'+id; }
+  function load(id){ try{ return JSON.parse(localStorage.getItem(key(id))||'[]'); }catch(e){ return []; } }
+  function save(id,a){ try{ localStorage.setItem(key(id), JSON.stringify(a)); }catch(e){} }
+
+  function nameOf(tr){
+    var c=tr.children[0]; if(!c) return '';
+    return (c.textContent||'').replace(/\s+/g,' ').trim().slice(0,48);
+  }
+  function detailOf(tr){
+    var bits=[], c=tr.children;
+    for(var i=1;i<c.length && bits.length<2;i++){
+      var t=(c[i].textContent||'').replace(/\s+/g,' ').trim();
+      if(t) bits.push(t);
+    }
+    return bits.join(' · ');
+  }
+
+  function paint(id){
+    var page=document.getElementById(id); if(!page) return;
+    var bar=page.querySelector(':scope > .cg-pk-bar'); if(!bar) return;
+    var list=load(id), wrap=bar.querySelector('.cg-pk-chips');
+    wrap.innerHTML='';
+    if(!list.length){
+      wrap.innerHTML='<span class="cg-pk-empty">nothing picked - click a row in any table below</span>';
+    } else {
+      list.forEach(function(it,i){
+        var c=document.createElement('span'); c.className='cg-pk-chip';
+        c.innerHTML='<b>'+it.n.replace(/[<>&]/g,'')+'</b><i data-x="'+i+'">x</i>';
+        wrap.appendChild(c);
+      });
+    }
+    var n=bar.querySelector('.cg-pk-n'); if(n) n.textContent=list.length?('('+list.length+')'):'';
+    /* re-mark the rows so a reload still shows what is picked */
+    var names={}; list.forEach(function(it){ names[it.n]=1; });
+    page.querySelectorAll('table tbody tr').forEach(function(tr){
+      tr.classList.toggle('cg-pk-on', !!names[nameOf(tr)]);
+    });
+  }
+
+  function toggle(id,tr){
+    var nm=nameOf(tr); if(!nm) return;
+    var list=load(id), at=-1;
+    for(var i=0;i<list.length;i++) if(list[i].n===nm){ at=i; break; }
+    if(at>=0) list.splice(at,1); else list.push({n:nm, d:detailOf(tr)});
+    save(id,list); paint(id);
+  }
+
+  function bar(id,label){
+    var page=document.getElementById(id); if(!page) return;
+    if(page.querySelector(':scope > .cg-pk-bar')) return;
+    var d=document.createElement('div'); d.className='cg-pk-bar';
+    d.innerHTML='<span class="cg-pk-l">PICKED <span class="cg-pk-n"></span></span>'
+      +'<span class="cg-pk-chips"></span>'
+      +'<button type="button" class="cg-pk-clear">CLEAR</button>';
+    var ph=page.querySelector(':scope > .cg-ph-bar');
+    if(ph && ph.nextSibling) page.insertBefore(d, ph.nextSibling);
+    else page.insertBefore(d, page.firstChild);
+    d.addEventListener('click',function(e){
+      var x=e.target.closest?e.target.closest('[data-x]'):null;
+      if(x){ var l=load(id); l.splice(parseInt(x.getAttribute('data-x'),10),1); save(id,l); paint(id); return; }
+      if(e.target.closest && e.target.closest('.cg-pk-clear')){ save(id,[]); paint(id); }
+    });
+    paint(id);
+  }
+
+  /* one delegated handler for every page */
+  function rowClick(e){
+    var tr=e.target.closest?e.target.closest('tr'):null; if(!tr) return;
+    if(e.target.closest('button,a,input,select,textarea,label,.hv-fav,.bp-pm')) return;
+    var page=tr.closest('.panel-page'); if(!page||!PAGES[page.id]) return;
+    if(!tr.closest('tbody')) return;
+    toggle(page.id,tr);
+  }
+  document.addEventListener('click', rowClick);
+  document.addEventListener('dblclick', function(e){ e.preventDefault(); });
+
+  /* PUSH TO HUD prefers the picked list - patched in, the b645 block is untouched */
+  window.cgPickLines=function(id){
+    var l=load(id);
+    return l.map(function(it){ return it.d? (it.n+' · '+it.d) : it.n; });
+  };
+  /* b647: the gather list stores a MATERIAL NAME, not a description line */
+  window.cgPickNames=function(id){
+    return load(id).map(function(it){ return it.n; });
+  };
+
+  function sweep(){ Object.keys(PAGES).forEach(function(k){ bar(k,PAGES[k]); paint(k); }); }
+  var n=0, iv=setInterval(function(){ sweep(); if(++n>120){ clearInterval(iv); setInterval(sweep,3000); } },500);
+  sweep();
+})();
+
+</script>
+
+<style id="sc-b648-hudfix-css">
+/* b648 (T): "the right column showing the right numbers ... needs to be further away from the
+   right bound of the hud pill". The rows are flex space-between with no right padding, so the
+   value touched the pill edge and its scrollbar. */
+/* the ops4 stylesheet is injected at runtime, so it lands AFTER this block in the cascade -
+   equal specificity would lose. Marked important, scoped to the row only. */
+.ops4-row{padding-right:12px !important}
+.ops4-qty{padding-left:10px !important}
+</style>
+<script id="sc-b648-hudfix-js">
+(function(){
+  if(window.__cgHudFix648) return; window.__cgHudFix648=true;
+  /* Remove any bar b645/b646 already put on the Craft Calculator in an earlier build, and
+     strip the numbered junk those pushes wrote into the gather list. Digits only - a real
+     material is never a bare number, so nothing legitimate can match. */
+  function tidy(){
+    var cc=document.getElementById('tab-craftcalc');
+    if(cc){
+      var b1=cc.querySelector(':scope > .cg-ph-bar'); if(b1) b1.remove();
+      var b2=cc.querySelector(':scope > .cg-pk-bar'); if(b2) b2.remove();
+    }
+    try{
+      var g=JSON.parse(localStorage.getItem('sc_ops_gather')||'[]');
+      if(Array.isArray(g)){
+        var keep=g.filter(function(x){ return !(x && /^\s*\d{1,3}\s*$/.test(String(x.material||''))); });
+        if(keep.length!==g.length){
+          localStorage.setItem('sc_ops_gather', JSON.stringify(keep));
+          try{ window.dispatchEvent(new StorageEvent('storage',{key:'sc_ops_gather'})); }catch(e){}
+        }
+      }
+    }catch(e){}
+    try{ localStorage.removeItem('cg_pick_tab-craftcalc'); }catch(e){}
+  }
+  var n=0, iv=setInterval(function(){ tidy(); if(++n>60){ clearInterval(iv); setInterval(tidy,4000); } },500);
+  tidy();
+})();
+</script>
+
+<script id="sc-b649-harvestlocs-js">
+(function(){
+  if(window.__cgHarvLocs649) return; window.__cgHarvLocs649=true;
+  var KEY='cg_harvest_locs';
+  function store(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ return {}; } }
+  function save(o){ try{ localStorage.setItem(KEY, JSON.stringify(o)); }catch(e){} }
+
+  /* "Arial (Hurston moon) - 35% spawn, big clusters of 5-10" -> {loc:'Arial', pct:'35'} */
+  function parseLoc(t){
+    t=String(t||'').replace(/\s+/g,' ').trim();
+    if(!t || /^-+$/.test(t)) return null;
+    var pct=(t.match(/(\d+(?:\.\d+)?)\s*%/)||[])[1]||'';
+    var name=t.split(/\s+[-–]\s+/)[0].split('(')[0].trim();
+    if(!name) return null;
+    return {loc:name.slice(0,40), pct:pct};
+  }
+  function topString(cells){
+    var out=[];
+    cells.forEach(function(c){
+      var p=parseLoc(c); if(!p) return;
+      out.push(p.pct ? (p.loc+' ('+p.pct+'%)') : p.loc);
+    });
+    return out.join('; ');
+  }
+
+  /* read a row's location columns using its own table header - no fixed column index */
+  function rowLocs(tr){
+    var tbl=tr.closest('table'); if(!tbl) return null;
+    var heads=[].map.call(tbl.querySelectorAll('thead th'),function(th){ return (th.textContent||'').trim(); });
+    if(!heads.length) return null;
+    var li=[], mi=-1;
+    heads.forEach(function(h,i){
+      if(/location/i.test(h)) li.push(i);
+      if(/^method$/i.test(h)) mi=i;
+    });
+    if(!li.length) return null;
+    var cells=li.map(function(i){ return tr.children[i]?tr.children[i].textContent:''; });
+    var top=topString(cells);
+    if(!top) return null;
+    var method=(mi>=0&&tr.children[mi])?(tr.children[mi].textContent||'').trim():'';
+    return {top:top, method:method};
+  }
+
+  function remember(name, tr){
+    if(!name) return;
+    try{ if(window.MINING_DATA && window.MINING_DATA[name]) return; }catch(e){}   /* never overwrite real data */
+    var d=rowLocs(tr); if(!d) return;
+    var o=store();
+    o[name]={kind:'harvestable', tier:'', methods:[/ship/i.test(d.method)?'Ship':'FPS'],
+             systems:[], top:d.top, all_locs:d.top, src:'harvest table'};
+    save(o);
+    merge();
+  }
+  function merge(){
+    var o=store(), n=0;
+    try{
+      window.MINING_DATA=window.MINING_DATA||{};
+      Object.keys(o).forEach(function(k){ if(!window.MINING_DATA[k]){ window.MINING_DATA[k]=o[k]; n++; } });
+    }catch(e){}
+    return n;
+  }
+  window.cgHarvestLocs={merge:merge, store:store};
+
+  /* piggyback on the pick click - same guard rules as b646 */
+  document.addEventListener('click', function(e){
+    var tr=e.target.closest?e.target.closest('tr'):null; if(!tr) return;
+    if(e.target.closest('button,a,input,select,textarea,label')) return;
+    if(!tr.closest('tbody')) return;
+    var c0=tr.children[0]; if(!c0) return;
+    remember((c0.textContent||'').replace(/\s+/g,' ').trim().slice(0,48), tr);
+  }, true);
+
+  var n=0, iv=setInterval(function(){ merge(); if(++n>60){ clearInterval(iv); setInterval(merge,5000); } },500);
+  merge();
+})();
+</script>
+
+<style id="sc-b650-pushbtn-css">
+/* b650 (T): "the push to hud button should be easy to read and identify/spot" - he picked B,
+   amber solid at 13px. Amber on the blue bar is the highest contrast pair on these pages and
+   nothing else on a tool page is amber, so it cannot be mistaken for anything else.
+   Marked important: the b645 rule is a static block that some pages re-render over. */
+.cg-ph-bar .cg-ph-btn{
+  font:800 13px 'Rajdhani','Segoe UI',sans-serif !important;
+  letter-spacing:1.7px !important; text-transform:uppercase !important;
+  color:#140d00 !important;
+  background:linear-gradient(180deg,#ffc84d,#ffb000) !important;
+  border:1px solid #ffd479 !important; border-radius:8px !important;
+  padding:9px 20px !important;
+  box-shadow:0 0 12px rgba(255,176,0,.35) !important;
+}
+.cg-ph-bar .cg-ph-btn:hover{filter:brightness(1.08) !important}
+.cg-ph-bar .cg-ph-btn:active{transform:translateY(1px)}
+.cg-ph-bar .cg-ph-l{color:#9fd0ea !important}
+.cg-ph-bar .cg-ph-tip{color:#6d8598 !important}
+</style>
 </body>
 </html>
