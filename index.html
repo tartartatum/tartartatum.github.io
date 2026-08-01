@@ -164,7 +164,7 @@ window.HM_ICON_DATA={"mining":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPA
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="CmdGlas">
-<title>Command Glass</title>
+<title>CmdGlas · Star Citizen Command Tablet</title>
 <!-- ══ build 585, 30 JUL 2026 - SITE BADGE ══════════════════════════════════════════
      T: "change the badge on the website the one that shows up in the explorer search
      results right now it's a generic globe."  MEASURED FIRST: this file carried NO
@@ -7880,7 +7880,7 @@ function applyVersion(gv){
       if(_m) Array.prototype.forEach.call(_mp,function(el){ el.textContent=_m[1]; });
     }
   }catch(e){}
-  try{document.title='CmdGlas · '+head;}catch(e){}
+  try{document.title='CmdGlas · Star Citizen Command Tablet · '+head;}catch(e){}
   try{buildPatch();}catch(e){}
   try{buildChannel();}catch(e){}
   /* 2026-07-16: the Blueprints data-version line COMPARES its dataset stamp against the live patch
@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=639;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=640;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
