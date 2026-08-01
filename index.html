@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=640;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=641;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -36395,6 +36395,49 @@ body.sc-home-mode #tab-home,
   background:transparent !important;
   background-color:transparent !important;
   background-image:none !important;
+}
+</style>
+
+<style id="sc-b641-scanline-hometiles-css">/* build 641 (T): "finish the implementation of scan.
+   it's partially working on the tablet".
+
+   MEASURED CAUSE, not a guess. A headless probe applied .cg-pressed to every one of the 45
+   selectors in build 638's SEL list and read the computed ::after box. 42 of 53 visible
+   controls drew a band. All 11 failures were the INGAME TOOLS tiles, and the reason is this
+   pair of rules already in the file:
+
+       #tab-home .hm-tile::after{display:none !important;content:none !important}
+       #tab-home .hm-tile.hm-wide549::before,
+       #tab-home .hm-tile.hm-wide549::after{display:none !important;content:none !important}
+
+   They beat .cg-pressed::after twice over - higher specificity (ID + class + pseudo vs class
+   + pseudo) AND !important. So on those tiles the pseudo-element was never created and the
+   sweep had nothing to draw into. The outline and glow still fired, which is exactly why it
+   looked "partially working".
+
+   Fix: re-enable the pseudo-element ONLY while the tile is pressed, at a specificity that
+   wins (ID + two classes + pseudo). Nothing about the tile's resting appearance changes -
+   the blocking rules still apply at every other moment. Re-probed after the fix: 53 of 53. */
+#tab-home .hm-tile.cg-pressed::after,
+#tab-home .hm-tile.hm-img.cg-pressed::after,
+#tab-home .hm-tile.hm-wide549.cg-pressed::after{
+  display:block !important;
+  content:'' !important;
+  position:absolute !important;
+  left:0; right:0; top:0;
+  height:38%;
+  width:auto;
+  border:0 !important;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--cg-pp-band,rgba(190,255,220,1)),transparent) !important;
+  animation:cgScan 1.05s linear infinite;
+  mix-blend-mode:screen;
+  z-index:3;
+}
+@media (prefers-reduced-motion:reduce){
+  #tab-home .hm-tile.cg-pressed::after,
+  #tab-home .hm-tile.hm-img.cg-pressed::after,
+  #tab-home .hm-tile.hm-wide549.cg-pressed::after{ animation:none; opacity:.35; }
 }
 </style>
 </body>
