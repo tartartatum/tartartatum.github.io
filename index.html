@@ -1652,7 +1652,7 @@ html{scrollbar-gutter:stable}
     <button type="button" class="tab" data-tab="cap">[ Capabilities ]</button>
     <button type="button" class="tab" data-tab="guide">[ User Guide ]</button><!-- 2026-07-18 user: searchable user manual nav target. -->
     <button type="button" class="tab" data-tab="system">[ System ]</button>
-    <button type="button" class="tab" data-tab="spacemanuals">[ Space Manuals ]</button><!-- 2026-07-19 T: SM hub nav target -->
+    <button type="button" class="tab" data-tab="spacemanuals">[ SC Manuals ]</button><!-- 2026-07-19 T: SM hub nav target -->
     <button type="button" class="tab" data-tab="console">[ Console Commands ]</button><!-- 2026-07-19 T: console cmds nav target -->
     <button type="button" class="tab" data-tab="allkb">[ Keybinds ]</button>
     <!-- kbref tab merged into Keybinds 2026-07-13 (user order) -->
@@ -1697,7 +1697,7 @@ html{scrollbar-gutter:stable}
     <option value="peripherals">Peripherals</option>
     <option value="reputation">Reputation</option>
     <option value="loadout">Ship Loadouts</option>
-    <option value="spacemanuals">Space Manuals</option>
+    <option value="spacemanuals">SC Manuals</option>
     <option value="console">Console</option>
   </select>
   <!-- 2026-07-15 user: "the color pallet compression via dropdown". The 10 dots ate a third of the
@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 673;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 676;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -8974,7 +8974,7 @@ function scBuildZoomBar(){
       + B('scr-nav-ship','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'loadout\')" title="Ship loadouts"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 2 4 5 4 9l-4 3-4-3c0-4 1.5-7 4-9z"/><path d="M8 13l-2 4 3-1M16 13l2 4-3-1"/></svg>','SHIP LOADOUTS')
     +'</div></div>'
     +'<div class="scr-group"><div class="scr-cat">LEARN</div><div class="scr-sec scr-flyout">'
-      + B('scr-nav-sm','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'spacemanuals\')" title="Space Manuals hub"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2z"/><path d="M9 4v14"/></svg>','SPACE MANUALS')
+      + B('scr-nav-sm','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'spacemanuals\')" title="SC Manuals hub"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2z"/><path d="M9 4v14"/></svg>','SC MANUALS')
       + B('scr-nav-con','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'console\')" title="Console commands"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>','CONSOLE')
       + B('scr-nav-help','onclick="window.scHelpOpen&&scHelpOpen()" title="Search the tablet"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.8 1c0 1.7-2.3 2-2.3 3.5M12 17h.01"/></svg>','HELP')
       + B('scr-nav-trb','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'trouble\')" title="Tips, fixes and workarounds"',window.SCRI.trb,'TROUBLESHOOT')
@@ -21391,7 +21391,7 @@ separate queued task (color dial-in), so the rest of the tablet is untouched. */
   };
   /* 2026-07-19 T #16: full name shown on hover (title). Only needed where the abbreviation
      differs from the option's own text; everything else falls back to the original label. */
-  var HFULL={ peripherals:'Devices', loadout:'Ship Loadouts', mypc:'My PC', spacemanuals:'Space Manuals', reputation:'Reputation', harvest:'Harvestables', console:'Console Commands' };
+  var HFULL={ peripherals:'Devices', loadout:'Ship Loadouts', mypc:'My PC', spacemanuals:'SC Manuals', reputation:'Reputation', harvest:'Harvestables', console:'Console Commands' };
   /* 2026-07-15 user: titles fully readable — zero-width break after "/" lets slashed labels wrap cleanly */
   function lab(s){return esc(s).replace(/\//g,'/&#8203;');}
   function tile(p,noico){var ni=noico||p.id==='myops';var _fid=p.id;var fullLabel=(typeof HFULL!=='undefined'&&HFULL[_fid])||p.label;
@@ -28242,7 +28242,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   if(window.__cgUserManual366) return; window.__cgUserManual366=true;
   var H=[
 '<div class="um-cover"><h1>TABLET USER MANUAL</h1><div class="um-sub">CMD &middot; GLS Command Tablet</div><div class="um-tm">TM-CMDGLAS-10 &middot; Operator Card for the Tablet Interface &middot; Unofficial Star Citizen companion</div></div>',
-'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET: how to move around the interface. For in-game subjects (flight, mining, hauling, combat) use LEARN &rarr; SPACE MANUALS, or SEARCH &rarr; BY TOPIC.</div>',
+'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET: how to move around the interface. For in-game subjects (flight, mining, hauling, combat) use LEARN &rarr; SC MANUALS, or SEARCH &rarr; BY TOPIC.</div>',
 '<div class="um-sec"><h2>Start Here - Open the Tablet the Right Way (read first)</h2><div class="um-purpose">There are two ways to open the tablet. Which one you use depends only on <b>who you are</b> and <b>where you are</b>. Do the exact steps for your case - nothing else.</div>',
       '<div class="um-proc">CASE A - You, the owner, on your own PC</div>',
       '<ol class="um-steps"><li>Go to your <b>Desktop</b>.</li><li>Double-click <b>Launch Tablet (No Chrome UI)</b>.</li><li>Wait for it to open. The <b>Server light is GREEN</b>. Every feature works (Twitch, live readouts, the iPad second screen).</li></ol>',
@@ -28320,7 +28320,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-proc">8-2. Groups and items</div>',
 '<div class="um-groups"><div><b>NAV</b> - Notepad, Start Page.</div>',
 '<div><b>MY RIG</b> - Devices, My PC, Ship Loadouts.</div>',
-'<div><b>LEARN</b> - Space Manuals, Console, Help, Troubleshoot.</div>',
+'<div><b>LEARN</b> - SC Manuals, SC Dictionary, Console, Help, Troubleshoot.</div>',
 '<div><b>MISSION CONTROLS</b> - Comms, Radio, Share.</div>',
 '<div><b>TABLET CONTROLS</b> - Fit 100%, Fullscreen, No URL Bar, Refresh, Reset, Q&amp;A Log.</div></div>',
 '<div class="um-caution"><b>CAUTION.</b> TABLET CONTROLS &rarr; REFRESH reloads the whole tablet. Any unsaved entry on the current page is lost. Save before you refresh.</div></div>',
@@ -28338,7 +28338,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<ol class="um-steps"><li>Locate the "USER MANUAL" button at the very bottom of Home, under &#9432; MORE INFO.</li>',
 '<li>Tap it - this manual opens as a sheet.</li>',
 '<li>Return via any BACK control (Section 9).</li></ol>',
-'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET. For in-game subjects, use LEARN &rarr; SPACE MANUALS or SEARCH &rarr; BY TOPIC.</div></div>',
+'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET. For in-game subjects, use LEARN &rarr; SC MANUALS or SEARCH &rarr; BY TOPIC.</div></div>',
 /* 2026-07-23 build 390 — ADD-TO-HOME-SCREEN section. Added after verifying (caniuse/MDN + Gadget Hacks/Chrome Help) that the no-address-bar window is controlled by the tablet's display:standalone MANIFEST, not the browser: Safari AND Chrome both work on iPadOS 16.4+. Reversible: delete from this comment through the END-b390 marker. */
 '<div class="um-sec"><h2>Section 12 - Install the Tablet as an App (no address bar)</h2><div class="um-purpose">The tablet installs like a real app - its own window and icon, no address bar, no tabs. Works on PC, iPad and Android. On iPhone and iPad, only <b>Safari</b> can open the tablet as a clean, no-address-bar window. Apple does not let Chrome or any other iOS browser do it, so in <b>Chrome on an iPad you will always see the address bar</b>. On an <b>Android</b> tablet, Chrome can hide it.</div>',
 '<div class="um-proc">12-0. PC - Chrome</div>',
@@ -29250,13 +29250,13 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
    {id:'first', gi:'🧭', label:'I am brand new', blurb:'Never played. Start here — from waking up to your first payday.', steps:[
      {t:'Get your bearings on the tablet.', w:'Tablet: Home screen. Read the zones, then open USER MANUAL (bottom of Home).',
       h:'Home is your base. Top-left is a SELECTABLE window that lands on CLOCK (time, patch, server lamps), top-centre is the HUD (Gather, Buy, Notes, Org/Party, Threat, Stream), left is SEARCH, the centre tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
-     {go:'spacemanuals', t:'Read the New Player Orientation.', w:'Tablet: CONTROL BAR > LEARN > SPACE MANUALS > SR-4 NEW PLAYER ORIENTATION (or SEARCH > BY TOPIC).',
+     {go:'spacemanuals', t:'Read the New Player Orientation.', w:'Tablet: CONTROL BAR > LEARN > SC MANUALS > SR-4 NEW PLAYER ORIENTATION (or SEARCH > BY TOPIC).',
       h:'SR-4 walks you from the bed you wake up in to your first payday: where you are, how to leave the station, and what to do first. Start in <b>Stanton</b> (monitored, service-rich), not Pyro (lawless).'},
      {go:'inventory', t:'Check your suit and grab MedPens.', w:'In game: your habitation room / personal inventory. Tablet: INVENTORY tool.',
       h:'Your <b>sealed flight suit + helmet is your life support</b> — keep the helmet on if a hull is breached. Carry a couple of <b>MedPens</b> for injuries. This is the SM-3 survival kit. Your <b>undersuit + armor</b> also set your protection and your <b>heat / radiation</b> resistance — see <b>SM-15 FPS Armor</b> once you start fighting or head into caves.'},
      {t:'Claim your ship at an ASOP terminal.', w:'In game: any ASOP / ship-retrieval terminal at a station or spaceport.',
       h:'Find an <b>ASOP terminal</b>, select your ship, and Retrieve it. Then take the elevator or transit to the assigned hangar/pad. <span class="npa-cau">CAUTION: filing a Claim on a stuck ship destroys any cargo inside it — empty it first.</span>'},
-     {go:'spacemanuals', t:'Get into your ship and take off.', w:'In game: board, sit (F), Flight Ready (R), request takeoff (Left Alt+N). Tablet: LEARN > SPACE MANUALS > SM-1 FLIGHT OPERATIONS.', h:'Once your ship is on the pad: 1) Board and walk to the pilot seat, press <b>F</b> to sit. 2) Press <b>Flight Ready</b> (<b>R</b>) — one press powers the ship and spools the engines (press again to power down). 3) In an enclosed hangar or station pad, request clearance with <b>Left Alt + N</b> so the doors open (open outdoor pads need none). 4) Ease the throttle up to lift off and climb away before you quantum. The full walkthrough — including landing — is <b>SM-1 Flight Operations</b>.'},
+     {go:'spacemanuals', t:'Get into your ship and take off.', w:'In game: board, sit (F), Flight Ready (R), request takeoff (Left Alt+N). Tablet: LEARN > SC MANUALS > SM-1 FLIGHT OPERATIONS.', h:'Once your ship is on the pad: 1) Board and walk to the pilot seat, press <b>F</b> to sit. 2) Press <b>Flight Ready</b> (<b>R</b>) — one press powers the ship and spools the engines (press again to power down). 3) In an enclosed hangar or station pad, request clearance with <b>Left Alt + N</b> so the doors open (open outdoor pads need none). 4) Ease the throttle up to lift off and climb away before you quantum. The full walkthrough — including landing — is <b>SM-1 Flight Operations</b>.'},
      {go:'starmap', t:'Plot a course and quantum travel.', w:'In game: open the Starmap — press F2. Tablet: STARMAP tool to plan first.',
       h:'Press <b>F2</b> to open the Starmap, pick your destination, and <b>Set Route</b>. In your pilot seat, switch to <b>NAV mode</b> (travel), then <b>hold B</b> to spool up and jump. To cancel a route, open the Starmap (F2) and clear it. More in SM-1 Flight Operations.'},
      {t:'Pick how you will earn.', w:'Tablet: this Assist (back to Goals) or SR-4 > Making Money, ranked for a new player.',
@@ -29355,7 +29355,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
         +'<div class="npa-gd">'+esc(g.blurb)+'</div>'
         +'<div class="npa-gp">'+(done?'✓ complete':(dn>0?(dn+' / '+pc+' steps done'):(pc+' steps')))+'</div></button>';
     }
-    h+='</div><div class="npa-foot">This Assist summarizes the tablet’s own Learn Library (SR-4 Orientation + the SM activity manuals, Alpha 4.9). Open LEARN &rarr; SPACE MANUALS any time for the full, cited detail.</div>';
+    h+='</div><div class="npa-foot">This Assist summarizes the tablet’s own Learn Library (SR-4 Orientation + the SM activity manuals, Alpha 4.9). Open LEARN &rarr; SC MANUALS any time for the full, cited detail.</div>';
     return h;
   }
   function renderGoal(g){
@@ -29918,7 +29918,7 @@ body.sc-home-mode:not([data-portable="1"]) #home-scroll > .hm-wrap{margin-top:au
   var TOOL={ 'STARMAP':'starmap','CONTRACTS':'missions','MINING':'mining','HAULING':'trading','SALVAGE':'salvage','INVENTORY':'inventory','BLUEPRINTS':'blueprints','HARVEST':'harvest','CRAFT CALCULATOR':'craftcalc','SYSTEM':'system' };
   function enc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
   var toolAlt=Object.keys(TOOL).sort(function(a,b){return b.length-a.length;}).join('|');
-  var RE=new RegExp('(SM-\\d+|SR-\\d+)|\\b(SPACE MANUALS|LEARN)\\b|\\b(Goals)\\b|\\b('+toolAlt+')\\b','g');
+  var RE=new RegExp('(SM-\\d+|SR-\\d+)|\\b(SC MANUALS|SPACE MANUALS|LEARN)\\b|\\b(Goals)\\b|\\b('+toolAlt+')\\b','g');
   function lnk(type,target,label){ return '<button type="button" class="npa-lnk" data-lnk="'+type+(target?(':'+target):'')+'">'+enc(label)+'</button>'; }
   function linkifyText(text){
     var out='', last=0, m; RE.lastIndex=0;
@@ -32775,11 +32775,11 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
-  var NOTES_VER='2026-08-01a';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
+  var NOTES_VER='2026-08-02a';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now - they were scrolling to a hidden card. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the HUD. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the HUD floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='NEW - SC DICTIONARY: do not know an abbreviation? LEARN &gt; SC DICTIONARY spells out 171 terms, codes, location prefixes and every alien species. &middot; HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now - they were scrolling to a hidden card. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the HUD. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the HUD floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -39974,6 +39974,393 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     return out;
   };
   window.CMDGLAS_LEFTSEL_673=1;
+})();
+</script>
+<style id="sc-b674-ctrrow-css">
+/* sc-b674-ctrrow-css  -  build 674, 2 AUG 2026.
+   T: "i need the entire row of buttons to be centered width wise right where they are.
+       symmetrical only."   Approved from the rendered 2560 px image before install.
+
+   WHY MIRRORS AND NOT A LAYOUT CHANGE.
+   UNDOCK and SOURCE are position:absolute at bottom:8px, anchored to opposite ends of the
+   ops pill by two other modules that also own their handlers. Nothing that leaves them
+   absolute can make the seven controls a single centred group - MEASURED at 1400 and 1800,
+   which is exactly how the previous single-row attempt overlapped. So the two absolute
+   controls are HIDDEN and two visually identical buttons are appended into the same flex
+   wrap as the five CLEAR/REFRESH buttons; the whole wrap is then centred as one box. The
+   mirrors forward their click to the hidden original, so the original module keeps its own
+   handler and state - the same clone-and-forward pattern the app-bar rail already uses.
+
+   PC ONLY. Everything below is inside @media (pointer:fine); a touch device is untouched.
+
+   b667's align() is not fought: it bails on !ur.height, and a display:none UNDOCK measures
+   zero, so it turns itself off. No timer war (rule 17). */
+@media (pointer:fine){
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap{
+    position:absolute !important; bottom:8px !important;
+    left:50% !important; right:auto !important; transform:translateX(-50%) !important;
+    width:max-content !important; max-width:calc(100% - 16px) !important;
+    flex-wrap:nowrap !important; gap:5px !important; z-index:4;
+  }
+  #sc-home-widgets .ops-pill.b385 .cg-undock-btn,
+  #sc-home-widgets .ops-pill.b385 #cg-hudsrc{ display:none !important; }
+
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror{
+    font:800 8px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1px;
+    text-transform:uppercase; border-radius:6px; padding:5px 9px;
+    cursor:pointer; min-height:25px; white-space:nowrap;
+  }
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.u{
+    color:#cfe6f5; border:1px solid rgba(108,180,214,.5);
+    background:linear-gradient(180deg,rgba(29,111,156,.30),rgba(18,74,104,.14));
+  }
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.s{
+    color:#04141d; border:1px solid rgba(170,242,255,.9);
+    background:linear-gradient(180deg,#a6f2ff,#33b5e6);
+  }
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.u:hover{ border-color:rgba(108,180,214,.85); }
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.s:hover{ filter:brightness(1.08); }
+}
+</style>
+<script id="sc-b674-ctrrow-js">
+/* sc-b674-ctrrow-js  -  build 674.  The two mirror buttons.
+
+   MEASURED before install, Chromium and WebKit, ops pill inner coordinates:
+     1280 px  leftGap 112  rightGap 112
+     1600 px  leftGap 141  rightGap 141
+     1920 px  leftGap 208  rightGap 208
+     2560 px  leftGap 241  rightGap 241
+   all four: symmetric, one row, no overlap, all seven buttons, inside the pill.
+
+   Reversible by deleting this style/script pair - the originals come straight back. */
+(function(){
+  if(window.__cgCtrRow674) return; window.__cgCtrRow674=true;
+
+  var SPEC=[['u','.cg-undock-btn','UNDOCK'],['s','#cg-hudsrc','SOURCE']];
+
+  function mirror(){
+    if(!window.matchMedia || !matchMedia('(pointer:fine)').matches) return true; /* touch: done */
+    var pill=document.querySelector('#sc-home-widgets .ops-pill.b385'); if(!pill) return false;
+    var w=pill.querySelector('.cg-clr-wrap'); if(!w) return false;
+    var made=0;
+    for(var i=0;i<SPEC.length;i++){
+      var sp=SPEC[i];
+      if(w.querySelector('.cg-mirror.'+sp[0])){ made++; continue; }
+      var src=pill.querySelector(sp[1]); if(!src) continue;
+      var b=document.createElement('button');
+      b.type='button'; b.className='cg-mirror '+sp[0]; b.textContent=sp[2];
+      b.setAttribute('data-cg-mirror', sp[0]);
+      (function(src){
+        b.addEventListener('click', function(e){
+          e.preventDefault(); e.stopPropagation();
+          try{
+            var t=(src.tagName==='BUTTON') ? src : (src.querySelector('button')||src);
+            t.click();
+          }catch(err){}
+        }, false);
+      })(src);
+      w.appendChild(b); made++;
+    }
+    return made===SPEC.length;
+  }
+
+  /* bounded settle schedule, then stop - the wrap and the pill are both mounted by other
+     modules on their own timers, and nothing here re-creates a node it already made. */
+  var n=0, iv=setInterval(function(){ if(mirror() || ++n>60) clearInterval(iv); }, 500);
+  mirror();
+  addEventListener('load', function(){ setTimeout(mirror,300); setTimeout(mirror,1500); });
+
+  window.cgCtrRowReport=function(){
+    var pill=document.querySelector('#sc-home-widgets .ops-pill.b385');
+    if(!pill) return {pill:false};
+    var pr=pill.getBoundingClientRect();
+    var w=pill.querySelector('.cg-clr-wrap');
+    if(!w) return {pill:true, wrap:false};
+    var wr=w.getBoundingClientRect();
+    var kids=[].slice.call(w.children).map(function(k){
+      var r=k.getBoundingClientRect();
+      return {t:(k.textContent||'').trim(), l:Math.round(r.left-pr.left),
+              r:Math.round(r.right-pr.left), b:Math.round(r.bottom)};
+    });
+    var ov=false, rows={};
+    for(var i=0;i<kids.length;i++){ rows[kids[i].b]=1; if(i && kids[i].l < kids[i-1].r-1) ov=true; }
+    var L=Math.round(wr.left-pr.left), R=Math.round(pr.right-wr.right);
+    return {count:kids.length, labels:kids.map(function(k){return k.t;}),
+            leftGap:L, rightGap:R, symmetric:Math.abs(L-R)<=2,
+            overlap:ov, oneRow:Object.keys(rows).length===1, fitsInPill:(L>=0&&R>=0)};
+  };
+  window.CMDGLAS_CTRROW_674=1;
+})();
+</script>
+<style id="sc-b675-scdict-css">
+/* sc-b675-scdict-css  -  build 675, 2 AUG 2026.  SC DICTIONARY.
+   T: "everything spelled out, every abbreviation or star citizen lingo or term
+   explained. add alien species to the glossary. call it SC Dictionary."
+
+   Readability follows the b665 manual rules that were signed off: 16 px body on
+   touch, 1.55 line-height, a bounded measure, and NO blanket p/li rules - every
+   size is scoped to a class this block owns, because a blanket rule blew up the
+   reference tables in WebKit last time (MEASURED).
+
+   The search field is 16 px on purpose. iOS zooms the whole page when a focused
+   input is under 16 px; that is a Safari rule, not a style choice. */
+#tab-scdict .scd{ max-width:900px; margin:0 auto; color:#c9dcec;
+  font-family:'Rajdhani','Segoe UI',sans-serif; }
+#tab-scdict .scd-cover{ text-align:center; border-bottom:1px solid rgba(120,200,235,.3);
+  padding-bottom:12px; margin-bottom:10px; }
+#tab-scdict .scd-cover h1{ font-family:'Bruno Ace','Rajdhani',sans-serif; font-size:20px;
+  letter-spacing:2px; color:#e7f5ff; margin:0 0 5px; }
+#tab-scdict .scd-cover .scd-sub{ font-size:11px; letter-spacing:2.5px; color:#7fb8d0;
+  text-transform:uppercase; }
+#tab-scdict .scd-cover .scd-tm{ font-size:10px; letter-spacing:2px; color:#5f7c92; margin-top:7px; }
+
+#tab-scdict .scd-bar{ position:sticky; top:0; z-index:5; background:rgba(6,14,22,.96);
+  backdrop-filter:blur(6px); padding:9px 0 8px; margin:0 0 6px;
+  border-bottom:1px solid rgba(120,200,235,.18); }
+#tab-scdict .scd-find{ width:100%; box-sizing:border-box; font-size:16px; line-height:1.2;
+  font-family:'Rajdhani','Segoe UI',sans-serif; padding:10px 12px; border-radius:9px;
+  color:#e7f5ff; background:rgba(10,22,33,.9); border:1px solid rgba(108,180,214,.4); }
+#tab-scdict .scd-find:focus{ outline:none; border-color:rgba(140,215,255,.85); }
+#tab-scdict .scd-count{ font-size:11px; letter-spacing:1.5px; color:#7fb8d0; margin:7px 2px 0; }
+#tab-scdict .scd-chips{ display:flex; flex-wrap:wrap; gap:5px; margin:8px 0 0; }
+#tab-scdict .scd-chip{ font-size:9.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase;
+  padding:6px 10px; min-height:30px; border-radius:999px; cursor:pointer; white-space:nowrap;
+  color:#bcdcf0; background:rgba(90,180,220,.08); border:1px solid rgba(120,190,225,.3); }
+#tab-scdict .scd-chip.on{ color:#04141d; background:linear-gradient(180deg,#a6f2ff,#33b5e6);
+  border-color:rgba(170,242,255,.9); }
+
+#tab-scdict .scd-cat{ font-size:12px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+  color:#bfe6ff; border-left:3px solid #4fd2ff; padding:6px 0 6px 12px;
+  background:linear-gradient(90deg,rgba(90,190,255,.09),transparent); margin:20px 0 8px; }
+#tab-scdict .scd-e{ padding:10px 12px; margin:0 0 8px; border-radius:9px;
+  background:rgba(10,22,33,.55); border:1px solid rgba(108,180,214,.16); }
+#tab-scdict .scd-t{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
+#tab-scdict .scd-term{ font-size:15px; font-weight:800; letter-spacing:1px; color:#8fd8ff; }
+#tab-scdict .scd-exp{ font-size:12.5px; color:#9fc0d5; font-style:italic; }
+#tab-scdict .scd-m{ font-size:15px; line-height:1.55; color:#cfe2f1; margin:6px 0 0;
+  max-width:min(70ch, 700px); }
+#tab-scdict .scd-badge{ font-size:8.5px; font-weight:800; letter-spacing:1.2px; padding:3px 7px;
+  border-radius:999px; white-space:nowrap; }
+#tab-scdict .scd-badge.V{ color:#7fffb0; background:rgba(57,211,83,.13); border:1px solid rgba(57,211,83,.4); }
+#tab-scdict .scd-badge.T{ color:#8fd8ff; background:rgba(90,190,255,.12); border:1px solid rgba(120,200,255,.42); }
+#tab-scdict .scd-badge.C{ color:#ffe1a6; background:rgba(255,176,0,.11); border:1px solid rgba(255,176,0,.42); }
+#tab-scdict .scd-badge.U{ color:#ffb3a6; background:rgba(255,90,60,.11); border:1px solid rgba(255,120,90,.45); }
+#tab-scdict .scd-key{ margin:10px 0 0; padding:10px 13px; border-radius:9px; font-size:13.5px;
+  line-height:1.5; background:rgba(90,190,255,.07); border:1px solid rgba(120,200,255,.3); color:#bcdcf0; }
+#tab-scdict .scd-key b{ letter-spacing:1.5px; }
+#tab-scdict .scd-none{ padding:22px 6px; text-align:center; color:#7fb8d0; font-size:14px; }
+#tab-scdict .scd-src{ margin:24px 0 4px; padding-top:12px; border-top:1px solid rgba(120,200,235,.2);
+  font-size:11.5px; line-height:1.6; color:#7f9bb0; }
+#tab-scdict .scd-src a{ color:#8fd8ff; }
+#tab-scdict .scd-end{ text-align:center; color:#5f7c92; font-size:10px; letter-spacing:3px;
+  margin:16px 0 4px; }
+@media (max-width:700px){
+  #tab-scdict .scd-term{ font-size:14px; }
+  #tab-scdict .scd-m{ font-size:15px; }
+}
+/* the LEARN nav button, styled like its neighbours in the rail */
+.scr-nav-dict .scd-ico{ width:16px; height:16px; }
+</style>
+<script id="sc-b675-scdict-js">
+/* sc-b675-scdict-js  -  build 675.  Builds #tab-scdict and the LEARN entry.
+
+   STATUS BADGES ARE THE POINT. T's standing rule is that a verified fact and an
+   unverified one never share a sentence. So every entry carries its own status and
+   they are never merged:
+     VERIFIED  - checked against a cited source, listed at the foot of the page
+     TABLET    - this tablet's own label, not a Star Citizen term at all
+     COMMUNITY - player slang, not official
+     UNCONFIRMED - could not be verified; say so rather than guess
+
+   Rule 17: nothing here is re-created on a timer. The page is built once, the nav
+   buttons are mounted once each, and the mount poll stops as soon as both exist. */
+(function(){
+  if(window.__cgScDict675) return; window.__cgScDict675=true;
+
+  var CATS=[["T","HOW TO READ THIS TABLET"],["M","MONEY, TRADE &amp; THE STORE"],["F","FLIGHT &amp; SHIP SYSTEMS"],["C","COMBAT"],["K","CAREERS &amp; MATERIALS"],["P","PLACES, STATIONS &amp; LOCATION CODES"],["O","ORGS, COMPANIES &amp; MANUFACTURERS"],["B","BUILDS, SERVERS &amp; TESTING"],["H","HARDWARE &amp; CONTROLS"],["S","SPECIES &amp; FACTIONS"],["G","COMMUNITY SLANG"]];
+  var D=[["eff %","effective spawn share","This tablet's own number. grp % multiplied by that item's share inside its rarity group. Plain meaning: roughly how many rocks out of a hundred at that location are this material.","T","T"],["grp %","rarity-group spawn chance","This tablet's own number. The chance that the whole rarity group (common, uncommon, rare, epic, legendary) spawns at that body at all.","T","T"],["hi_q / lo_q","high quality / low quality","Price per unit in the tablet's harvest data. hi_q is the best refined sale price seen, lo_q the worst.","T","T"],["HUD","heads-up display","In this tablet: the HUD on Home that carries your gather, harvest and buy list. In game: the flight information overlaid on your canopy.","T","V"],["GATHER LIST","-","Everything the tablet has told you to collect, from blueprints, mining picks and the Craft Calculator combined. All three feed one list.","T","T"],["TOOL","-","One of the centre tiles on Home: Mining, Hauling, Trading, Blueprints, Harvestables, Craft Calculator and the rest.","T","T"],["DECKS / TABLES","-","The two ways the Harvestables page can display data. Decks are cards, Tables are the reference grid.","T","T"],["MORE LOCATIONS","-","Button on a harvest item. The HUD row already prints the best location; this shows every other one.","T","T"],["SOURCE","-","Button on the HUD. Opens where the number in front of you came from.","T","T"],["UNDOCK","-","Button on the HUD. Pops the HUD out into its own floating window on PC.","T","T"],["STALE DATA bar","-","The orange strip that appears when the tablet's location dataset is older than the live game patch. It is a warning, not an error.","T","T"],["CLEAR GATHER / HARVEST / BUY","-","Empties one list. Each asks first whether to clear only the HUD, or the HUD and the underlying page selections too.","T","T"],["CLEAR ALL","-","Empties gather, harvest and buy in one action, after the same two-step confirmation.","T","T"],["REFRESH","-","Re-reads the underlying pages and rebuilds the HUD from what is currently selected.","T","T"],["TM","Technical Manual (CmdGlas numbering)","Operator's manual. Every technical procedure a ship or vehicle performs. Example: TM-CMDGLAS-10 is the tablet's own operator card.","T","T"],["SM","Supplemental Manual (CmdGlas numbering)","Tactics and technique, one manual per game loop. SM-1 Flight Operations, SM-9 Salvage, SM-10 Mining, and so on.","T","T"],["SR","Space Regulations (CmdGlas numbering)","Conduct, etiquette and safety. SR-4 is the New Player Orientation.","T","T"],["OM (CmdGlas)","Operations Manual","In THIS tablet, OM means a one-page field guide. CAUTION: in the game, OM means Orbital Marker - a completely different thing. See the FLIGHT section.","T","T"],["band700","-","A field in the tablet's harvest data holding the location list with its spawn percentages.","T","T"],["VERIFIED / PARTIAL / PENDING","-","Badges on tablet data. VERIFIED means checked against a source. PARTIAL means some of it was. PENDING means it is still being written.","T","T"],["CmdGlas","-","This tablet and its server. An unofficial Star Citizen companion, not made by Cloud Imperium Games.","T","T"],["aUEC","alpha United Earth Credit","The spendable in-game currency during Alpha. Wiped on some patches. Not real money.","M","V"],["UEC","United Earth Credit","The currency of the setting. Also the name of the small store currency used for rentals and some items.","M","V"],["SCU","Standard Cargo Unit","The cargo box measurement. Ship capacity, hauling contracts and commodity prices are all quoted in SCU.","M","V"],["REC","Rental Equipment Credits","Earned in Arena Commander and spent renting ships and components for test flights. Cannot buy real ships.","M","V"],["CCU","Cross Chassis Upgrade","A store upgrade that converts one pledged ship into a more expensive one for the price difference.","M","V"],["LTI","Lifetime Insurance","A pledge perk. The ship's hull is insured for the life of the account. Cargo is never insured.","M","V"],["SHI","Standard Hull Insurance","Ordinary time-limited hull insurance, as opposed to LTI.","M","V"],["TDD","Trade &amp; Development Division","The commodity trading floor found in the big landing zones. Where you sell cargo at the best posted prices.","M","V"],["UEX","-","A community-run trade and price database many tools pull from, including this tablet. Not an official CIG source.","M","U"],["IAE","Intergalactic Aerospace Expo","The yearly in-fiction ship show. Nearly every ship goes on free flight and on sale.","M","V"],["ILW","Invictus Launch Week","The yearly military expo event. Free flight of military ships.","M","U"],["FW","Fleet Week","Community event week, often paired with military ship showcases.","M","V"],["melt","-","Community slang for reclaiming a pledge back to store credit. NOT an in-game action, and it is not reversible on demand.","M","C"],["buyback","-","The store list of pledges you have melted, which can sometimes be re-bought.","M","C"],["warbond","-","A store variant of a pledge bought with real money only, usually cheaper, sometimes with extra insurance.","M","C"],["SCM","Space Combat Maneuvering","The slower flight mode. Weapons, shields and manoeuvring work properly. This is combat mode.","F","V"],["NAV","navigation mode","The faster travel mode. Higher speed, worse handling, and it is the mode quantum travel spools from.","F","U"],["QT","Quantum Travel","Fast travel between markers inside a system. Needs a spooled drive, quantum fuel and a clear line to the target.","F","V"],["QF","Quantum Fuel","The separate fuel that quantum travel burns. Running out strands you at normal speed.","F","V"],["QED","Quantum Enforcement Device","A device that blocks quantum travel in an area and snaps ships out of it. Used by pirates and by law enforcement.","F","V"],["OM","Orbital Marker","Navigation points in orbit around a body, OM-1 through OM-6. You quantum to an OM, then fly down.","F","V"],["IFCS","Intelligent Flight Control System","The flight computer between your stick and the thrusters. It is what limits your speed and holds your attitude.","F","V"],["ESP","Enhanced Stick Precision","An aim assist that softens your stick input when the reticle is near a target. Can be turned off.","F","V"],["ITTS","Improved Target Tracking System","The system that draws the lead pip showing where to shoot ahead of a moving target.","F","V"],["VTOL","Vertical Take-Off and Landing","Thrusters that rotate so the ship can lift straight up. Not every ship has it.","F","V"],["MFD","multi-function display","The small in-cockpit screens you cycle for power, shields, cargo and radar. Confirm layout against your own cockpit - it varies by ship.","F","U"],["VDU","Video Display Unit","CIG's own name for those cockpit screens.","F","V"],["TVI","Total Velocity Indicator","The marker showing the direction your ship is actually travelling, which is not always where the nose points.","F","V"],["EVA","Extravehicular Activity","Being outside a ship in space in your suit. Thruster pack movement, no gravity.","F","V"],["EMU","Extravehicular Mobility Unit","The suit itself - the thing keeping you alive during EVA.","F","V"],["INS","Inertial Navigation System","Onboard navigation that tracks position by motion rather than by external signal.","F","V"],["AU","Astronomical Unit","Distance measure. One AU is roughly the Earth-to-Sun distance. Used for system-scale travel.","F","V"],["GM","Gigameter / Geodesic Marker","Distance unit (one billion metres); also used for a navigation marker. Read it from context.","F","V"],["MM","Megameter","One million metres. The unit most in-system quantum distances are shown in.","F","V"],["Flight Ready","-","Powering the ship up. Bound to R by default. One press spools engines, a second press powers down.","F","U"],["ATC","Air Traffic Control","The station or port service that grants you a landing pad or hangar. You request, they assign.","F","V"],["LZ","Landing Zone","A major planetside city you can land at and walk around in.","F","V"],["ASOP","Automated Ship Organization Program","The terminal you use to retrieve or store a ship at a station or port.","F","V"],["DPS","Damage Per Second","How fast a weapon removes health. The headline number for comparing guns.","C","V"],["ROF","Rate of Fire","Shots per minute.","C","V"],["AP","Armor-Piercing","Ammunition or damage type that ignores part of the target's armour.","C","V"],["HE","High Explosive","Ammunition or damage type that trades penetration for blast damage.","C","V"],["EMP","electromagnetic pulse","A burst that disables ship systems in a radius rather than damaging hull.","C","V"],["EM","electromagnetic","One of the signatures enemies track you by. Running hot power raises it and makes you easier to find.","C","V"],["IR","infrared","Your heat signature. The other main way you get detected.","C","V"],["CIWS","Close-In Weapon System","Short-range defensive turret designed to shoot down incoming missiles and small craft.","C","V"],["ADS","Aim Down Sight","Bringing the weapon sight up to your eye on foot.","C","V"],["TTK","time to kill","How long it takes to destroy a target. Lower is deadlier. Community shorthand, not an in-game readout.","C","C"],["LOS","Line-of-Sight","Whether you can actually see the target, with nothing solid in between.","C","V"],["CS","CrimeStat","Your criminal rating. Raise it and security forces and turrets engage you on sight.","C","V"],["PvP","Player vs Player","Fighting other real players.","C","V"],["PvE","Player vs Environment","Fighting the game's own NPCs.","C","V"],["PvA","Player vs All","Everything is hostile - other players and NPCs.","C","V"],["NPC","non-player character","Anyone in the world run by the game rather than by a person.","C","V"],["VLRT","Very Low-Risk Target","The easiest bounty tier.","C","V"],["LRT","Low-Risk Target","Bounty tier. The usual starting point.","C","V"],["MRT","Medium-Risk Target","Bounty tier above LRT.","C","V"],["HRT","High-Risk Target","Bounty tier. Expect a real fight and escorts.","C","V"],["VHRT","Very High-Risk Target","Bounty tier above HRT.","C","V"],["ERT","Extreme-Risk Target","The hardest bounty tier. Usually a group job.","C","V"],["XT","XenoThreat","A recurring hostile faction and the event built around it.","C","V"],["RMC","Recycled Material Composite","What hull scraping produces. You peel the outer surface off a wreck with the salvage beam and it fills your canisters.","K","V"],["CM","Construction Materials","What structural salvage produces. You fracture the hull into chunks and disintegrate them. CAUTION: CM also gets used for countermeasures in combat talk - read it from context.","K","V"],["hull scraping","-","Salvage mode that removes the outer surface of a wreck. Produces RMC.","K","V"],["structural salvage","-","Salvage mode that breaks the hull itself apart. Fracture, then Disintegrate. Produces Construction Materials.","K","V"],["ROC","Remote Ore Collector","The single-seat Greycat ground mining vehicle. Used for gem deposits you drive to.","K","V"],["ROC-DS","Remote Ore Collector - Dual Seat","The two-seat version of the ROC.","K","V"],["MOLE","Multi-Operator Laser Extractor","The ARGO multi-turret mining ship. Three mining heads, crewed.","K","V"],["SRV","Standard Recovery Vehicle","The Argo tractor-beam ship, used for towing and pulling.","K","V"],["ATLS","-","The Argo cargo exosuit - a powered loader you wear to move SCU boxes by hand. Expansion of the name not confirmed.","K","U"],["MPUV","Multi-Purpose Utility Vehicle","The small Argo utility craft, in cargo and personnel versions.","K","V"],["PTV","Personal Transport Vehicle","The little open buggy. Fast, no protection.","K","V"],["STV","Sport Terrain Vehicle","The Greycat open sport buggy.","K","V"],["scan / fracture / extract","-","The three steps of ship mining. Find the rock, crack it with a heat window, then vacuum the ore.","K","U"],["FPS mining","first-person mining","Hand mining with a multitool on foot. Small deposits, no ship needed.","K","T"],["QED / interdiction","-","Being pulled out of quantum by a QED. The standard pirate opening move on a loaded hauler.","K","V"],["L1 - L5","Lagrange points","Gravitationally stable points around a planet. Stations sit at them. Named by planet then number.","P","U"],["ARC-L1 ... ARC-L5","Arccorp Lagrange 1-5","The Lagrange stations around ArcCorp in the Stanton system.","P","U"],["CRU-L1 ... CRU-L5","Crusader Lagrange 1-5","The Lagrange stations around Crusader.","P","U"],["HUR-L1 ... HUR-L5","Hurston Lagrange 1-5","The Lagrange stations around Hurston.","P","U"],["MIC-L1 ... MIC-L5","microTech Lagrange 1-5","The Lagrange stations around microTech.","P","U"],["A18","Area18","The ArcCorp landing zone city.","P","V"],["NB","New Babbage","The microTech landing zone city.","P","V"],["GH","Grim HEX","The lawless station at Yela. No security, no questions.","P","V"],["PO","Port Olisar","Legacy Crusader station.","P","V"],["PT","Port Tressler","The microTech orbital station.","P","V"],["EH","Everus Harbor","The Hurston orbital station.","P","V"],["BP","Baijini Point","The ArcCorp orbital station.","P","V"],["SPK","Security Post Kareah","Contested security station. A regular fight location.","P","V"],["JT","Jumptown","The recurring drug-lab event location.","P","V"],["POI","Point of Interest","Any named place worth flying to.","P","V"],["UGF","Underground Facility","Buried bunker complexes with on-foot missions inside.","P","V"],["INB","Imperial Naval Base","A UEE navy installation.","P","V"],["HDMS-","Hurston Dynamics Mining Station","Prefix on Hurston's mining outposts, for example HDMS-Edmond.","P","V"],["HDSF-","Hurston Dynamics Storage Facility","Prefix on Hurston's storage outposts, for example HDSF-Sherman.","P","V"],["PU","Persistent Universe","The main shared game world, as opposed to Arena Commander.","P","V"],["Stanton","-","The developed, policed, service-rich system. Where new players should start.","P","U"],["Pyro","-","The lawless system next door. No security response, hostile stations.","P","U"],["Nyx","-","A system carrying ores found nowhere else, including Savrilium at Glaciem Ring and Keeger Belt.","P","U"],["CIG","Cloud Imperium Games","The company that actually makes Star Citizen.","O","V"],["RSI","Roberts Space Industries","Two things at once: the real-world website and store, and an in-fiction ship manufacturer. Read it from context.","O","V"],["CR","Chris Roberts","The game's director and the founder of CIG.","O","V"],["UEE","United Empire of Earth","The human government in the setting.","O","V"],["UEEN","United Empire of Earth Navy","The UEE's military arm.","O","V"],["UNE","United Nations of Earth","The earlier human government in the setting's history.","O","V"],["UPE","United Planets of Earth","The government between the UNE and the UEE.","O","V"],["MISC","Musashi Industrial and Starflight Concern","Ship manufacturer. Freelancer, Prospector, Hull series.","O","V"],["CNOU / CO","Consolidated Outland","Ship manufacturer. Mustang, Nomad, Pioneer.","O","V"],["MSR","Mercury Star Runner","The Crusader data-runner and cargo ship.","O","V"],["RAFT","Reinforced Advanced Freight Transport","The Argo cargo hauler.","O","V"],["R&amp;R","Rest &amp; Relax","The truck-stop station chain. Refuel, repair, restock.","O","V"],["Org","organization","A player group. Yours is set up in the tablet's Org / Party tool.","O","C"],["LIVE","-","The public build everyone plays. When this tablet says a dataset is behind, it means behind LIVE.","B","U"],["PTU","Public Test Universe","The test build patches go to before LIVE. Bugs expected.","B","V"],["EPTU","Experimental Public Test Universe","An earlier, rougher test build than PTU.","B","V"],["AC","Arena Commander","The separate arcade module. Ship and FPS matches, no persistence.","B","V"],["OCS","Object Container Streaming","The engine tech that loads only nearby objects. A performance system.","B","V"],["PES","Persistent Entity Streaming","The tech that makes dropped items and changes persist in the world.","B","V"],["RL","Replication Layer","The server layer that holds world state, so a crashed server does not lose it.","B","V"],["RMQ","Replication Message Queue","Part of the same server plumbing as the Replication Layer.","B","V"],["DGS","dedicated game server","One server instance. The thing that crashes when everyone says the server died.","B","V"],["Alpha 4.9 / 4.10","-","Patch numbers. 4.9 is the LIVE branch as of this writing; 4.10 was in PTU. CAUTION: verify the current build in game before trusting any patch-specific number.","B","U"],["HOTAS","Hands On Throttle and Stick","A throttle in one hand, a flight stick in the other.","H","V"],["HOSAS","Hands On Stick and Stick","Two flight sticks, one per hand. Popular for six-degree flight.","H","V"],["VKB / VIRPIL","-","Two flight-stick manufacturers commonly used for HOTAS and HOSAS setups.","H","U"],["FPS","frames per second / first-person shooter","Both. Frames per second is your performance; first-person shooter is on-foot gameplay. Read it from context.","H","V"],["GPU / CPU / RAM / VRAM / SSD","-","Your PC's graphics card, processor, memory, graphics memory and drive. Star Citizen is heavy on all five.","H","T"],["LMB / RMB","left / right mouse button","Standard mouse button shorthand.","H","T"],["PTT","Push-to-Talk","Hold a key to transmit voice instead of transmitting all the time.","H","V"],["FOIP","Face Over Internet Protocol","Webcam face tracking that maps your expression onto your character.","H","V"],["PMA / VMA","Personal Manager App / Vehicle Manager App","The mobiGlas apps for your character loadout and your ship loadout.","H","V"],["mobiGlas","-","The wrist computer. Contracts, map, loadouts, landing. Opened with F1 by default.","H","U"],["Human","-","The only playable species. Governed by the UEE.","S","V"],["Banu","-","Major spacefaring species. Commerce and trade focused. Home: the Banu Protectorate.","S","V"],["Xi'an","-","Major spacefaring species. Long-lived, cautious and calculating. Home: the Xi'an Empire. Formerly in conflict with the Kr'Thak.","S","V"],["Vanduul","-","Major spacefaring species. Aggressive warrior culture organised in nomadic raiding clans. The UEE's main military enemy.","S","V"],["Tevarin","-","Major spacefaring species. Militaristic, honoured war and combat. Defeated and absorbed into the UEE.","S","V"],["Kr'Thak","-","Major spacefaring species. Homeworld not established. Historically in conflict with the Xi'an.","S","V"],["Hadesian","-","Extinct species from the Hades system. Tall multi-limbed humanoids, known only from ruins.","S","V"],["Kins II Civilization","-","Extinct minor civilization on Kins II. Left ruins found before Banu settlement.","S","V"],["Quasi Civilization","-","Extinct minor civilization near Quasi on Terra.","S","V"],["30k","-","A server crash that dumps everyone with error code 30000. Used as a verb: the server 30k'd.","G","C"],["the 'verse","-","The game world. Short for universe.","G","C"],["daddy ship / big ship","-","A large multi-crew ship someone else brought.","G","C"],["soft death","-","A ship disabled but not exploded. Still salvageable, still boardable.","G","C"],["hard death","-","The ship is gone. Claim it.","G","C"],["claim","-","Filing an insurance claim to get a lost or stuck ship back. CAUTION: claiming a stuck ship destroys the cargo inside it.","G","U"],["daymar / dune buggy runs","-","Community racing events on Daymar.","G","C"],["bed log","-","Logging out in a ship bed so your character and ship state persist properly.","G","C"],["quantum boosting / QT spam","-","Community terms for chaining short quantum jumps. Behaviour changes patch to patch - do not trust old guides.","G","C"]];
+  var BADGE={V:'VERIFIED',T:'TABLET',C:'COMMUNITY',U:'UNCONFIRMED'};
+
+  function esc(s){ return String(s==null?'':s)
+    .replace(/&(?![a-zA-Z]+;|#\d+;)/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* alphabetical inside each category - a dictionary that is not sorted is a list */
+  function sortKey(t){ return String(t).replace(/[^A-Za-z0-9]/g,'').toUpperCase(); }
+
+  function build(){
+    var by={}; CATS.forEach(function(c){ by[c[0]]=[]; });
+    D.forEach(function(r){ by[r[3]].push(r); });
+    Object.keys(by).forEach(function(k){
+      by[k].sort(function(a,b){ var x=sortKey(a[0]), y=sortKey(b[0]); return x<y?-1:(x>y?1:0); });
+    });
+    var h='';
+    CATS.forEach(function(c){
+      var rows=by[c[0]]; if(!rows.length) return;
+      h+='<div class="scd-cat" data-cat="'+c[0]+'">'+c[1]+'</div>';
+      rows.forEach(function(r){
+        var exp=(r[1]&&r[1]!=='-')?'<span class="scd-exp">'+esc(r[1])+'</span>':'';
+        h+='<div class="scd-e" data-cat="'+c[0]+'" data-k="'+esc((r[0]+' '+r[1]+' '+r[2]).toLowerCase())+'">'
+          +'<div class="scd-t"><span class="scd-term">'+esc(r[0])+'</span>'+exp
+          +'<span class="scd-badge '+r[4]+'">'+BADGE[r[4]]+'</span></div>'
+          +'<div class="scd-m">'+esc(r[2])+'</div></div>';
+      });
+    });
+    return h;
+  }
+
+  var HEAD=
+    '<div class="scd-cover"><h1>SC DICTIONARY</h1>'
+   +'<div class="scd-sub">Star Citizen terms, abbreviations and species &mdash; spelled out</div>'
+   +'<div class="scd-tm">CMDGLAS &middot; unofficial Star Citizen companion</div></div>'
+   +'<div class="scd-key"><b>HOW TO READ THE BADGES.</b> '
+   +'<b>VERIFIED</b> &mdash; checked against a source listed at the bottom of this page. '
+   +'<b>TABLET</b> &mdash; a label this tablet invented; you will not hear it in game. '
+   +'<b>COMMUNITY</b> &mdash; player slang, not official. '
+   +'<b>UNCONFIRMED</b> &mdash; could not be verified; treat it as a lead, not a fact.</div>'
+   +'<div class="scd-bar">'
+   +'<input class="scd-find" id="scd-find" type="search" autocomplete="off" autocorrect="off" '
+   +'autocapitalize="none" spellcheck="false" placeholder="Type a term, an abbreviation, or part of a meaning">'
+   +'<div class="scd-count" id="scd-count"></div>'
+   +'<div class="scd-chips" id="scd-chips"></div></div>';
+
+  var FOOT=
+    '<div class="scd-src"><b>SOURCES.</b> Acronym expansions, place codes and the species list were '
+   +'checked against the Star Citizen Wiki: '
+   +'<a href="https://starcitizen.tools/Acronyms" target="_blank" rel="noopener">Acronyms</a>, '
+   +'<a href="https://starcitizen.tools/Alien_races" target="_blank" rel="noopener">Alien races</a>, '
+   +'<a href="https://starcitizen.tools/Salvage" target="_blank" rel="noopener">Salvage</a>, '
+   +'<a href="https://starcitizen.tools/Bounty_hunting" target="_blank" rel="noopener">Bounty hunting</a>. '
+   +'Entries marked UNCONFIRMED are ones no source could be found for at the time of writing &mdash; '
+   +'they are printed as unconfirmed rather than dressed up as fact. '
+   +'<br><b>CAUTION.</b> Anything patch-specific (speeds, prices, spawn rates, mission payouts) changes '
+   +'between builds. Check it in game before you rely on it.</div>'
+   +'<div class="scd-end">END OF DICTIONARY</div>';
+
+  function mkPage(){
+    if(document.getElementById('tab-scdict')) return;
+    var host=document.getElementById('content')||document.body;
+    var pg=document.createElement('div'); pg.id='tab-scdict'; pg.className='panel-page';
+    pg.style.display='none';
+    pg.innerHTML='<div class="scrollbox p-body" style="padding:14px 16px 30px">'
+      +'<div class="scd">'+HEAD+'<div id="scd-body">'+build()+'</div>'
+      +'<div class="scd-none" id="scd-none" style="display:none">No entry matches that. '
+      +'Try a shorter piece of the word.</div>'+FOOT+'</div></div>';
+    host.appendChild(pg);
+    wire(pg);
+  }
+
+  function wire(pg){
+    var chips=pg.querySelector('#scd-chips'), find=pg.querySelector('#scd-find'),
+        cnt=pg.querySelector('#scd-count'), none=pg.querySelector('#scd-none');
+    var cur='*';
+    var ch='<button type="button" class="scd-chip on" data-c="*">ALL</button>';
+    CATS.forEach(function(c){
+      ch+='<button type="button" class="scd-chip" data-c="'+c[0]+'">'+c[1].replace(/&amp;/g,'&')+'</button>';
+    });
+    chips.innerHTML=ch;
+
+    function apply(){
+      var q=(find.value||'').trim().toLowerCase();
+      var shown=0;
+      var es=pg.querySelectorAll('.scd-e');
+      for(var i=0;i<es.length;i++){
+        var e=es[i];
+        var okc=(cur==='*'||e.getAttribute('data-cat')===cur);
+        var okq=(!q || e.getAttribute('data-k').indexOf(q)>=0);
+        var on=okc&&okq;
+        e.style.display=on?'':'none';
+        if(on) shown++;
+      }
+      /* a category heading with nothing under it is noise - hide it */
+      var hs=pg.querySelectorAll('.scd-cat');
+      for(var j=0;j<hs.length;j++){
+        var k=hs[j].getAttribute('data-cat'), any=false;
+        var list=pg.querySelectorAll('.scd-e[data-cat="'+k+'"]');
+        for(var n=0;n<list.length;n++){ if(list[n].style.display!=='none'){ any=true; break; } }
+        hs[j].style.display=any?'':'none';
+      }
+      cnt.textContent=shown+' of '+es.length+' entries'+(q?(' matching "'+q+'"'):'');
+      none.style.display=shown?'none':'';
+    }
+    find.addEventListener('input', apply);
+    chips.addEventListener('click', function(e){
+      var b=e.target.closest&&e.target.closest('.scd-chip'); if(!b) return;
+      cur=b.getAttribute('data-c');
+      var all=chips.querySelectorAll('.scd-chip');
+      for(var i=0;i<all.length;i++) all[i].classList.toggle('on', all[i]===b);
+      apply();
+    });
+    apply();
+  }
+
+  function open(){
+    mkPage();
+    if(typeof window.cgSheetOpenTab==='function'){
+      window.cgSheetOpenTab('scdict',{title:'SC DICTIONARY', large:true});
+    }else if(typeof window.setActiveTabById==='function'){
+      window.setActiveTabById('scdict');
+    }
+  }
+  window.cgOpenScDict=open;
+
+  /* ---- the LEARN entry ---------------------------------------------------------
+     Build 337 CLONES the rail .scr-group elements into #sc-appbar and then locks the
+     pill with dataset.acc='1'. A button added to the rail after that lock never
+     reaches the pill, so it is added to BOTH - and the clone carries an onclick
+     ATTRIBUTE, which is exactly what build 513 documented as the thing that survives
+     cloneNode. No handler property, so nothing to repair. */
+  var ICO='<svg class="scd-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    +'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    +'<path d="M4 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"/>'
+    +'<path d="M20 5h-7a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h7z"/></svg>';
+
+  function mkBtn(){
+    var b=document.createElement('button');
+    b.type='button'; b.className='scr-btn scr-nav-dict';
+    b.setAttribute('onclick','window.cgOpenScDict&&window.cgOpenScDict()');
+    b.setAttribute('title','SC Dictionary - every term and abbreviation spelled out');
+    b.innerHTML=ICO+'<span>SC DICTIONARY</span>';
+    return b;
+  }
+  function learnFlyouts(){
+    var out=[];
+    var groups=document.querySelectorAll('#sc-zoom-bar .scr-group, #sc-right-bar .scr-group, #sc-appbar .scr-group');
+    for(var i=0;i<groups.length;i++){
+      var c=groups[i].querySelector('.scr-cat');
+      if(!c) continue;
+      var lab=(c.textContent||'').replace(/[^A-Za-z ]/g,'').trim().toUpperCase();
+      if(lab!=='LEARN') continue;
+      var f=groups[i].querySelector('.scr-flyout, .scr-sec');
+      if(f) out.push(f);
+    }
+    return out;
+  }
+  function mount(){
+    var fs=learnFlyouts();
+    if(!fs.length) return false;
+    var done=0;
+    for(var i=0;i<fs.length;i++){
+      if(fs[i].querySelector('.scr-nav-dict')){ done++; continue; }
+      fs[i].appendChild(mkBtn()); done++;
+    }
+    /* the rail always exists; the app-bar clone appears later. keep polling until
+       both are in, but stop at the bounded count below either way. */
+    return fs.length>=2 && done>=2;
+  }
+
+  mkPage();
+  var n=0, iv=setInterval(function(){ if(mount()||++n>90) clearInterval(iv); }, 300);
+  mount();
+
+  window.cgScDictReport=function(){
+    var pg=document.getElementById('tab-scdict');
+    var st={V:0,T:0,C:0,U:0};
+    D.forEach(function(r){ st[r[4]]++; });
+    return {entries:D.length, categories:CATS.length, status:st,
+            page:!!pg, rendered:pg?pg.querySelectorAll('.scd-e').length:0,
+            navButtons:document.querySelectorAll('.scr-nav-dict').length};
+  };
+  window.CMDGLAS_SCDICT_675=1;
 })();
 </script>
 </body>
