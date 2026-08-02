@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=656;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=659;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -29818,7 +29818,12 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
     /* build 636: remember what this pass measured so the caller can tell when it has settled */
     apply.lastH=h;
     /* build 450 (user: do NOT shrink the pills/badges — just make it fit). Cap the HEIGHT only on the OPS pill (its long gather list scrolls inside instead of stretching the row). Clock + Account get min-height only, so they sit at the row height with full-size content and never scroll. Pinning max-height on THEM was what clipped the Account pill into a scroll. */
-    [].forEach.call(hw.querySelectorAll('.wg'),function(w){ var isOps=w.classList.contains('ops-pill'); var mh=isOps?(h+'px'):''; if(w.style.minHeight!==h+'px') w.style.minHeight=h+'px'; if(w.style.maxHeight!==mh) w.style.maxHeight=mh; });
+    /* b659 (T: "hud pill too short"): neighbours first, uncapped; then cap the ops pill at the
+       tallest NEIGHBOUR instead of the tools row - measured 403 vs 418 at 2560px wide. The ops
+       pill now always equals the row the neighbours set, and still cannot stretch it. */
+    var rowH=h;
+    [].forEach.call(hw.querySelectorAll('.wg'),function(w){ if(w.classList.contains('ops-pill')) return; if(w.style.minHeight!==h+'px') w.style.minHeight=h+'px'; if(w.style.maxHeight!=='') w.style.maxHeight=''; if(w.offsetHeight>rowH) rowH=w.offsetHeight; });
+    [].forEach.call(hw.querySelectorAll('.wg.ops-pill'),function(w){ if(w.style.minHeight!==rowH+'px') w.style.minHeight=rowH+'px'; if(w.style.maxHeight!==rowH+'px') w.style.maxHeight=rowH+'px'; });
     return true;
   }
   /* build 636 (T: "i have to click on the hud pill to make it snap into place fully expanded").
@@ -31038,7 +31043,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
         win.resizeTo(w,h);
       }catch(e){}
     }
-    [40,180,450].forEach(function(ms){ try{ win.setTimeout(snap,ms); }catch(e){ setTimeout(snap,ms); } });
+    [40,180,450,900,1600,2600,4000].forEach(function(ms){ try{ win.setTimeout(snap,ms); }catch(e){ setTimeout(snap,ms); } });/* b658: schedule extended - Chrome re-applied its remembered size after the old 450ms window */
     try{ (win.requestAnimationFrame||requestAnimationFrame)(function(){ (win.requestAnimationFrame||requestAnimationFrame)(snap); }); }catch(e){}
   }
   function intoWindow(key, win){
@@ -31124,7 +31129,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
        The 2026-07-28 retreat from PiP was a sizing bug, not a dead end: the window opened
        oversized because the page zoom was applied twice. intoWindow now neutralizes any cloned
        zoom before applying its own, and the window is asked for in VISUAL px. */
-    if(!(DETACHABLE[key] && tryPiP(key))){ if(!(DETACHABLE[key] && tryPopup(key))) floatFallback(key); }
+    var canPiP=!!(window.documentPictureInPicture&&typeof window.documentPictureInPicture.requestWindow==='function');/* b658: no DocPiP (iPad Safari) -> the popup can only be a FULL-SCREEN tab, so skip it */if(!(DETACHABLE[key] && tryPiP(key))){ if(!canPiP){ floatFallback(key); } else if(!(DETACHABLE[key] && tryPopup(key))) floatFallback(key); }
     updateBtns();
   }
   function tryPiP(key){
@@ -38222,6 +38227,59 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     sweep(); if(++n>120){ clearInterval(iv); setInterval(sweep,3000); }
   }, 500);
   sweep();
+})();
+</script>
+<style id="sc-b656-hudtitle-css">
+/* sc-b656-hudtitle-css  -  build 656, 2 AUG 2026.
+   T: "please put a small HUD title into the top part above gather buy notes etc.
+   centered lnside the pill left to right" -
+   then 2 AUG: "not a button pill. it's just a title" and "your first put it in a. i want it in b" -
+   plain text, no border, no backdrop, inset 6px clear of the frame so it reads as part of
+   the pill body (his box B), not the widget frame (his box A). Placement approved on the
+   rendered sample before install.
+
+   MEASURED: .pill-body is a flex column, padding 8px 9px, and .ops4-tabs is its FIRST child.
+   The title goes in front of that as another full-width flex item, so "centred left to right"
+   is the pill body box, not the screen. Rajdhani per T 2 AUG - same font as the rest of the tablet.
+   Reversible: delete this block and its script twin. */
+#sc-home-widgets .ops-pill.b385 .cg-hud-t{
+  flex:0 0 auto; width:100%; text-align:center; order:-1;
+  font:700 10px/1 'Rajdhani','Segoe UI',sans-serif;
+  /* b659 T: "same font as the rest of the tablet". MEASURED: sc-global-font-brunoace pins
+     'Bruno Ace' on html body * with !important, so this needs !important to actually win. */
+  font-family:'Rajdhani','Segoe UI',sans-serif !important;
+  letter-spacing:4px; text-transform:uppercase; color:#9fe2ff;
+  text-shadow:0 0 10px rgba(79,210,255,.45);
+  margin:6px 0 7px; padding:0;
+  pointer-events:none;   /* never steals a tap from the tabs underneath */
+  user-select:none;
+}
+</style>
+<script id="sc-b656-hudtitle-js">
+/* sc-b656-hudtitle-js  -  build 656.
+   MEASURED before writing: the ops4 core only rebuilds .pill-body when .ops4-tabs is MISSING
+   (`if(!body.querySelector('.ops4-tabs')){ body.innerHTML=... }`), so an inserted title is not
+   wiped on the 1.5 s repaint and there is nothing to fight. The sweep below only inserts when
+   the title is absent, so it costs nothing and it self-heals if the core ever does rebuild -
+   after an undock and re-dock, for instance. */
+(function(){
+  if(window.__cgHudTitle656) return; window.__cgHudTitle656=true;
+  var TEXT='HUD';           /* one word - change this string to retitle it */
+
+  function put(){
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body');
+    if(!body) return;
+    var tabs=body.querySelector('.ops4-tabs'); if(!tabs) return;
+    if(body.querySelector(':scope > .cg-hud-t')) return;
+    var t=document.createElement('div');
+    t.className='cg-hud-t';
+    t.textContent=TEXT;
+    body.insertBefore(t, tabs);
+  }
+  var n=0, iv=setInterval(function(){
+    put(); if(++n>120){ clearInterval(iv); setInterval(put,3000); }
+  }, 500);
+  put();
 })();
 </script>
 </body>
