@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 669;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 670;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -35242,7 +35242,19 @@ document.addEventListener('touchend',function(e){
   if(t-_lastTap<320 && !inScroller(e.target)) e.preventDefault();
   _lastTap=t;
 },{passive:false});
-addEventListener('scroll',function(){ if(coarse()&&(scrollY||scrollX)) try{ scrollTo(0,0); }catch(e){} },{passive:true});
+/* b670, T: "user has to drag the page up to see the bottom and it doesn't stay at the
+   bottom, it snaps back to top."
+   CAUGHT ON THE WIRE, not guessed: instrumented window.scrollTo before the page loaded,
+   scrolled the home page to its limit (276 px) and watched. Within 500 ms it read 0 again,
+   and the stack pointed at THIS line.
+   This guard is build 596's anti-wobble: on a coarse pointer it slammed the window back to
+   0,0 on ANY scroll - both axes. The wobble it was written for is the SIDEWAYS drift from a
+   two-finger drag; the vertical axis is just normal scrolling, and killing it means the
+   bottom of the page can never be reached. Build 596's own comment two lines up says the
+   same lesson was already learned once with touchmove: "blocking it hid the bottom of the
+   home page instead of just stopping the wobble."
+   So: reset X, keep Y. The wobble still cannot happen; the page scrolls. */
+addEventListener('scroll',function(){ if(coarse()&&scrollX) try{ scrollTo(0, scrollY); }catch(e){} },{passive:true});
 })();
 </script>
 
