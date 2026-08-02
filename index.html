@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 676;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 679;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -32775,11 +32775,11 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
-  var NOTES_VER='2026-08-02a';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
+  var NOTES_VER='2026-08-02b';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='NEW - SC DICTIONARY: do not know an abbreviation? LEARN &gt; SC DICTIONARY spells out 171 terms, codes, location prefixes and every alien species. &middot; HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now - they were scrolling to a hidden card. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the HUD. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the HUD floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='NEW - SC DICTIONARY: don&rsquo;t know an abbreviation? LEARN &gt; SC DICTIONARY spells out 171 terms, codes, location prefixes and every alien species. &middot; HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the HUD. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the HUD floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -35850,6 +35850,7 @@ window.bpImgTag=bpImgTag;
      the tooltip, where it costs nothing. */
   var MAP={
     gather:   {page:'myops',   label:'SOURCE', tip:'Open the full GATHER & BUY page'},
+    notes:    {page:'notepad', label:'SOURCE', tip:'Open the full NOTEPAD page'},   /* b679: NOTES had no destination, so SOURCE returned early and looked broken. */
     buy:      {page:'myops',   label:'SOURCE', tip:'Open the full GATHER & BUY page'},/* build 628: merged into gather, kept as a safety net */
     contracts:{page:'missions',label:'SOURCE', tip:'Open the full CONTRACTS page'},
     orgparty: {page:'orgpage', label:'SOURCE', tip:'Open the full ORG / PARTY page'}
@@ -40361,6 +40362,181 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
             navButtons:document.querySelectorAll('.scr-nav-dict').length};
   };
   window.CMDGLAS_SCDICT_675=1;
+})();
+</script>
+<style id="sc-b677-homefit-css">
+/* sc-b677-homefit-css  -  build 677, 2 AUG 2026.
+
+   1. THE DUPLICATE VERSION CHIP.
+      b668 added #cg-verchip top-right because T could not find a version number.
+      MEASURED since: #scv-build already prints the same string bottom-left at
+      (26,1288), 80x19, fully visible - and the top-right chip is overlapped by the
+      right widget card. Two numbers, one of them half-covered, is worse than one
+      clean one. The duplicate is hidden, not deleted, so it can be restored by
+      removing this one rule. */
+#cg-verchip{ display:none !important; }
+
+/* 2. THE DEAD BANDS.  Measured margins, one line each, no layout change. */
+#tab-home #sc-home-widgets{ margin-bottom:4px !important; }
+#tab-home .hm-col > .hm-sec.ig-sec{ margin-bottom:6px !important; }
+#tab-home #sc-tools-row{ margin-top:2px !important; margin-bottom:2px !important; }
+#tab-home .hm-wrap > .hm-cols{ margin-bottom:0 !important; }
+#tab-home .hm-wrap > #cg-onebar{ margin-top:2px !important; }
+#tab-home .hm-wrap > #cg-theme-row536{ margin-top:2px !important; margin-bottom:2px !important; }
+#tab-home .hm-wrap > #cg-social-row{ margin-top:0 !important; margin-bottom:0 !important; }
+
+/* 3. THE COVER-UP.  #cg-cmdlog and #cg-credit are position:fixed at bottom:0 with a
+      16 px band. Reserving 20 px at the foot of the home wrap means no content can
+      sit under them. This is the same reservation build 669 made for .scrollbox;
+      the home wrap needed its own. */
+#tab-home .hm-wrap{ padding-bottom:20px !important; }
+
+/* 4. PC ONLY - a safety net, not a layout change.  If a shorter window ever pushes
+      content past the fold again, it can now be scrolled to instead of being
+      unreachable. TOUCH IS DELIBERATELY EXCLUDED: the no-scroll lock on coarse
+      pointers is what fixed T's iPad snap-back in build 670 and it stays. */
+@media (pointer:fine){
+  #tab-home #home-scroll{ overflow-y:auto !important; }
+}
+</style>
+<script id="sc-b677-homefit-js">
+/* sc-b677-homefit-js  -  build 677.  Measurement only - it changes nothing.
+   window.cgHomeFit() returns the numbers this block was built from, so the fit can
+   be re-checked on the real machine rather than argued about. */
+(function(){
+  if(window.__cgHomeFit677) return; window.__cgHomeFit677=true;
+  window.cgHomeFit=function(){
+    function R(sel){ var e=document.querySelector(sel); if(!e) return null;
+      var r=e.getBoundingClientRect();
+      return {y:Math.round(r.top), b:Math.round(r.bottom), h:Math.round(r.height)}; }
+    var wrap=R('#tab-home .hm-wrap'), soc=R('#cg-social-row'),
+        th=R('#cg-theme-row536'), tick=R('#cg-cmdlog');
+    var chip=document.getElementById('cg-verchip');
+    return {viewport:window.innerHeight,
+            overflow: wrap? wrap.b-window.innerHeight : null,
+            themeCoveredByTicker: (th&&tick)? th.b>tick.y : null,
+            socialOffScreen: soc? soc.b>window.innerHeight : null,
+            socialClearance: soc? window.innerHeight-soc.b : null,
+            duplicateChipHidden: chip? getComputedStyle(chip).display==='none' : true};
+  };
+  window.CMDGLAS_HOMEFIT_677=1;
+})();
+</script>
+<style id="sc-b678-affil-css">
+/* sc-b678-affil-css  -  build 678, 2 AUG 2026.
+   Presentation only. The position itself is measured in the twin script, because a
+   hard-coded offset cannot survive this tablet - see the note there. */
+#cg-affil-note{ opacity:.62; text-align:center; white-space:nowrap; pointer-events:none; }
+@media (max-width:900px){ #cg-affil-note{ white-space:normal; } }
+</style>
+<script id="sc-b678-affil-js">
+/* sc-b678-affil-js  -  build 678.  Centres the affiliation line in the empty band
+   between the bottom button row (#cg-onebar) and the THEME row (#cg-theme-row536).
+
+   WHY THIS IS MEASURED AND NOT A NUMBER.
+   Three hard-coded offsets were tried first and all three failed: bottom:66px,
+   bottom:54px and a computed innerHeight formula each landed 10-12 px out, and each
+   one drifted differently at 1920x970 and 1600x900. Cause: the tablet scales itself
+   for the FIT control, and a transformed ancestor changes what position:fixed
+   resolves against - so "distance from the bottom of the window" is not the distance
+   the browser actually applies. The fix is the same self-correcting technique build
+   667's align() uses: read the note's CURRENT computed bottom, measure how far its
+   rendered edge is from where it should be, and add the difference. It never assumes
+   a containing block, so it is right on the first correction at any zoom or size.
+
+   RULE 17. It writes style.bottom only when the value actually changes, runs a
+   bounded settle loop that stops as soon as the position holds, and re-runs only on
+   resize. Nothing is re-created, and there is no repeating timer left behind. */
+(function(){
+  if(window.__cgAffil678) return; window.__cgAffil678=true;
+
+  function place(){
+    var n=document.getElementById('cg-affil-note'),
+        ob=document.getElementById('cg-onebar'),
+        th=document.getElementById('cg-theme-row536');
+    if(!n||!ob||!th) return false;
+    var nr=n.getBoundingClientRect();
+    if(!nr.height) return false;
+    var top=ob.getBoundingClientRect().bottom,
+        bot=th.getBoundingClientRect().top,
+        band=bot-top;
+    if(band<=0) return false;                      /* no band on this layout - leave it alone */
+    var targetBottom = top + (band + nr.height)/2; /* centre of the band */
+    var cur = parseFloat(getComputedStyle(n).bottom) || 0;
+    var want = Math.round(cur + (nr.bottom - targetBottom));
+    if(String(want)+'px' !== n.style.bottom){ n.style.bottom = want+'px'; return false; }
+    return true;                                    /* settled */
+  }
+
+  var k=0, iv=setInterval(function(){ if(place() || ++k>40) clearInterval(iv); }, 120);
+  place();
+  addEventListener('resize', function(){
+    var j=0, i2=setInterval(function(){ if(place() || ++j>20) clearInterval(i2); }, 120);
+  });
+  try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(place,150); }); }catch(e){}
+
+  window.cgAffilReport=function(){
+    var g=function(id){ var e=document.getElementById(id); return e? e.getBoundingClientRect():null; };
+    var n=g('cg-affil-note'), ob=g('cg-onebar'), th=g('cg-theme-row536'),
+        s=g('cg-social-row'), t=g('cg-cmdlog');
+    if(!n||!ob||!th) return {ready:false};
+    var ov=function(a,b){ return !(a.bottom<=b.top+0.5 || a.top>=b.bottom-0.5); };
+    return {gapAbove:Math.round(n.top-ob.bottom), gapBelow:Math.round(th.top-n.bottom),
+            offCentre:Math.round(n.left+n.width/2-window.innerWidth/2),
+            onButtonRow:ov(n,ob), onTheme:ov(n,th),
+            onSocial:s?ov(n,s):null, onTicker:t?ov(n,t):null};
+  };
+  window.CMDGLAS_AFFIL_678=1;
+})();
+</script>
+<style id="sc-b679-srcsync-css">
+/* sc-b679-srcsync-css  -  build 679, 2 AUG 2026.
+   The mirrored SOURCE button hides when the real one is off. Class-driven, so the
+   observer in the twin script only has to toggle one class. */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.s.cg-src-off{ display:none !important; }
+</style>
+<script id="sc-b679-srcsync-js">
+/* sc-b679-srcsync-js  -  build 679.
+   Keeps the b674 SOURCE mirror in step with the real #cg-hudsrc.
+
+   RULE 17. No node is created, and nothing polls forever. A MutationObserver watches
+   ONE attribute on ONE element - the class list of #cg-hudsrc, which build 627
+   already toggles - and flips a class on the mirror. Event-driven, so it cannot
+   fight build 627's own tick(). The short settle loop below exists only to find the
+   two elements at start-up and stops the moment it has them. */
+(function(){
+  if(window.__cgSrcSync679) return; window.__cgSrcSync679=true;
+
+  var obs=null;
+
+  function sync(){
+    var real=document.getElementById('cg-hudsrc');
+    var mir=document.querySelector('#sc-home-widgets .ops-pill.b385 .cg-mirror.s');
+    if(!real||!mir) return false;
+    var off=!real.classList.contains('on');
+    if(mir.classList.contains('cg-src-off')!==off) mir.classList.toggle('cg-src-off',off);
+    if(!obs){
+      try{
+        obs=new MutationObserver(function(){ sync(); });
+        obs.observe(real,{attributes:true, attributeFilter:['class']});
+      }catch(e){}
+    }
+    return true;
+  }
+
+  var n=0, iv=setInterval(function(){ if(sync() || ++n>60) clearInterval(iv); }, 300);
+  sync();
+
+  window.cgSrcSyncReport=function(){
+    var real=document.getElementById('cg-hudsrc');
+    var mir=document.querySelector('#sc-home-widgets .ops-pill.b385 .cg-mirror.s');
+    var view=null; try{ view=localStorage.getItem('sc_ops_pill_view'); }catch(e){}
+    return {view:view,
+            realOn: real? real.classList.contains('on') : null,
+            mirrorShown: mir? getComputedStyle(mir).display!=='none' : null,
+            observing: !!obs};
+  };
+  window.CMDGLAS_SRCSYNC_679=1;
 })();
 </script>
 </body>
