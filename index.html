@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=661;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 663;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -37636,7 +37636,8 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
      were producing entries like "Manned Middle" and "Focus II". */
   var SRC=[
     {k:'laser',  pg:'mining',     label:'LASER',        acc:/ROCKS\s*REF|COMPATIBILITY/i},
-    {k:'loc',    pg:'harvest',    label:'LOCATIONS',    acc:/SHIP-?MINEABLE\s*ORES/i},
+    {k:'loc',    pg:'harvest',    label:'MORE LOCATIONS',acc:/SHIP-?MINEABLE\s*ORES/i},   /* b662: the primary location is now printed in the HUD row itself, so this
+       button is no longer "where is it" - it is "show me the rest". */
     {k:'handgem',pg:'harvest',    label:'HAND GEM',     acc:/FPS\s*HAND-?MIN/i},
     {k:'rocgem', pg:'harvest',    label:'ROC GEM',      acc:/ROC\s*GEMS/i},
     {k:'harv',   pg:'harvest',    label:'HARVEST',      acc:/HARVESTABLES\s*\+|SELL\s*DATA/i},
@@ -37759,7 +37760,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
   /* the tooltip says what you get, in the same words as the chip */
   var TIP={
     laser:  'Mining - ROCKS REF: the laser power it takes to crack it',
-    loc:    'Harvestables - SHIP-MINEABLE ORES: where the rock spawns',
+    loc:    'Harvestables - SHIP-MINEABLE ORES: every location for this ore, not just the best one',
     handgem:'Harvestables - FPS HAND-MINABLE GEMS: pick it up on foot',
     rocgem: 'Harvestables - ROC GEMS: ROC-mine it',
     harv:   'Harvestables - hand-collect it, with locations and sell data',
@@ -38377,6 +38378,445 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
       return;   /* physical tablet: no pop-out, by T's instruction 2 AUG */
     };
   }catch(e){}
+})();
+</script>
+<style id="sc-b662-hudloc-css">
+/* sc-b662-hudloc-css  -  build 662, 2 AUG 2026.
+   T: "the name itself doesn't help much if it doesn't show where to go to get it."
+   Prints the #1 Location under the item name in the HUD gather/buy list.
+   Reversible: delete this block and its script twin, and put the two b654 labels back. */
+#sc-home-widgets .ops-pill.b385 .cg-loc-wrap{flex:1 1 100%;display:flex;gap:5px;
+  align-items:flex-start;margin:2px 0 0;padding-left:1px;min-width:0}
+#sc-home-widgets .ops-pill.b385 .cg-loc-pin{flex:0 0 auto;font:800 8px/1.35 'Rajdhani',sans-serif;
+  letter-spacing:1px;color:#04141d;background:linear-gradient(180deg,#ffd98a,#f0a63c);
+  border-radius:4px;padding:3px 5px;text-transform:uppercase}
+#sc-home-widgets .ops-pill.b385 .cg-loc-txt{flex:1 1 auto;min-width:0;
+  font:600 9.5px/1.35 'Rajdhani','Segoe UI',sans-serif;color:#ffd08a;letter-spacing:.2px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* a location the source itself flags as stale or unsourced must not read like a fact */
+#sc-home-widgets .ops-pill.b385 .cg-loc-txt.cg-loc-weak{color:#c58f8f}
+#sc-home-widgets .ops-pill.b385 .cg-loc-txt b{color:#fff2d6;font-weight:800}
+</style>
+<script id="sc-b662-hudloc-js">
+/* sc-b662-hudloc-js  -  build 662, 2 AUG 2026.  PRIMARY LOCATION IN THE HUD ROW.
+
+   WHERE THE TEXT COMES FROM - nothing is authored here. The Harvestables page already
+   carries the answer in four tables, every one of which has a "#1 Location" column:
+
+       SECTION 1  HARVESTABLES & COLLECTIBLES (TOP 2 LOCATIONS)
+       SECTION 2  FPS / HAND-MINABLE GEMS
+       SECTION 3  ROC / GROUND-VEHICLE GEMS
+       SECTION 4  SHIP-MINEABLE ORES (TOP 2 BY EFFECTIVE SPAWN %)
+
+   This block reads the #1 Location cell out of whichever of those tables holds the item
+   and prints it under the name. Edit the table and the HUD follows on the next reindex -
+   there is no second copy of the data to keep in step.
+
+   COLUMNS ARE FOUND BY THEIR HEADER, NEVER BY POSITION. The four tables do not share a
+   column order (section 1 has Item/Method/#1/#2/Best Sell/Confidence, section 3 has
+   Gem/#1/#2/Confidence), so a hardcoded index would print the Method string as a location
+   on one table and the right thing on another.
+
+   CONFIDENCE IS CARRIED THROUGH, NOT LAUNDERED. Several rows say STALE, UNCONFIRMED,
+   COMMUNITY, or "None sourced". Those render dimmed and say so on hover. A location the
+   page itself does not stand behind must not read like a fact in the HUD.
+
+   RULE 17 - it does not fight b654. Each decorator owns its own wrapper class and skips a
+   row that already has one; neither ever removes the other's node. Measured for childList
+   churn, not just attributes (rev12 section 4 was an attributes-only test that reported a
+   false green). */
+(function(){
+  if(window.__cgHudLoc662) return; window.__cgHudLoc662=true;
+
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function txt(el){ return el ? (el.textContent||'').replace(/\s+/g,' ').trim() : ''; }
+
+  /* which b654 chip key a table maps to, by the accordion heading it sits under.
+     Same four regexes b654 uses, so the MORE LOCATIONS button and the printed location
+     can never disagree about which table they mean. */
+  /* MEASURED, and this cost a rebuild: the SAME table is titled TWO different ways in this
+     file, and which one you can see depends on when you look.
+         accordion heading   "HARVESTABLES + COLLECTIBLES"       <- what b654 matches
+         section heading     "SECTION 1 - HARVESTABLES & COLLECTIBLES (TOP 2 LOCATIONS)"
+     Plus + against &, "FPS HAND-MINABLE GEMS" against "FPS / HAND-MINABLE GEMS", and
+     "ROC GEMS" against "ROC / GROUND-VEHICLE GEMS". The first build of this block reused
+     b654's four regexes, matched ONLY the ores table, and silently dropped the MORE
+     LOCATIONS button from every harvestable and every gem - caught by reading the rendered
+     tooltips, not by reading the code. Both headings are now fed in together and the
+     patterns tolerate either wording. */
+  var TABKEY=[
+    {k:'loc',     re:/SHIP-?MINEABLE\s*ORES/i,               what:'ship mining'},
+    {k:'handgem', re:/FPS[^A-Za-z0-9]{0,4}HAND-?MIN/i,        what:'hand-mined on foot'},
+    {k:'rocgem',  re:/\bROC\b.{0,40}GEMS/i,                   what:'ROC-mined'},
+    {k:'harv',    re:/HARVESTABLES\s*[+&]|SELL\s*DATA/i,      what:'hand-collected'}
+  ];
+  var WEAK=/\bSTALE\b|\bUNCONFIRMED\b|\bCOMMUNITY\b|^none\b|\bnone sourced\b|\bno .*data\b/i;
+
+  function accOf(tb){
+    var a=tb.closest? tb.closest('.sc-acc') : null;
+    if(!a) return '';
+    var h=a.querySelector('.sc-acc-h');
+    return txt(h);
+  }
+
+  /* ---- 1. the location index ------------------------------------------------------- */
+  var LOC=null, LOCN=0;
+
+  function build(){
+    var out={}, page=document.getElementById('tab-harvest');
+    if(!page) return out;
+    [].forEach.call(page.querySelectorAll('table'), function(tb){
+      if(tb.closest('[id^="tab-"]')!==page) return;
+      var ths=tb.querySelectorAll('thead th');
+      if(!ths.length) return;
+      var c1=-1,c2=-1,cConf=-1,cNote=-1;
+      [].forEach.call(ths, function(th,i){
+        var h=txt(th);
+        if(c1<0 && /#\s*1\s*location/i.test(h)) c1=i;
+        else if(c2<0 && /#\s*2\s*location/i.test(h)) c2=i;
+        else if(cConf<0 && /confidence/i.test(h)) cConf=i;
+        else if(cNote<0 && /^notes?$/i.test(h)) cNote=i;
+      });
+      if(c1<0) return;                       /* not a locations table - skip it entirely */
+
+      /* BOTH headings, joined - never one or the other. accOf() can come back empty
+         depending on when the index is built, and the section div uses different wording. */
+      var acc=accOf(tb), hit=null;
+      if(true){
+        var sec='';
+        var p=tb.previousElementSibling, guard=0;
+        while(p && guard++<6){ var t=txt(p); if(/SECTION\s*\d/i.test(t)){ sec=t; break; } p=p.previousElementSibling; }
+        if(!sec){
+          var host=tb.parentElement, g2=0;
+          while(host && g2++<4){
+            var hs=host.previousElementSibling, g3=0;
+            while(hs && g3++<6){ var t2=txt(hs); if(/SECTION\s*\d/i.test(t2)){ sec=t2; break; } hs=hs.previousElementSibling; }
+            if(sec) break; host=host.parentElement;
+          }
+        }
+        acc=(acc+' '+sec).trim();
+      }
+      TABKEY.forEach(function(t){ if(!hit && t.re.test(acc)) hit=t; });
+
+      [].forEach.call(tb.querySelectorAll('tbody tr'), function(tr){
+        var c0=tr.children[0]; if(!c0) return;
+        var name=txt(c0);
+        if(!name || name.length>60 || name.length<2) return;
+        if(tr.querySelector('select,textarea')) return;
+        if(/^[\d.,\s\-+/]+$/.test(name)) return;
+        var cell1=tr.children[c1];
+        if(!cell1 || cell1.getAttribute('colspan')) return;   /* the "no data yet" filler row */
+        var l1=txt(cell1); if(!l1) return;
+        var k=norm(name); if(!k || out[k]) return;            /* first table wins, in page order */
+        out[k]={
+          loc1:l1,
+          html1:(cell1.innerHTML||'').replace(/<span[^>]*>|<\/span>/g,''),
+          loc2:(c2>=0 && tr.children[c2] && !tr.children[c2].getAttribute('colspan')) ? txt(tr.children[c2]) : '',
+          conf:(cConf>=0 && tr.children[cConf]) ? txt(tr.children[cConf]) : '',
+          note:(cNote>=0 && tr.children[cNote]) ? txt(tr.children[cNote]) : '',
+          key:hit? hit.k : '',
+          what:hit? hit.what : ''
+        };
+      });
+    });
+    return out;
+  }
+  function idx(){
+    if(!LOC || !Object.keys(LOC).length) LOC=build();
+    return LOC;
+  }
+  /* SAME MEASURED TRAP b654 hit: at 500 ms the harvest tables are not all laid out, so a
+     first pass indexes nothing and every row would read "no location on file" forever.
+     Rebuild while the page settles, and when the index GROWS, drop the lines and redraw. */
+  function reindex(){
+    LOC=build();
+    var n=Object.keys(LOC).length;
+    if(n===LOCN) return false;
+    LOCN=n;
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-body');
+    if(body){
+      [].forEach.call(body.querySelectorAll('.cg-loc-wrap'),function(w){ w.remove(); });
+      decorate(body);
+    }
+    return true;
+  }
+  [1600,4200,9200,15200].forEach(function(ms){ setTimeout(reindex, ms); });
+
+  /* ---- 2. draw the line ------------------------------------------------------------ */
+  function decorate(body){
+    if(!body) return;
+    body.querySelectorAll('.ops4-row').forEach(function(row){
+      if(row.querySelector('.cg-loc-wrap')) return;
+      var mat=row.querySelector('.ops4-mat'); if(!mat) return;
+      var name=(mat.childNodes[0] && mat.childNodes[0].nodeType===3)
+        ? mat.childNodes[0].nodeValue : mat.textContent;
+      name=(name||'').replace(/\s+/g,' ').trim();
+      if(!name) return;
+      var rec=idx()[norm(name)];
+      if(!rec) return;                     /* no location on file - print nothing, claim nothing */
+
+      var weak = WEAK.test(rec.loc1) || WEAK.test(rec.conf);
+      var w=document.createElement('div');
+      w.className='cg-loc-wrap';
+
+      var tip=name+' - #1 location'+(rec.what?(' ('+rec.what+')'):'')+':\n'+rec.loc1;
+      if(rec.loc2) tip+='\n\n#2 location:\n'+rec.loc2;
+      if(rec.note) tip+='\n\nNotes: '+rec.note;
+      if(rec.conf) tip+='\n\nConfidence: '+rec.conf;
+      tip+='\n\nSource: the Harvestables page tables in this tablet.';
+
+      var html='<span class="cg-loc-pin">GO</span>'
+        +'<span class="cg-loc-txt'+(weak?' cg-loc-weak':'')+'" title="'+esc(tip)+'">'
+        +rec.html1+'</span>';
+
+      /* MORE LOCATIONS. When the item came from SHIP-MINEABLE ORES, b654 already draws that
+         button on the chip strip below (relabelled in this build) - drawing a second one
+         would be two buttons doing one job. For the other three tables b654's chip is named
+         for the METHOD (HARVEST / HAND GEM / ROC GEM), which is the 655 decision and stays,
+         so the "show me the rest" button is added here instead. It carries b654's own class
+         and data attributes, so b654's delegated click handler runs it - there is no second
+         copy of the jump logic in this file. */
+      if(rec.key && rec.key!=='loc'){
+        html+='<button type="button" class="cg-src-chip" data-k="'+esc(rec.key)+'" data-it="'
+             +esc(name)+'" title="Open the full table for '+esc(name)+' - #1 and #2 locations, '
+             +'notes and confidence">MORE LOCATIONS</button>';
+      }
+      w.innerHTML=html;
+
+      /* name, then where, then the buttons. b654 appends its strip to the row, so inserting
+         before it puts the location above the chips whichever decorator ran first. */
+      var chips=row.querySelector('.cg-src-wrap');
+      if(chips) row.insertBefore(w, chips); else row.appendChild(w);
+    });
+  }
+
+  /* ---- 3. wiring - mirrors b654 so the two stay in step ----------------------------- */
+  var seen=null, LAST=0;
+  function watch(){
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-body');
+    if(!body) return false;
+    if(body!==seen){
+      seen=body;
+      try{
+        new MutationObserver(function(){
+          var t=+new Date();
+          if(t-LAST>10000){ LAST=t; reindex(); }
+          decorate(body);
+        }).observe(body,{childList:true});
+      }catch(e){}
+    }
+    decorate(body);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){
+    watch();
+    if(++n>120){ clearInterval(iv); setInterval(watch, 3000); }
+  }, 500);
+  watch();
+
+  /* b663 needs the SAME index. Exposed rather than copied - two copies of a derived
+     index is two things to keep in step, and they will drift. */
+  window.cgLocIndex=function(){ return idx(); };
+  window.CMDGLAS_HUDLOC_662=1;
+})();
+</script>
+<style id="sc-b662-hangarexit-css">
+/* sc-b662-hangarexit-css  -  build 662, 2 AUG 2026.
+   T: "there is no way to exit out of the ship selector when adding a ship through the ship
+       builder. add ship to hangar. it stays stuck."
+
+   MEASURED at 2560x1400 before touching anything:
+       #hangar-modal   top 64   height 1272     <- the overlay, inside the zoomed #content
+       #hangar-box     top 48   height 1305     <- TALLER THAN ITS OWN OVERLAY, and its
+                                                   bottom (1353) sits past the overlay's (1336)
+       ESC              does not close it
+       backdrop click   does not close it
+   So the ONLY exit is one 104x30 button, and the box is already overflowing its container on a
+   large screen. Push the aspect ratio the wrong way - or apply the SC-FIT zoom - and that title
+   row is the first thing to leave the screen, with no second way out. That is the stuck state.
+
+   Three fixes, all additive:
+     1. the box can never be taller than the viewport, so the title row cannot be pushed off
+     2. the title row is sticky, so it stays reachable while the ship list scrolls
+     3. ESC and a backdrop click also close it (the script twin)
+   Reversible: delete this block and its script twin. */
+/* MEASURED: adding height:auto here made it WORSE - the box grew 1305 -> 2061 px and its top
+   went to -330. And a vh clamp is unreliable in this file anyway: SC-FIT zooms #content, and
+   vh resolves against the UNZOOMED layout viewport (the same trap build 361 documents), so
+   88vh can still be taller than the screen. The clamp is kept as an upper bound only. The
+   thing that actually guarantees a way out is the STICKY TITLE below - measured with the box
+   top at -330, the CLOSE button still sat at top 81, on screen and hit-testable. */
+#hangar-box{max-height:88vh !important}
+#hangar-title{position:sticky;top:0;z-index:2;background:var(--bg2,#12161c)}
+/* the close control was 104x30 - under the 44 px touch minimum on the iPad */
+#hangar-close{min-height:34px;padding:6px 12px !important;touch-action:manipulation}
+@media (pointer:coarse){ #hangar-close{min-height:44px;min-width:88px} }
+#hangar-modal .cg-hx-hint{position:absolute;left:50%;transform:translateX(-50%);
+  bottom:max(10px,env(safe-area-inset-bottom));font:700 9px/1 'Rajdhani',sans-serif;
+  letter-spacing:2px;color:#9fb6c9;background:rgba(8,17,26,.86);
+  border:1px solid rgba(120,180,255,.3);border-radius:999px;padding:7px 14px;pointer-events:none}
+</style>
+<script id="sc-b662-hangarexit-js">
+/* sc-b662-hangarexit-js  -  build 662.  A SECOND AND THIRD WAY OUT OF THE HANGAR PICKER.
+   Calls the page's OWN closeHangar() - this file does not invent a second close path, so
+   whatever that function does about saving stays exactly as it was. */
+(function(){
+  if(window.__cgHangarExit662) return; window.__cgHangarExit662=true;
+
+  function modal(){ return document.getElementById('hangar-modal'); }
+  function isOpen(){ var m=modal(); return !!(m && m.classList.contains('open')); }
+  function shut(why){
+    if(!isOpen()) return;
+    try{ if(typeof window.closeHangar==='function'){ window.closeHangar(); return; } }catch(e){}
+    /* only if the page's own function is missing - never instead of it */
+    try{ modal().classList.remove('open'); }catch(e){}
+  }
+
+  /* ESC. Capture phase, because the ship list carries its own key handling. */
+  document.addEventListener('keydown', function(e){
+    if(e.key!=='Escape' && e.key!=='Esc') return;
+    if(!isOpen()) return;
+    e.preventDefault(); e.stopPropagation();
+    shut('esc');
+  }, true);
+
+  /* Click the dimmed area outside the box. Guarded to the overlay ITSELF so a click that
+     started inside the box and drifted out does not close it mid-drag. */
+  document.addEventListener('mousedown', function(e){
+    var m=modal(); if(!m || !isOpen()) return;
+    m.__downOnBackdrop = (e.target===m);
+  }, true);
+  document.addEventListener('click', function(e){
+    var m=modal(); if(!m || !isOpen()) return;
+    if(e.target!==m || !m.__downOnBackdrop) return;
+    e.preventDefault(); e.stopPropagation();
+    shut('backdrop');
+  }, true);
+  /* touch equivalent - iPadOS does fire click, but only after a clean tap */
+  document.addEventListener('touchstart', function(e){
+    var m=modal(); if(!m || !isOpen()) return;
+    m.__downOnBackdrop = (e.target===m);
+  }, {capture:true, passive:true});
+
+  /* say the exits out loud - a modal you cannot see your way out of is the whole complaint */
+  function hint(){
+    var m=modal(); if(!m) return;
+    if(!isOpen()){ var old=m.querySelector('.cg-hx-hint'); if(old) old.remove(); return; }
+    if(m.querySelector('.cg-hx-hint')) return;
+    var d=document.createElement('div');
+    d.className='cg-hx-hint';
+    d.textContent='ESC, OR TAP OUTSIDE THIS BOX, TO CLOSE';
+    m.appendChild(d);
+  }
+  /* NOT a timer that rebuilds a node (rule 17) - it adds once when the modal opens and
+     removes once when it closes, and both are guarded. */
+  try{
+    new MutationObserver(hint).observe(document.documentElement,
+      {subtree:true, attributes:true, attributeFilter:['class']});
+  }catch(e){}
+  hint();
+
+  window.CMDGLAS_HANGAREXIT_662=1;
+})();
+</script>
+<script id="sc-b663-minloc-js">
+/* sc-b663-minloc-js  -  build 663, 2 AUG 2026.
+   T: "when i plan mining run things like hadanite, aphrotie fps mining stuff shows no
+       location data for stop 1."
+
+   IT IS NOT A PLANNER BUG. MEASURED: window.MINING_DATA holds 11 entries whose `top` AND
+   `all_locs` are the literal string "NO LOCATION DATA" -
+
+       Aphorite   Beradom   Carinite   Dolivine   Feynmaline   Glacosite
+       Hadanite   Janalite  Sadaryx    Saldynium (Ore)         Yormandi Eye
+
+   Every one of them is hand-mined on foot or ROC-mined. The blob's own source note says why:
+   "Items marked NO LOCATION DATA had no per-location entries in those confirmed sources" -
+   the commodities API it was built from carries ship-mining locations only. The planner is
+   printing exactly what the data says.
+
+   THE LOCATIONS ALREADY EXIST IN THIS FILE, in the Harvestables tables that build 662 reads
+   for the HUD row. This block fills the eleven gaps FROM THAT SAME INDEX, so the planner, the
+   mining page and the HUD can never give three different answers for one gem.
+
+   WHAT IT WILL NOT DO:
+     * it never overwrites a real value - only the exact string "NO LOCATION DATA"
+     * it invents nothing. A gem with no row in the tables either is left exactly as it was
+     * the text is copied verbatim from the table cell, and it says where it came from
+
+   Reversible: delete this block. MINING_DATA on disk is untouched - this is a runtime fill. */
+(function(){
+  if(window.__cgMinLoc663) return; window.__cgMinLoc663=true;
+
+  var GAP='NO LOCATION DATA';
+  var FILLED=0, PASSES=0;
+
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+
+  function fill(){
+    PASSES++;
+    var MD=window.MINING_DATA;
+    if(!MD || typeof MD!=='object') return 0;
+    var idx=(typeof window.cgLocIndex==='function') ? window.cgLocIndex() : null;
+    if(!idx || !Object.keys(idx).length) return 0;
+
+    var n=0;
+    Object.keys(MD).forEach(function(name){
+      var rec=MD[name];
+      if(!rec || typeof rec!=='object') return;
+      if(rec.top!==GAP && rec.all_locs!==GAP) return;      /* only the gaps, never real data */
+      var loc=idx[norm(name)];
+      if(!loc || !loc.loc1) return;                        /* no row in the tables - leave it */
+
+      if(rec.top===GAP){
+        rec.top=loc.loc1;
+        rec.cg_locsrc='Harvestables page'+(loc.what?(' - '+loc.what):'');
+        n++;
+      }
+      if(rec.all_locs===GAP){
+        var all=[loc.loc1];
+        if(loc.loc2 && !/^none\b/i.test(loc.loc2)) all.push(loc.loc2);
+        rec.all_locs=all.join('; ');
+        rec.cg_locsrc=rec.cg_locsrc||('Harvestables page'+(loc.what?(' - '+loc.what):''));
+      }
+      if(loc.conf) rec.cg_locconf=loc.conf;
+    });
+    FILLED+=n;
+    return n;
+  }
+
+  /* The harvest tables and MINING_DATA are both built during load, and the b662 index needs
+     its own settle time - same measured trap b654 and b662 hit at 500 ms. Bounded passes,
+     and it stops as soon as there is nothing left to fill.
+     NOT a sweep: it mutates plain data, never the DOM, so it cannot fight a renderer
+     (rule 17 is about re-creating nodes on a timer - there are no nodes here). */
+  var tries=0;
+  var iv=setInterval(function(){
+    fill();
+    var MD=window.MINING_DATA, left=0;
+    if(MD) Object.keys(MD).forEach(function(k){
+      if(MD[k] && MD[k].top===GAP) left++; });
+    if(left===0 || ++tries>12) clearInterval(iv);
+  }, 1500);
+  fill();
+
+  window.cgMinLocReport=function(){
+    var MD=window.MINING_DATA||{}, gaps=[], done=[];
+    Object.keys(MD).forEach(function(k){
+      if(MD[k] && MD[k].top===GAP) gaps.push(k);
+      else if(MD[k] && MD[k].cg_locsrc) done.push(k+' <- '+MD[k].cg_locsrc);
+    });
+    return {filled:done, stillEmpty:gaps, passes:PASSES};
+  };
+  window.CMDGLAS_MINLOC_663=1;
 })();
 </script>
 </body>
