@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=659;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=660;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -32844,7 +32844,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
            32 -> 77 wpm   62 -> 149 wpm   80 -> ~193 wpm   100 -> 241 wpm
        On a banner this length, wpm ≈ divisor × 2.4.
        NOTE: prefers-reduced-motion already stops the animation entirely — untouched. */
-    var w=tr.scrollWidth||1200; tr.style.animationDuration=Math.max(20, Math.round(w/100))+'s';
+    var w=tr.scrollWidth||1200; tr.style.animationDuration=Math.max(20, Math.round(w/62))+'s';/* b660 (T 2 AUG: "the banner is going at 100mph. make it slow now") - 100 -> 62, i.e. 241 wpm -> the 149 wpm build 590 measured. The divisor is the speed. */
   }
   paint(NOTES);
   /* T 28 JUL ("how do we notify the user to refresh"): the site_news read used to run ONCE at
@@ -36236,7 +36236,7 @@ window.bpImgTag=bpImgTag;
         +'.cg-tw-go,.cg-tw-open,.cg-tw-clear,.cg-tw-chat-btn,.mall-track,.mall-lbtn,.syc-btn,'
         +'.ct-x,.ct-clear,.cg-c2-go,.cg-c2-cancel,.cg-pop-rtb,.cg-pop-fdock,.bp-ops,'
         +'.cg-comms-open,.cg-comms-scorg,.cg-comms-btns button,.rp-send,.rp-cancel,'
-        +'.cgcp-tabs button,.cg-w-btn,.scr-btn,.sc-rail-btn,.hm-pop-btn,.dl-btn,'
+        +'.cgcp-tabs button,.cg-w-btn,.scr-btn,.sc-rail-btn,.hm-pop-btn,'/* b660: .dl-btn (SHOW/HIDE NEWS) removed on T's order 2 AUG - that chip only, everything else keeps the scan */
         +'a.panel-btn,a.cg-sbtn,.cg-bf-bar button,.cg-rtb-bar button,#cg-hudsrc button,.pill-sel';
 
   /* pulse in the control's own accent so a red button scans red and a green one green */
@@ -38280,6 +38280,82 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     put(); if(++n>120){ clearInterval(iv); setInterval(put,3000); }
   }, 500);
   put();
+})();
+</script>
+<style id="sc-b660-notabletundock-css">
+/* sc-b660-notabletundock-css  -  build 660, 2 AUG 2026.
+   T: "can you disable the undock function on the tablet? it's not needed there. just disable
+   the switch for any tablet loading on a tablet. apple or android. on physical tablet, no popout."
+
+   HIDDEN BY CSS, NEVER REMOVED FROM THE DOM - deliberate. The undock module re-adds its button
+   on a 900ms interval (`setInterval(function(){ addBtns(); updateBtns(); }, 900)`), so deleting
+   the node would be re-created 900ms later, deleted again, forever: the exact sweep-fight that
+   caused the Craft Calculator flicker T reported on build 655. A CSS hide cannot be fought.
+
+   TWO WAYS IN, because neither alone is trustworthy:
+     1. the media query - a touch-primary device with no hover. A Windows touchscreen laptop
+        with a mouse reports hover:hover, so it keeps its UNDOCK button.
+     2. html.cg-tabletdev, set by the script twin for the cases the media query misses -
+        notably iPadOS 13+, which reports itself as "Macintosh" and is only distinguishable
+        by maxTouchPoints.
+   Reversible: delete this block and its script twin. */
+@media (pointer:coarse) and (hover:none){
+  #sc-home-widgets .cg-undock-btn,
+  #sc-tools-row .cg-undock-btn,
+  .cg-undock-btn{ display:none !important; }
+  /* MEASURED: build 632 centres UNDOCK and SOURCE as a PAIR - UNDOCK is pushed left of the
+     pill midline and SOURCE sits 4px right of it. With UNDOCK gone, SOURCE was left stranded
+     right of centre. Re-centre it so the lone button sits on the midline. */
+  #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translateX(-50%) !important; }
+}
+html.cg-tabletdev .cg-undock-btn{ display:none !important; }
+html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translateX(-50%) !important; }
+</style>
+<script id="sc-b660-notabletundock-js">
+/* sc-b660-notabletundock-js  -  build 660.
+   Marks the document for the CSS above, and makes the toggle itself a no-op on a physical
+   tablet so nothing else can trigger a pop-out there - the keyboard shortcut (Ctrl+Alt+1,
+   sc-b564-pillkeys-js) and window.cgPillToggle both route through the same call. */
+(function(){
+  if(window.__cgNoTabletUndock660) return; window.__cgNoTabletUndock660=true;
+
+  function isTabletDevice(){
+    var ua='', mtp=0;
+    try{ ua=navigator.userAgent||''; }catch(e){}
+    try{ mtp=navigator.maxTouchPoints||0; }catch(e){}
+    /* iPadOS 13+ Safari reports "Macintosh" on purpose. A real Mac has maxTouchPoints 0,
+       so touch points are the only honest separator. */
+    var iPad = /iPad/i.test(ua) || (/Macintosh/i.test(ua) && mtp > 1);
+    var iPhone = /iPhone|iPod/i.test(ua);
+    var android = /Android/i.test(ua);
+    var touchOnly = false;
+    try{
+      touchOnly = !!(window.matchMedia
+        && matchMedia('(pointer:coarse)').matches
+        && matchMedia('(hover:none)').matches);
+    }catch(e){}
+    return iPad || iPhone || android || touchOnly;
+  }
+
+  if(!isTabletDevice()) return;   /* PC is untouched - T: "it works perfectly on pc" */
+
+  try{ document.documentElement.classList.add('cg-tabletdev'); }catch(e){}
+
+  /* belt and braces: the button is hidden, but the toggle is also reachable from the keyboard
+     handler and from window.cgPillToggle. Neutralise the entry point rather than the module,
+     so RESTORE still works if something is already floating. */
+  try{
+    var orig = window.cgPillToggle;
+    window.cgPillToggle = function(k){
+      /* if a pill is somehow already detached, let the call through so it can dock back */
+      try{
+        if(document.querySelector('.cg-pop-float') || document.querySelector('.cg-pop-ph')){
+          if(typeof orig==='function') return orig.apply(this, arguments);
+        }
+      }catch(e){}
+      return;   /* physical tablet: no pop-out, by T's instruction 2 AUG */
+    };
+  }catch(e){}
 })();
 </script>
 </body>
