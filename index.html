@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 666;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 669;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -29812,7 +29812,12 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
        match the LAYOUT px that min-height/max-height are measured in, and did not match the
        offsetHeight that sc-b406 writes to the same elements. Measured 403 vs 347 live on the
        same pill. offsetHeight is the right unit here and is what sc-b406 already uses. */
-    var h=tr.offsetHeight;
+    /* b668: build 388 measures the tools row and writes the result onto the grid and every
+       pill, re-applying on resize / fonts / load. Three CSS attempts to raise the ops pill
+       moved the container and left the pill at 309 px every time - a stylesheet cannot beat a
+       module that rewrites the inline style. So the INPUT is scaled here instead of the output
+       being fought. CG_PILL_SCALE defaults to 1.5; setting it to 1 restores the old size. */
+    var h=Math.round(tr.offsetHeight * (window.CG_PILL_SCALE || 1));
     if(h<140) return false; /* tools row not laid out yet */
     if(hw.style.minHeight!==h+'px') hw.style.minHeight=h+'px'; /* grow the grid CONTAINER — that is the real height constraint */
     /* build 636: remember what this pass measured so the caller can tell when it has settled */
@@ -37177,7 +37182,10 @@ body.sc-home-mode #tab-home,
       var have={}; g.forEach(function(x){ if(x&&x.material) have[String(x.material).toLowerCase()]=1; });
       items.forEach(function(n){
         if(have[n.toLowerCase()]) return;
-        g.push({material:n, qty:1, from:[]}); have[n.toLowerCase()]=1; added++;
+        /* b667: this function is declared push(page, LABEL) and then wrote from:[] - it took
+           the source label and discarded it. That is why nothing in the gather list ever said
+           where it came from, and why CLEAR HARVEST had nothing to key on. */
+        g.push({material:n, qty:1, from:[label||'Harvestables']}); have[n.toLowerCase()]=1; added++;
       });
       localStorage.setItem('sc_ops_gather', JSON.stringify(g));
       try{ window.dispatchEvent(new StorageEvent('storage',{key:'sc_ops_gather'})); }catch(e){}
@@ -38957,6 +38965,26 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     };
   }
 
+  /* NAME ALIASES - WRITTEN DOWN, NEVER FUZZY-MATCHED.
+     Diffed all 54 names this tablet uses against the 47 the live feed returns: 36 match on
+     the normalised name, 18 do not. Of those 18, only these are genuinely the same material
+     under a different string. The rest - Cave/Tundra/Irradiated Kopion Horn, Valakkar Pearls,
+     Marok Gem, Yormandi Eye, Sadaryx, Saldynium, Jaclium, Carinite - are simply ABSENT from
+     the feed, and they stay on the 4.8.2 tables where they belong.
+     Fuzzy matching was tried and rejected: the closest live name to "Carinite" is "Taranite",
+     a completely different ore. One wrong character would have put Taranite's 105 locations
+     on a Carinite row. Every alias here is deliberate and reversible. */
+  var ALIAS={
+    'quantanium':'quantainium',        /* the feed spells it with the extra i */
+    'ouratite':'raw ouratite',         /* feed carries the raw form only */
+    'silicon':'raw silicon',
+    /* FLAGGED, NOT A PURE ALIAS: the feed has no Pressurized Ice. The tablet's own table note
+       says its figures come "via Raw Ice (refines to Pressurized Ice)", so this follows the
+       page's own stated reasoning rather than inventing a link - and the row still shows the
+       LIVE confidence stamp so it is never mistaken for a first-hand entry. */
+    'pressurized ice':'raw ice'
+  };
+
   function buildMap(){
     MAP={};
     if(!LIVE || !LIVE.items) return;
@@ -38964,6 +38992,12 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     Object.keys(LIVE.items).forEach(function(name){
       var r=toRecord(name, LIVE.items[name], patch);
       if(r) MAP[norm(name)]=r;
+    });
+    /* an alias only ever fills a name the feed did not already answer for */
+    Object.keys(ALIAS).forEach(function(from){
+      if(MAP[from]) return;
+      var to=MAP[ALIAS[from]];
+      if(to) MAP[from]=to;
     });
   }
 
@@ -39208,6 +39242,401 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     return out;
   };
   window.CMDGLAS_READABLE_665=1;
+})();
+</script>
+<style id="sc-b667-clear-css">
+/* sc-b667-clear-css  -  build 667, 2 AUG 2026.
+   T: "there needs to be a 2 step buttons to clear all data from the HUD. next to source i need
+       a clear Gather, clear harvest and clear buy... user selects clear harvest and is presented
+       with option: clear HUD and TOOL or only clear HUD."
+   Reversible: delete this block and its script twin. */
+.cg-clr-btn{font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.1px;text-transform:uppercase;
+  color:#f6d4d1;background:linear-gradient(180deg,rgba(255,95,86,.26),rgba(255,95,86,.10));
+  border:1px solid rgba(255,110,100,.55);border-radius:6px;padding:5px 8px;cursor:pointer;
+  white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:22px}
+.cg-clr-btn:active{transform:translateY(1px);filter:brightness(1.25)}
+@media (pointer:coarse){ .cg-clr-btn{min-height:34px;padding:8px 11px;font-size:9.5px} }
+.cg-clr-wrap{display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap}
+.cg-clr-btn.cg-clr-go{color:#cfeed6;border-color:rgba(80,220,120,.55);
+  background:linear-gradient(180deg,rgba(57,211,83,.24),rgba(57,211,83,.09))}
+
+/* the two-step panel. z-index matches build 360's modal lift - the HUD pill sits near the
+   top of the stacking order, so anything less renders BEHIND it and cannot be pressed. */
+#cg-clr-modal{position:fixed;inset:0;z-index:2147483402;background:rgba(0,0,0,.74);
+  display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:5vh 16px 6vh}
+#cg-clr-box{background:linear-gradient(180deg,#141e2c,#0a0f16);border:1px solid rgba(255,110,100,.5);
+  border-radius:14px;max-width:520px;width:100%;padding:20px 22px;
+  box-shadow:0 18px 60px rgba(0,0,0,.75);font-family:'Rajdhani','Segoe UI',sans-serif}
+#cg-clr-box h3{margin:0 0 4px;font-size:15px;letter-spacing:2px;color:#ff8a7d;font-weight:700;text-transform:uppercase}
+#cg-clr-box .cnt{font-size:22px;font-weight:700;color:#fff2d6;letter-spacing:1px;margin:6px 0 2px}
+#cg-clr-box .why{font-size:13px;color:#8fa6ba;line-height:1.55;margin:0 0 14px}
+#cg-clr-box .why b{color:#ffd08a}
+#cg-clr-box .rows{max-height:150px;overflow:auto;border:1px solid rgba(108,180,214,.22);border-radius:8px;
+  padding:9px 11px;margin:0 0 15px;font-size:13px;line-height:1.6;color:#dfeaf5}
+#cg-clr-box .rows .inf{color:#c58f8f}
+#cg-clr-box .opt{display:block;width:100%;text-align:left;margin:0 0 9px;padding:13px 15px;border-radius:10px;
+  cursor:pointer;font-family:inherit;min-height:52px;touch-action:manipulation;
+  border:1px solid rgba(108,180,214,.4);background:linear-gradient(180deg,rgba(29,111,156,.28),rgba(18,74,104,.14));
+  color:#eaf6ff}
+#cg-clr-box .opt b{display:block;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+#cg-clr-box .opt i{display:block;font-style:normal;font-size:12.5px;color:#8fa6ba;margin-top:3px;line-height:1.45}
+#cg-clr-box .opt.hard{border-color:rgba(255,110,100,.55);
+  background:linear-gradient(180deg,rgba(255,95,86,.22),rgba(255,95,86,.07))}
+#cg-clr-box .opt:active{transform:translateY(1px);filter:brightness(1.2)}
+#cg-clr-box .cancel{background:none;border:1px solid rgba(108,180,214,.3);color:#8fa6ba;
+  width:100%;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:12px;
+  letter-spacing:2px;min-height:48px;text-transform:uppercase}
+#cg-clr-box .esc{font-size:11.5px;color:#5f7688;letter-spacing:1px;text-align:center;margin-top:10px}
+</style>
+<script id="sc-b667-clear-js">
+/* sc-b667-clear-js  -  build 667, 2 AUG 2026.  CLEAR GATHER / HARVEST / BUY, two-step.
+
+   NOTHING IS DELETED ON THE FIRST TAP. Tapping a CLEAR button opens a panel that names the
+   exact rows, counts them, and offers three ways out. That is the second step.
+
+   HOW "HARVEST" IS IDENTIFIED, AND WHY IT NEEDED A FIX FIRST. A gather row is
+   {material, qty, from:[labels]} - `from` records where the material came from. Basic Mining
+   stamps "Basic Mining", blueprints stamp the blueprint name. MEASURED: the Harvestables push
+   is declared push(page, LABEL) and then writes `from: []` - it takes the label and throws it
+   away. So nothing in the list said "this came from harvesting". That one line is fixed in
+   this build, so every future push is exact.
+
+   Rows already in the list carry no label and cannot be made to. Those fall back to the
+   location index build 662 maintains - hand-collected, FPS gem and ROC gem materials are
+   harvest, ship-mined ores are not - and the panel SAYS SO, in the count and per row. An
+   inference is labelled as an inference; it is never presented as a record.
+
+   WHAT EACH OPTION TOUCHES, stated in the panel rather than left to guess:
+     CLEAR HUD ONLY   the HUD list, nothing else
+     CLEAR HUD + TOOL that, plus the selection stores that PERSIST -
+                      sccmd_overlay_craft (Craft Calculator picks) and sc_bp_sent (pinned
+                      blueprint names). Page row ticks are not stored anywhere - they exist
+                      only in the open page - so they clear on reload either way, and the
+                      panel says that instead of implying more is wiped than really is.
+
+   Reversible: delete this block. No data shape changes. */
+(function(){
+  if(window.__cgClear667) return; window.__cgClear667=true;
+
+  var GK='sc_ops_gather', BK='sc_ops_buy';
+  var TOOL_KEYS=['sccmd_overlay_craft','sc_bp_sent'];
+  var HARVEST_LABELS=/harvest|harvestable|gem/i;
+  var HARVEST_KEYS={harv:1, handgem:1, rocgem:1};   /* NOT 'loc' - ship-mined ore is not harvesting */
+
+  function get(k){ try{ var v=JSON.parse(localStorage.getItem(k)||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+  function set(k,v){
+    try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){}
+    try{ window.dispatchEvent(new StorageEvent('storage',{key:k})); }catch(e){}
+  }
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function repaint(){
+    try{ if(typeof window.opsRender==='function') window.opsRender(); }catch(e){}
+  }
+
+  /* which rows of the gather list are harvesting materials */
+  function harvestSplit(){
+    var list=get(GK), stamped=[], inferred=[], keep=[];
+    var idx=null;
+    try{ if(typeof window.cgLocIndex==='function') idx=window.cgLocIndex(); }catch(e){}
+    list.forEach(function(r){
+      var from=(r&&r.from)||[];
+      if(from.some(function(f){ return HARVEST_LABELS.test(String(f)); })){ stamped.push(r); return; }
+      if(from.length){ keep.push(r); return; }          /* labelled as something else - leave it */
+      var rec=idx && idx[norm(r&&r.material)];
+      if(rec && HARVEST_KEYS[rec.key]){ inferred.push(r); return; }
+      keep.push(r);
+    });
+    return {stamped:stamped, inferred:inferred, keep:keep};
+  }
+
+  var SPECS={
+    gather:{ title:'CLEAR GATHER', list:GK,
+      pick:function(){ var l=get(GK); return {hit:l, keep:[], stamped:l, inferred:[]}; },
+      why:'Every row in the HUD gather list.' },
+    harvest:{ title:'CLEAR HARVEST', list:GK,
+      pick:function(){ var s=harvestSplit();
+        return {hit:s.stamped.concat(s.inferred), keep:s.keep, stamped:s.stamped, inferred:s.inferred}; },
+      why:'Only the harvesting materials in the gather list. Ship-mined ore and bought goods stay.' },
+    buy:{ title:'CLEAR BUY', list:BK,
+      pick:function(){ var l=get(BK); return {hit:l, keep:[], stamped:l, inferred:[]}; },
+      why:'Every row in the HUD buy list.' },
+    all:{ title:'CLEAR ALL', list:GK, both:true,
+      pick:function(){ var l=get(GK).concat(get(BK)); return {hit:l, keep:[], stamped:l, inferred:[]}; },
+      why:'Every row in BOTH HUD lists - gather and buy.' }
+  };
+
+  function close(){ var m=document.getElementById('cg-clr-modal'); if(m) m.remove(); }
+
+  function commit(kind, hard){
+    var spec=SPECS[kind]; if(!spec) return;
+    var r=spec.pick();
+    set(spec.list, r.keep);
+    if(spec.both) set(BK, []);          /* CLEAR ALL empties the buy list too */
+    var alsoTool=0;
+    if(hard){
+      TOOL_KEYS.forEach(function(k){
+        try{ if(localStorage.getItem(k)!==null){ localStorage.removeItem(k); alsoTool++; } }catch(e){}
+      });
+    }
+    close(); repaint();
+    try{
+      if(typeof window.cgLocRedraw==='function') window.cgLocRedraw();
+    }catch(e){}
+    var msg=spec.title+' - '+r.hit.length+' removed'+(hard?(', '+alsoTool+' tool selection store'+(alsoTool===1?'':'s')+' cleared'):'');
+    try{
+      var t=document.getElementById('cg-ph-toast');
+      if(!t){ t=document.createElement('div'); t.id='cg-ph-toast'; document.body.appendChild(t); }
+      t.textContent=msg; t.classList.add('on');
+      clearTimeout(t.__h); t.__h=setTimeout(function(){ t.classList.remove('on'); },3400);
+    }catch(e){}
+  }
+
+  function open(kind){
+    var spec=SPECS[kind]; if(!spec) return;
+    close();
+    var r=spec.pick();
+
+    var rowsHtml='';
+    if(!r.hit.length){
+      rowsHtml='<div style="color:#8fa6ba">Nothing to clear - this list is already empty.</div>';
+    } else {
+      rowsHtml=r.stamped.map(function(x){ return '<div>'+esc(x.material||'?')+'</div>'; }).join('')
+             + r.inferred.map(function(x){
+                 return '<div class="inf">'+esc(x.material||'?')+' <span style="font-size:11.5px">— no source recorded, matched by material type</span></div>'; }).join('');
+    }
+
+    var m=document.createElement('div'); m.id='cg-clr-modal';
+    var body='<div id="cg-clr-box">'
+      +'<h3>'+esc(spec.title)+'</h3>'
+      +'<div class="cnt">'+r.hit.length+' row'+(r.hit.length===1?'':'s')+'</div>'
+      +'<p class="why">'+esc(spec.why)
+      + (r.inferred.length ? ' <b>'+r.inferred.length+' of them have no recorded source and were matched by material type</b> - shown dimmed below.' : '')
+      +'</p>'
+      +'<div class="rows">'+rowsHtml+'</div>';
+    if(r.hit.length){
+      body+='<button type="button" class="opt" data-do="soft"><b>Clear HUD only</b>'
+           +'<i>Empties these from the HUD. Leaves every page selection exactly as it is.</i></button>'
+           +'<button type="button" class="opt hard" data-do="hard"><b>Clear HUD + tool</b>'
+           +'<i>Also clears the Craft Calculator picks and the pinned blueprint names, so the list '
+           +'does not refill on the next push. Row ticks on a page are not stored anywhere and clear '
+           +'when you reload that page either way.</i></button>';
+    }
+    body+='<button type="button" class="cancel" data-do="cancel">Cancel</button>'
+        +'<div class="esc">Esc, or tap outside this box, also cancels</div></div>';
+    m.innerHTML=body;
+
+    m.addEventListener('click', function(e){
+      var b=e.target.closest && e.target.closest('[data-do]');
+      if(b){ var d=b.getAttribute('data-do');
+        if(d==='cancel') return close();
+        return commit(kind, d==='hard'); }
+      if(e.target===m) close();               /* backdrop */
+    }, false);
+    document.body.appendChild(m);
+  }
+
+  document.addEventListener('keydown', function(e){
+    if((e.key==='Escape'||e.key==='Esc') && document.getElementById('cg-clr-modal')){
+      e.preventDefault(); e.stopPropagation(); close();
+    }
+  }, true);
+
+  /* ---- REFRESH: re-pull from the source pages -------------------------------------------
+     T: "user needs a way to pull data from the main pages for harvest mining etc from the hud."
+     It does NOT reimplement the push. It presses each page's OWN "PUSH TO HUD" bar button -
+     build 645/647's verified path, junk filters and all - so there is exactly one pushing
+     code path in this file and REFRESH cannot drift from it.
+     MEASURED PRECONDITION (b654's own note): every tab page is fully built at load with its
+     tables populated, so the bars exist without visiting the page first. Pages with nothing
+     picked toast "Nothing picked" and are skipped - that is their behaviour, not an error. */
+  function refresh(){
+    var before=get(GK).length + get(BK).length;
+    var bars=[].slice.call(document.querySelectorAll('.cg-ph-bar .cg-ph-btn'));
+    var pressed=0, i=0;
+    var view=null; try{ view=localStorage.getItem('sc_ops_pill_view'); }catch(e){}
+    function step(){
+      if(i>=bars.length){
+        try{ if(view) localStorage.setItem('sc_ops_pill_view', view); }catch(e){}
+        repaint();
+        var after=get(GK).length + get(BK).length;
+        toast('REFRESH - pressed '+pressed+' page push'+(pressed===1?'':'es')+', '
+              +(after-before)+' new row'+((after-before)===1?'':'s'));
+        return;
+      }
+      var b=bars[i++];
+      try{ if(b && b.offsetParent!==null || b){ b.click(); pressed++; } }catch(e){}
+      setTimeout(step, 90);
+    }
+    step();
+  }
+  function toast(msg){
+    try{
+      var t=document.getElementById('cg-ph-toast');
+      if(!t){ t=document.createElement('div'); t.id='cg-ph-toast'; document.body.appendChild(t); }
+      t.textContent=msg; t.classList.add('on');
+      clearTimeout(t.__h); t.__h=setTimeout(function(){ t.classList.remove('on'); },3400);
+    }catch(e){}
+  }
+
+  /* ---- the buttons, beside SOURCE in the pill footer ------------------------------------- */
+  function mount(){
+    var src=document.getElementById('cg-hudsrc');
+    if(!src || !src.parentElement) return false;
+    if(document.querySelector('.cg-clr-wrap')) return true;
+    var w=document.createElement('span');
+    w.className='cg-clr-wrap';
+    w.innerHTML='<button type="button" class="cg-clr-btn cg-clr-go" data-refresh="1" '
+      +'title="Re-press every page\'s own PUSH TO HUD bar and pull what is selected there into the HUD">REFRESH</button>'
+      + ['gather','harvest','buy','all'].map(function(k){
+          return '<button type="button" class="cg-clr-btn" data-clr="'+k+'" title="Two steps - this opens a panel, it does not clear anything yet">CLEAR '+k.toUpperCase()+'</button>';
+        }).join('');
+    w.addEventListener('click', function(e){
+      if(e.target.closest && e.target.closest('[data-refresh]')){
+        e.preventDefault(); e.stopPropagation(); refresh(); return;
+      }
+      var b=e.target.closest && e.target.closest('[data-clr]');
+      if(!b) return;
+      e.preventDefault(); e.stopPropagation();
+      open(b.getAttribute('data-clr'));
+    }, true);
+    src.parentElement.insertBefore(w, src.nextSibling);
+    return true;
+  }
+  /* bounded - it mounts once and the guard above stops a second copy (rule 17) */
+  var n=0, iv=setInterval(function(){ if(mount() || ++n>60) clearInterval(iv); }, 500);
+  mount();
+
+  window.cgClearReport=function(){
+    var s=harvestSplit();
+    return {gather:get(GK).length, buy:get(BK).length,
+            harvestStamped:s.stamped.length, harvestInferred:s.inferred.length,
+            mounted:!!document.querySelector('.cg-clr-wrap'),
+            panelOpen:!!document.getElementById('cg-clr-modal')};
+  };
+  window.cgClearOpen=open;
+  window.cgHudRefresh=refresh;
+  window.CMDGLAS_CLEAR_667=1;
+})();
+</script>
+<style id="sc-b668-home-css">
+/* sc-b668-home-css  -  build 668, 2 AUG 2026.
+
+   THE BOTTOM VOID - CAUSE FOUND, MEASURED.
+   Every space optimisation on the home screen is gated behind the body class
+   `sc-home-mode`:
+       body.sc-home-mode ... > .hm-foot { display:none }          (build 363)
+       body.sc-home-mode ... > #cg-social-row { margin:0 }        (build 598)
+       body.sc-home-mode ... > .hm-foot { margin-top:6px }        (build 598)
+   T's screenshots show the "unofficial Star Citizen companion" line VISIBLE - which
+   only happens when that class is ABSENT. So on his window none of the space work is
+   applying, and the old dead band between the RSI/DISCORD row and the disclaimer is
+   exactly what build 598 was written to remove.
+   Rather than force the class on (it gates a dozen other rules and I have not read them
+   all), the two spacing rules that close the band are restated WITHOUT the gate. Nothing
+   is hidden - the footer line stays visible, it just stops floating 165 px below the row
+   above it. */
+#tab-home .hm-wrap > #cg-social-row{ margin-top:0 !important; margin-bottom:0 !important; }
+#tab-home .hm-wrap > .hm-sub-hint,
+#tab-home .hm-wrap > .hm-foot{ margin-top:8px !important; }
+#tab-home .hm-wrap > .cg-footer-hidden:empty{ display:none !important; }
+
+/* THE VERSION NUMBER. T: "even when i hide the news banner i still don't see a version
+   number. please move it somewhere else."
+   MEASURED: the version lives in .hm-foot, and .hm-foot is display:none under
+   sc-home-mode - so on a window where that class IS set, the number is unreachable.
+   This chip is independent of both, sits top-right of the home dashboard in space that
+   renders at zero height today, and is on screen the moment home loads. */
+#cg-verchip{ position:absolute; top:4px; right:10px; z-index:6;
+  font:700 10px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.6px;
+  color:#6d8ba1; background:rgba(8,17,26,.72); border:1px solid rgba(108,180,214,.28);
+  border-radius:999px; padding:5px 11px; pointer-events:none; white-space:nowrap; }
+#tab-home .hm-wrap{ position:relative; }
+@media (max-width:560px){ #cg-verchip{ font-size:9px; padding:4px 9px; } }
+</style>
+<script id="sc-b668-home-js">
+/* sc-b668-home-js  -  build 668.  Version chip + the pill-height scale.
+
+   THE PILL HEIGHT. Build 388's module owns it - it measures #sc-tools-row and writes
+   min-height/max-height onto the grid AND onto each pill, re-applying on resize, on
+   document.fonts.ready and twice on load. MEASURED: three separate CSS attempts to raise
+   it (4, 5 and 6 rows) moved the container 309 -> 391 -> 446 -> 502 px and left the ops
+   pill at 309 every time. A stylesheet cannot win against a module that rewrites the
+   inline style, and hammering it on a timer is the exact fight rule 17 forbids.
+
+   So the INPUT is scaled instead of the output fought. One surgical edit in build 388
+   multiplies its tools-row measurement by window.CG_PILL_SCALE, and this block sets that
+   value and nudges the module to re-measure. Everything downstream - the neighbours, the
+   ops-pill cap, build 659's tallest-neighbour logic - follows on its own, and the long
+   gather list still SCROLLS inside the cap rather than stretching the page. Setting the
+   scale to 1 restores the old behaviour exactly. */
+(function(){
+  if(window.__cgHome668) return; window.__cgHome668=true;
+
+  /* ---- 1. pill height scale ---------------------------------------------------------- */
+  var KEY='cg_pill_scale', DEF=1.5;
+  function scale(){
+    var v=DEF;
+    try{ var s=parseFloat(localStorage.getItem(KEY)); if(s>=1 && s<=3) v=s; }catch(e){}
+    return v;
+  }
+  window.CG_PILL_SCALE=scale();
+  window.cgPillScale=function(v){
+    if(v===undefined) return window.CG_PILL_SCALE;
+    v=parseFloat(v);
+    if(!(v>=1 && v<=3)) return window.CG_PILL_SCALE;
+    window.CG_PILL_SCALE=v;
+    try{ localStorage.setItem(KEY,String(v)); }catch(e){}
+    /* build 388 re-applies on resize - that is its own documented re-entry point, so we
+       use it rather than reaching inside the module. */
+    try{ window.dispatchEvent(new Event('resize')); }catch(e){}
+    return v;
+  };
+
+  /* ---- 2. the version chip ------------------------------------------------------------ */
+  function verStr(){
+    try{ if(typeof window.CMDGLAS_VERSTR==='function') return window.CMDGLAS_VERSTR(); }catch(e){}
+    if(window.CMDGLAS_VERSION) return String(window.CMDGLAS_VERSION);
+    if(window.CMDGLAS_BUILD) return 'v1.1.'+window.CMDGLAS_BUILD;
+    return '';
+  }
+  function chip(){
+    var wrap=document.querySelector('#tab-home .hm-wrap');
+    if(!wrap) return false;
+    var c=document.getElementById('cg-verchip');
+    var txt=verStr(); if(!txt) return false;
+    if(!c){
+      c=document.createElement('div'); c.id='cg-verchip';
+      wrap.appendChild(c);
+    }
+    /* rewritten only when the TEXT changes - never rebuilt on a timer (rule 17) */
+    if(c.textContent!==txt) c.textContent=txt;
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ if(chip() || ++n>40) clearInterval(iv); }, 500);
+  chip();
+
+  window.cgHomeReport=function(){
+    var w=document.querySelector('#tab-home .hm-wrap');
+    var ops=document.querySelector('#sc-home-widgets .ops-pill.b385');
+    var soc=document.getElementById('cg-social-row');
+    var foot=document.querySelector('#tab-home .hm-wrap > .hm-foot');
+    var gap=null;
+    try{
+      if(soc && foot && getComputedStyle(foot).display!=='none')
+        gap=Math.round(foot.getBoundingClientRect().top - soc.getBoundingClientRect().bottom);
+    }catch(e){}
+    return {scale:window.CG_PILL_SCALE,
+            chip:(document.getElementById('cg-verchip')||{}).textContent||null,
+            opsPill:ops?Math.round(ops.getBoundingClientRect().height):null,
+            gapSocialToFoot:gap,
+            wrapH:w?Math.round(w.getBoundingClientRect().height):null};
+  };
+  window.CMDGLAS_HOME_668=1;
 })();
 </script>
 </body>
