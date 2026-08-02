@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 663;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 666;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -38557,7 +38557,9 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
         ? mat.childNodes[0].nodeValue : mat.textContent;
       name=(name||'').replace(/\s+/g,' ').trim();
       if(!name) return;
-      var rec=idx()[norm(name)];
+      /* b664 wraps window.cgLocIndex to merge LIVE 4.9 data over this one. Reading through
+         the wrapper is what lets the HUD pick that up without a second copy of the merge. */
+      var rec=(typeof window.cgLocIndex==='function'?window.cgLocIndex():idx())[norm(name)];
       if(!rec) return;                     /* no location on file - print nothing, claim nothing */
 
       var weak = WEAK.test(rec.loc1) || WEAK.test(rec.conf);
@@ -38622,6 +38624,17 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
   /* b663 needs the SAME index. Exposed rather than copied - two copies of a derived
      index is two things to keep in step, and they will drift. */
   window.cgLocIndex=function(){ return idx(); };
+  /* b664 calls this once the live pull lands: the rows already carry a strip and
+     decorate() skips those, so they have to be dropped before the redraw. One call,
+     on one event - not a sweep. */
+  window.cgLocRedraw=function(){
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-body');
+    if(!body) return 0;
+    var n=0;
+    [].forEach.call(body.querySelectorAll('.cg-loc-wrap'),function(w){ w.remove(); n++; });
+    decorate(body);
+    return n;
+  };
   window.CMDGLAS_HUDLOC_662=1;
 })();
 </script>
@@ -38651,8 +38664,23 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
    88vh can still be taller than the screen. The clamp is kept as an upper bound only. The
    thing that actually guarantees a way out is the STICKY TITLE below - measured with the box
    top at -330, the CLOSE button still sat at top 81, on screen and hit-testable. */
-#hangar-box{max-height:88vh !important}
-#hangar-title{position:sticky;top:0;z-index:2;background:var(--bg2,#12161c)}
+/* MEASURED on the iPad after the sticky was removed: the box top sat at -18 px and the CLOSE
+   row went off the top of the screen. The modal centres its child, so a box taller than the
+   viewport overflows BOTH ways and the header is what you lose. Top-align it and let the
+   MODAL scroll instead - the header is then always the first thing on screen. */
+#hangar-modal{align-items:flex-start !important;overflow-y:auto;padding:2vh 0 4vh}
+#hangar-box{max-height:none !important;margin:0 auto}
+/* b666 CORRECTION, T on the iPad: "the close my hangar button you installed earlier covers
+   the entire text entry slot." He is right. position:sticky pins the title over whatever
+   scrolls beneath it, and the SEARCH SHIPS field is the first thing under it - so on a short
+   iPad window the CLOSE row sat on top of the search box.
+   The sticky was belt-and-braces anyway. The correct shape is a proper app layout: a header
+   that cannot scroll at all, and ONE scrolling child. #hangar-scroll is already flex:1 with
+   overflow-y:auto, so pinning the three header rows with flex-shrink:0 does the same job
+   with nothing overlapping anything. */
+#hangar-title{position:static;flex:0 0 auto;background:var(--bg2,#12161c)}
+#hangar-actions,#hangar-search{flex:0 0 auto}
+#hangar-scroll{min-height:0}
 /* the close control was 104x30 - under the 44 px touch minimum on the iPad */
 #hangar-close{min-height:34px;padding:6px 12px !important;touch-action:manipulation}
 @media (pointer:coarse){ #hangar-close{min-height:44px;min-width:88px} }
@@ -38772,16 +38800,22 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     Object.keys(MD).forEach(function(name){
       var rec=MD[name];
       if(!rec || typeof rec!=='object') return;
-      if(rec.top!==GAP && rec.all_locs!==GAP) return;      /* only the gaps, never real data */
+      /* only the gaps - never authored data. The one exception is a value THIS block
+         filled earlier from the 4.8.2 tables: if the live 4.9 feed later answers for the
+         same material, that is an upgrade, not an overwrite of anything hand-made. */
+      var mine=!!rec.cg_locsrc;
+      if(rec.top!==GAP && rec.all_locs!==GAP && !mine) return;
       var loc=idx[norm(name)];
       if(!loc || !loc.loc1) return;                        /* no row in the tables - leave it */
 
-      if(rec.top===GAP){
+      if(mine && !loc.cgLive) return;                      /* already filled, nothing better */
+      if(rec.top===GAP || (mine && loc.cgLive)){
         rec.top=loc.loc1;
-        rec.cg_locsrc='Harvestables page'+(loc.what?(' - '+loc.what):'');
+        rec.cg_locsrc=(loc.cgLive?('LIVE feed'+(loc.conf?(' · '+loc.conf.replace(/^LIVE /,'')):''))
+                                 :'Harvestables page')+(loc.what?(' - '+loc.what):'');
         n++;
       }
-      if(rec.all_locs===GAP){
+      if(rec.all_locs===GAP || (mine && loc.cgLive)){
         var all=[loc.loc1];
         if(loc.loc2 && !/^none\b/i.test(loc.loc2)) all.push(loc.loc2);
         rec.all_locs=all.join('; ');
@@ -38817,6 +38851,363 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     return {filled:done, stillEmpty:gaps, passes:PASSES};
   };
   window.CMDGLAS_MINLOC_663=1;
+})();
+</script>
+<style id="sc-b664-liveloc-css">
+/* sc-b664-liveloc-css  -  build 664, 2 AUG 2026.
+   T: "why do we serve outdated info? stop that and fix it."
+   The banner is the point. The refresh keeps the data current; the banner is what
+   makes it IMPOSSIBLE to read stale data without knowing it is stale. */
+#cg-stale-bar{display:none;margin:8px 0 10px;padding:10px 13px;border-radius:10px;
+  font:700 12px/1.5 'Rajdhani','Segoe UI',sans-serif;letter-spacing:.4px;
+  border:1px solid rgba(255,176,0,.5);background:rgba(255,176,0,.09);color:#f3e2c2}
+#cg-stale-bar.on{display:block}
+#cg-stale-bar b{color:#ffb000;letter-spacing:1.4px}
+#cg-stale-bar.cg-live{border-color:rgba(57,211,83,.42);background:rgba(57,211,83,.08);color:#cfeed6}
+#cg-stale-bar.cg-live b{color:#39d353}
+#sc-home-widgets .ops-pill.b385 .cg-loc-pin.cg-live{
+  background:linear-gradient(180deg,#a9f5bb,#39d353)}
+</style>
+<script id="sc-b664-liveloc-js">
+/* sc-b664-liveloc-js  -  build 664, 2 AUG 2026.  LIVE LOCATIONS, AND A STALENESS ALARM.
+
+   WHAT THIS FIXES. Three datasets are baked into this file, each a one-time pull:
+       blueprints             4.9.0-LIVE.12232306   current
+       harvestable locations  4.8.2-LIVE.12030094   one patch behind
+       MINING_DATA            4.8.1                 two patches behind
+   Nothing checked them and nothing said so on screen.
+
+   MEASURED 2 AUG against api.star-citizen.wiki on live 4.9.0-LIVE.12232306: the
+   /api/commodities record now carries a POPULATED `locations` array - Aphorite returns
+   45 entries, group_name "FPS_Mineables". The "NO LOCATION DATA" in MINING_DATA is a
+   stale-pull artifact from the 4.8.1 set, not a dead source.
+
+   The control server pulls that daily and serves it at /api/mining_locations, stamped
+   with the live patch code and with `stale` already computed. This block consumes it.
+
+   ONE INJECTION POINT, ON PURPOSE. It wraps window.cgLocIndex() - the index build 662
+   exposes - so the HUD row, build 663's MINING_DATA fill and anything added later all
+   read the same merged answer. There is no second copy of the merge logic and no way
+   for two surfaces to disagree.
+
+   PRECEDENCE, AND IT IS THE HONEST ONE:
+       live 4.9 data          wins wherever it exists
+       the 4.8.2 tables       fall back to, when live has nothing for that item
+       nothing                prints nothing - no row is invented
+   Every line carries the patch it came from, so which one you are reading is never
+   a guess.
+
+   DEGRADES QUIETLY. On cmdglas.com there is no control server, so the fetch 404s and
+   everything falls straight back to the baked tables - exactly today's behaviour, no
+   errors, no empty panels. Same if the server is simply not restarted yet. */
+(function(){
+  if(window.__cgLiveLoc664) return; window.__cgLiveLoc664=true;
+
+  var LIVE=null;              /* the whole /api/mining_locations payload */
+  var MAP=null;               /* normalised name -> index record, live-shaped */
+
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  var METHOD={ship:'ship mining', gv:'ROC / ground vehicle', fps:'hand-mined on foot',
+              harv:'hand-collected', salv:'salvage'};
+
+  /* a place, written the way a pilot would say it: "Adair's Retreat (Euterpe)" */
+  function place(L){
+    var n=L.n||'';
+    if(!n) return '';
+    if(L.p && L.p!==n) n+=' ('+L.p+')';
+    else if(L.s && /system/i.test(L.s) && L.t) n+=' ('+L.t.toLowerCase()+')';
+    return n;
+  }
+  function line(locs, from, to){
+    var out=[];
+    for(var i=from;i<to && i<locs.length;i++){ var p=place(locs[i]); if(p) out.push(p); }
+    return out.join(' · ');
+  }
+
+  /* the API's shape -> the same record shape build 662's index already hands out, so
+     every consumer downstream needs no change at all */
+  function toRecord(name, it, patch){
+    var locs=(it&&it.locs)||[];
+    if(!locs.length) return null;
+    var meth=(it.methods||[]).map(function(m){ return METHOD[m]||m; });
+    var head=line(locs,0,3);
+    if(!head) return null;
+    var tail=line(locs,3,9);
+    var more=(it.total||locs.length);
+    var sys={}, syss=[];
+    locs.forEach(function(L){ if(L.s && !sys[L.s]){ sys[L.s]=1; syss.push(L.s); } });
+    return {
+      loc1: head + (more>3 ? ('  —  ' + more + ' sites total') : ''),
+      html1: esc(head) + (more>3 ? (' <span style="opacity:.75">— '+more+' sites total</span>') : ''),
+      loc2: tail || '',
+      note: (meth.length?('Method: '+meth.join(', ')+'. '):'') + (syss.length?('Systems: '+syss.join(', ')+'.'):''),
+      conf: 'LIVE ' + (patch||'current patch'),
+      key: it.methods && it.methods.indexOf('ship')>=0 ? 'loc'
+         : it.methods && it.methods.indexOf('fps')>=0 ? 'handgem'
+         : it.methods && it.methods.indexOf('gv')>=0 ? 'rocgem'
+         : it.methods && it.methods.indexOf('harv')>=0 ? 'harv' : '',
+      what: meth[0] || '',
+      cgLive: true
+    };
+  }
+
+  function buildMap(){
+    MAP={};
+    if(!LIVE || !LIVE.items) return;
+    var patch=LIVE.version||'';
+    Object.keys(LIVE.items).forEach(function(name){
+      var r=toRecord(name, LIVE.items[name], patch);
+      if(r) MAP[norm(name)]=r;
+    });
+  }
+
+  /* ---- the single injection point --------------------------------------------------
+     Wrap 662's index. Live wins; the baked tables stay as the fallback. The wrapper is
+     installed ONCE and is idempotent, so a re-fetch does not stack wrappers. */
+  var baseIndex=null;
+  function install(){
+    if(baseIndex) return;
+    if(typeof window.cgLocIndex!=='function') return;
+    baseIndex=window.cgLocIndex;
+    window.cgLocIndex=function(){
+      var base={};
+      try{ var b=baseIndex()||{}; Object.keys(b).forEach(function(k){ base[k]=b[k]; }); }catch(e){}
+      if(MAP) Object.keys(MAP).forEach(function(k){ base[k]=MAP[k]; });   /* live wins */
+      return base;
+    };
+    window.cgLocIndex.__b664=true;
+  }
+
+  /* ---- the alarm ------------------------------------------------------------------- */
+  function banner(){
+    var host=document.getElementById('tab-harvest');
+    if(!host) return;
+    var bar=document.getElementById('cg-stale-bar');
+    if(!bar){
+      bar=document.createElement('div'); bar.id='cg-stale-bar';
+      host.insertBefore(bar, host.firstChild);
+    }
+    /* built once, rewritten only when the TEXT changes - never re-created on a timer
+       (rule 17: the b660 undock button and the rev12 section 4 flicker were both a node
+       being rebuilt underneath a page that manages its own DOM) */
+    var html='', cls='on';
+    if(!LIVE || !LIVE.ok){
+      html='<b>LOCATION DATA: BAKED-IN COPY.</b> The live feed is not answering, so the '
+          +'locations on this page are the <b>4.8.2</b> research set that shipped with the '
+          +'tablet. Start the control server and press RESTART SERVER on the console to '
+          +'refresh them.';
+    } else if(LIVE.stale){
+      html='<b>LOCATION DATA IS BEHIND.</b> Pulled on <b>'+esc(LIVE.version||'?')+'</b>, the '
+          +'game is now on <b>'+esc(LIVE.live_patch||'?')+'</b>'
+          +(LIVE.age_days!=null?(' · '+esc(String(LIVE.age_days))+' days old'):'')
+          +'. Press RESTART SERVER on the console to re-pull.';
+    } else {
+      cls='on cg-live';
+      html='<b>LOCATION DATA IS CURRENT.</b> '+esc(String(LIVE.count||0))+' materials, live from '
+          +'<b>'+esc(LIVE.version||'')+'</b>, refreshed '+esc(LIVE.fetched_at||'')
+          +'. Rows with no live entry fall back to the 4.8.2 research set and say so.';
+    }
+    if(bar.__html!==html){ bar.__html=html; bar.innerHTML=html; }
+    if(bar.className!==cls) bar.className=cls;
+  }
+
+  /* ---- fetch ----------------------------------------------------------------------- */
+  function pull(){
+    return fetch('/api/mining_locations',{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(function(d){
+        LIVE=d; buildMap(); install(); banner();
+        window.CG_LIVELOC=d;
+        /* the HUD rows were drawn before this landed - ask 662 to redraw them once */
+        try{ if(typeof window.cgLocRedraw==='function') window.cgLocRedraw(); }catch(e){}
+        return d;
+      })
+      .catch(function(){ LIVE=null; MAP=null; banner(); return null; });
+  }
+
+  install();                       /* wrap first, so nothing reads an un-wrapped index */
+  pull();
+  setTimeout(function(){ install(); banner(); }, 2500);
+  setInterval(pull, 1800000);      /* every 30 min - the server only re-pulls daily */
+
+  window.cgLiveLocReport=function(){
+    return {live:!!(LIVE&&LIVE.ok), patch:LIVE&&LIVE.version, livePatch:LIVE&&LIVE.live_patch,
+            stale:LIVE&&LIVE.stale, count:LIVE&&LIVE.count,
+            merged:MAP?Object.keys(MAP).length:0, wrapped:!!(window.cgLocIndex&&window.cgLocIndex.__b664)};
+  };
+  window.CMDGLAS_LIVELOC_664=1;
+})();
+</script>
+<style id="sc-b665-readable-css">
+/* sc-b665-readable-css  -  build 665, 2 AUG 2026.
+   T: "all the user manuals in the tablet have horrible contrast and overall readability.
+       walls of text."
+
+   MEASURED FIRST, AND IT MOVED THE ANSWER. I sampled every text style on the reference
+   pages and computed the real contrast ratio of each against its own background:
+
+       body prose            10.53 : 1
+       body on panel          9.90 : 1
+       sub-label              6.13 : 1
+       NOTE line              7.22 : 1
+
+   WCAG AA asks 4.5 : 1. Contrast is NOT the fault - it passes twice over. Raising it
+   further would change nothing, because the problem is somewhere else:
+
+       PAGE            BODY SIZE   LINE-HEIGHT   MEDIAN LINE WIDTH
+       Space Manuals   11.5 px     normal        1243 px   <- ~200 characters per line
+       Troubleshoot    10   px     normal         580 px
+       Console Cmds    12   px     normal         532 px
+       User Guide      12.5 px     1.7 / 1.5      324 px
+
+   Small light type, no set line rhythm, and lines running 1,243 px wide. That is what
+   reads as "washed out" and "a wall" - and none of it is colour. Typography research puts
+   comfortable measure at 45-75 characters; 200 is roughly triple the top of that, and the
+   eye loses its place returning to the next line. That is the wall.
+
+   WHAT THIS DOES - three things, no content touched:
+     1. body prose to 16 px (15 px on a phone-width screen)
+     2. a real line-height, 1.6, replacing `normal`
+     3. a measure cap of 72 characters, so no line runs the full width of a 2560 monitor
+
+   WHAT IT DELIBERATELY DOES NOT TOUCH: tables, chips, buttons, badges, inputs, the row
+   strips and anything inside the HUD pill. Dense data is supposed to be dense - blowing a
+   reference table up to 16 px would wreck the thing it is trying to help. The scope below
+   is the five reference PAGES only, and inside them only text blocks.
+   Reversible: delete this block. No markup is changed anywhere - this is stylesheet only. */
+
+#tab-guide, #tab-spacemanuals, #tab-trouble, #tab-cap, #tab-console{
+  --cgr-size:16px; --cgr-lh:1.6; --cgr-measure:72ch;
+}
+@media (max-width:560px){
+  #tab-guide, #tab-spacemanuals, #tab-trouble, #tab-cap, #tab-console{ --cgr-size:15px; }
+}
+
+/* ONE SELECTOR, AND IT IS THE JS-TAGGED CLASS. MEASURED FAULT in the first cut: blanket
+   `#tab-x p, #tab-x li` rules also matched paragraphs INSIDE tables, and the `font-size:revert`
+   rule meant to undo that does not behave the same in WebKit - the iPad measured reference
+   TABLE cells at 16 px where the PC kept them at 12 px. Dense data blown up is worse than the
+   problem being fixed. So there is no blanket rule any more: only elements the script has
+   inspected and tagged get touched, and the script refuses anything inside a table, a control
+   or the HUD pill. Nothing to undo, so nothing to get wrong. */
+#tab-guide .cgr-txt, #tab-spacemanuals .cgr-txt, #tab-trouble .cgr-txt,
+#tab-cap .cgr-txt, #tab-console .cgr-txt{
+  font-size:var(--cgr-size) !important;
+  line-height:var(--cgr-lh) !important;
+  /* px floor as well as the ch cap: `ch` resolves off the font's zero-glyph and WebKit came
+     out 117 characters per line where Chromium came out 68 from the identical rule. */
+  max-width:min(var(--cgr-measure), 660px);
+}
+#tab-guide li.cgr-txt, #tab-spacemanuals li.cgr-txt, #tab-trouble li.cgr-txt,
+#tab-cap li.cgr-txt, #tab-console li.cgr-txt{ margin-bottom:.55em; }
+#tab-guide p.cgr-txt, #tab-spacemanuals p.cgr-txt, #tab-trouble p.cgr-txt,
+#tab-cap p.cgr-txt, #tab-console p.cgr-txt{ margin-bottom:1em; }
+
+/* callouts get a shape, not just a colour - NOTE / CAUTION / WARNING read at a glance */
+.cgr-callout{
+  border-left:3px solid #ffb000; background:rgba(255,176,0,.08);
+  border-radius:0 9px 9px 0; padding:12px 15px; margin:14px 0;
+  font-size:var(--cgr-size,16px) !important; line-height:1.55 !important;
+  color:#f3e2c2 !important; max-width:min(var(--cgr-measure,72ch), 660px);
+}
+.cgr-callout.cgr-warn{ border-left-color:#ff5f56; background:rgba(255,95,86,.09); color:#f6d4d1 !important; }
+.cgr-callout.cgr-tip { border-left-color:#39d353; background:rgba(57,211,83,.08); color:#cfeed6 !important; }
+.cgr-callout .cgr-k{ font-weight:700; letter-spacing:1.4px; color:#ffb000; }
+.cgr-callout.cgr-warn .cgr-k{ color:#ff5f56; }
+.cgr-callout.cgr-tip  .cgr-k{ color:#39d353; }
+</style>
+<script id="sc-b665-readable-js">
+/* sc-b665-readable-js  -  build 665.  Tags the leaf prose blocks the stylesheet cannot
+   reach with a selector, and lifts NOTE / CAUTION / WARNING lines into real callouts.
+
+   CONSERVATIVE BY DESIGN. It only ever ADDS a class. It never moves a node, never rewrites
+   text, never touches a table, a control or anything inside the HUD pill. A block it cannot
+   confidently classify is left exactly as it was - the worst case is that one paragraph
+   keeps its old size, not that content moves or disappears.
+
+   RULE 17: this runs on tab activation and on a bounded settle schedule, never on a
+   repeating timer, and every element it has already tagged is skipped. Measured for
+   childList AND attribute churn before shipping. */
+(function(){
+  if(window.__cgReadable665) return; window.__cgReadable665=true;
+
+  var PAGES=['tab-guide','tab-spacemanuals','tab-trouble','tab-cap','tab-console'];
+  var KEY=/^\s*(NOTE|CAUTION|WARNING|IMPORTANT|TIP)\b\s*[:.—-]?\s*/i;
+  var SKIP=/^(TABLE|THEAD|TBODY|TR|TD|TH|BUTTON|INPUT|SELECT|TEXTAREA|OPTION|LABEL|SVG|PATH|CODE|PRE)$/;
+
+  function inSkippedHost(el){
+    return !!(el.closest && (el.closest('table') || el.closest('.ops-pill') ||
+              el.closest('button') || el.closest('.sc-table')));
+  }
+
+  function tag(pageId){
+    var host=document.getElementById(pageId);
+    if(!host) return 0;
+    var n=0;
+    /* MEASURED: tagging <span> did nothing useful - max-width does not apply to an inline
+       box, so WebKit still ran 110 characters per line where Chromium ran 68. Block-level
+       leaves only, and the computed display is checked rather than assumed. */
+    [].forEach.call(host.querySelectorAll('div,p,li'), function(el){
+      if(el.__cgr) return;
+      if(SKIP.test(el.tagName)) return;
+      if(el.children.length) return;                /* leaf text only */
+      if(inSkippedHost(el)) return;
+      var t=(el.textContent||'').replace(/\s+/g,' ').trim();
+      if(t.length<45) return;                       /* labels and chips are not prose */
+      var disp=''; try{ disp=getComputedStyle(el).display; }catch(e){}
+      if(disp==='inline' || disp==='none') return;  /* the measure cap cannot bind on those */
+      el.__cgr=1;
+
+      var m=KEY.exec(t);
+      if(m && el.tagName!=='LI'){
+        var kind=m[1].toUpperCase();
+        el.classList.add('cgr-callout');
+        if(/WARNING|CAUTION/.test(kind)) el.classList.add('cgr-warn');
+        else if(kind==='TIP') el.classList.add('cgr-tip');
+        /* the keyword is emphasised in place - the sentence is NOT rewritten */
+        if(!el.querySelector('.cgr-k')){
+          var rest=t.slice(m[0].length);
+          el.textContent='';
+          var k=document.createElement('b'); k.className='cgr-k'; k.textContent=kind+'.';
+          el.appendChild(k); el.appendChild(document.createTextNode(' '+rest));
+        }
+        n++; return;
+      }
+      el.classList.add('cgr-txt');
+      n++;
+    });
+    return n;
+  }
+
+  function sweep(){ var n=0; PAGES.forEach(function(p){ n+=tag(p); }); return n; }
+
+  /* bounded settle passes, then only when a reference page is opened */
+  [400,1500,4000,9000,15000].forEach(function(ms){ setTimeout(sweep, ms); });
+  document.addEventListener('click', function(e){
+    var t=e.target && e.target.closest && e.target.closest('.tab[data-tab]');
+    if(!t) return;
+    var id='tab-'+t.getAttribute('data-tab');
+    if(PAGES.indexOf(id)<0) return;
+    setTimeout(function(){ tag(id); }, 120);
+    setTimeout(function(){ tag(id); }, 900);
+  }, true);
+
+  window.cgReadableReport=function(){
+    var out={};
+    PAGES.forEach(function(p){
+      var h=document.getElementById(p);
+      out[p]=h?{txt:h.querySelectorAll('.cgr-txt').length,
+                callouts:h.querySelectorAll('.cgr-callout').length}:null;
+    });
+    return out;
+  };
+  window.CMDGLAS_READABLE_665=1;
 })();
 </script>
 </body>
