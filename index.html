@@ -1475,7 +1475,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 .kb-sd-pages-wrap>.kb-sd-grid{display:none}
 .kb-sd-pages-wrap>.kb-sd-grid.active{display:grid}
 </style>
-<style id="sc-b560-stable-gutter">/* 2026-07-28 T: the center pill 'shrank on its own' because the fit() zoom is computed from window.innerWidth, and a scrollbar appearing/disappearing as live data changed the page height kept flipping that width -> zoom oscillated -> the fluid centre pill pumped. Reserving the scrollbar gutter freezes the width so the loop can't start. Reversible: delete this block. */
+<style id="sc-b560-stable-gutter">/* 2026-07-28 T: the HUD 'shrank on its own' because the fit() zoom is computed from window.innerWidth, and a scrollbar appearing/disappearing as live data changed the page height kept flipping that width -> zoom oscillated -> the fluid HUD pumped. Reserving the scrollbar gutter freezes the width so the loop can't start. Reversible: delete this block. */
 html{scrollbar-gutter:stable}
 </style>
 <style id="sc-b561-traylabel">/* 2026-07-28 T: INGAME TOOLS labels rendered at 11px nowrap with no width cap, so the long ones (BLUEPRINTS, INVENTORY, CONTRACTS) overflowed their tiles and ran into the next label. Fit each label to its own cell so none overlap. Reversible: delete this block. */
@@ -3790,7 +3790,7 @@ html{scrollbar-gutter:stable}
           <div class="cap-card">
             <div class="cap-h">It Remembers</div>
             <div class="cap-i"><b>Your notes, lists and picks persist</b><span class="cap-why">Notepad, gather list, buy list, blueprint selections and inventory are still there next session - and next patch.</span></div>
-            <div class="cap-i"><b>Everything is cross-page</b><span class="cap-why">Send blueprints from Blueprints and they appear in the Craft Calculator and the centre pill's Gather list. One store, many views - nothing is typed twice.</span></div>
+            <div class="cap-i"><b>Everything is cross-page</b><span class="cap-why">Send blueprints from Blueprints and they appear in the Craft Calculator and the HUD's Gather list. One store, many views - nothing is typed twice.</span></div>
             <div class="cap-i"><b>PC and iPad builds</b><span class="cap-why">The same tablet, sized for each: the iPad keeps 44px tap targets and its own notch handling.</span></div>
             <div class="cap-i"><b>Cross-device sync</b><span class="cap-why">Notes, gather and buy lists, craft picks, blueprints, reputation and inventory move between PC and iPad through the control server on your own machine. Zoom and theme stay per-device on purpose, the iPad wants its own. Verified end-to-end 2026-07-16.</span></div>
         </div>
@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 671;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 673;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -18103,7 +18103,7 @@ their own rules) and COMPACT MODE (its layout is intentionally small). */
          is smaller than MIN_W*z physical px, the body keeps MIN_W and a scrollbar appears — the
          layout stays intact instead of squishing/breaking. */
       document.body.style.minWidth=MIN_W+'px';
-      /* build 472 (user: top-center pill still resizes on window drag): CAP the width and centre it,
+      /* build 472 (user: HUD still resizes on window drag): CAP the width and centre it,
          so wide/short windows letterbox instead of stretching the fluid grid.
          build 625 (T: "sides and bottoms no more then 15px from the last text/pill on that side"):
          the cap is no longer a hard 1700. It grows to whatever the window can show AT THE CURRENT
@@ -19277,7 +19277,7 @@ live list and the photo reference; choice persists (sc_kbview). */
   'tab-harvest':'Harvestable & mineable atlas. Card decks with a live type-search up top; DECKS/TABLES toggle switches to the full source tables. Jump dropdowns skip straight to an item, section or location.',
   'tab-inventory':'Add gear with the CATEGORY / ITEM / QTY / QUALITY / LOCATION row, or type lines on the Notepad page (name x qty q quality @ location). Views: item list, by location, associations.',
   'tab-meta':'The best craftable pick per weapon/armor slot, with materials, mining locations and a confidence pill. Tap a row or [ MORE INFO ] for the full reasoning and source. 4.9 WATCH note at top flags incoming changes.',
-  'tab-missions':'Every live contract, cleaned of placeholder rows. Filter and sort by type, giver, system and LEGAL/ILLEGAL, or search - the search also looks at the CARGO and HARVESTABLES a contract asks for, so typing a material name finds the job that wants it. Cards tagged UNCONFIRMED are ones CIG has not flagged live yet. Press [ TRACK ] on any card and it appears in the CONTRACTS tab of the centre pill.',
+  'tab-missions':'Every live contract, cleaned of placeholder rows. Filter and sort by type, giver, system and LEGAL/ILLEGAL, or search - the search also looks at the CARGO and HARVESTABLES a contract asks for, so typing a material name finds the job that wants it. Cards tagged UNCONFIRMED are ones CIG has not flagged live yet. Press [ TRACK ] on any card and it appears in the CONTRACTS tab of the HUD.',
   'tab-mining':'Top: rig builder - pick ship, pick a laser head per slot (only compatible sizes shown), SAVE LOADOUT. Below: pin reference and laser/module data.',
   'tab-salvage':'Salvage rig builder. Heads (Baler / Salvation, S2) go on the arms; Abrade / Cinch / Trawler / ReadyGrip are S1 MODULES that slot INTO each head. Pick ship → heads → modules → SAVE LOADOUT.',
   'tab-notepad':'Free-form notes. Lines under ## INVENTORY parse automatically into the Inventory tracker.',
@@ -19328,7 +19328,7 @@ live list and the photo reference; choice persists (sc_kbview). */
     {t:"Press [ CLOSE ] to apply your hangar.", s:"#hangar-close"},
     {t:"Tap a hull in the ship list to open it.", s:"#ship-list"},
     {t:"Its component loadout shows on the right; your edits persist.", s:"#loadout-detail"},
-    {t:"Every slot has a \ud83d\uded2 cart - tap to send that part to the BUY list, tap again to recall it. Green glow = already on the list. Then PLAN ROUTE (centre pill, BUY tab) builds the shopping run.", s:"#loadout-detail"}
+    {t:"Every slot has a \ud83d\uded2 cart - tap to send that part to the BUY list, tap again to recall it. Green glow = already on the list. Then PLAN ROUTE (HUD, BUY tab) builds the shopping run.", s:"#loadout-detail"}
   ],
   'tab-notepad':[
     {t:"Type free-form notes in the text area.", s:"#np-textarea"},
@@ -22129,7 +22129,7 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
       +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to your GATHER list, grouped by verified mining location'>&#8594; PUSH TO GATHER LIST</button>"
       +"<button type='button' id='be-mn-recall' class='panel-btn' style='border:1px solid var(--red2,#ff6b6b);color:var(--red2,#ff6b6b);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;margin-left:6px' title='build 541: removes the selected materials from the GATHER list (only the Basic Mining tag - a material a blueprint also needs stays)'>&#8592; RECALL</button>"
       +"<span id='be-mn-sendmsg' class='be-mn-sendmsg'></span></div>"
-      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO GATHER does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>gather list</b> (centre pill, GATHER tab); <b>&#8592; RECALL</b> takes the same picks back off it. No quantity is invented; it just lists what you are after, grouped by verified location. Once your list is set, <b>PLAN MINING RUN</b> on the GATHER tab sorts everything into a location-by-location run with verified yield rates - tap a material there to PIN a spot. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
+      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO GATHER does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>gather list</b> (HUD, GATHER tab); <b>&#8592; RECALL</b> takes the same picks back off it. No quantity is invented; it just lists what you are after, grouped by verified location. Once your list is set, <b>PLAN MINING RUN</b> on the GATHER tab sorts everything into a location-by-location run with verified yield rates - tap a material there to PIN a spot. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
       +"<div id='be-mn-out'></div>";
     row.parentNode.insertBefore(bp,row.nextSibling);
     /* datalist = MAT_LOC keys + atlas item names, deduped, ALPHABETICAL (user rule) */
@@ -24124,7 +24124,7 @@ html,body{overflow:auto;height:auto}
   var TOPICS=[
     {id:'ipad',t:'DISPLAY ON iPAD / ANDROID',d:'CmdGlas runs on your PC and serves itself over your network. Run the .bat once, then open the address it shows from your tablet browser.'+IPAD},
     {id:'start',t:'GETTING STARTED',d:'CmdGlas is a second-screen companion for Star Citizen. It reads files the game writes on your PC plus community data, it never writes to the game. Start the control server for live data and snips.',go:go('home'),goL:'HOME SCREEN'},
-    {id:'ops',t:'GATHER &amp; BUY LISTS',d:'Your workspace lives in the top-centre pill. The <b>gather list</b> and <b>buy list</b> collect what you need as you use the tools - and each tab has a one-tap ROUTE PLANNER: <b>PLAN ROUTE</b> builds the fewest-stops shopping run with listed aUEC prices, <b>PLAN MINING RUN</b> sorts materials by best verified location. Tap any planned item to <b>PIN</b> where you buy or mine it.'},
+    {id:'ops',t:'GATHER &amp; BUY LISTS',d:'Your workspace lives in the HUD. The <b>gather list</b> and <b>buy list</b> collect what you need as you use the tools - and each tab has a one-tap ROUTE PLANNER: <b>PLAN ROUTE</b> builds the fewest-stops shopping run with listed aUEC prices, <b>PLAN MINING RUN</b> sorts materials by best verified location. Tap any planned item to <b>PIN</b> where you buy or mine it.'},
     {id:'medical',t:'MEDICAL SPACE MANUAL',d:'Full 4.9 medical reference: MedPens and drug pens, the ParaMed MedGun and LifeGuard multitool attachment, MedBed tiers and respawn range, blood drug level and how to lower it, refills (incl. the new lootable MedGel), prices and where to buy. Every figure is sourced; unconfirmed items are flagged.'},
     {id:'mining',t:'MINING',d:'<b>BASIC</b> = pick a material, get where and how. <b>EXPERT</b> = the full rig builder and reference tables. The <b>Yield Estimator</b> values a rock before you crack it. <b>PUSH</b> adds your picks to the gather list.',go:go('mining'),goL:'GO TO MINING'},
     {id:'craft',t:'CRAFT CALCULATOR',d:'Tick the blueprints you want to build; it sums every material they need and drops the totals into the gather list, grouped by where to find them.',go:go('craftcalc'),goL:'GO TO CRAFT CALC'},
@@ -24240,8 +24240,8 @@ table tbody tr:nth-child(even) td{background:rgba(120,180,255,.06)}
    Reusable: add an entry to HOWTO + a button onclick="scHowto('key')" on any section. */
 (function(){
   var HOWTO={
-    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE row to select it. Pick as many as you like, then hit PUSH TO GATHER LIST to send their materials to your Gather list. RECALL removes those materials from the Gather list. CLEAR SELECTION clears your current picks. When the list is ready, PLAN MINING RUN (centre pill, GATHER tab) sorts every material into a location-by-location run with verified yield rates.'},
-    harvest:{t:'HARVESTABLES',b:'One compact table per category (the card decks were retired in build 537). Type in the search box to filter live by name, method, location, sell price or confidence. Each entry gives the top locations, how to harvest it, and a VERIFIED / COMMUNITY / UNCONFIRMED tag on the data. Push materials to the GATHER list, then PLAN MINING RUN (centre pill, GATHER tab) sorts the whole list into a location-by-location run - tap a material there to PIN a spot.'}
+    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE row to select it. Pick as many as you like, then hit PUSH TO GATHER LIST to send their materials to your Gather list. RECALL removes those materials from the Gather list. CLEAR SELECTION clears your current picks. When the list is ready, PLAN MINING RUN (HUD, GATHER tab) sorts every material into a location-by-location run with verified yield rates.'},
+    harvest:{t:'HARVESTABLES',b:'One compact table per category (the card decks were retired in build 537). Type in the search box to filter live by name, method, location, sell price or confidence. Each entry gives the top locations, how to harvest it, and a VERIFIED / COMMUNITY / UNCONFIRMED tag on the data. Push materials to the GATHER list, then PLAN MINING RUN (HUD, GATHER tab) sorts the whole list into a location-by-location run - tap a material there to PIN a spot.'}
   };
   var bub=null;
   function make(){bub=document.createElement("div");bub.id="sc-howto-bubble";
@@ -26739,7 +26739,7 @@ body.sc-home-mode #sc-chatdock{top:44px !important}
 #sc-navsearch .ns-wing{left:auto !important;right:0 !important}
 </style>
 
-<style id="sc-b330-pills-css">/* 2026-07-21 build 331 (user: center pill 1/4 bigger than the two outer pills + black interior; supersedes the brief equal-size). Equal columns (were 1.3/1/1) and a near-black interior fill; the holographic double-line border from b328 is kept. */
+<style id="sc-b330-pills-css">/* 2026-07-21 build 331 (user: HUD 1/4 bigger than the two outer pills + black interior; supersedes the brief equal-size). Equal columns (were 1.3/1/1) and a near-black interior fill; the holographic double-line border from b328 is kept. */
 #sc-home-widgets{grid-template-columns:1fr 1.25fr 1fr !important}
 #sc-home-widgets .wg{background:linear-gradient(180deg,#0a0e15 0%,#06090e 55%,#04060b 100%),radial-gradient(rgba(130,215,255,.05) 1px,transparent 1.4px) !important;background-size:auto,18px 18px !important}
 </style>
@@ -27046,7 +27046,7 @@ body.sc-home-mode #sc-profile{display:flex}
 </script>
 
 
-<style id="sc-b340-pillslots-css">/* 2026-07-21 build 340 (user: LEFT + RIGHT home pills become user-configurable via a small selector — pick any tablet module to show; CENTER pill locked to OPS, centered. Top status readouts move into the Status module, shown compact as colored LEDs + labeled buttons. Reversible: delete this block + its JS twin. */
+<style id="sc-b340-pillslots-css">/* 2026-07-21 build 340 (user: LEFT + RIGHT home pills become user-configurable via a small selector — pick any tablet module to show; HUD locked to OPS, centered. Top status readouts move into the Status module, shown compact as colored LEDs + labeled buttons. Reversible: delete this block + its JS twin. */
 /* top: hide the moved-out readouts; keep SIGN IN by the profile pic */
 body.sc-home-mode #sc-statusbar .sb-clock,
 body.sc-home-mode #sc-statusbar .sb-live,
@@ -27083,7 +27083,7 @@ body.sc-home-mode #sc-statusbar{justify-content:flex-end !important;left:130px !
 #sc-home-widgets .st-led.warn{background:#ffcf6b;box-shadow:0 0 7px rgba(255,207,107,.75)}
 #sc-home-widgets .st-lbl{background:rgba(90,180,220,.06);border:1px solid rgba(120,190,225,.28);border-radius:6px;color:#bfd3e2;font:700 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.2px;padding:4px 7px;cursor:pointer}
 #sc-home-widgets .st-lbl:hover{border-color:#7fc4de;color:#eaf7ff;background:rgba(90,180,220,.14)}
-/* OPS center pill */
+/* OPS HUD */
 #sc-home-widgets .wg.ops-pill .pill-head{justify-content:center}
 #sc-home-widgets .wg.ops-pill .pill-title{color:#7fe0ff}
 #sc-home-widgets .wg.ops-pill .pill-body{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:7px}
@@ -27305,7 +27305,7 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
     var sel=card.querySelector('.pill-sel'); sel.onchange=function(){ setModule(card,key,sel.value); }; setModule(card,key,saved);
   }
   function setupOps(card){ if(card.dataset.opsPill) return; card.dataset.opsPill='1'; card.dataset.b327='1'; card.classList.add('ops-pill');
-    card.innerHTML='<div class="pill-head"><span class="pill-title"></span></div><div class="pill-body"></div>';/* build 467 (user: drop the OPS name from the centre pill) */
+    card.innerHTML='<div class="pill-head"><span class="pill-title"></span></div><div class="pill-body"></div>';/* build 467 (user: drop the OPS name from the HUD) */
     var body=card.querySelector('.pill-body'); var iv=renderOps(body); if(iv) body.__iv=iv;
   }
   function setupLogin(card){ if(card.dataset.login) return; card.dataset.login='1'; card.dataset.pill='1'; card.dataset.b327='1'; card.classList.add('login-pill');
@@ -27588,7 +27588,7 @@ body.sc-home-mode #sc-home-widgets .st-chip{min-width:0}
     /* build 496 (user: "the middle top pill still resizes itself. you failed again to lock it down").
        DESKTOP HARD LOCK: stop mirroring the tools-row entirely. The mirror re-read the top row's
        center-segment width on every resize, and on the real machine that segment (NAV/RIG/LEARN…)
-       changes width as its content/fonts settle, dragging the center pill with it. We now strip any
+       changes width as its content/fonts settle, dragging the HUD with it. We now strip any
        inline grid-template-columns and let the fixed CSS ratio in sc-b496 govern
        (minmax(0,1fr) minmax(0,1.9fr) minmax(0,1fr) == the measured 455:868:455). Nothing can move it
        relative to the side pills again. Touch already uses the fixed CSS ratio (sc-b487). */
@@ -28270,10 +28270,10 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<ol class="um-steps"><li>Locate the drop-down selector at the top-right corner of the LEFT window (top-left of Home). It reads whatever module is loaded - on a fresh tablet that is <b>CLOCK</b>.</li>',
 '<li>Tap the selector.</li>',
 '<li>Choose any of the 16 modules: Blueprints, Clock, Contracts, Hauling, Inventory, Keybinds, Media Player, Mining, Nav / Starmap, Notepad, Pinned, Reputation, Salvage, Shard Health, Ship Loadouts, Wikelo.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> There is no STATUS module here any more - the server and rig lamps moved onto the CLOCK module, and the live operational readout is the STREAM tab of the centre pill (Section 3).</div></div>',
-'<div class="um-sec"><h2>Section 3 - Centre Pill</h2><div class="um-purpose">The centre pill (top-centre of Home) is the HUD. Six tabs, left to right: <b>GATHER &amp; BUY</b> (the lists every tool pushes into, both on one tab), <b>NOTES</b>, <b>CONTRACTS</b> (the contracts you have tracked), <b>ORG/PARTY</b> (your roster, live status and assigned objective), THREAT, and STREAM (the Twitch player - this tab was called STATUS on older builds).</div>',
+'<div class="um-note"><b>NOTE.</b> There is no STATUS module here any more - the server and rig lamps moved onto the CLOCK module, and the live operational readout is the STREAM tab of the HUD (Section 3).</div></div>',
+'<div class="um-sec"><h2>Section 3 - HUD</h2><div class="um-purpose">The HUD (top-centre of Home) is the HUD. Six tabs, left to right: <b>GATHER &amp; BUY</b> (the lists every tool pushes into, both on one tab), <b>NOTES</b>, <b>CONTRACTS</b> (the contracts you have tracked), <b>ORG/PARTY</b> (your roster, live status and assigned objective), THREAT, and STREAM (the Twitch player - this tab was called STATUS on older builds).</div>',
 '<div class="um-proc">3-1. Switch tabs</div>',
-'<ol class="um-steps"><li>Locate the centre pill (top-centre of Home).</li>',
+'<ol class="um-steps"><li>Locate the HUD (top-centre of Home).</li>',
 '<li>Tap <b>GATHER &amp; BUY</b>, <b>NOTES</b>, <b>CONTRACTS</b>, <b>ORG/PARTY</b>, <b>THREAT</b>, or <b>STREAM</b> across the top of the pill.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> GATHER and BUY used to be two tabs. They opened the same page, so they are one tab now and both lists show together, each under its own heading.</div>',
 '<div class="um-proc">3-2. Open the full page behind a tab</div>',
@@ -28281,7 +28281,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Locate <b>SOURCE</b> at the bottom of the pill, beside UNDOCK.</li>',
 '<li>Tap it - the full page opens.</li>',
 '<li>Tap <b>&#8592; RETURN TO HUD</b> at the top of that page to come back to the same tab you left from.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> Blueprints, Craft Calculator, Mining, Harvestables and Ship Loadouts push your picks into the centre pill\'s GATHER and BUY lists.</div></div>',
+'<div class="um-note"><b>NOTE.</b> Blueprints, Craft Calculator, Mining, Harvestables and Ship Loadouts push your picks into the HUD\'s GATHER and BUY lists.</div></div>',
 '<div class="um-sec"><h2>Section 4 - Account</h2><div class="um-purpose">Sign in to sync gear, loadouts, and org comms across devices.</div>',
 '<div class="um-proc">4-1. Sign in</div>',
 '<ol class="um-steps"><li>Locate the ACCOUNT window, top-right of Home.</li>',
@@ -28305,7 +28305,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-proc">6-2. Open a tool</div>',
 '<ol class="um-steps"><li>Click the tile (mouse), or tap the preview card (touch).</li>',
 '<li>The tool opens as a reading sheet on top of Home (see Section 9).</li></ol>',
-'<div class="um-note"><b>NOTE.</b> The preview card names the tool and shows whether it pushes items to the centre pill\'s Gather / Buy lists.</div></div>',
+'<div class="um-note"><b>NOTE.</b> The preview card names the tool and shows whether it pushes items to the HUD\'s Gather / Buy lists.</div></div>',
 '<div class="um-sec"><h2>Section 7 - Comms</h2><div class="um-purpose">Org chat and channel monitor.</div>',
 '<div class="um-proc">7-1. Read and transmit</div>',
 '<ol class="um-steps"><li>Locate the COMMS window, top-right of Home (below ACCOUNT).</li>',
@@ -28380,7 +28380,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-note"><b>NO DANGER.</b> The control server runs only on your own PC and serves the tablet to your browser. It does not touch the game and is unrelated to anti-cheat.</div>',
 '<div class="um-sec"><h2>Section 14 - Gather &amp; Buy Page</h2><div class="um-purpose">The full version of the pill&#39;s GATHER &amp; BUY tab. Everything you push from the tools lands here.</div>',
 '<div class="um-proc">14-1. Open it</div>',
-'<ol class="um-steps"><li>Open the <b>GATHER &amp; BUY</b> tab in the centre pill.</li>',
+'<ol class="um-steps"><li>Open the <b>GATHER &amp; BUY</b> tab in the HUD.</li>',
 '<li>Tap <b>SOURCE</b> at the bottom of the pill.</li></ol>',
 '<div class="um-proc">14-2. Jump to the tool that fills a list</div>',
 '<ol class="um-steps"><li>Locate the <b>BUILT FROM</b> row near the top of the page.</li>',
@@ -28393,7 +28393,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>A confirmation window opens.</li>',
 '<li>Tap <b>CLEAR</b> in that window <b>twice</b> - the first tap arms it, the second carries it out.</li></ol>',
 '<div class="um-caution"><b>CAUTION.</b> Clearing cannot be undone. The gather list also wipes your Craft Calculator and mining picks, because all three feed the same list. CANCEL, Escape, or a tap outside backs out safely.</div></div>',
-'<div class="um-sec"><h2>Section 15 - Put the HUD Over Your Game (PC)</h2><div class="um-purpose">The centre pill can leave the page and float on top of Star Citizen while you fly.</div>',
+'<div class="um-sec"><h2>Section 15 - Put the HUD Over Your Game (PC)</h2><div class="um-purpose">The HUD can leave the page and float on top of Star Citizen while you fly.</div>',
 '<div class="um-proc">15-1. Pop it out</div>',
 '<ol class="um-steps"><li>Open the tablet on your PC and click it once so it is the active window.</li>',
 '<li>Press <b>Ctrl + Alt + 1</b>. The pill becomes a small floating window - drag it where you want it.</li>',
@@ -29249,7 +29249,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   var GOALS=[
    {id:'first', gi:'🧭', label:'I am brand new', blurb:'Never played. Start here — from waking up to your first payday.', steps:[
      {t:'Get your bearings on the tablet.', w:'Tablet: Home screen. Read the zones, then open USER MANUAL (bottom of Home).',
-      h:'Home is your base. Top-left is a SELECTABLE window that lands on CLOCK (time, patch, server lamps), top-centre is the CENTRE PILL (Gather, Buy, Notes, Org/Party, Threat, Stream), left is SEARCH, the centre tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
+      h:'Home is your base. Top-left is a SELECTABLE window that lands on CLOCK (time, patch, server lamps), top-centre is the HUD (Gather, Buy, Notes, Org/Party, Threat, Stream), left is SEARCH, the centre tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
      {go:'spacemanuals', t:'Read the New Player Orientation.', w:'Tablet: CONTROL BAR > LEARN > SPACE MANUALS > SR-4 NEW PLAYER ORIENTATION (or SEARCH > BY TOPIC).',
       h:'SR-4 walks you from the bed you wake up in to your first payday: where you are, how to leave the station, and what to do first. Start in <b>Stanton</b> (monitored, service-rich), not Pyro (lawless).'},
      {go:'inventory', t:'Check your suit and grab MedPens.', w:'In game: your habitation room / personal inventory. Tablet: INVENTORY tool.',
@@ -29731,7 +29731,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
     pill.__brand=1;
     if(!body.querySelector('.ops4-tabs')){
       pill.classList.add('b385');
-      body.innerHTML='<div class="ops4-tabs">'+VIEWS.map(function(v){return '<button type="button" class="ops4-tab" data-v="'+v.k+'">'+v.label+'</button>';}).join('')+'</div><div class="ops4-body"></div>';/* build 467 (user: remove the GO TO OPS link from the centre pill) */
+      body.innerHTML='<div class="ops4-tabs">'+VIEWS.map(function(v){return '<button type="button" class="ops4-tab" data-v="'+v.k+'">'+v.label+'</button>';}).join('')+'</div><div class="ops4-body"></div>';/* build 467 (user: remove the GO TO OPS link from the HUD) */
       body.querySelector('.ops4-tabs').addEventListener('click',function(e){ var t=e.target.closest('.ops4-tab'); if(!t) return; try{ localStorage.setItem(LSK,t.getAttribute('data-v')); }catch(_){} refresh(); });
       /* build 545: pill GATHER-tab planner (synchronous - MINING_DATA is baked in) */
       body.addEventListener('click',function(e){
@@ -29823,7 +29823,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
     /* build 636: remember what this pass measured so the caller can tell when it has settled */
     apply.lastH=h;
     /* build 450 (user: do NOT shrink the pills/badges — just make it fit). Cap the HEIGHT only on the OPS pill (its long gather list scrolls inside instead of stretching the row). Clock + Account get min-height only, so they sit at the row height with full-size content and never scroll. Pinning max-height on THEM was what clipped the Account pill into a scroll. */
-    /* b659 (T: "hud pill too short"): neighbours first, uncapped; then cap the ops pill at the
+    /* b659 (T: "HUD too short"): neighbours first, uncapped; then cap the ops pill at the
        tallest NEIGHBOUR instead of the tools row - measured 403 vs 418 at 2560px wide. The ops
        pill now always equals the row the neighbours set, and still cannot stretch it. */
     var rowH=h;
@@ -29831,7 +29831,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
     [].forEach.call(hw.querySelectorAll('.wg.ops-pill'),function(w){ if(w.style.minHeight!==rowH+'px') w.style.minHeight=rowH+'px'; if(w.style.maxHeight!==rowH+'px') w.style.maxHeight=rowH+'px'; });
     return true;
   }
-  /* build 636 (T: "i have to click on the hud pill to make it snap into place fully expanded").
+  /* build 636 (T: "i have to click on the HUD to make it snap into place fully expanded").
      MEASURED: min-height 403px and max-height 347px were live on the ops pill at the same time -
      written by two runs that measured the tools row at different moments while it was still
      settling. max wins, so the pill rendered 56px short until a click forced a repaint.
@@ -30676,9 +30676,9 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-wrap,body.sc-home-mode #cg-onebar #cg-
 /* theme selector pinned to the bottom-right corner — mirror of #scv-build (left:3px;bottom:1px) */
 body.sc-home-mode #cg-onebar #cg-theme-pick{position:fixed !important;right:26px;bottom:24px;margin:0 !important;z-index:2147483601;}
 </style>
-<style id="sc-b442-onebar-1line-css">/* 2026-07-24 build 444 (user: single-line was right, but NEW PLAYER ASSIST touched the centre pill). CAUSE: the left group used justify-content:space-evenly, which spreads the buttons to fill the column so the last one hugged the centre pill. FIX: pack each flank toward its OUTER edge (left group left, right group right) + a padding gutter next to the centre pill + smaller buttons so all three fit one line with clearance. Reversible: delete this block. */
+<style id="sc-b442-onebar-1line-css">/* 2026-07-24 build 444 (user: single-line was right, but NEW PLAYER ASSIST touched the HUD). CAUSE: the left group used justify-content:space-evenly, which spreads the buttons to fill the column so the last one hugged the HUD. FIX: pack each flank toward its OUTER edge (left group left, right group right) + a padding gutter next to the HUD + smaller buttons so all three fit one line with clearance. Reversible: delete this block. */
 body.sc-home-mode #cg-onebar .cg-ob-side{flex-wrap:nowrap !important;gap:6px !important;min-width:0 !important;}
-/* build 453 (user: bottom bar unsymmetrical after LINK QR was removed — right flank left with only SQ42, left cluster crowding the centre). Centre each flank's content within its own half so both sides mirror around the centre pill, with margin on both sides so nothing clips it. */
+/* build 453 (user: bottom bar unsymmetrical after LINK QR was removed — right flank left with only SQ42, left cluster crowding the centre). Centre each flank's content within its own half so both sides mirror around the HUD, with margin on both sides so nothing clips it. */
 body.sc-home-mode #cg-onebar .cg-ob-left{justify-content:center !important;}
 body.sc-home-mode #cg-onebar .cg-ob-right{justify-content:center !important;}
 /* build 453: MORE INFO removed from the bar — hide the wrap the b363 script still generates so it can't render anywhere else. */
@@ -31000,7 +31000,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
 <script id="sc-b430-popout-js">
 (function(){
   if(window.__cgPopout430) return; window.__cgPopout430=true;
-  var PILLS={/* 2026-07-28 T: OPS/centre pill re-enabled for undock as HUD (had been pulled from the registry in build 467). */
+  var PILLS={/* 2026-07-28 T: OPS/HUD re-enabled for undock as HUD (had been pulled from the registry in build 467). */
     leftpill:{sel:'#sc-home-widgets > .wg:not(.ops-pill):not(.login-pill)', label:'STATUS'},
     ops:{sel:'#sc-home-widgets .ops-pill', label:'HUD'},
     account:{sel:'#sc-home-widgets .login-pill', label:'ACCOUNT'},
@@ -31901,7 +31901,7 @@ body.sc-home-mode #sc-tools-row > #sc-chatdock .cd-head{height:36px !important;m
     +'<h4>Music</h4>'
     +'<ol class="cg-w-steps"><li>Set the <b>top-left pill</b> to <b>Media Player</b>.</li><li>Press <b>CONNECT MUSIC</b> and sign in to Spotify.</li></ol>'
     +'<h4>Twitch</h4>'
-    +'<ol class="cg-w-steps"><li>Open the <b>center pill</b> and pick the <b>STREAM</b> tab.</li><li>Type a channel, press <b>WATCH</b>. Press <b>CHAT</b> to show or hide chat.</li></ol>'
+    +'<ol class="cg-w-steps"><li>Open the <b>HUD</b> and pick the <b>STREAM</b> tab.</li><li>Type a channel, press <b>WATCH</b>. Press <b>CHAT</b> to show or hide chat.</li></ol>'
     +'<h4>Notepad</h4>'
     +'<ol class="cg-w-steps"><li>Set the <b>top-left pill</b> to <b>Notepad</b>.</li><li>What you type also shows in <b>OPS → NOTES</b> and on the <b>NAV</b> button.</li><li>Use the box at the top to send a line to <b>Inventory, Gather, or Notes</b>.</li></ol>'
     +'<div class="cg-w-foot">Free &amp; unofficial. Not made by CIG.<br><a href="https://cmdglas.com" target="_blank" rel="noopener">cmdglas.com</a> &middot; <a href="https://discord.gg/dkBvyyYNHj" target="_blank" rel="noopener">discord.gg/dkBvyyYNHj</a></div>';
@@ -32545,10 +32545,10 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
 (function(){ try{ window.openSatelliteOverlay=function(){ return false; }; }catch(e){} })();
 </script>
 <style id="sc-b496-pilllock-css">/* 2026-07-25 build 496.
-   (1) LOCK THE TOP-CENTER PILL (user: "the middle top pill still resizes itself. you failed again to lock it down").
+   (1) LOCK THE HUD (user: "the middle top pill still resizes itself. you failed again to lock it down").
        The old balancer (sc-b345-pillcols-js) mirrored the top tools-row's three segment widths onto this grid and
        re-read them on every resize; on the real machine the center tools-row segment (NAV/RIG/LEARN/MISSION/TABLET)
-       shifts width as content/fonts settle, so the center pill followed it. The balancer now only STRIPS any inline
+       shifts width as content/fonts settle, so the HUD followed it. The balancer now only STRIPS any inline
        width (see b496 edit in sc-b345), and this fixed ratio governs. 1 : 1.9 : 1 == the measured 455:868:455px.
        minmax(0,…) means no pill's content can ever push its column wider. Highest source order -> wins over b21786.
    (2) RECLAIM THE TOP/BOTTOM VERTICAL GAPS (user: "big gaps on the bottom and top... make the pills a little larger.
@@ -32779,7 +32779,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now - they were scrolling to a hidden card. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the centre pill. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the centre pill floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  var NOTES='HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now - they were scrolling to a hidden card. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the HUD. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the HUD floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -34009,7 +34009,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important} /* 2026-07-28 T: the
 <script id="sc-b539-buyroute-js">
 /* 2026-07-27 build 539/542 (T): BUY ROUTE PLANNER - TWO SURFACES, ONE ENGINE.
    539 wired the planner into the GATHER & BUY page (#br-*). 542 adds it to the surface T actually
-   uses - the CENTER PILL's BUY tab (ops4 widget) - after his screenshots showed the pill, not the
+   uses - the HUD's BUY tab (ops4 widget) - after his screenshots showed the pill, not the
    page ("for the buy section of the center top pill" meant exactly this). The engine (catalog
    match -> shops -> greedy fewest-stops set cover -> aUEC itinerary HTML) is shared; each surface
    only owns its controls. Data path unchanged: /api/buy_index + /api/buy_locations on the control
@@ -34379,7 +34379,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important} /* 2026-07-28 T: the
    percentages, methods Ship/FPS, systems). No network, no server - works everywhere including the
    published copy. Greedy fewest-stops set cover like the buy planner; ties prefer the higher
    summed yield. Materials with no location data on file are LISTED, never guessed.
-   Surfaces: the center pill's GATHER tab and the GATHER LIST section of the big page. */
+   Surfaces: the HUD's GATHER tab and the GATHER LIST section of the big page. */
 (function(){
   if(window.__cgGatherRoute545) return; window.__cgGatherRoute545=true;
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -34881,7 +34881,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important} /* 2026-07-28 T: the
   };
 })();
 </script>
-<style id="sc-b554-threattab-css">/* 2026-07-27 build 554 (T): "threat check needs to be a button in the center pill as well to
+<style id="sc-b554-threattab-css">/* 2026-07-27 build 554 (T): "threat check needs to be a button in the HUD as well to
    give user quick access. don't destroy the symetry". So it rides the ops pill as its own tab,
    built from the SAME parts as the Org/Party tab - same body-class ownership of the highlight
    (never JS, or the core's 1.5 s tab repaint starts a flicker war again), same rounded 3D skin.
@@ -37121,7 +37121,7 @@ body.sc-home-mode #tab-home,
    capped at 8, written into the same store the Notepad and OPS > NOTES already share
    (localStorage sc_notepad, mirrored into #np-textarea). Nothing is invented and nothing is
    summarised: the text pushed is the text on screen.
-   Then it switches the HUD pill to NOTES and returns you to the HUD.
+   Then it switches the HUD to NOTES and returns you to the HUD.
    Reversible: delete this block and its style twin. */
 (function(){
   if(window.__cgPushHud645) return; window.__cgPushHud645=true;
@@ -37374,7 +37374,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
 
 <style id="sc-b648-hudfix-css">
 /* b648 (T): "the right column showing the right numbers ... needs to be further away from the
-   right bound of the hud pill". The rows are flex space-between with no right padding, so the
+   right bound of the HUD". The rows are flex space-between with no right padding, so the
    value touched the pill edge and its scrollbar. */
 /* the ops4 stylesheet is injected at runtime, so it lands AFTER this block in the cascade -
    equal specificity would lose. Marked important, scoped to the row only. */
@@ -37610,7 +37610,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
 @keyframes cgSrcPulse{0%,100%{background:rgba(79,210,255,.16)}50%{background:rgba(79,210,255,.34)}}
 </style>
 <script id="sc-b654-rowsrc-js">
-/* sc-b654-rowsrc-js  -  build 654, 1 AUG 2026.  PER-ROW SOURCE CHIPS in the HUD pill.
+/* sc-b654-rowsrc-js  -  build 654, 1 AUG 2026.  PER-ROW SOURCE CHIPS in the HUD.
 
    HOW IT SURVIVES THE REPAINT, MEASURED - the ops4 core repaints on a 1.5s timer but it
    string-diffs first:
@@ -38102,7 +38102,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
         on the list, with a junk filter that drops "+", "-", digits-only and anything under
         2 or over 48 characters. This is the filter 648 did not have.
      2. the blueprint names you have selected, into sc_bp_sent, so they show as PUSHED chips
-        at the top of the HUD pill - the same store the Blueprints page PUSH TO OPS writes
+        at the top of the HUD - the same store the Blueprints page PUSH TO OPS writes
         (build 441).
 
    HONEST NOTE, because it changes what you should expect: your selected blueprints ALREADY
@@ -39127,7 +39127,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
      3. a measure cap of 72 characters, so no line runs the full width of a 2560 monitor
 
    WHAT IT DELIBERATELY DOES NOT TOUCH: tables, chips, buttons, badges, inputs, the row
-   strips and anything inside the HUD pill. Dense data is supposed to be dense - blowing a
+   strips and anything inside the HUD. Dense data is supposed to be dense - blowing a
    reference table up to 16 px would wreck the thing it is trying to help. The scope below
    is the five reference PAGES only, and inside them only text blocks.
    Reversible: delete this block. No markup is changed anywhere - this is stylesheet only. */
@@ -39145,7 +39145,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
    TABLE cells at 16 px where the PC kept them at 12 px. Dense data blown up is worse than the
    problem being fixed. So there is no blanket rule any more: only elements the script has
    inspected and tagged get touched, and the script refuses anything inside a table, a control
-   or the HUD pill. Nothing to undo, so nothing to get wrong. */
+   or the HUD. Nothing to undo, so nothing to get wrong. */
 #tab-guide .cgr-txt, #tab-spacemanuals .cgr-txt, #tab-trouble .cgr-txt,
 #tab-cap .cgr-txt, #tab-console .cgr-txt{
   font-size:var(--cgr-size) !important;
@@ -39177,7 +39177,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
    reach with a selector, and lifts NOTE / CAUTION / WARNING lines into real callouts.
 
    CONSERVATIVE BY DESIGN. It only ever ADDS a class. It never moves a node, never rewrites
-   text, never touches a table, a control or anything inside the HUD pill. A block it cannot
+   text, never touches a table, a control or anything inside the HUD. A block it cannot
    confidently classify is left exactly as it was - the worst case is that one paragraph
    keeps its old size, not that content moves or disappears.
 
@@ -39273,10 +39273,22 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
 .cg-clr-btn:active{transform:translateY(1px);filter:brightness(1.25)}
 @media (pointer:coarse){ .cg-clr-btn{min-height:34px;padding:8px 11px;font-size:9.5px} }
 .cg-clr-wrap{display:inline-flex;gap:5px;align-items:center;flex-wrap:wrap}
+/* b672, T: "on PC and on PC only place all of these on the same row."
+   MEASURED at 2560x1400: UNDOCK and SOURCE are position:absolute at bottom:8px, while this
+   wrap sits in normal flow - so it lands on its own line 31 px above them. Matching their
+   positioning puts all seven controls on one row. Pill is 1127 px wide and UNDOCK's left
+   edge is 473 px in from it, so the five buttons get a 455 px budget: the compact padding
+   below fits them in about 430 px with the gaps.
+   POINTER:FINE ONLY. On a touch tablet these keep the 34 px tap height and the wrap - a
+   44 px-minimum target is worth more there than a tidy single line. */
+@media (pointer:fine){
+  .cg-clr-wrap{position:absolute;bottom:8px;left:10px;right:auto;flex-wrap:nowrap;gap:4px;z-index:3}
+  .cg-clr-wrap .cg-clr-btn{font-size:8px;letter-spacing:.9px;padding:5px 7px;min-height:25px}
+}
 .cg-clr-btn.cg-clr-go{color:#cfeed6;border-color:rgba(80,220,120,.55);
   background:linear-gradient(180deg,rgba(57,211,83,.24),rgba(57,211,83,.09))}
 
-/* the two-step panel. z-index matches build 360's modal lift - the HUD pill sits near the
+/* the two-step panel. z-index matches build 360's modal lift - the HUD sits near the
    top of the stacking order, so anything less renders BEHIND it and cannot be pressed. */
 #cg-clr-modal{position:fixed;inset:0;z-index:2147483402;background:rgba(0,0,0,.74);
   display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:5vh 16px 6vh}
@@ -39521,8 +39533,36 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
       open(b.getAttribute('data-clr'));
     }, true);
     src.parentElement.insertBefore(w, src.nextSibling);
+    align();
     return true;
   }
+
+  /* b672: on a fine pointer all seven controls go on ONE row. UNDOCK and SOURCE are
+     position:absolute at bottom:8px; giving this wrap the same bottom put it 43 px too high -
+     MEASURED, wrap top 630 against their 673 - because it does not resolve against the same
+     box. So the offset is not guessed: UNDOCK is measured and matched. Mount and resize
+     only, never a timer. */
+  function align(){
+    try{
+      if(!window.matchMedia || !matchMedia('(pointer:fine)').matches) return;
+      var w=document.querySelector('.cg-clr-wrap');
+      var u=document.querySelector('.cg-undock-btn');
+      if(!w||!u) return;
+      var ur=u.getBoundingClientRect(), wr=w.getBoundingClientRect();
+      if(!ur.height||!wr.height) return;
+      var cur=parseFloat(getComputedStyle(w).bottom)||0;
+      var want=Math.round(cur + (wr.bottom-ur.bottom));
+      if(String(want)+'px'!==w.style.bottom) w.style.bottom=want+'px';
+    }catch(e){}
+  }
+  window.addEventListener('resize', function(){ setTimeout(align,120); });
+  /* b673: T reported the two-row layout again on PC. The align pass has to survive the pill
+     being rebuilt and the fonts landing - both move UNDOCK after the first measurement. So it
+     runs on a bounded settle schedule and once more when the fonts are ready, then stops.
+     It is idempotent: it only writes when the computed bottom actually differs. */
+  [600,1200,2500,4000,7000,11000].forEach(function(ms){ setTimeout(align,ms); });
+  try{ if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(align,150); }); }catch(e){}
+  addEventListener('load', function(){ setTimeout(align,300); setTimeout(align,1500); });
   /* bounded - it mounts once and the guard above stops a second copy (rule 17) */
   var n=0, iv=setInterval(function(){ if(mount() || ++n>60) clearInterval(iv); }, 500);
   mount();
@@ -39653,6 +39693,287 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
             wrapH:w?Math.round(w.getBoundingClientRect().height):null};
   };
   window.CMDGLAS_HOME_668=1;
+})();
+</script>
+<style id="sc-b673-leftsel-css">
+/* sc-b673-leftsel-css  -  build 673, 2 AUG 2026.
+   T: "the top left pill. none of the dropdowns actually display what's selected on the
+       individual pages. it just takes the user to the main page. that's not the point.
+       i want them to be able to open and see whatever is selected in the underlying pages.
+       like the HUD but compressed. item name - harvest/purchase location and amount."
+   Approved from the mockup. Reversible: delete this block and its script twin. */
+.cg-lsel{display:flex;flex-direction:column;height:100%;min-height:0}
+.cg-lsel-cnt{flex:0 0 auto;font:800 9px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.2px;
+  color:#5f8ba1;padding:5px 2px 3px;text-transform:uppercase}
+.cg-lsel-body{flex:1 1 auto;overflow-y:auto;min-height:0;padding:0 2px 4px}
+.cg-lsel-r{padding:6px 3px;border-top:1px solid rgba(108,180,214,.13)}
+.cg-lsel-r:first-child{border-top:0}
+.cg-lsel-r .l1{display:flex;align-items:baseline;gap:6px}
+.cg-lsel-r .nm{font:700 12.5px/1.25 'Rajdhani','Segoe UI',sans-serif;letter-spacing:.4px;color:#eaf6ff;
+  flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cg-lsel-r .qt{flex:0 0 auto;font:700 11.5px/1 'Rajdhani',sans-serif;color:#ffd08a;
+  font-variant-numeric:tabular-nums}
+.cg-lsel-r .l2{display:flex;align-items:center;gap:5px;margin-top:2px}
+.cg-lsel-r .tag{flex:0 0 auto;font:800 7.5px/1 'Rajdhani',sans-serif;letter-spacing:.9px;
+  text-transform:uppercase;padding:2px 5px;border-radius:4px;color:#04141d;
+  background:linear-gradient(180deg,#a6f2ff,#33b5e6)}
+.cg-lsel-r .tag.h{background:linear-gradient(180deg,#ffd98a,#f0a63c)}
+.cg-lsel-r .tag.b{background:linear-gradient(180deg,#a9f5bb,#39d353)}
+.cg-lsel-r .loc{font:600 10.5px/1.3 'Rajdhani',sans-serif;color:#9fb6c9;flex:1 1 auto;min-width:0;
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.cg-lsel-r .loc.weak{color:#c58f8f}
+.cg-lsel-empty{color:#5f7688;font:600 11px/1.6 'Rajdhani',sans-serif;text-align:center;padding:22px 8px}
+.cg-lsel-foot{flex:0 0 auto;display:flex;gap:5px;padding:6px 2px 2px;border-top:1px solid rgba(108,180,214,.2)}
+.cg-lsel-foot button{flex:1;font:800 8px/1 'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;
+  color:#eaf6ff;background:linear-gradient(180deg,rgba(29,111,156,.3),rgba(18,74,104,.14));
+  border:1px solid rgba(108,180,214,.4);border-radius:6px;padding:6px 4px;cursor:pointer;
+  touch-action:manipulation}
+.cg-lsel-foot button:active{transform:translateY(1px);filter:brightness(1.2)}
+@media (pointer:coarse){ .cg-lsel-foot button{min-height:34px;font-size:8.5px} }
+</style>
+<script id="sc-b673-leftsel-js">
+/* sc-b673-leftsel-js  -  build 673.  THE LEFT PILL SHOWS THE SELECTION, NOT A LINK.
+
+   WHERE THE DATA COMES FROM - all of it already exists, none of it is entered by hand:
+     * build 646 stores every picked row per page in localStorage under `cg_pick_<tabId>`,
+       shape {n:name, d:detail}. That is the pick list the PICKED chips on each page show.
+     * the location line is window.cgLocIndex() - the same merged index the HUD row reads,
+       so live 4.9 data where it exists and the 4.8.2 tables where it does not, with the
+       same STALE/COMMUNITY dimming.
+     * the blueprint "4 of 9" line is counted at render time from RECIPE_DATA against the
+       gather list. Nothing to type, nothing to keep in step.
+
+   RULE 17. It renders when the view CHANGES and when the pick store changes - never on a
+   repeating timer. Its own node carries a data-view marker; if the pill rewrites its body,
+   the observer re-renders once and the marker stops it repeating. Measured for childList
+   churn before shipping. */
+(function(){
+  if(window.__cgLeftSel673) return; window.__cgLeftSel673=true;
+
+  /* build 646's own page map - same ids, same labels */
+  var VIEWS={
+    mining:     {tab:'tab-mining',     label:'MINING',     sub:'SHIP LASER',      tag:'LASER',  cls:''},
+    harvest:    {tab:'tab-harvest',    label:'HARVEST',    sub:'ON FOOT / ROC',   tag:'',       cls:'h'},
+    hauling:    {tab:'tab-trading',    label:'HAULING',    sub:'BUY LIST',        tag:'BUY',    cls:'b'},
+    blueprints: {tab:'tab-blueprints', label:'BLUEPRINTS', sub:'',                tag:'BP',     cls:''},
+    salvage:    {tab:'tab-salvage',    label:'SALVAGE',    sub:'WRECK PICKS',     tag:'SALV',   cls:''},
+    inventory:  {tab:'tab-inventory',  label:'INVENTORY',  sub:'',                tag:'INV',    cls:''},
+    contracts:  {tab:'tab-missions',   label:'CONTRACTS',  sub:'TRACKED',         tag:'JOB',    cls:''}
+  };
+  var METHTAG={loc:'LASER', handgem:'FPS', rocgem:'ROC', harv:'HAND'};
+  var WEAK=/\bSTALE\b|\bUNCONFIRMED\b|\bCOMMUNITY\b|4\.1-era/i;
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+  function picks(tab){
+    try{ var a=JSON.parse(localStorage.getItem('cg_pick_'+tab)||'[]');
+         return Array.isArray(a)?a:[]; }catch(e){ return []; }
+  }
+  function gather(){
+    try{ var a=JSON.parse(localStorage.getItem('sc_ops_gather')||'[]');
+         return Array.isArray(a)?a:[]; }catch(e){ return []; }
+  }
+
+  /* blueprint progress, COUNTED not typed: how many of a recipe's materials are already on
+     the gather list. Falls back to the pick's own detail text if RECIPE_DATA is not loaded. */
+  function bpLine(name, detail){
+    try{
+      if(typeof RECIPE_DATA==='undefined') return detail||'';
+      var mats=RECIPE_DATA.filter(function(x){ return x.k===name || x.n===name; });
+      if(!mats.length) return detail||'no recipe on file';
+      var have={}; gather().forEach(function(g){ if(g&&g.material) have[norm(g.material)]=1; });
+      var got=mats.filter(function(m){ return have[norm(m.ig)]; }).length;
+      return got+' of '+mats.length+(got===0?' — nothing gathered yet'
+             :(got===mats.length?' — ready to craft':' already on the gather list'));
+    }catch(e){ return detail||''; }
+  }
+
+  function row(view, it){
+    var name=(it&&it.n)||'', detail=(it&&it.d)||'';
+    if(!name) return '';
+    var qty='', tag=view.tag, cls=view.cls, loc=detail, weak=false;
+
+    /* amount: the first number in the page's own detail string, if there is one */
+    var m=/(\d[\d,.]*)\s*(SCU|units?|x)?/i.exec(detail||'');
+    if(m) qty=m[1]+(m[2]?(' '+m[2].toUpperCase().replace('UNITS','')):'');
+
+    if(view.label==='BLUEPRINTS'){
+      loc=bpLine(name, detail); qty=''; tag='BP';
+    } else if(view.label==='HAULING'){
+      /* MEASURED: Agricium picked up its MINING spawn location from the index, which is the
+         wrong answer on a buy list - T asked for the PURCHASE location here. The page's own
+         detail string carries terminal and price, so it wins; the index is only a fallback
+         for a row the page gave no detail for. */
+      if(!loc){
+        var r2=null;
+        try{ if(typeof window.cgLocIndex==='function') r2=window.cgLocIndex()[norm(name)]; }catch(e){}
+        if(r2&&r2.loc1) loc=r2.loc1;
+      }
+    } else {
+      var rec=null;
+      try{ if(typeof window.cgLocIndex==='function') rec=window.cgLocIndex()[norm(name)]; }catch(e){}
+      if(rec && rec.loc1){
+        loc=rec.loc1;
+        weak=WEAK.test(rec.loc1)||WEAK.test(rec.conf||'');
+        if(view.label==='HARVEST' && METHTAG[rec.key]) tag=METHTAG[rec.key];
+        if(view.label==='MINING'  && METHTAG[rec.key]) tag=METHTAG[rec.key];
+      }
+    }
+    if(!loc) loc='no location on file';
+    return '<div class="cg-lsel-r"><div class="l1"><span class="nm">'+esc(name)+'</span>'
+      +(qty?'<span class="qt">'+esc(qty)+'</span>':'')+'</div>'
+      +'<div class="l2">'+(tag?'<span class="tag '+cls+'">'+esc(tag)+'</span>':'')
+      +'<span class="loc'+(weak?' weak':'')+'">'+esc(loc)+'</span></div></div>';
+  }
+
+  function render(host, key){
+    var view=VIEWS[key]; if(!view) return false;
+    var list=picks(view.tab);
+    var html='<div class="cg-lsel" data-view="'+key+'" data-n="'+list.length+'">'
+      +'<div class="cg-lsel-cnt">'+(list.length?(list.length+' SELECTED'+(view.sub?(' · '+view.sub):''))
+                                                :'NOTHING SELECTED')+'</div>'
+      +'<div class="cg-lsel-body">';
+    html += list.length ? list.map(function(it){ return row(view,it); }).join('')
+      : '<div class="cg-lsel-empty">Nothing picked on the '+esc(view.label.toLowerCase())
+        +' page yet.<br><br>Open it, tap a row, and it appears here.</div>';
+    html+='</div><div class="cg-lsel-foot">'
+      +'<button type="button" data-lsel="open">Open page</button>'
+      + (list.length ? '<button type="button" data-lsel="push">Push to HUD</button>'
+                      +'<button type="button" data-lsel="clear">Clear</button>' : '')
+      +'</div></div>';
+    if(host.__lselHtml===html) return true;      /* nothing changed - do not touch the DOM */
+    host.__lselHtml=html;
+    host.innerHTML=html;
+    host.__lselView=key;
+    return true;
+  }
+
+  function leftPill(){
+    var wgs=document.querySelectorAll('#sc-home-widgets > .wg');
+    return wgs.length?wgs[0]:null;
+  }
+  function currentView(){
+    var p=leftPill(); if(!p) return '';
+    var s=p.querySelector('select.pill-sel');
+    return s?String(s.value||''):'';
+  }
+  function body(){
+    var p=leftPill(); return p?p.querySelector('.pill-body'):null;
+  }
+
+  function paint(){
+    var k=currentView(); if(!VIEWS[k]) return;
+    var b=body(); if(!b) return;
+    render(b,k);
+  }
+
+  /* the pill's own select is the change signal - not a timer */
+  /* MEASURED: this listener is on the CAPTURE phase, so it runs BEFORE the pill's own change
+     handler - which then rewrites the body and wipes the render. Harvest showed it worst,
+     because the pill has no view of its own for that value and blanked the panel outright.
+     So paint runs again after the pill has finished. Three bounded passes, not a loop, and
+     render() is a no-op when the html is unchanged. */
+  function paintSoon(){ [60,300,800,1600].forEach(function(ms){ setTimeout(paint,ms); }); }
+  document.addEventListener('change', function(e){
+    var t=e.target;
+    if(t && t.classList && t.classList.contains('pill-sel')) paintSoon();
+  }, true);
+  document.addEventListener('click', function(e){
+    var o=e.target && e.target.closest && e.target.closest('.pill-ddopt');
+    if(o) paintSoon();
+    var btn=e.target && e.target.closest && e.target.closest('[data-lsel]');
+    if(!btn) return;
+    var k=currentView(), view=VIEWS[k]; if(!view) return;
+    e.preventDefault(); e.stopPropagation();
+    var act=btn.getAttribute('data-lsel');
+    if(act==='open'){
+      try{ if(typeof setActiveTabById==='function') setActiveTabById(view.tab.replace('tab-','')); }catch(e2){}
+      return;
+    }
+    if(act==='push'){
+      /* press the page's OWN push bar - one pushing path in this file, same as REFRESH */
+      var pg=document.getElementById(view.tab);
+      var bar=pg&&pg.querySelector('.cg-ph-bar .cg-ph-btn');
+      if(bar){ try{ bar.click(); }catch(e2){} }
+      setTimeout(paint,400);
+      return;
+    }
+    if(act==='clear'){
+      try{ localStorage.removeItem('cg_pick_'+view.tab); }catch(e2){}
+      paint();
+      return;
+    }
+  }, true);
+
+  /* the pick store changing in another tab, and the pill rewriting its own body */
+  window.addEventListener('storage', function(e){
+    if(!e || !e.key) return;
+    if(/^cg_pick_|^sc_ops_gather$/.test(e.key)) setTimeout(paint,60);
+  });
+  /* THE DROPDOWN HAS NO HARVEST VIEW. Measured: its 16 options are blueprints, clock,
+     contracts, hauling, inventory, keybinds, media, mining, nav, notepad, pinned, reputation,
+     salvage, shard, loadout, wikelo. Harvest is a page with a pick list and no way to see it,
+     which is exactly the complaint. One option is added to the native select AND to the custom
+     menu the pill renders, in alphabetical position, and only once. */
+  function addHarvestOption(){
+    var p=leftPill(); if(!p) return;
+    var sel=p.querySelector('select.pill-sel');
+    if(sel && !sel.querySelector('option[value="harvest"]')){
+      var o=document.createElement('option'); o.value='harvest'; o.textContent='Harvest';
+      var before=null;
+      [].forEach.call(sel.options,function(x){ if(!before && x.value>'harvest') before=x; });
+      sel.insertBefore(o, before||null);
+    }
+    var menu=p.querySelector('.pill-ddmenu');
+    if(menu && !menu.querySelector('[data-cg-harv]')){
+      var opts=[].slice.call(menu.querySelectorAll('.pill-ddopt'));
+      if(opts.length){
+        var d=document.createElement(opts[0].tagName);
+        d.className=opts[0].className.replace(/\bsel\b/,'').trim();
+        d.textContent='Harvest'; d.setAttribute('data-cg-harv','1');
+        var ref=null;
+        opts.forEach(function(x){ if(!ref && (x.textContent||'').trim().toLowerCase()>'harvest') ref=x; });
+        menu.insertBefore(d, ref||null);
+        d.addEventListener('click', function(){
+          var s2=p.querySelector('select.pill-sel');
+          if(s2){ s2.value='harvest'; s2.dispatchEvent(new Event('change',{bubbles:true})); }
+          var trg=p.querySelector('.pill-ddtrigger'); if(trg) trg.textContent='Harvest \u25be';
+          setTimeout(paint,60);
+        }, false);
+      }
+    }
+  }
+
+  var seen=null;
+  function watch(){
+    addHarvestOption();
+    var b=body(); if(!b) return;
+    if(b!==seen){
+      seen=b;
+      try{ new MutationObserver(function(){
+        var k=currentView();
+        if(!VIEWS[k]) return;
+        var mine=b.querySelector('.cg-lsel[data-view="'+k+'"]');
+        if(!mine){ b.__lselHtml=null; paint(); }   /* re-render ONCE, marker stops a loop */
+      }).observe(b,{childList:true}); }catch(e){}
+    }
+    paint();
+  }
+  var n=0, iv=setInterval(function(){ watch(); if(++n>60){ clearInterval(iv); setInterval(watch,3000); } },500);
+  watch();
+
+  window.cgLeftSelReport=function(){
+    var out={view:currentView()};
+    Object.keys(VIEWS).forEach(function(k){ out[k]=picks(VIEWS[k].tab).length; });
+    var b=body(); out.rendered=!!(b&&b.querySelector('.cg-lsel'));
+    out.rows=b?b.querySelectorAll('.cg-lsel-r').length:0;
+    return out;
+  };
+  window.CMDGLAS_LEFTSEL_673=1;
 })();
 </script>
 </body>
