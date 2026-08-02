@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=650;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=656;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -35908,7 +35908,7 @@ window.bpImgTag=bpImgTag;
   function syncBars(){
     Object.keys(PAGES).forEach(function(id){
       var p=document.getElementById(id); if(!p) return;
-      if(p.querySelector(':scope > .cg-rtb-bar')) return;
+      if(p.querySelector('.cg-rtb-bar')) return;
       p.insertBefore(bar(PAGES[id]), p.firstChild);
     });
   }
@@ -37016,13 +37016,22 @@ body.sc-home-mode #tab-home,
      builder wraps by child index, and a target that was display:none when it was wrapped
      leaves the wrapper hidden. Only un-hide a wrapper whose body actually holds content,
      so an empty placeholder section is never resurrected. */
+  var _wrapDone = (typeof WeakSet==='function') ? new WeakSet() : null;
   function unhideWrap(acc){
-    if(!acc.style || acc.style.display!=='none') return false;
+    /* b653: ONCE per wrapper. Repeating it fought the Craft Calculator's own re-render and
+       made BLUEPRINT CATALOG and SOURCES blink in and out. */
+    if(_wrapDone){ if(_wrapDone.has(acc)) return false; }
+    else if(acc.__cgUnhid) return false;
+    if(!acc.style || acc.style.display!=='none'){
+      if(_wrapDone) _wrapDone.add(acc); else acc.__cgUnhid=1;
+      return false;
+    }
     var body=null, kids=acc.children, i;
     for(i=0;i<kids.length;i++){ if(kids[i].classList.contains('sc-acc-b')){ body=kids[i]; break; } }
     if(!body) return false;
     if((body.textContent||'').trim().length < 200) return false;
     acc.style.removeProperty('display');
+    if(_wrapDone) _wrapDone.add(acc); else acc.__cgUnhid=1;
     return true;
   }
 
@@ -37188,7 +37197,7 @@ body.sc-home-mode #tab-home,
   function bar(id,label){
     var page=document.getElementById(id);
     if(!page) return false;
-    if(page.querySelector(':scope > .cg-ph-bar')) return true;
+    if(page.querySelector('.cg-ph-bar')) return true;
     var d=document.createElement('div'); d.className='cg-ph-bar';
     d.innerHTML='<span class="cg-ph-l">'+label+'</span>'
       +'<button type="button" class="cg-ph-btn">PUSH TO HUD →</button>'
@@ -37264,7 +37273,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
 
   function paint(id){
     var page=document.getElementById(id); if(!page) return;
-    var bar=page.querySelector(':scope > .cg-pk-bar'); if(!bar) return;
+    var bar=page.querySelector('.cg-pk-bar'); if(!bar) return;
     var list=load(id), wrap=bar.querySelector('.cg-pk-chips');
     wrap.innerHTML='';
     if(!list.length){
@@ -37294,12 +37303,12 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
 
   function bar(id,label){
     var page=document.getElementById(id); if(!page) return;
-    if(page.querySelector(':scope > .cg-pk-bar')) return;
+    if(page.querySelector('.cg-pk-bar')) return;
     var d=document.createElement('div'); d.className='cg-pk-bar';
     d.innerHTML='<span class="cg-pk-l">PICKED <span class="cg-pk-n"></span></span>'
       +'<span class="cg-pk-chips"></span>'
       +'<button type="button" class="cg-pk-clear">CLEAR</button>';
-    var ph=page.querySelector(':scope > .cg-ph-bar');
+    var ph=page.querySelector('.cg-ph-bar');
     if(ph && ph.nextSibling) page.insertBefore(d, ph.nextSibling);
     else page.insertBefore(d, page.firstChild);
     d.addEventListener('click',function(e){
@@ -37356,8 +37365,9 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
   function tidy(){
     var cc=document.getElementById('tab-craftcalc');
     if(cc){
-      var b1=cc.querySelector(':scope > .cg-ph-bar'); if(b1) b1.remove();
-      var b2=cc.querySelector(':scope > .cg-pk-bar'); if(b2) b2.remove();
+      /* b656: .cg-ph-bar removal retired - the b655 push bar is legitimate and this
+         line was fighting it on a 500ms loop (the flicker T saw). PICKED-bar removal kept. */
+      var b2=cc.querySelector('.cg-pk-bar'); if(b2) b2.remove();
     }
     try{
       var g=JSON.parse(localStorage.getItem('sc_ops_gather')||'[]');
@@ -37472,5 +37482,747 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
 .cg-ph-bar .cg-ph-l{color:#9fd0ea !important}
 .cg-ph-bar .cg-ph-tip{color:#6d8598 !important}
 </style>
+
+<style id="sc-b651-barwidth-css">
+/* hug the content instead of stretching. max-width keeps a long PICKED row inside the page. */
+.cg-ph-bar, .cg-pk-bar{
+  display:inline-flex !important; width:max-content !important; max-width:calc(100% - 20px) !important;
+}
+.panel-page > .cg-rtb-bar{
+  display:inline-flex !important; width:max-content !important; max-width:calc(100% - 20px) !important;
+  gap:14px !important;
+}
+/* they are inline now, so give each its own line and keep the left margin consistent */
+.cg-ph-bar, .cg-pk-bar, .panel-page > .cg-rtb-bar{ margin-left:10px !important; }
+.cg-ph-bar::after, .cg-pk-bar::after, .panel-page > .cg-rtb-bar::after{ content:''; display:block; }
+.panel-page > .cg-rtb-bar + *, .cg-ph-bar + *, .cg-pk-bar + *{ clear:both; }
+.cg-pk-bar .cg-pk-chips{ flex:0 1 auto !important; min-width:0 !important; }
+</style>
+
+<style id="sc-b652-onebar-css">
+/* the single strip */
+.cg-onebar{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap;margin:8px 10px 10px;
+  border:1px solid rgba(108,180,214,.30);border-left:3px solid #4fd2ff;border-radius:12px;
+  background-image:linear-gradient(180deg,rgba(120,200,235,.06),rgba(255,255,255,0) 46%,rgba(0,0,0,.20)),
+                   linear-gradient(180deg,rgba(14,24,36,.88),rgba(10,12,18,.92));
+  overflow:hidden}
+/* the three former pills become borderless segments of it */
+.cg-onebar > .cg-ph-bar, .cg-onebar > .cg-pk-bar, .cg-onebar > .cg-rtb-bar{
+  display:flex !important;align-items:center;gap:10px;margin:0 !important;padding:8px 14px !important;
+  border:0 !important;border-radius:0 !important;background:none !important;width:auto !important;
+  max-width:none !important;flex:0 0 auto}
+.cg-onebar > .cg-pk-bar{flex:1 1 auto;min-width:0;border-left:1px solid rgba(108,180,214,.22) !important;
+  border-right:1px solid rgba(108,180,214,.22) !important}
+.cg-onebar > .cg-rtb-bar{margin-left:auto !important}
+.cg-onebar .cg-pk-chips{flex:1 1 auto;min-width:0;overflow:hidden;flex-wrap:nowrap}
+.cg-onebar .cg-ph-tip{display:none}            /* the button says it; the tip made it lopsided */
+/* both action buttons identical: same font, same padding, same height, same radius */
+.cg-onebar .cg-ph-btn, .cg-onebar .cg-rtb-bar button{
+  font:800 12.5px 'Rajdhani','Segoe UI',sans-serif !important;letter-spacing:1.6px !important;
+  text-transform:uppercase !important;border-radius:8px !important;padding:8px 18px !important;
+  min-width:186px !important;text-align:center !important;white-space:nowrap;cursor:pointer;
+  border:1px solid #ffd479 !important;color:#140d00 !important;
+  background:linear-gradient(180deg,#ffc84d,#ffb000) !important;
+  box-shadow:0 0 12px rgba(255,176,0,.32) !important}
+.cg-onebar .cg-ph-btn:hover, .cg-onebar .cg-rtb-bar button:hover{filter:brightness(1.08) !important}
+.cg-onebar .cg-ph-l, .cg-onebar .cg-rtb-l, .cg-onebar .cg-pk-l{
+  font:800 10px 'Rajdhani',sans-serif !important;letter-spacing:1.4px;color:#8fbfdc !important;
+  flex:0 0 auto;white-space:nowrap}
+.cg-onebar .cg-pk-empty{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cg-onebar .cg-pk-clear{flex:0 0 auto}
+@media (max-width:900px){
+  .cg-onebar{flex-wrap:wrap}
+  .cg-onebar > .cg-pk-bar{border:0 !important;order:3;flex-basis:100%}
+}
+</style>
+<script id="sc-b652-onebar-js">
+(function(){
+  if(window.__cgOneBar652) return; window.__cgOneBar652=true;
+  function join(page){
+    var ph=page.querySelector('.cg-ph-bar');
+    var pk=page.querySelector('.cg-pk-bar');
+    var rt=page.querySelector('.cg-rtb-bar');
+    var have=[ph,pk,rt].filter(Boolean);
+    if(!have.length) return;
+    var bar=page.querySelector(':scope > .cg-onebar');
+    if(!bar){ bar=document.createElement('div'); bar.className='cg-onebar'; page.insertBefore(bar,page.firstChild); }
+    if(bar!==page.firstChild) page.insertBefore(bar,page.firstChild);
+    /* fixed order, so every page reads the same left to right */
+    [ph,pk,rt].forEach(function(el){ if(el && el.parentNode!==bar) bar.appendChild(el); });
+  }
+  function sweep(){
+    document.querySelectorAll('.panel-page').forEach(function(p){
+      if(p.querySelector('.cg-ph-bar, .cg-pk-bar, .cg-rtb-bar')) join(p);
+    });
+  }
+  var n=0, iv=setInterval(function(){ sweep(); if(++n>120){ clearInterval(iv); setInterval(sweep,3000); } },500);
+  sweep();
+})();
+</script>
+<style id="sc-b654-rowsrc-css">
+/* sc-b654-rowsrc-css  -  build 654, 1 AUG 2026.
+   T: "a way to get to the source for gather and buy from the same pill... buttons in there
+   taking it to all sources. ie. mining source, ship builder source etc to all source locations."
+   MEASURED: build 627 gives ONE source button per HUD tab and gather/buy both point at myops.
+   This adds a chip per row, one per page that actually carries that item.
+   Reversible: delete this block and its script twin. Nothing else was edited except the
+   build number. */
+#sc-home-widgets .ops-pill.b385 .ops4-row{flex-wrap:wrap}
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap{flex:1 1 100%;display:flex;gap:4px;flex-wrap:wrap;
+  margin:3px 0 1px;padding-left:1px}
+#sc-home-widgets .ops-pill.b385 .cg-src-chip{font:800 7.5px/1 'Rajdhani','Segoe UI',sans-serif;
+  letter-spacing:1.1px;text-transform:uppercase;color:#04141d;
+  background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:1px solid rgba(170,242,255,.9);
+  border-radius:5px;padding:4px 7px;cursor:pointer;white-space:nowrap;
+  box-shadow:0 1px 4px rgba(0,0,0,.35)}
+#sc-home-widgets .ops-pill.b385 .cg-src-chip:hover{filter:brightness(1.12)}
+#sc-home-widgets .ops-pill.b385 .cg-src-chip:active{transform:translateY(1px)}
+#sc-home-widgets .ops-pill.b385 .cg-src-none{font:700 7.5px/1 'Rajdhani',sans-serif;
+  letter-spacing:1px;color:#5f7688;padding:4px 2px;text-transform:uppercase}
+/* the row we jumped to - loud, fades on its own */
+.cg-src-hit{outline:2px solid #4fd2ff !important;outline-offset:-2px;
+  background:rgba(79,210,255,.16) !important;animation:cgSrcPulse 1s ease-in-out 2}
+@keyframes cgSrcPulse{0%,100%{background:rgba(79,210,255,.16)}50%{background:rgba(79,210,255,.34)}}
+</style>
+<script id="sc-b654-rowsrc-js">
+/* sc-b654-rowsrc-js  -  build 654, 1 AUG 2026.  PER-ROW SOURCE CHIPS in the HUD pill.
+
+   HOW IT SURVIVES THE REPAINT, MEASURED - the ops4 core repaints on a 1.5s timer but it
+   string-diffs first:
+       var html=renderView(v); if(contentEl.__last!==html){ contentEl.innerHTML=html; ... }
+   so an unchanged list is NOT rewritten and the chips are not disturbed. When the list DOES
+   change, innerHTML is replaced and the MutationObserver below re-decorates in the same
+   microtask, before paint. No flicker, and no sweep fighting the page (see rev12 section 4).
+
+   WHERE THE NAMES COME FROM - every index is measured data already in this file, and every
+   tab page is fully built at load with its tables populated (verified in Chromium on 653:
+   harvest 55 rows, mining 83, blueprints 1064, loadout 204, ships 193, salvage 8, trading 28,
+   loot 24 - none of them needs to be visited first).
+
+   NOT INCLUDED, ON PURPOSE: the Craft Calculator. Its ingredient set is byte-identical to
+   MINING_DATA (both 37 names, same names), so a CRAFT chip would duplicate MINING on every
+   single row, and the Craft Calculator is where a material is USED, not where it is obtained.
+   Its first column is numbered lines anyway - there is nothing there to jump to. */
+(function(){
+  if(window.__cgRowSrc654) return; window.__cgRowSrc654=true;
+
+  /* ---- 1. the index --------------------------------------------------------------------- */
+  /* BUILD 655 CORRECTION. T, 1 AUG: "does it make sense to have mining harvst and hauling for
+     each line? what's the purpose and logic reasoning behind hvaeing them there?"
+
+     He was right to ask. Build 654 labelled a chip by which PAGE held the name, so an Iron row
+     showed HARVEST - which reads as "Iron can be hand-harvested". It cannot. The chip fired
+     because the Harvestables PAGE happens to carry a SHIP-MINEABLE ORES table, which is a
+     mining LOCATIONS table, not a harvesting method. Measured, Harvestables holds four
+     different acquisition methods under one page name:
+
+         HARVESTABLES + COLLECTIBLES   15 rows   Prota, Ranta Dung        hand-collect
+         FPS HAND-MINABLE GEMS          4 rows   Aphorite, Hadanite       on foot
+         ROC GEMS                       4 rows   Feynmaline, Beradom      ROC
+         SHIP-MINEABLE ORES            20 rows   Iron, Titanium, Gold     ship laser LOCATIONS
+
+     So a chip is now keyed to a TABLE, named by what you get when you land there, and it is
+     only offered when a row actually exists to land on. `acc` matches the accordion heading
+     the table sits under; acc:null means every table on that page counts.
+
+     SIDE EFFECT, AND IT IS THE POINT: names are no longer taken from MINING_DATA or
+     RECIPE_DATA. A chip that cannot land on a row is not shown at all. Mining loses its
+     LASERS REF / MODULES REF / MASS REFERENCE / QUICK CRACK CHECK rows from the index, which
+     were producing entries like "Manned Middle" and "Focus II". */
+  var SRC=[
+    {k:'laser',  pg:'mining',     label:'LASER',        acc:/ROCKS\s*REF|COMPATIBILITY/i},
+    {k:'loc',    pg:'harvest',    label:'LOCATIONS',    acc:/SHIP-?MINEABLE\s*ORES/i},
+    {k:'handgem',pg:'harvest',    label:'HAND GEM',     acc:/FPS\s*HAND-?MIN/i},
+    {k:'rocgem', pg:'harvest',    label:'ROC GEM',      acc:/ROC\s*GEMS/i},
+    {k:'harv',   pg:'harvest',    label:'HARVEST',      acc:/HARVESTABLES\s*\+|SELL\s*DATA/i},
+    {k:'buy',    pg:'trading',    label:'BUY',          acc:/HAULING\s*ROUTES/i},
+    {k:'salv',   pg:'salvage',    label:'SALVAGE',      acc:null},
+    {k:'loot',   pg:'loot',       label:'LOOT',         acc:null},
+    {k:'bp',     pg:'blueprints', label:'BLUEPRINT',    acc:null},
+    /* BUILD 656. MEASURED in the 655 sweep: setActiveTabById('ships') does NOTHING - the tab
+       never activates, active stays tab-home. #tab-ships is not a page you can switch to, it
+       is nested inside #tab-loadout as #loadout-shipsview, which is display:none until the
+       page own SHIP DATABASE button is pressed. The SHIP DB chip was therefore dead: it went
+       nowhere and highlighted nothing. `open` says which page to actually open, `pre` names a
+       button on that page to press once on arrival. Ship Loadouts own table is a weapons
+       comparison, so its chip is labelled for what it is. */
+    {k:'shipb',  pg:'loadout',    label:'SHIP WEAPONS', acc:null},
+    {k:'shipdb', pg:'ships',      label:'SHIP DB',      acc:null,
+       open:'loadout', pre:/SHIP\s*DATABASE/i}
+  ];
+  var BYKEY={}; SRC.forEach(function(s){ BYKEY[s.k]=s; });
+  var IDX=null;
+
+  /* the heading of the accordion a table sits in, so a table can be told from its neighbours */
+  function accOf(tb){
+    var a=tb.closest? tb.closest('.sc-acc') : null;
+    if(!a) return '';
+    var h=a.querySelector('.sc-acc-h');
+    return h? (h.textContent||'').replace(/\s+/g,' ').trim() : '';
+  }
+  /* every table on a page that this SRC entry claims */
+  function tablesFor(s){
+    var el=document.getElementById('tab-'+s.pg), out=[];
+    if(!el) return out;
+    [].forEach.call(el.querySelectorAll('table'), function(tb){
+      /* #tab-ships is nested inside #tab-loadout - a table belongs to its OWN nearest page */
+      if(tb.closest('[id^="tab-"]')!==el) return;
+      if(s.acc && !s.acc.test(accOf(tb))) return;
+      out.push(tb);
+    });
+    return out;
+  }
+
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+  /* first column of one table. A <select> stuffed into a cell dumps every option as one
+     string, and the numbered / coordinate rows are not item names - both are dropped. */
+  function tableNames(tb){
+    var out=[];
+    [].forEach.call(tb.querySelectorAll('tbody tr'), function(tr){
+      var c=tr.children[0]; if(!c) return;
+      var t=(c.textContent||'').replace(/\s+/g,' ').trim();
+      if(!t || t.length>60 || t.length<2) return;
+      if(tr.querySelector('select,textarea')) return;
+      if(/^[\d.,\s\-+/]+$/.test(t)) return;
+      out.push(t);
+    });
+    return out;
+  }
+  function build(){
+    var idx={};
+    function add(name,key){
+      var k=norm(name); if(!k||k.length<2) return;
+      if(!idx[k]) idx[k]=[];
+      if(idx[k].indexOf(key)<0) idx[k].push(key);
+    }
+    SRC.forEach(function(s){
+      tablesFor(s).forEach(function(tb){
+        tableNames(tb).forEach(function(n){ add(n,s.k); });
+      });
+    });
+    return idx;
+  }
+  function idx(){
+    if(!IDX || !Object.keys(IDX).length) IDX=build();
+    return IDX;
+  }
+  /* MEASURED BUG, caught on the first 655 build: the index is scraped from the pages own
+     tables, and at 500 ms those tables are not all built yet - so the first decoration wrote
+     "no source page carries this item" onto every row, and because decorate() skips a row that
+     already has a chip strip, a later rebuild never corrected it. Every row read (no source).
+     So: rebuild a few times while the page settles, and whenever the index actually GREW,
+     throw the strips away and decorate again. Bounded - four passes, then it stops. */
+  var IDXN=0, LASTIDX=0;
+  function reindex(){
+    IDX=build();
+    var n=Object.keys(IDX).length;
+    if(n===IDXN) return false;
+    IDXN=n;
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-body');
+    if(body){
+      [].forEach.call(body.querySelectorAll('.cg-src-wrap'),function(w){ w.remove(); });
+      decorate(body);
+    }
+    return true;
+  }
+  [1500,4000,9000,15000].forEach(function(ms){ setTimeout(reindex, ms); });
+
+  function sourcesFor(name){
+    var k=norm(name); if(!k) return [];
+    var hits=idx()[k];
+    if(!hits || !hits.length) return [];
+    /* fixed order so every row reads the same left to right */
+    var out=[];
+    SRC.forEach(function(s){ if(hits.indexOf(s.k)>=0) out.push(s); });
+    return out.slice(0,4);   /* cap: 4 chips is the widest a docked pill row takes cleanly */
+  }
+
+  /* ---- 2. decorate the rows ------------------------------------------------------------- */
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* the tooltip says what you get, in the same words as the chip */
+  var TIP={
+    laser:  'Mining - ROCKS REF: the laser power it takes to crack it',
+    loc:    'Harvestables - SHIP-MINEABLE ORES: where the rock spawns',
+    handgem:'Harvestables - FPS HAND-MINABLE GEMS: pick it up on foot',
+    rocgem: 'Harvestables - ROC GEMS: ROC-mine it',
+    harv:   'Harvestables - hand-collect it, with locations and sell data',
+    buy:    'Hauling - USER-REPORTED ROUTES: buy it instead, with price and SCU',
+    salv:   'Salvage - where it comes off a wreck',
+    loot:   'Loot - where it drops',
+    bp:     'Blueprints - the catalog entry and what it builds into',
+    shipb:  'Ship Loadouts - the builder entry',
+    shipdb: 'Ship DB - the reference entry'
+  };
+
+  function decorate(body){
+    if(!body) return;
+    body.querySelectorAll('.ops4-row').forEach(function(row){
+      if(row.querySelector('.cg-src-wrap')) return;
+      var mat=row.querySelector('.ops4-mat'); if(!mat) return;
+      /* the material cell can carry a grade chip on the buy side - take the text only */
+      var name=(mat.childNodes[0] && mat.childNodes[0].nodeType===3)
+        ? mat.childNodes[0].nodeValue : mat.textContent;
+      name=(name||'').replace(/\s+/g,' ').trim();
+      if(!name) return;
+      var list=sourcesFor(name);
+      var w=document.createElement('div');
+      w.className='cg-src-wrap';
+      if(!list.length){
+        w.innerHTML='<span class="cg-src-none">no source page carries this item</span>';
+      } else {
+        w.innerHTML=list.map(function(s){
+          return '<button type="button" class="cg-src-chip" data-k="'+s.k+'" data-it="'
+            +esc(name)+'" title="'+esc(TIP[s.k]||s.label)+' - opens at '+esc(name)+'">'
+            +esc(s.label)+'</button>';
+        }).join('');
+      }
+      row.appendChild(w);
+    });
+  }
+
+  /* ---- 3. the jump ---------------------------------------------------------------------- */
+  function activePillView(){
+    try{
+      var b=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body');
+      if(b){
+        if(b.classList.contains('cg-ct-on')) return 'contracts';
+        if(b.classList.contains('cg-op-on')) return 'orgparty';
+      }
+      var v=localStorage.getItem('sc_ops_pill_view')||'gather';
+      return /^(gather|buy|notes|status)$/.test(v)?v:'gather';
+    }catch(e){ return 'gather'; }
+  }
+  /* look ONLY in the tables this chip claims, so a LOCATIONS chip lands in SHIP-MINEABLE ORES
+     and not in whatever other table on the page happens to repeat the name.
+
+     Returns EVERY match, not the first. MEASURED on the Hauling page: it carries TWO
+     "HAULING ROUTES - USER-REPORTED" tables and switches one off with an INLINE display:none
+     on the <table> itself - a page decision, not an accordion collapse. Gold sits in the one
+     that was off, so a first-match jump opened the page, opened the accordion, and then sat
+     on a row stuck at height 0. Rows in a switched-off table are sorted LAST, and the jump
+     takes whichever candidate actually gains height. Read live on every call, so if the page
+     switches which table it shows, the jump follows it. */
+  function findRows(s,name){
+    var k=norm(name), out=[];
+    tablesFor(s).forEach(function(tb){
+      var off = !!(tb.style && tb.style.display==='none');
+      [].forEach.call(tb.querySelectorAll('tbody tr'), function(tr){
+        var c=tr.children[0]; if(!c) return;
+        if(norm(c.textContent)===k) out.push({tr:tr, off:off});
+      });
+    });
+    out.sort(function(a,b){ return (a.off?1:0)-(b.off?1:0); });
+    return out.map(function(x){ return x.tr; });
+  }
+  /* say so out loud rather than leaving him staring at a page that did not move.
+     Reuses build 645s toast node if it exists, creates it with the same id if it does not. */
+  function note(msg){
+    var t=document.getElementById('cg-ph-toast');
+    if(!t){ t=document.createElement('div'); t.id='cg-ph-toast'; document.body.appendChild(t); }
+    t.textContent=msg; t.classList.add('on');
+    clearTimeout(t.__h); t.__h=setTimeout(function(){ t.classList.remove('on'); }, 3200);
+  }
+  function flash(tr){
+    tr.classList.add('cg-src-hit');
+    setTimeout(function(){ tr.classList.remove('cg-src-hit'); }, 2600);
+  }
+  /* MEASURED on 654: every one of these tables lives inside a COLLAPSED accordion
+     (.sc-acc > .sc-acc-h header + .sc-acc-b body, body is display:none when shut), so the
+     target row was found and highlighted at height 0 - off screen, invisible. Screenshot of
+     the Blueprints jump proved it: page opened, accordion still shut.
+     We open it by CLICKING THE PAGE OWN HEADER, never by setting style.display - rev12
+     section 4: a page that manages its own visibility must not be fought. One click, on the
+     pilot own action, is not a sweep. */
+  function reveal(tr){
+    var chain=[], el=tr, guard=0;
+    while(el && guard++<40){ chain.push(el); el=el.parentElement; }
+    var opened=0;
+    for(var i=chain.length-1;i>=0;i--){        /* outermost first, so nesting unfolds in order */
+      var n=chain[i];
+      if(!n.classList || !n.classList.contains('sc-acc-b')) continue;
+      var shut=false;
+      try{ shut=getComputedStyle(n).display==='none'; }catch(e){}
+      if(!shut) continue;
+      var h=n.previousElementSibling;
+      if(h && h.classList && h.classList.contains('sc-acc-h')){ try{ h.click(); opened++; }catch(e){} }
+    }
+    return opened;
+  }
+  /* nearest ancestor that actually scrolls. MEASURED (rev12 section 8): do NOT assume the
+     scroll container - find it, and judge the result by the target position in the viewport. */
+  function scrollParent(el){
+    var n=el.parentElement, guard=0;
+    while(n && guard++<40){
+      var cs; try{ cs=getComputedStyle(n); }catch(e){ cs=null; }
+      if(cs && /auto|scroll/.test(cs.overflowY) && n.scrollHeight > n.clientHeight+4) return n;
+      n=n.parentElement;
+    }
+    return null;
+  }
+  /* MEASURED IN WEBKIT (iPad engine, rule 3): scrollIntoView({block:center}) left the row at
+     top 894 in a 768 px viewport - below the fold. Chromium centred it correctly. So we do not
+     trust it: instant scroll, then MEASURE, then correct the scroll container by the miss.
+     Two passes, because the accordion is still settling on the first. */
+  /* SECOND MEASURED BUG, traced on 655 with a per-frame readout of the Iron row:
+
+         400 ms   top 0     height 0     <- accordion still laying out
+         900 ms   top 0     height 0
+        1500 ms   top 1055  height 29    <- real, and BELOW a 1000 px viewport
+
+     The old version fired three correction passes inside the first 800 ms, all against a
+     zero-height row, so all three did nothing and the row settled off screen. It never waits
+     for a fixed delay now - it POLLS until the row has real height, scrolls once, then
+     corrects until the miss is small. Bounded at 5 s, then it gives up quietly. */
+  function bring(rows, onVisible, onFail){
+    var waited=0, scrolled=false, passes=0, tr=null;
+    var iv=setInterval(function(){
+      waited+=120;
+      /* take whichever candidate has actually gained height */
+      if(!tr || tr.getBoundingClientRect().height===0){
+        var found=null;
+        for(var i=0;i<rows.length;i++){
+          if(rows[i].getBoundingClientRect().height>0){ found=rows[i]; break; }
+        }
+        if(found && found!==tr){
+          tr=found; scrolled=false; passes=0;
+          if(onVisible) try{ onVisible(tr); }catch(e){}
+        }
+      }
+      if(tr){
+        var r=tr.getBoundingClientRect();
+        if(!scrolled){
+          scrolled=true;
+          try{ tr.scrollIntoView({block:'center',inline:'nearest'}); }
+          catch(e){ try{ tr.scrollIntoView(); }catch(e2){} }
+          return;
+        }
+        var vh=window.innerHeight||600, want=vh/2, miss=r.top-want;
+        if(Math.abs(miss) <= vh*0.30){ clearInterval(iv); return; }
+        var sc=scrollParent(tr);
+        if(sc) sc.scrollTop += miss;
+        else { try{ window.scrollBy(0,miss); }catch(e){} }
+        if(++passes>5){ clearInterval(iv); return; }
+      }
+      if(waited>5000){
+        clearInterval(iv);
+        if(!tr && onFail) try{ onFail(); }catch(e){}
+      }
+    }, 120);
+  }
+  /* press a named button that the page owns, once - the same idea as opening an accordion by
+     its own header rather than poking at display */
+  function press(pageId, re){
+    var page=document.getElementById(pageId); if(!page) return false;
+    var btns=page.querySelectorAll('button');
+    for(var i=0;i<btns.length;i++){
+      var t=(btns[i].textContent||'').replace(/\s+/g,' ').trim();
+      if(t && re.test(t)){ try{ btns[i].click(); }catch(e){} return true; }
+    }
+    return false;
+  }
+  function jump(key,name){
+    var s=BYKEY[key]; if(!s) return;
+    var pg=s.pg;                       /* where the ROWS live */
+    var openPg=s.open||s.pg;           /* the page you can actually switch to */
+    var pressed=!s.pre;
+    /* so RETURN TO HUD puts the pill back on the tab this was launched from */
+    try{ localStorage.setItem('cg_hud_return', activePillView()); }catch(e){}
+    try{ if(typeof setActiveTabById==='function') setActiveTabById(openPg); }catch(e){}
+    /* MEASURED LESSON (rev12 section 8): judge the scroll by the target position in the
+       viewport, never by a container scrollTop - the scroll container here is not the window. */
+    var tries=0;
+    var iv=setInterval(function(){
+      var opened=document.getElementById('tab-'+openPg);
+      /* the sub-view button is on the page you opened, and only once it is on screen */
+      if(!pressed && opened && opened.getBoundingClientRect().height>0){
+        pressed=press('tab-'+openPg, s.pre);
+        return;                            /* give it a tick to lay the sub-view out */
+      }
+      var page=document.getElementById('tab-'+pg);
+      if(page && page.getBoundingClientRect().height>0){
+        var rows=findRows(s,name);
+        if(rows.length){
+          clearInterval(iv);
+          rows.forEach(reveal);             /* open every accordion a candidate lives in */
+          /* flash only once the row is actually on screen - it used to start while the
+             accordion was still shut, so most of the highlight burned invisibly */
+          bring(rows,
+            function(hit){ flash(hit); },
+            function(){ note(name+' is in a '+(s.label)+' table this page currently has switched off'); });
+          return;
+        }
+      }
+      if(++tries>40) clearInterval(iv);   /* 4s, then give up quietly - the page is still open */
+    }, 100);
+  }
+
+  /* one delegated listener on the document, so it survives every repaint and every undock */
+  document.addEventListener('click', function(e){
+    var b=e.target && e.target.closest && e.target.closest('.cg-src-chip');
+    if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    jump(b.getAttribute('data-k'), b.getAttribute('data-it')||'');
+  }, true);
+
+  /* ---- 4. RETURN TO HUD on every page a chip can reach ----------------------------------- */
+  /* build 627 put this bar on myops / missions / orgpage only, and its comment gives the
+     reason: a button that leads nowhere is worse than no button. These eight pages now DO
+     lead somewhere - a chip brought you here - so the return leg has to exist. T approved
+     this explicitly on 1 AUG. Handler is build 627s own window.cgReturnToHud, unchanged. */
+  var RTB={
+    mining:'MINING', harvest:'HARVESTABLES', salvage:'SALVAGE', loot:'LOOT',
+    trading:'HAULING', blueprints:'BLUEPRINTS', loadout:'SHIP LOADOUTS', ships:'SHIP DB'
+  };
+  function rtbBar(pg,label){
+    var page=document.getElementById('tab-'+pg); if(!page) return;
+    /* GUARD - two measured traps at once:
+       (a) build 652 moves these bars into .cg-onebar, so a ":scope >" guard goes false and
+           stacks a second copy on every sweep (rev12 section 8, the four-sets-of-buttons bug).
+           So the guard must match at any depth.
+       (b) MEASURED on 653: #tab-ships is NESTED inside #tab-loadout
+           (#tab-loadout > #loadout-shipsview > #tab-ships). A plain descendant match would
+           therefore see the Ship DB bar and wrongly conclude Ship Loadouts already had one.
+       So: match at any depth, but only bars whose OWN nearest tab page is this page. */
+    var mine=[].some.call(page.querySelectorAll('.cg-rtb-bar'), function(b){
+      return b.closest('[id^="tab-"]')===page;
+    });
+    if(mine) return;
+    var bar=document.createElement('div');
+    bar.className='cg-rtb-bar';
+    bar.innerHTML='<span class="cg-rtb-l">'+label+'</span>'
+      +'<button type="button">RETURN TO HUD</button>';
+    bar.querySelector('button').addEventListener('click', function(ev){
+      ev.stopPropagation();
+      try{ if(typeof window.cgReturnToHud==='function') window.cgReturnToHud(); }catch(e){}
+    });
+    page.insertBefore(bar, page.firstChild);
+  }
+  function rtbSweep(){ Object.keys(RTB).forEach(function(pg){ rtbBar(pg,RTB[pg]); }); }
+
+  /* ---- 5. wiring ------------------------------------------------------------------------ */
+  var seen=null;
+  function watch(){
+    var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-body');
+    if(!body) return false;
+    if(body!==seen){
+      seen=body;
+      try{
+        /* the list changing is the one cheap moment worth re-indexing on - it means the pilot
+           did something. Throttled to once per 10 s so a busy list cannot turn this into a
+           sweep over ~2,000 table rows. */
+        new MutationObserver(function(){
+          var t=+new Date();
+          if(t-LASTIDX>10000){ LASTIDX=t; reindex(); }
+          decorate(body);
+        }).observe(body,{childList:true});
+      }catch(e){}
+    }
+    decorate(body);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){
+    watch(); rtbSweep();
+    if(++n>120){ clearInterval(iv); setInterval(function(){ watch(); rtbSweep(); }, 3000); }
+  }, 500);
+  watch(); rtbSweep();
+})();
+</script>
+<script id="sc-b655-ccpush-js">
+/* sc-b655-ccpush-js  -  build 655, 1 AUG 2026.
+   T: "there is still no push to hud button in the craft calculator page."
+
+   MEASURED, HE IS RIGHT - on 654 the Craft Calculator page carries ZERO bars:
+       .cg-ph-bar 0   .cg-pk-bar 0   .cg-rtb-bar 0   .cg-onebar 0
+   Build 648 pulled it out of both bars and the reason was real. Re-measured today, in detail:
+
+       table 0    8 rows      saves / controls
+       table 1  1050 rows     the BLUEPRINT CATALOG - children[0] is the "+" quantity cell,
+                              the NAME is in children[1]
+       table 2    23 rows     the COMPUTED MATERIALS - children[0] first text node is the
+                              material name, followed by a div reading "-> Coda Pistol (0.02)"
+
+   Build 645s generic extractor reads children[0] of every table, so on this page it collected
+   the "+" cells. That is what poisoned the gather list, not "numbered lines". Fixed here by
+   never using the generic extractor on this page.
+
+   WHAT THIS BUTTON SENDS, and nothing else:
+     1. the MATERIALS the calculator computed - name only, deduped against what is already
+        on the list, with a junk filter that drops "+", "-", digits-only and anything under
+        2 or over 48 characters. This is the filter 648 did not have.
+     2. the blueprint names you have selected, into sc_bp_sent, so they show as PUSHED chips
+        at the top of the HUD pill - the same store the Blueprints page PUSH TO OPS writes
+        (build 441).
+
+   HONEST NOTE, because it changes what you should expect: your selected blueprints ALREADY
+   feed the gather list on their own. The pill core calls ccMats(), which reads
+   sccmd_overlay_craft and merges the totals in live. Measured right now on your saved
+   selection: 32 blueprints selected, 23 materials already showing in the pill with no push.
+   So this button does not unlock the materials - it makes the send explicit, it pins the
+   blueprint NAMES as chips, and it takes you back to the HUD. That is the whole of it.
+
+   Reversible: delete this block. Nothing else was edited except the build number. */
+(function(){
+  if(window.__cgCcPush655) return; window.__cgCcPush655=true;
+  var PAGE='tab-craftcalc', LABEL='CRAFT CALCULATOR';
+
+  function own(page,sel){
+    return [].some.call(page.querySelectorAll(sel), function(b){
+      return b.closest('[id^="tab-"]')===page;
+    });
+  }
+  function clean(t){
+    t=String(t==null?'':t).replace(/\s+/g,' ').trim();
+    if(t.length<2 || t.length>48) return '';
+    if(/^[+\-−–—]$/.test(t)) return '';      /* the +/- quantity cells */
+    if(/^[\d.,\s−\-+/x×]+$/i.test(t)) return '';  /* digits-only, the 648 poison */
+    if(/^<=.*=>$/.test(t)) return '';                        /* the catalog placeholder row */
+    return t;
+  }
+
+  /* the materials table identifies ITSELF - its first cell carries a child div starting with
+     an arrow ("-> Coda Pistol (0.02)"). Measured: 23 of 23 rows match on that table, 0 of
+     1050 on the catalog and 0 of 8 on the controls table. No fixed table index, no header
+     text, nothing that a re-render can shift. */
+  function matTable(page){
+    var tbs=page.querySelectorAll('table');
+    for(var i=0;i<tbs.length;i++){
+      var rows=tbs[i].querySelectorAll('tbody tr'), hit=0;
+      for(var j=0;j<rows.length && j<40;j++){
+        var c=rows[j].children[0]; if(!c) continue;
+        var d=c.querySelector('div');
+        if(d && /^\s*(→|->)/.test(d.textContent||'')) hit++;
+      }
+      if(hit>=2) return tbs[i];
+    }
+    return null;
+  }
+  function materials(page){
+    var tb=matTable(page); if(!tb) return [];
+    var out=[], seen={};
+    [].forEach.call(tb.querySelectorAll('tbody tr'), function(tr){
+      var c=tr.children[0]; if(!c) return;
+      /* the name is the FIRST TEXT NODE - the arrow line lives in a child div */
+      var n=c.childNodes[0];
+      var t=clean(n && n.nodeType===3 ? n.nodeValue : c.textContent);
+      if(!t) return;
+      var k=t.toLowerCase(); if(seen[k]) return; seen[k]=1;
+      out.push(t);
+    });
+    return out;
+  }
+  /* if a future build makes these rows pickable, picked rows win */
+  function picked(){
+    try{
+      if(typeof window.cgPickNames==='function'){
+        return (window.cgPickNames(PAGE)||[]).map(clean).filter(Boolean);
+      }
+    }catch(e){}
+    return [];
+  }
+  function selectedBPs(){
+    var out=[];
+    try{
+      var s=JSON.parse(localStorage.getItem('sccmd_overlay_craft')||'{}')||{};
+      Object.keys(s).forEach(function(k){
+        if(!(s[k]>0)) return;
+        var n=clean(String(k).split(' | ')[0]);
+        if(n && out.indexOf(n)<0) out.push(n);
+      });
+    }catch(e){}
+    return out;
+  }
+
+  function toast(msg){
+    var t=document.getElementById('cg-ph-toast');
+    if(!t){ t=document.createElement('div'); t.id='cg-ph-toast'; document.body.appendChild(t); }
+    t.textContent=msg; t.classList.add('on');
+    clearTimeout(t.__h); t.__h=setTimeout(function(){ t.classList.remove('on'); }, 2200);
+  }
+
+  function push(page){
+    var items=picked();
+    var src=items.length?'picked rows':'computed materials';
+    if(!items.length) items=materials(page);
+    if(!items.length){
+      toast('NOTHING TO PUSH - select blueprints first, the materials list is empty');
+      return;
+    }
+    var added=0;
+    try{
+      var g=[]; try{ g=JSON.parse(localStorage.getItem('sc_ops_gather')||'[]'); }catch(e){ g=[]; }
+      if(!Array.isArray(g)) g=[];
+      var have={};
+      g.forEach(function(x){ if(x&&x.material) have[String(x.material).toLowerCase()]=1; });
+      items.forEach(function(n){
+        var k=n.toLowerCase(); if(have[k]) return;
+        g.push({material:n, qty:1, from:[]}); have[k]=1; added++;
+      });
+      localStorage.setItem('sc_ops_gather', JSON.stringify(g));
+      try{ window.dispatchEvent(new StorageEvent('storage',{key:'sc_ops_gather'})); }catch(e){}
+    }catch(e){}
+
+    /* pin the blueprint names as PUSHED chips - same store the Blueprints page uses (b441) */
+    var bps=selectedBPs(), pinned=0;
+    if(bps.length){
+      try{
+        var s={}; try{ s=JSON.parse(localStorage.getItem('sc_bp_sent')||'{}')||{}; }catch(e){ s={}; }
+        bps.forEach(function(n){ if(!s[n]){ s[n]=n; pinned++; } });
+        localStorage.setItem('sc_bp_sent', JSON.stringify(s));
+      }catch(e){}
+    }
+
+    try{ localStorage.setItem('sc_ops_pill_view','gather'); }catch(e){}
+    toast(added || pinned
+      ? ('PUSHED TO HUD · ' + added + ' material' + (added===1?'':'s') +
+         (pinned? (' · ' + pinned + ' blueprint' + (pinned===1?'':'s')) : '') +
+         ' · from ' + src)
+      : 'ALREADY ON THE HUD · GATHER & BUY');
+
+    /* back to the HUD the same way RETURN TO HUD does it */
+    setTimeout(function(){
+      try{ if(typeof window.cgSheetClose==='function'){ window.cgSheetClose(); return; } }catch(e){}
+      try{ if(typeof setActiveTabById==='function') setActiveTabById('home'); }catch(e){}
+    }, 260);
+  }
+
+  /* ---- the bars -------------------------------------------------------------------------- */
+  function phBar(){
+    var page=document.getElementById(PAGE); if(!page) return;
+    if(own(page,'.cg-ph-bar')) return;
+    var d=document.createElement('div'); d.className='cg-ph-bar';
+    d.innerHTML='<span class="cg-ph-l">'+LABEL+'</span>'
+      +'<button type="button" class="cg-ph-btn">PUSH TO HUD →</button>'
+      +'<span class="cg-ph-tip">sends the computed MATERIALS list, and pins your selected '
+      +'blueprints as chips</span>';
+    d.querySelector('.cg-ph-btn').addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation(); push(page);
+    });
+    page.insertBefore(d, page.firstChild);
+  }
+  /* a page that can push to the HUD needs the return leg - same rule as build 654 */
+  function rtbBar(){
+    var page=document.getElementById(PAGE); if(!page) return;
+    if(own(page,'.cg-rtb-bar')) return;
+    var bar=document.createElement('div'); bar.className='cg-rtb-bar';
+    bar.innerHTML='<span class="cg-rtb-l">CRAFT CALCULATOR</span>'
+      +'<button type="button">RETURN TO HUD</button>';
+    bar.querySelector('button').addEventListener('click',function(ev){
+      ev.stopPropagation();
+      try{ if(typeof window.cgReturnToHud==='function') window.cgReturnToHud(); }catch(e){}
+    });
+    page.insertBefore(bar, page.firstChild);
+  }
+  function sweep(){ phBar(); rtbBar(); }
+  var n=0, iv=setInterval(function(){
+    sweep(); if(++n>120){ clearInterval(iv); setInterval(sweep,3000); }
+  }, 500);
+  sweep();
+})();
+</script>
 </body>
 </html>
