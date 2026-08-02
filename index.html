@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD=660;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD=661;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -37652,8 +37652,15 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
        button on that page to press once on arrival. Ship Loadouts own table is a weapons
        comparison, so its chip is labelled for what it is. */
     {k:'shipb',  pg:'loadout',    label:'SHIP WEAPONS', acc:null},
+    /* b661. MEASURED after 660 shipped: pressing SHIP DATABASE does open the view
+       (#loadout-shipsview display:none -> block, #tab-ships grows to 26,052px) but the row
+       still measured height 0 - because the Ship DB renders CARDS and keeps its <table> at
+       inline display:none. The name lives in span.ship-card-name inside div.ship-card.
+       So this chip lands on the CARD, not a table row. `card` = what to scroll to,
+       `cardName` = the element inside it that carries the name. */
     {k:'shipdb', pg:'ships',      label:'SHIP DB',      acc:null,
-       open:'loadout', pre:/SHIP\s*DATABASE/i}
+       open:'loadout', pre:/SHIP\s*DATABASE/i,
+       card:'.ship-card', cardName:'.ship-card-name'}
   ];
   var BYKEY={}; SRC.forEach(function(s){ BYKEY[s.k]=s; });
   var IDX=null;
@@ -37814,6 +37821,19 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
      switches which table it shows, the jump follows it. */
   function findRows(s,name){
     var k=norm(name), out=[];
+    /* card-rendered pages (Ship DB) - the table is switched off, the card is the real target */
+    if(s.card){
+      var pg=document.getElementById('tab-'+s.pg);
+      if(pg){
+        var cards=pg.querySelectorAll(s.card), got=[];
+        for(var ci=0; ci<cards.length; ci++){
+          var nm=s.cardName? cards[ci].querySelector(s.cardName) : cards[ci];
+          if(nm && norm(nm.textContent)===k) got.push(cards[ci]);
+        }
+        if(got.length) return got;
+      }
+      /* fall through to the table if no card matched - the names are in it either way */
+    }
     tablesFor(s).forEach(function(tb){
       var off = !!(tb.style && tb.style.display==='none');
       [].forEach.call(tb.querySelectorAll('tbody tr'), function(tr){
@@ -37833,6 +37853,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     clearTimeout(t.__h); t.__h=setTimeout(function(){ t.classList.remove('on'); }, 3200);
   }
   function flash(tr){
+    /* b661: works for a <tr> and for a .ship-card alike - the class only paints an outline */
     tr.classList.add('cg-src-hit');
     setTimeout(function(){ tr.classList.remove('cg-src-hit'); }, 2600);
   }
