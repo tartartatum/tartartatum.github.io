@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 687;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 689;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -41127,6 +41127,84 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
             skipped: ls(SKIP), versionUrl: url().split('?')[0]};
   };
   window.CMDGLAS_UPDBAR_687=1;
+})();
+</script>
+<style id="sc-b689-pilllock-css">
+/* sc-b689-pilllock-css  -  build 689, 3 AUG 2026.
+   --cg-pilllock is written by the twin script. Until it is, this resolves to
+   none and nothing changes - so a failure here leaves the old behaviour rather
+   than a broken pill. */
+#sc-home-widgets .ops-pill.b385{
+  max-height: var(--cg-pilllock, none) !important;
+}
+/* a flex child will not shrink below its content unless it is allowed to; these
+   two are what let the list scroll inside the cap instead of pushing it open */
+#sc-home-widgets .ops-pill.b385 > .pill-body,
+#sc-home-widgets .ops-pill.b385 .ops4-body{ min-height:0; }
+</style>
+<script id="sc-b689-pilllock-js">
+/* sc-b689-pilllock-js  -  build 689. */
+(function(){
+  if(window.__cgPillLock689) return; window.__cgPillLock689=true;
+
+  function tools(){ return document.getElementById('sc-tools-row'); }
+  function pill(){ return document.querySelector('#sc-home-widgets .ops-pill.b385'); }
+
+  /* build 668's formula, unchanged - this block does not invent a height, it
+     enforces the one the tablet already decided on */
+  function target(){
+    var tr=tools(); if(!tr) return 0;
+    var h=tr.offsetHeight; if(!h) return 0;
+    return Math.round(h * (Number(window.CG_PILL_SCALE) || 1));
+  }
+
+  function current(){
+    var v=getComputedStyle(document.documentElement).getPropertyValue('--cg-pilllock');
+    return parseFloat(v) || 0;
+  }
+
+  function apply(){
+    var t=target();
+    if(!t) return false;
+    if(Math.abs(t-current()) < 2) return true;          /* already correct */
+    document.documentElement.style.setProperty('--cg-pilllock', t+'px');
+    return true;
+  }
+
+  /* bounded settle, then event-driven only. Nothing re-created, no permanent
+     timer (rule 17). */
+  var n=0, iv=setInterval(function(){ if(apply() || ++n>60) clearInterval(iv); }, 200);
+  apply();
+  addEventListener('load', function(){ setTimeout(apply,400); setTimeout(apply,1800); });
+  addEventListener('resize', function(){ setTimeout(apply,150); setTimeout(apply,600); });
+  try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(apply,200); }); }catch(e){}
+  /* the tools row settles late on a cold load - two more passes cost nothing and
+     close the window the race lives in */
+  setTimeout(apply, 4000);
+  setTimeout(apply, 9000);
+  setTimeout(apply, 15000);
+
+  /* if a pilot changes the scale by hand, the lock follows it immediately */
+  var _cgPS=window.cgPillScale;
+  if(typeof _cgPS==='function'){
+    window.cgPillScale=function(v){
+      var r=_cgPS.apply(this, arguments);
+      setTimeout(apply, 120); setTimeout(apply, 600);
+      return r;
+    };
+  }
+
+  window.cgPillLockReport=function(){
+    var p=pill(), tr=tools();
+    return {scale:Number(window.CG_PILL_SCALE)||null,
+            toolsHeight: tr? tr.offsetHeight : null,
+            target: target(),
+            lock: (getComputedStyle(document.documentElement).getPropertyValue('--cg-pilllock')||'').trim() || 'none',
+            pillHeight: p? Math.round(p.getBoundingClientRect().height) : null,
+            listScrollsInside: (function(){ var b=document.querySelector('.ops4-body');
+              return b? (b.scrollHeight > b.clientHeight+2) : null; })()};
+  };
+  window.CMDGLAS_PILLLOCK_689=1;
 })();
 </script>
 </body>
