@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 679;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 680;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -40537,6 +40537,37 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
             observing: !!obs};
   };
   window.CMDGLAS_SRCSYNC_679=1;
+})();
+</script>
+<style id="sc-b680-onescroll-css">
+/* sc-b680-onescroll-css  -  build 680, 2 AUG 2026.
+   Puts #home-scroll back to overflow:hidden, which is how it shipped before build
+   677. Higher specificity than the rule it cancels (html body prefix), so it wins
+   regardless of block order, and it is scoped to the home page only - every other
+   page keeps its own scrolling untouched. */
+html body #tab-home #home-scroll{ overflow-y:hidden !important; }
+</style>
+<script id="sc-b680-onescroll-js">
+/* sc-b680-onescroll-js  -  build 680.  Measurement only, changes nothing.
+   window.cgScrollReport() counts how many scrollable boxes the home page actually
+   has, so "two scrollbars" is a number rather than an argument. */
+(function(){
+  if(window.__cgOneScroll680) return; window.__cgOneScroll680=true;
+  window.cgScrollReport=function(){
+    var out=[];
+    var els=document.querySelectorAll('#tab-home, #tab-home *');
+    for(var i=0;i<els.length;i++){
+      var e=els[i], cs=getComputedStyle(e);
+      if(/(auto|scroll)/.test(cs.overflowY) && e.scrollHeight>e.clientHeight+2){
+        out.push((e.id?'#'+e.id:e.tagName.toLowerCase()+'.'+String(e.className).split(' ')[0])
+                 +' ('+(e.scrollHeight-e.clientHeight)+'px)');
+      }
+    }
+    var de=document.scrollingElement||document.documentElement;
+    return {scrollableBoxesOnHome:out.length, which:out,
+            documentScrolls: de.scrollHeight>de.clientHeight+2};
+  };
+  window.CMDGLAS_ONESCROLL_680=1;
 })();
 </script>
 </body>
