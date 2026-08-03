@@ -40595,6 +40595,17 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
     #cg-cmdlog, #cg-credit{
       bottom: max(0px, env(safe-area-inset-bottom)) !important;
     }
+    /* T, 3 AUG: "there's still no version number on the tablet ipad".
+       MY REGRESSION, from the rule directly above. #scv-build is pinned at
+       bottom:20px; raising the COMMAND LOG / credit strip by the home-indicator
+       inset moved that strip up onto it and hid the version behind it. MEASURED at
+       1024x1366: version occupies y 1330-1346 and the strip sits at 1352 with a
+       zero inset - about 20 px of daylight, which a real iPad's inset closes
+       exactly. So the version gets lifted by the same amount, and the gap holds
+       whatever the device reports. */
+    #scv-build{
+      bottom: calc(20px + max(0px, env(safe-area-inset-bottom))) !important;
+    }
   }
 }
 </style>
@@ -40637,6 +40648,10 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
             insetTop: probe('top'), insetBottom: probe('bottom'),
             contentPaddingTop: c? getComputedStyle(c).paddingTop : null,
             firstRowFromScreenTop: first? Math.round(first.getBoundingClientRect().top) : null,
+            versionGapAboveTicker: (function(){
+              var v=document.getElementById('scv-build'), t=document.getElementById('cg-cmdlog');
+              if(!v||!t) return null;
+              return Math.round(t.getBoundingClientRect().top - v.getBoundingClientRect().bottom); })(),
             viewportFit: (function(){
               var m=document.querySelector('meta[name="viewport"]');
               return m? (/viewport-fit=cover/.test(m.content)?'cover':'default') : null; })()};
