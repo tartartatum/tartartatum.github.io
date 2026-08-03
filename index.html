@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 681;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 682;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -40640,6 +40640,79 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
               return m? (/viewport-fit=cover/.test(m.content)?'cover':'default') : null; })()};
   };
   window.CMDGLAS_SAFEAREA_681=1;
+})();
+</script>
+<style id="sc-b682-topcut-css">
+/* sc-b682-topcut-css  -  build 682, 3 AUG 2026.
+   Belt and braces for the same fault: tell the browser not to restore a scroll
+   position into a container that can no longer be scrolled. overflow-anchor:none
+   stops scroll anchoring from re-introducing an offset when content above the
+   viewport changes height (the pill and the widgets both settle after load). */
+#tab-home #home-scroll{ overflow-anchor:none; }
+</style>
+<script id="sc-b682-topcut-js">
+/* sc-b682-topcut-js  -  build 682.
+
+   window.cgTopReport() returns the numbers this was diagnosed from, so the fault
+   can be confirmed on the real machine rather than argued about:
+     scrollTop        - must be 0. Anything else means the top is cut off.
+     overflowY        - must be hidden. That is build 680's lock.
+     firstCardTop     - distance from the top of the frame to the first card.
+     clippedAbove     - true if the first card starts above the frame. */
+(function(){
+  if(window.__cgTopCut682) return; window.__cgTopCut682=true;
+
+  /* the browser must not put a remembered offset back into a locked container */
+  try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+
+  function unpin(){
+    var sc=document.getElementById('home-scroll');
+    if(!sc) return false;
+    var cs=getComputedStyle(sc);
+    /* only touch it while it is LOCKED - if a future build makes it scrollable
+       again, this must not fight the pilot's own scrolling */
+    if(!/hidden|clip/.test(cs.overflowY)) return true;
+    if(sc.scrollTop!==0) sc.scrollTop=0;
+    if(sc.scrollLeft!==0) sc.scrollLeft=0;
+    return true;
+  }
+
+  /* The settle loop alone was NOT enough - MEASURED: forcing a 44 px offset after the
+     loop had finished left the first card 38 px above the frame with no way back. So the
+     element itself is watched. A scroll event on a LOCKED container can only come from
+     something other than the pilot (restore, anchoring, focus, a script), and the answer
+     is always the same: put it back to 0. Setting scrollTop to 0 when it is already 0
+     fires nothing, so this cannot loop. */
+  function watch(){
+    var sc=document.getElementById('home-scroll');
+    if(!sc || sc.__cgUnpinWatched) return !!sc;
+    sc.__cgUnpinWatched=true;
+    sc.addEventListener('scroll', unpin, {passive:true});
+    return true;
+  }
+
+  var n=0, iv=setInterval(function(){ watch(); if(unpin() || ++n>40) clearInterval(iv); }, 150);
+  unpin(); watch();
+  addEventListener('load', function(){ setTimeout(unpin,300); setTimeout(unpin,1500); });
+  addEventListener('resize', function(){ setTimeout(unpin,150); });
+  try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(unpin,150); }); }catch(e){}
+
+  window.cgTopReport=function(){
+    var sc=document.getElementById('home-scroll');
+    var card=document.querySelector('#sc-home-widgets .wg')
+          || document.getElementById('sc-home-widgets');
+    var cr=card? card.getBoundingClientRect() : null;
+    return {scrollTop: sc? Math.round(sc.scrollTop) : null,
+            scrollLeft: sc? Math.round(sc.scrollLeft) : null,
+            overflowY: sc? getComputedStyle(sc).overflowY : null,
+            scrollHeight: sc? sc.scrollHeight : null,
+            clientHeight: sc? sc.clientHeight : null,
+            firstCardTop: cr? Math.round(cr.top) : null,
+            clippedAbove: cr? (cr.top < 0) : null,
+            zoom: (function(){ var z=document.querySelector('.zoom-wrapper');
+              return z? getComputedStyle(z).transform : null; })()};
+  };
+  window.CMDGLAS_TOPCUT_682=1;
 })();
 </script>
 </body>
