@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 680;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 681;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -40568,6 +40568,78 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
             documentScrolls: de.scrollHeight>de.clientHeight+2};
   };
   window.CMDGLAS_ONESCROLL_680=1;
+})();
+</script>
+<style id="sc-b681-safearea-css">
+/* sc-b681-safearea-css  -  build 681, 3 AUG 2026.
+
+   env(safe-area-inset-top) is 0 on a desktop browser and on any device without an
+   inset, so the max() below collapses to 0 there and nothing moves. On an iPad it
+   resolves to the real strip height iOS reports.
+
+   @supports guards the whole thing: a browser that cannot do max() with env() skips
+   it entirely rather than applying a broken padding.
+
+   Scoped to #content, which is the parent of every .panel-page - so the reservation
+   is made ONCE for the whole app instead of page by page, and no page can be missed. */
+@supports (padding-top: max(0px, env(safe-area-inset-top))){
+  @media (pointer:coarse){
+    #content{
+      padding-top: max(0px, env(safe-area-inset-top)) !important;
+      box-sizing: border-box;
+    }
+    /* the fixed bottom strip gets the same treatment at its own edge, so the ticker
+       does not sit under the home indicator on an iPad in a case */
+    #cg-cmdlog, #cg-credit{
+      bottom: max(0px, env(safe-area-inset-bottom)) !important;
+    }
+  }
+}
+</style>
+<script id="sc-b681-safearea-js">
+/* sc-b681-safearea-js  -  build 681.
+
+   The CSS above is the fix. This is the PROOF, because a headless browser cannot be
+   given a real safe-area inset - it always reports 0 - so this could not be verified
+   here the way the PC layout was. It has to be readable on the actual iPad.
+
+   window.cgSafeReport() returns the inset iOS is reporting, the padding actually
+   applied, and how far the first pill row now sits from the top of the screen.
+   window.cgSafeTop(px) forces a value for a one-off test; cgSafeTop(null) clears it.
+   Neither is needed in normal use and neither writes anything to storage. */
+(function(){
+  if(window.__cgSafeArea681) return; window.__cgSafeArea681=true;
+
+  function probe(side){
+    var d=document.createElement('div');
+    d.style.cssText='position:fixed;top:-9999px;left:-9999px;height:0;'
+                   +'padding-top:env(safe-area-inset-'+side+',0px)';
+    document.body.appendChild(d);
+    var v=parseFloat(getComputedStyle(d).paddingTop)||0;
+    d.parentNode.removeChild(d);
+    return Math.round(v);
+  }
+
+  window.cgSafeTop=function(px){
+    var c=document.getElementById('content'); if(!c) return null;
+    if(px===null||px===undefined){ c.style.paddingTop=''; return 'cleared'; }
+    c.style.paddingTop=parseInt(px,10)+'px';
+    return c.style.paddingTop;
+  };
+
+  window.cgSafeReport=function(){
+    var c=document.getElementById('content');
+    var first=document.getElementById('sc-home-widgets')
+           || document.querySelector('#tab-home .hm-wrap > *');
+    return {coarsePointer: !!(window.matchMedia && matchMedia('(pointer:coarse)').matches),
+            insetTop: probe('top'), insetBottom: probe('bottom'),
+            contentPaddingTop: c? getComputedStyle(c).paddingTop : null,
+            firstRowFromScreenTop: first? Math.round(first.getBoundingClientRect().top) : null,
+            viewportFit: (function(){
+              var m=document.querySelector('meta[name="viewport"]');
+              return m? (/viewport-fit=cover/.test(m.content)?'cover':'default') : null; })()};
+  };
+  window.CMDGLAS_SAFEAREA_681=1;
 })();
 </script>
 </body>
