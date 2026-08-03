@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.1';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 682;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 685;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -37656,7 +37656,9 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
      LASERS REF / MODULES REF / MASS REFERENCE / QUICK CRACK CHECK rows from the index, which
      were producing entries like "Manned Middle" and "Focus II". */
   var SRC=[
-    {k:'laser',  pg:'mining',     label:'LASER',        acc:/ROCKS\s*REF|COMPATIBILITY/i},
+    /* b684, T 3 AUG 2026: "until we can automate the Laser button remove it from this
+   and future builds". Restore this line to bring the chip back.
+  {k:'laser',  pg:'mining',     label:'LASER',        acc:/ROCKS\s*REF|COMPATIBILITY/i}, */
     {k:'loc',    pg:'harvest',    label:'MORE LOCATIONS',acc:/SHIP-?MINEABLE\s*ORES/i},   /* b662: the primary location is now printed in the HUD row itself, so this
        button is no longer "where is it" - it is "show me the rest". */
     {k:'handgem',pg:'harvest',    label:'HAND GEM',     acc:/FPS\s*HAND-?MIN/i},
@@ -40713,6 +40715,290 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
               return z? getComputedStyle(z).transform : null; })()};
   };
   window.CMDGLAS_TOPCUT_682=1;
+})();
+</script>
+<style id="sc-b683-chipfold-css">
+/* sc-b683-chipfold-css  -  build 683, 3 AUG 2026. */
+
+/* collapsed: the chips and the "no source page" note are hidden, the strip keeps
+   only its chevron. Zero vertical margin so a folded item costs one small line. */
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap{ align-items:center; }
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap:not(.cg-open) > .cg-src-chip,
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap:not(.cg-open) > .cg-src-none{ display:none !important; }
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap:not(.cg-open){ margin:0 !important; gap:0 !important; }
+
+/* the chevron. Deliberately quiet - it is a disclosure control, not an action. */
+/* T: "reduce by half the size of option" - MEASURED before: 19 px strip, the word
+   OPTIONS plus a count. Now the chevron carries the count on its own. */
+#sc-home-widgets .ops-pill.b385 .cg-src-tog{
+  font:800 6.5px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:.6px; text-transform:uppercase;
+  color:#8fb3c8; background:rgba(90,180,220,.10); border:1px solid rgba(120,190,225,.28);
+  border-radius:4px; padding:1px 4px; cursor:pointer; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:2px; min-height:9px; }
+/* T, 3 AUG: "the option chip needs to move away from the invisible border - the bottom
+   left lit up pill gets cut off". The strip only carried 1 px of left padding, so the
+   chevron sat against the pill's rounded edge and the lit (open) state clipped. Indent it
+   to the same left edge the item name and location line use. */
+#sc-home-widgets .ops-pill.b385 .cg-src-tog{ margin-left:7px; }
+#sc-home-widgets .ops-pill.b385 .cg-src-tog:hover{ color:#dcefff; border-color:rgba(140,215,255,.6); }
+#sc-home-widgets .ops-pill.b385 .cg-src-tog .cg-cv{ font-size:7px; line-height:1; }
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap.cg-open .cg-src-tog{
+  color:#04141d; background:linear-gradient(180deg,#a6f2ff,#33b5e6); border-color:rgba(170,242,255,.9); }
+
+/* a touch device needs a bigger target than 18 px - HIG minimum is 44, and this
+   sits in a dense list, so it gets the height without getting wider */
+@media (pointer:coarse){
+  #sc-home-widgets .ops-pill.b385 .cg-src-tog{ min-height:20px; padding:4px 7px; }
+}
+</style>
+<script id="sc-b683-chipfold-js">
+/* sc-b683-chipfold-js  -  build 683. */
+(function(){
+  if(window.__cgChipFold683) return; window.__cgChipFold683=true;
+
+  /* T, 3 AUG: "the more option button needs to close the same way the assist nav my rig
+     learn mission controls tablet controls" - so this is an ACCORDION, exactly like the
+     control-bar groups: ONE open at a time, and a tap anywhere else closes it. Nothing is
+     remembered across a reload, because those groups do not remember either. */
+  var CUR=null;
+
+  /* the item a strip belongs to - every chip already carries data-it, and that is
+     the same name b654 uses to jump, so no second naming scheme is invented here */
+  function itemOf(w){
+    var c=w.querySelector('[data-it]');
+    return c? (c.getAttribute('data-it')||'') : '';
+  }
+
+  function paint(w){
+    var name=itemOf(w);
+    var open=!!name && CUR===name;
+    if(w.classList.contains('cg-open')!==open) w.classList.toggle('cg-open', open);
+    var t=w.querySelector(':scope > .cg-src-tog');
+    if(!t){
+      t=document.createElement('button');
+      t.type='button'; t.className='cg-src-tog';
+      t.innerHTML='<span class="cg-cv">&#9662;</span><span class="cg-lb">OPTIONS</span>';
+      w.insertBefore(t, w.firstChild);
+    }
+    var cv=t.querySelector('.cg-cv'), lb=t.querySelector('.cg-lb');
+    var wantCv=open?'▴':'▾';
+    if(cv && cv.textContent!==wantCv) cv.textContent=wantCv;
+    var n=w.querySelectorAll(':scope > .cg-src-chip').length;
+    /* label halved to the count alone - the chevron already says what it does */
+    var wantLb=open?'':(n?String(n):'');
+    if(lb && lb.textContent!==wantLb) lb.textContent=wantLb;
+    t.title=open?'Hide this item’s buttons':'Show LASER / MORE LOCATIONS / BUY for this item';
+  }
+
+  function sweep(){
+    var ws=document.querySelectorAll('#sc-home-widgets .ops-pill.b385 .cg-src-wrap');
+    for(var i=0;i<ws.length;i++) paint(ws[i]);
+    return ws.length>0;
+  }
+
+  /* capture phase, on the document - it survives every repaint and every undock,
+     which is the same pattern b654's own chip handler uses */
+  document.addEventListener('click', function(e){
+    var t=e.target && e.target.closest && e.target.closest('.cg-src-tog');
+    if(!t) return;
+    e.preventDefault(); e.stopPropagation();
+    var w=t.closest('.cg-src-wrap'); if(!w) return;
+    var name=itemOf(w); if(!name) return;
+    CUR = (CUR===name) ? null : name;
+    sweep();                       /* repaint them all - opening one closes the rest */
+  }, true);
+
+  /* tap anywhere that is not this control and not an open strip -> close, same as the
+     control-bar flyouts. Bubble phase on purpose: a chip inside an open strip must still
+     get its own click before this runs. */
+  document.addEventListener('click', function(e){
+    if(!CUR) return;
+    var t=e.target;
+    if(t && t.closest && (t.closest('.cg-src-tog') || t.closest('.cg-src-wrap'))) return;
+    CUR=null; sweep();
+  }, false);
+  document.addEventListener('keydown', function(e){
+    if(CUR && (e.key==='Escape'||e.keyCode===27)){ CUR=null; sweep(); }
+  }, false);
+
+  /* the pill repaints on its own schedule; watch for new strips instead of polling
+     forever. childList only - no attribute storm. */
+  function observe(){
+    var host=document.querySelector('#sc-home-widgets .ops-pill.b385');
+    if(!host || host.__cgFoldObs) return !!host;
+    host.__cgFoldObs=true;
+    try{
+      new MutationObserver(function(){ sweep(); })
+        .observe(host,{childList:true, subtree:true});
+    }catch(e){}
+    return true;
+  }
+
+  var n=0, iv=setInterval(function(){ observe(); if(sweep() || ++n>60) clearInterval(iv); }, 300);
+  sweep(); observe();
+
+  window.cgChipFoldReport=function(){
+    var ws=document.querySelectorAll('#sc-home-widgets .ops-pill.b385 .cg-src-wrap');
+    var open=0, h=0;
+    for(var i=0;i<ws.length;i++){
+      if(ws[i].classList.contains('cg-open')) open++;
+      h+=ws[i].getBoundingClientRect().height;
+    }
+    return {strips:ws.length, openNow:open, openItem:CUR,
+            totalStripHeight:Math.round(h),
+            togglesMounted:document.querySelectorAll('#sc-home-widgets .ops-pill.b385 .cg-src-tog').length};
+  };
+  window.CMDGLAS_CHIPFOLD_683=1;
+})();
+</script>
+<style id="sc-b685-clrone-css">
+/* sc-b685-clrone-css  -  build 685, 3 AUG 2026.
+   Sized and shaped exactly like the neighbouring chips so the strip stays one
+   row; only the colour differs, because this is the one destructive control in
+   it. NOT given the .cg-src-chip class on purpose - that class carries b654's
+   delegated jump handler, and a CLEAR button that also navigates would be a
+   trap. */
+#sc-home-widgets .ops-pill.b385 .cg-clr-one{
+  font:800 7.5px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.1px; text-transform:uppercase;
+  color:#2a0b0b; background:linear-gradient(180deg,#ff9a8f,#e2564a);
+  border:1px solid rgba(255,150,140,.95); border-radius:5px; padding:4px 7px;
+  cursor:pointer; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.35); }
+#sc-home-widgets .ops-pill.b385 .cg-clr-one:hover{ filter:brightness(1.10); }
+#sc-home-widgets .ops-pill.b385 .cg-clr-one:active{ transform:translateY(1px); }
+/* the undo state - deliberately a different colour so it cannot be mistaken for
+   a second delete */
+#sc-home-widgets .ops-pill.b385 .cg-clr-one.cg-undo{
+  color:#04141d; background:linear-gradient(180deg,#ffe08a,#f0b429);
+  border-color:rgba(255,224,138,.95); }
+/* folded strips hide it with the rest - zero height when closed, as agreed */
+#sc-home-widgets .ops-pill.b385 .cg-src-wrap:not(.cg-open) > .cg-clr-one{ display:none !important; }
+@media (pointer:coarse){
+  #sc-home-widgets .ops-pill.b385 .cg-clr-one{ padding:7px 10px; }
+}
+</style>
+<script id="sc-b685-clrone-js">
+/* sc-b685-clrone-js  -  build 685. */
+(function(){
+  if(window.__cgClrOne685) return; window.__cgClrOne685=true;
+
+  var GK='sc_ops_gather', BK='sc_ops_buy';
+  var UNDO_MS=3000;
+
+  function get(k){ try{ var v=JSON.parse(localStorage.getItem(k)||'[]'); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+  function set(k,v){
+    try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){}
+    try{ window.dispatchEvent(new StorageEvent('storage',{key:k})); }catch(e){}
+  }
+  function repaint(){
+    try{ if(typeof window.opsRender==='function') window.opsRender(); }catch(e){}
+    try{ if(typeof window.cgLocRedraw==='function') window.cgLocRedraw(); }catch(e){}
+  }
+  function norm(s){
+    return String(s==null?'':s).replace(/\s+/g,' ').trim().toLowerCase()
+      .replace(/\s*\(.*?\)\s*$/,'').trim();
+  }
+
+  /* which list holds this material, and where in it */
+  function find(name){
+    var n=norm(name);
+    var lists=[GK,BK];
+    for(var i=0;i<lists.length;i++){
+      var arr=get(lists[i]);
+      for(var j=0;j<arr.length;j++){
+        if(norm(arr[j] && arr[j].material)===n) return {key:lists[i], idx:j, row:arr[j]};
+      }
+    }
+    return null;
+  }
+
+  /* item name for a strip - the same data-it every chip already carries */
+  function itemOf(w){
+    var c=w.querySelector('[data-it]');
+    return c? (c.getAttribute('data-it')||'') : '';
+  }
+
+  function mount(w){
+    if(w.querySelector(':scope > .cg-clr-one')) return;
+    var name=itemOf(w); if(!name) return;
+    var b=document.createElement('button');
+    b.type='button'; b.className='cg-clr-one';
+    b.setAttribute('data-clr-it', name);
+    b.textContent='CLEAR';
+    b.title='Remove '+name+' from this list. The tool pages keep their selection.';
+    w.appendChild(b);
+  }
+  function sweep(){
+    var ws=document.querySelectorAll('#sc-home-widgets .ops-pill.b385 .cg-src-wrap');
+    for(var i=0;i<ws.length;i++) mount(ws[i]);
+    return ws.length>0;
+  }
+
+  /* one pending undo at a time - a second delete commits the first, which is what
+     every mail client does and what a pilot expects */
+  var PEND=null;   /* {key, idx, row, btn, timer} */
+  function commitPending(){
+    if(!PEND) return;
+    try{ clearTimeout(PEND.timer); }catch(e){}
+    var b=PEND.btn;
+    if(b && b.isConnected){ b.classList.remove('cg-undo'); b.textContent='CLEAR'; }
+    PEND=null;
+  }
+  function doUndo(){
+    if(!PEND) return;
+    var arr=get(PEND.key);
+    var at=Math.min(PEND.idx, arr.length);
+    arr.splice(at, 0, PEND.row);
+    set(PEND.key, arr);
+    commitPending();
+    repaint();
+  }
+
+  document.addEventListener('click', function(e){
+    var b=e.target && e.target.closest && e.target.closest('.cg-clr-one');
+    if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+
+    if(PEND && PEND.btn===b){ doUndo(); return; }   /* second press = take it back */
+    commitPending();                                 /* pressing a different one commits the last */
+
+    var name=b.getAttribute('data-clr-it')||'';
+    var hit=find(name);
+    if(!hit){ b.textContent='NOT IN LIST'; setTimeout(function(){ b.textContent='CLEAR'; },1400); return; }
+
+    var arr=get(hit.key);
+    arr.splice(hit.idx,1);
+    set(hit.key, arr);
+    repaint();
+
+    /* the strip is repainted by opsRender, so re-find the button by its item name
+       rather than holding a node that may already be gone */
+    setTimeout(function(){
+      var live=document.querySelector('#sc-home-widgets .ops-pill.b385 .cg-clr-one[data-clr-it="'
+                 + (window.CSS && CSS.escape ? CSS.escape(name) : name.replace(/"/g,'\\"')) + '"]');
+      var btn = live || b;
+      if(btn && btn.isConnected){ btn.classList.add('cg-undo'); btn.textContent='UNDO'; }
+      PEND={key:hit.key, idx:hit.idx, row:hit.row, btn:btn,
+            timer:setTimeout(commitPending, UNDO_MS)};
+    }, 60);
+  }, true);
+
+  function observe(){
+    var host=document.querySelector('#sc-home-widgets .ops-pill.b385');
+    if(!host || host.__cgClrObs) return !!host;
+    host.__cgClrObs=true;
+    try{ new MutationObserver(function(){ sweep(); }).observe(host,{childList:true, subtree:true}); }catch(e){}
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ observe(); if(sweep() || ++n>60) clearInterval(iv); }, 300);
+  sweep(); observe();
+
+  window.cgClrOneReport=function(){
+    return {chips:document.querySelectorAll('#sc-home-widgets .ops-pill.b385 .cg-clr-one').length,
+            pending: PEND? {item:PEND.row&&PEND.row.material, list:PEND.key} : null,
+            gather:get(GK).map(function(r){return r.material;}),
+            buy:get(BK).map(function(r){return r.material;})};
+  };
+  window.CMDGLAS_CLRONE_685=1;
 })();
 </script>
 </body>
