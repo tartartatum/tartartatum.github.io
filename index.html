@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 713;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 714;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -43555,5 +43555,67 @@ html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-clr-wrap,
 html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-b708{
   -webkit-app-region:no-drag; }
 </style>
+<style id="sc-b714-acctfix-css">
+/* 4 AUG 2026 build 714. T: "the crimestat symbol is missing in the account panel."
+   MEASURED in Chrome on b713, signed in, from the live DOM:
+     #cg-cs-badge box = 90x0        <- zero height
+     every img: naturalWidth 170, complete, position:absolute, rendered 90x0
+     img[0]: opacity 1, display block, visibility visible, z-index 2
+     #cg-cs-frame = 91x91, overflow hidden
+   The art was never the problem. Every badge image is position:absolute, so none
+   of them gives the badge any height, and the badge had none of its own - it
+   collapsed to 0 inside a 91x91 frame that clips. Fill the frame instead of
+   depending on the images to shape it. Two ids in the selector so it outranks the
+   plain #cg-cs-badge rules (RULE 18). Reversible: delete this block. */
+#sc-home-widgets .login-pill #cg-cs-frame > #cg-cs-badge{
+  position:absolute !important; inset:0 !important; }
+#sc-home-widgets .login-pill #cg-cs-frame > #cg-cs-badge img{
+  width:100% !important; height:100% !important; object-fit:contain !important; }
+</style>
+<script id="sc-b714-acctfix-js">
+/* 4 AUG 2026 build 714. T: "when i click on account nothing happens."
+   MEASURED, live DOM, signed in:
+     #sca-pill  display:none, 0x0, text "RRazvyn"     body.sc-home-mode = true
+     #sca-usermenu  class "sca-menu", display:none, 0x0 at 0,0  AFTER the click
+   #lg-btn opens nothing itself - it calls .click() on #sca-pill, and
+   body.sc-home-mode #sca-pill{display:none!important} hides that pill on the very
+   screen the account panel lives on. showMenu() then anchors the menu to a 0x0
+   box at 0,0 and it never lands anywhere you can see.
+   FIX: keep using the app's own menu and its own toggle, but anchor it to the
+   ACCOUNT BUTTON, which is real and on screen. The listener is on document in the
+   CAPTURE phase so it runs before the old handler and stops it - the old one is
+   left in place, untouched, for a clean revert. Reversible: delete this block. */
+(function(){
+  if(window.__cgB714) return; window.__cgB714=1;
+  function place(btn){
+    var m=document.getElementById('sca-usermenu'); if(!m) return;
+    var r=btn.getBoundingClientRect();
+    m.style.left=''; m.style.right=Math.max(6,(window.innerWidth-r.right))+'px';
+    var mh=m.getBoundingClientRect().height||0;
+    /* the ACCOUNT button sits at the BOTTOM of the pill, so the menu opens upward
+       unless there is no room, then it falls back to below and gets clamped. */
+    var top=r.top-mh-8;
+    if(top<6) top=Math.min(r.bottom+8, Math.max(6,(window.innerHeight-mh-6)));
+    m.style.top=Math.max(6,top)+'px';
+    var b=m.getBoundingClientRect();
+    if(b.left<6){ m.style.right=''; m.style.left='6px'; }
+    else if(b.right>window.innerWidth-6){ m.style.right='6px'; m.style.left=''; }
+  }
+  document.addEventListener('click', function(ev){
+    var btn=ev.target && ev.target.closest && ev.target.closest('#lg-btn');
+    if(!btn) return;
+    ev.preventDefault(); ev.stopPropagation();
+    if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    var p=document.getElementById('sca-pill'); if(!p) return;
+    var m=document.getElementById('sca-usermenu');
+    if(m && m.classList.contains('sca-open')){ m.classList.remove('sca-open'); return; }
+    p.click();          /* signed out this opens the sign-in modal - nothing to place */
+    setTimeout(function(){
+      var mm=document.getElementById('sca-usermenu');
+      if(mm && mm.classList.contains('sca-open')) place(btn);
+    },0);
+  }, true);
+})();
+</script>
 </body>
 </html>
