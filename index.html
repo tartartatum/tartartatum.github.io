@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 689;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 713;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -32762,7 +32762,7 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
    HONESTY RULE: on any fetch failure it silently keeps the baked text. */
 (function(){
   if(window.__cgCmdlog533) return; window.__cgCmdlog533=true;
-  var BUILD_STAMP='TABLET UPDATED 29 JUL 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
+  var BUILD_STAMP='TABLET UPDATED 4 AUG 2026 - BUILD '+(window.CMDGLAS_BUILD||'');
   /* T's order 27 JUL 2026: the two pin/price items below STAY in the ticker until at least
      30 JUL 2026, even as newer items are added above them. Add new NEW items BEFORE these two. */
   /* T 2026-07-27: "update new news banner on the tablet to read: Org Planner and Mission builder
@@ -32775,11 +32775,14 @@ bottom ~2.03, zero tray spill, no page overflow. Reversible: delete this <style>
      together." So: COMING becomes LIVE, the PLEASE TEST line retires (superseded by
      operational), the spread-the-word call rides second, and the agreed multicrew WORKING ON
      line plus the two route-planner items stay exactly as ordered on 27-28 JUL. */
-  var NOTES_VER='2026-08-02b';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
+  var NOTES_VER='2026-08-04a';   /* b650: harvest/mining repairs + PUSH TO HUD */   /* bumped: reopens the strip ONCE for anyone who hid it */
   /* 2026-07-29 T, approved: four short beats instead of two long paragraphs. Party voice is
      what actually shipped; org voice is named as NEXT and not claimed, because squadron
      channels and role mirroring do not exist yet. */
-  var NOTES='NEW - SC DICTIONARY: don&rsquo;t know an abbreviation? LEARN &gt; SC DICTIONARY spells out 171 terms, codes, location prefixes and every alien species. &middot; HARVEST + MINING REPAIRED - sections that opened but showed nothing now open for real, on Harvestables, Mining, Salvage and the Craft Calculator. &middot; JUMP TO ITEM and JUMP TO SECTION on Harvestables actually jump now. &middot; PUSH TO HUD - click any row on a tool page to pick it, then press PUSH TO HUD and it lands in the HUD GATHER &amp; BUY list. &middot; HARVESTABLE LOCATIONS feed the route planner - PLAN MINING RUN now plots harvestables, not just mineables. &middot; CONTRACTS PAGE FIXED - the junk rows are gone and search actually works now. Looking for a contract by what it asks you to fetch? Type the material - it will find it. &middot; TRACK CONTRACTS - press TRACK on any contract and it shows up in the new CONTRACTS tab of the HUD. &middot; GATHER AND BUY ARE ONE TAB - fewer tabs, more room. &middot; JUMP BOTH WAYS - every pill tab has a SOURCE button to its full page, and every page has a RETURN TO HUD button to come straight back. The GATHER &amp; BUY page also links to every tool that feeds it. &middot; ORG / PARTY OPENS INSIDE THE TABLET - no more second browser tab. &middot; GET RID OF THE ADDRESS BAR - the tablet installs like an app now. PC: Chrome menu &rarr; Cast, save and share &rarr; Install page as app. iPad: Safari &rarr; Share &rarr; Add to Home Screen. &middot; OPEN ANY PAGE FROM A LINK - add ?tab= and the page name, like cmdglas.com/?tab=mining. Handy for bookmarks and Stream Deck keys. &middot; BIGGER ON PC - the layout uses the full width of your window. &middot; PUT THE HUD OVER YOUR GAME - press Ctrl+Alt+1 and the HUD floats on top of Star Citizen. PC only - that is where the game runs - but it needs no server and no install. Set the game to BORDERLESS WINDOWED or it cannot show. Ctrl+Alt+1 again puts it back. &middot; TWITCH - the stream panel no longer flashes white, and there is a TWITCH button that opens the channel on twitch.tv - use it on DROPS days so your watch time counts. &middot; ALWAYS UP TO DATE - the tablet now quietly refreshes itself when a new version is out, while you are looking at something else. No pop-ups, no reload prompts. &middot; USER MANUAL UPDATED - all of the above is written up in it. Button at the bottom of Home. &middot; DISCORD PARTY VOICE IS LIVE - make or join a party in COMMS, press JOIN PARTY VOICE, and Discord puts your whole party in one voice room. Nothing to set up, no download. &middot; TESTERS WANTED - Raz needs pilots on party chat. Use it, abuse it, and report back. &middot; MESSAGE FROM THE CREATOR - if you are against advanced AI integration, built-in functionality and ease of use, go use SCORG, the button is in the COMMS pill. This tool is free. &middot; CHANGE YOUR DISPLAY NAME - COMMS pill, GUIDED SETUP, edit YOUR CALLSIGN in step 2, press SAVE. &middot; ORG VOICE IS NEXT - squadron channels and roles that follow the org builder. Party first, on purpose.';
+  /* 4 AUG 2026, T: "make an announcement on the banner. Transparent HUD is live NOW.
+     USE it and provide feedback. make that the only part of the banner." Every previous
+     note retired in one move, on his order - the old text is in the b712 backup. */
+  var NOTES='TRANSPARENT HUD IS LIVE NOW &mdash; USE IT AND SEND FEEDBACK. &middot; Download it at cmdglas.com/CmdGlas-Overlay.zip &middot; Unzip it, run 0 - FIRST TIME SETUP.bat once, then 1 - RUN OVERLAY.bat &mdash; full installation and hotkeys are in the README inside the zip. &middot; Set Star Citizen to BORDERLESS WINDOWED or no overlay can show over it.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -41207,5 +41210,2350 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
   window.CMDGLAS_PILLLOCK_689=1;
 })();
 </script>
+<style id="sc-b690-dimchip-css">
+/* sc-b690-dimchip-css  -  build 690, 3 AUG 2026. */
+#cg-dim-wrap{ display:inline-flex; align-items:center; gap:6px; }
+#cg-dim-chip{
+  display:inline-flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;
+  font:800 9.5px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.6px; text-transform:uppercase;
+  color:#bcdcf0; background:rgba(90,180,220,.10); border:1px solid rgba(120,190,225,.34);
+  border-radius:6px; padding:6px 10px; min-height:22px; }
+#cg-dim-chip:hover{ color:#dcefff; border-color:rgba(140,215,255,.62); }
+#cg-dim-wrap.on #cg-dim-chip{
+  color:#04141d; background:linear-gradient(180deg,#a6f2ff,#33b5e6); border-color:rgba(170,242,255,.9); }
+#cg-dim-chip .v{ letter-spacing:1.2px; }
+#cg-dim-chip .cv{ font-size:8px; line-height:1; }
+#cg-dim-levels{ display:none; gap:5px; }
+#cg-dim-wrap.on #cg-dim-levels{ display:inline-flex; }
+#cg-dim-levels button{
+  font:800 9.5px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.2px; cursor:pointer;
+  color:#bcdcf0; background:rgba(10,22,33,.85); border:1px solid rgba(120,190,225,.34);
+  border-radius:5px; padding:6px 9px; min-height:22px; white-space:nowrap; }
+#cg-dim-levels button:hover{ color:#dcefff; border-color:rgba(140,215,255,.62); }
+#cg-dim-levels button.sel{
+  color:#04141d; background:linear-gradient(180deg,#a6f2ff,#33b5e6); border-color:rgba(170,242,255,.95); }
+@media (pointer:coarse){
+  #cg-dim-chip, #cg-dim-levels button{ min-height:30px; padding:8px 11px; }
+}
+/* the fade itself. A CSS variable so one rule covers every level and nothing has
+   to be rewritten when the pilot changes it. */
+#content{ opacity: var(--cg-dim, 1); }
+/* only when the tablet is running inside the transparent overlay does the page
+   give up its own background - otherwise a dimmed tablet would show the desktop
+   through a window that is not meant to be see-through */
+html.cg-in-overlay, html.cg-in-overlay body,
+html.cg-in-overlay #content, html.cg-in-overlay #tab-home,
+html.cg-in-overlay #tab-home #home-scroll, html.cg-in-overlay #tab-home .hm-wrap,
+html.cg-in-overlay #tab-home .hm-cols{
+  background: transparent !important; background-image: none !important;
+}
+</style>
+<script id="sc-b690-dimchip-js">
+/* sc-b690-dimchip-js  -  build 690. */
+(function(){
+  if(window.__cgDimChip690) return; window.__cgDimChip690=true;
+
+  var KEY='cg_dim_level', STEPS=[25,50,75,100], DEF=100;
+
+  /* Electron puts its own token in the user agent. That is the only honest way to
+     know the tablet is inside the transparent overlay rather than a browser tab. */
+  try{
+    if(/Electron/i.test(navigator.userAgent)) document.documentElement.classList.add('cg-in-overlay');
+  }catch(e){}
+
+  function get(){
+    var v=DEF;
+    try{ var s=parseInt(localStorage.getItem(KEY),10); if(STEPS.indexOf(s)>=0) v=s; }catch(e){}
+    return v;
+  }
+  function put(v){ try{ localStorage.setItem(KEY,String(v)); }catch(e){} }
+
+  function paint(){
+    var lvl=get();
+    document.documentElement.style.setProperty('--cg-dim', (lvl/100));
+    var chip=document.getElementById('cg-dim-chip');
+    if(chip){
+      var v=chip.querySelector('.v');
+      if(v && v.textContent!==lvl+'%') v.textContent=lvl+'%';
+    }
+    var box=document.getElementById('cg-dim-levels');
+    if(box){
+      var bs=box.querySelectorAll('button');
+      for(var i=0;i<bs.length;i++){
+        var on=(parseInt(bs[i].getAttribute('data-lvl'),10)===lvl);
+        if(bs[i].classList.contains('sel')!==on) bs[i].classList.toggle('sel',on);
+      }
+    }
+  }
+
+  /* the only entry point - the chip, the Electron hotkeys and anything else all
+     come through here, so there is one place that can be wrong */
+  window.cgDim=function(lvl){
+    if(lvl===undefined) return get();
+    lvl=parseInt(lvl,10);
+    if(STEPS.indexOf(lvl)<0) return get();
+    put(lvl); paint(); close();
+    return lvl;
+  };
+
+  function open(){ var w=document.getElementById('cg-dim-wrap'); if(w) w.classList.add('on'); paint(); }
+  function close(){ var w=document.getElementById('cg-dim-wrap'); if(w) w.classList.remove('on'); }
+
+  function mount(){
+    var row=document.getElementById('cg-theme-row536');
+    if(!row) return false;
+    if(document.getElementById('cg-dim-wrap')) return true;
+
+    var wrap=document.createElement('span');
+    wrap.id='cg-dim-wrap';
+    wrap.innerHTML='<button type="button" id="cg-dim-chip" '
+      +'title="How much of the game shows through, when the tablet is in the overlay">'
+      +'DIM <span class="v">100%</span><span class="cv">&#9662;</span></button>'
+      +'<span id="cg-dim-levels">'
+      + STEPS.map(function(s){ return '<button type="button" data-lvl="'+s+'">'+s+'%</button>'; }).join('')
+      +'</span>';
+    row.appendChild(wrap);
+
+    wrap.addEventListener('click', function(e){
+      var b=e.target && e.target.closest && e.target.closest('button');
+      if(!b) return;
+      e.preventDefault(); e.stopPropagation();
+      if(b.id==='cg-dim-chip'){
+        var w=document.getElementById('cg-dim-wrap');
+        if(w.classList.contains('on')) close(); else open();
+        return;
+      }
+      var lvl=b.getAttribute('data-lvl');
+      if(lvl) window.cgDim(lvl);
+    }, false);
+
+    paint();
+    return true;
+  }
+
+  /* outside tap closes it - the same rule the control-bar flyouts and the b683
+     chevron follow, so nothing in this tablet stays open behind your back */
+  document.addEventListener('click', function(e){
+    var w=document.getElementById('cg-dim-wrap');
+    if(!w || !w.classList.contains('on')) return;
+    if(e.target && e.target.closest && e.target.closest('#cg-dim-wrap')) return;
+    close();
+  }, false);
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'||e.keyCode===27) close();
+  }, false);
+
+  var n=0, iv=setInterval(function(){ if(mount() || ++n>60) clearInterval(iv); }, 300);
+  mount(); paint();
+
+  window.cgDimReport=function(){
+    var w=document.getElementById('cg-dim-wrap');
+    return {level:get(), cssVar:getComputedStyle(document.documentElement).getPropertyValue('--cg-dim').trim(),
+            contentOpacity:(function(){var c=document.getElementById('content');
+              return c? getComputedStyle(c).opacity : null;})(),
+            mounted:!!w, open:!!(w&&w.classList.contains('on')),
+            inOverlay:document.documentElement.classList.contains('cg-in-overlay'),
+            onThemeRow:!!(w && w.parentElement && w.parentElement.id==='cg-theme-row536')};
+  };
+  window.CMDGLAS_DIMCHIP_690=1;
+})();
+</script>
+<style id="sc-b691-tone-css">
+/* sc-b691-tone-css  -  build 691, 3 AUG 2026.  DIM chip + CrimeStat badge.
+   No hue here - see the header note; the hue is a CONTROL in b692. */
+
+/* ---- 1. THE DIM CHIP, DIALLED BACK -------------------------------------------- */
+#cg-dim-chip{
+  font-size:8px !important; letter-spacing:1.1px !important;
+  padding:3px 7px !important; min-height:16px !important; gap:4px !important;
+  color:#7f9bb0 !important; background:rgba(90,180,220,.06) !important;
+  border-color:rgba(120,190,225,.20) !important; border-radius:5px !important;
+}
+#cg-dim-chip .cv{ font-size:7px !important; }
+#cg-dim-chip:hover{ color:#bcdcf0 !important; border-color:rgba(120,190,225,.40) !important; }
+#cg-dim-wrap.on #cg-dim-chip{
+  color:#04141d !important;
+  background:linear-gradient(180deg,#79c9dd,#2e8fb4) !important;
+  border-color:rgba(140,205,225,.70) !important;
+}
+#cg-dim-levels button{
+  font-size:8px !important; letter-spacing:1px !important;
+  padding:3px 7px !important; min-height:16px !important; border-radius:4px !important;
+  color:#7f9bb0 !important; background:rgba(10,22,33,.70) !important;
+  border-color:rgba(120,190,225,.20) !important;
+}
+#cg-dim-levels button:hover{ color:#bcdcf0 !important; border-color:rgba(120,190,225,.40) !important; }
+#cg-dim-levels button.sel{
+  color:#04141d !important;
+  background:linear-gradient(180deg,#79c9dd,#2e8fb4) !important;
+  border-color:rgba(140,205,225,.75) !important;
+}
+/* a touch target still has to be reachable - the chip shrinks visually, not the
+   area a finger has to hit */
+@media (pointer:coarse){
+  #cg-dim-chip, #cg-dim-levels button{ min-height:26px !important; padding:6px 10px !important; }
+}
+
+/* ---- 2. THE CRIMESTAT BADGE ----------------------------------------------------
+   T: "too bright ... give it a nice underglow but take away the harsh brightness."
+   So: the image itself comes down in brightness and contrast, and the GLOW is put
+   on the frame BEHIND it rather than on the artwork. Glowing the artwork is what
+   made it blare in the first place. */
+#sc-home-widgets .login-pill #cg-cs-frame{
+  position:relative;
+  box-shadow: 0 0 18px rgba(90,190,220,.22), 0 0 42px rgba(60,150,190,.14);
+  border-color: rgba(120,190,225,.22) !important;
+}
+#sc-home-widgets .login-pill #cg-cs-frame::after{
+  /* the underglow - a soft pool under the badge, never over it */
+  content:''; position:absolute; left:12%; right:12%; bottom:-6%; height:34%;
+  border-radius:50%; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse at center, rgba(110,200,230,.30), rgba(110,200,230,0) 70%);
+  filter: blur(6px);
+}
+#sc-home-widgets .login-pill #cg-cs-badge{ position:relative; z-index:1; }
+#sc-home-widgets .login-pill #cg-cs-badge img{
+  filter: brightness(.72) contrast(.94) saturate(.92) !important;
+}
+</style>
+<script id="sc-b691-tone-js">
+/* sc-b691-tone-js  -  build 691.  Measurement only - it changes nothing.
+   window.cgToneReport() prints the badge's computed filter and the chip's computed
+   size, so "did it dial back" is a number rather than an opinion. */
+(function(){
+  if(window.__cgTone691) return; window.__cgTone691=true;
+  window.cgToneReport=function(){
+    function f(el){ return el? getComputedStyle(el).filter : null; }
+    var img=document.querySelector('#sc-home-widgets .login-pill #cg-cs-badge img');
+    var frame=document.querySelector('#sc-home-widgets .login-pill #cg-cs-frame');
+    return {badgeFilter:   f(img),
+            frameShadow:   frame? getComputedStyle(frame).boxShadow : null,
+            dimChipFont:   (function(){ var c=document.getElementById('cg-dim-chip');
+              return c? getComputedStyle(c).fontSize : null; })(),
+            dimChipHeight: (function(){ var c=document.getElementById('cg-dim-chip');
+              return c? Math.round(c.getBoundingClientRect().height) : null; })()};
+  };
+  window.CMDGLAS_TONE_691=1;
+})();
+</script>
+<style id="sc-b694-display-css">
+/* sc-b694-display-css  -  build 694, 3 AUG 2026.  MY RIG > DISPLAY. */
+
+/* ---- 2.  THE THEME PICKER LEAVES THE BOTTOM ROW ------------------------------
+   T: "remove the theme selector from that bottom row and let the user go to the
+   settings page." It is HIDDEN, not deleted - build 398 still owns it, still writes
+   cg_theme, and the dots on the DISPLAY page click these very buttons. One source
+   of truth, no second copy of the logic to drift. */
+#cg-theme-row536 #cg-theme-pick{ display:none !important; }
+
+/* ---- 3.  COMPACT MODE --------------------------------------------------------
+   T: "let the user hide everything underneath the assist nav my rig row." */
+html.cg-compact #tab-home .hm-wrap > #cg-theme-row536,
+html.cg-compact #tab-home .hm-wrap > #cg-social-row,
+html.cg-compact #cg-affil-note{ display:none !important; }
+html.cg-compact #cg-onebar .cg-ob-side{ display:none !important; }
+
+/* ---- 4.  THE PAGE ITSELF ------------------------------------------------------
+   Sizes follow the b665 manual rules that were signed off: 16 px body on touch,
+   1.55 line-height, bounded measure, and every rule scoped to a class this block
+   owns. No blanket p/li rules - a blanket rule blew up the reference tables in
+   WebKit once already. */
+#tab-cgdisplay .dsp{ max-width:900px; margin:0 auto; color:#c9dcec;
+  font-family:'Rajdhani','Segoe UI',sans-serif; }
+#tab-cgdisplay .dsp-cover{ text-align:center; border-bottom:1px solid rgba(120,200,235,.3);
+  padding-bottom:12px; margin-bottom:12px; }
+#tab-cgdisplay .dsp-cover h1{ font-family:'Bruno Ace','Rajdhani',sans-serif; font-size:20px;
+  letter-spacing:2px; color:#e7f5ff; margin:0 0 5px; }
+#tab-cgdisplay .dsp-cover .dsp-sub{ font-size:11px; letter-spacing:2.5px; color:#7fb8d0;
+  text-transform:uppercase; }
+
+#tab-cgdisplay .dsp-sec{ margin:0 0 14px; padding:12px 14px; border-radius:10px;
+  background:rgba(10,22,33,.55); border:1px solid rgba(108,180,214,.16); }
+#tab-cgdisplay .dsp-h{ font-size:12px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+  color:#bfe6ff; border-left:3px solid #4fd2ff; padding:5px 0 5px 11px;
+  background:linear-gradient(90deg,rgba(90,190,255,.09),transparent); margin:0 0 9px; }
+#tab-cgdisplay .dsp-p{ font-size:15px; line-height:1.55; color:#cfe2f1; margin:0 0 8px;
+  max-width:min(70ch,700px); }
+#tab-cgdisplay .dsp-p:last-child{ margin-bottom:0; }
+#tab-cgdisplay .dsp-step{ font-size:15px; line-height:1.55; color:#cfe2f1;
+  margin:0 0 12px; padding-left:26px; text-indent:-26px; max-width:min(70ch,700px); }
+#tab-cgdisplay .dsp-step b{ color:#8fd8ff; }
+
+/* the baseline table - one line per thing, its shipped value, in plain words */
+#tab-cgdisplay .dsp-base{ display:grid; grid-template-columns:auto 1fr; gap:5px 14px;
+  font-size:14px; line-height:1.5; margin:2px 0 0; }
+#tab-cgdisplay .dsp-base b{ color:#8fd8ff; font-weight:700; white-space:nowrap; letter-spacing:.6px; }
+#tab-cgdisplay .dsp-base span{ color:#cfe2f1; }
+
+/* one row of choices - the same shape for DIM and THEME so the page reads as
+   one control panel and not three bolted-together widgets */
+#tab-cgdisplay .dsp-row{ display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin:2px 0 0; }
+#tab-cgdisplay .dsp-opt{ font-family:'Rajdhani','Segoe UI',sans-serif;
+  font-size:10px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;
+  padding:8px 13px; min-height:34px; border-radius:7px; cursor:pointer; white-space:nowrap;
+  color:#bcdcf0; background:rgba(90,180,220,.07); border:1px solid rgba(120,190,225,.28); }
+#tab-cgdisplay .dsp-opt:hover{ color:#dcefff; border-color:rgba(140,215,255,.6); }
+#tab-cgdisplay .dsp-opt.on{ color:#04141d;
+  background:linear-gradient(180deg,#a6f2ff,#33b5e6); border-color:rgba(170,242,255,.9); }
+#tab-cgdisplay .dsp-now{ font-size:11px; letter-spacing:1.6px; color:#7fb8d0;
+  text-transform:uppercase; margin:9px 0 0; }
+#tab-cgdisplay .dsp-now b{ color:#8fd8ff; }
+
+/* theme dots - proxies for the real build 398 buttons */
+#tab-cgdisplay .dsp-dot{ width:26px; height:26px; border-radius:50%; padding:0; cursor:pointer;
+  border:1.5px solid rgba(160,200,230,.5); }
+#tab-cgdisplay .dsp-dot[aria-pressed="true"]{ border-color:#fff; box-shadow:0 0 0 2px rgba(255,255,255,.28); }
+#tab-cgdisplay .dsp-dot.tp-blue{ background:radial-gradient(circle at 35% 30%,#8fd8ff,#2b6fb0); }
+#tab-cgdisplay .dsp-dot.tp-green{ background:radial-gradient(circle at 35% 30%,#7dffb0,#199a5a); }
+#tab-cgdisplay .dsp-dot.tp-amber{ background:radial-gradient(circle at 35% 30%,#ffd479,#c8890f); }
+#tab-cgdisplay .dsp-dot.tp-red{ background:radial-gradient(circle at 35% 30%,#ff8a7a,#c8291a); }
+#tab-cgdisplay .dsp-dotlbl{ font-size:10px; letter-spacing:1.4px; color:#7fb8d0;
+  text-transform:uppercase; margin-right:4px; }
+
+/* the acknowledgement */
+#tab-cgdisplay .dsp-ack{ display:flex; align-items:flex-start; gap:12px; cursor:pointer;
+  padding:12px 14px; border-radius:10px;
+  background:rgba(255,176,0,.07); border:1px solid rgba(255,176,0,.42); }
+#tab-cgdisplay .dsp-ack.done{ background:rgba(57,211,83,.08); border-color:rgba(57,211,83,.42); }
+#tab-cgdisplay .dsp-ack .dsp-box{ flex:0 0 auto; width:26px; height:26px; border-radius:6px;
+  border:2px solid rgba(255,208,120,.75); background:rgba(10,22,33,.7);
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; line-height:1; color:#7fffb0; }
+#tab-cgdisplay .dsp-ack.done .dsp-box{ border-color:rgba(120,255,170,.8); }
+#tab-cgdisplay .dsp-ack .dsp-acktext{ font-size:15px; line-height:1.5; color:#ffe1a6; }
+#tab-cgdisplay .dsp-ack.done .dsp-acktext{ color:#cfe2f1; }
+#tab-cgdisplay .dsp-ack .dsp-ackwhen{ display:block; font-size:12px; letter-spacing:1.2px;
+  color:#7fb8d0; margin-top:5px; }
+
+/* NOTE / CAUTION bands, same look as the manuals */
+#tab-cgdisplay .dsp-note{ margin:10px 0 0; padding:10px 13px; border-radius:9px; font-size:14px;
+  line-height:1.5; background:rgba(90,190,255,.07); border:1px solid rgba(120,200,255,.3); color:#bcdcf0; }
+#tab-cgdisplay .dsp-caution{ margin:10px 0 0; padding:10px 13px; border-radius:9px; font-size:14px;
+  line-height:1.5; background:rgba(255,176,0,.08); border:1px solid rgba(255,176,0,.45); color:#ffe1a6; }
+#tab-cgdisplay .dsp-nodanger{ margin:10px 0 0; padding:9px 13px; border-radius:9px; font-size:13.5px;
+  line-height:1.5; background:rgba(57,211,83,.07); border:1px solid rgba(57,211,83,.35); color:#bdf0c8; }
+#tab-cgdisplay .dsp-end{ text-align:center; color:#5f7c92; font-size:10px; letter-spacing:3px;
+  margin:16px 0 4px; }
+
+/* the amber dot on the MY RIG > DISPLAY nav button, until the box is ticked */
+.scr-nav-disp{ position:relative; }
+html:not(.cg-disp-ack) .scr-nav-disp::after{ content:''; position:absolute; top:5px; right:6px;
+  width:7px; height:7px; border-radius:50%; background:#ffb000;
+  box-shadow:0 0 6px rgba(255,176,0,.85); pointer-events:none; }
+.scr-nav-disp .dsp-ico{ width:16px; height:16px; }
+
+@media (max-width:700px){
+  #tab-cgdisplay .dsp-base{ grid-template-columns:1fr; gap:1px 0; }
+  #tab-cgdisplay .dsp-base b{ margin-top:7px; }
+}
+</style>
+<script id="sc-b694-display-js">
+/* sc-b694-display-js  -  build 694.  MY RIG > DISPLAY.
+
+   Rule 17 is respected: the SVG defs, the page and the two nav buttons are each
+   mounted ONCE and the poll stops as soon as they exist. Nothing is re-created on
+   a timer inside a page that manages its own DOM. */
+(function(){
+  if(window.__cgDisplay694) return; window.__cgDisplay694=true;
+
+  var K_ACK='cg_disp_ack', K_CMP='cg_compact';
+
+  function ls(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
+  function ss(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} }
+
+  /* ---------- compact ---------- */
+  function cmpGet(){ return ls(K_CMP,'0')==='1'; }
+  window.cgCompact=function(on){
+    if(on===undefined) return cmpGet();
+    on=!!on; ss(K_CMP, on?'1':'0'); paintCmp();
+    try{ if(typeof window.cgHomeFit==='function') window.cgHomeFit(); }catch(e){}
+    return on;
+  };
+  function paintCmp(){
+    var on=cmpGet();
+    document.documentElement.classList.toggle('cg-compact', on);
+    mark('dsp-cmp', on?'on':'off');
+  }
+
+  /* ---------- acknowledgement ---------- */
+  function ackGet(){ return ls(K_ACK,''); }
+  function paintAck(){
+    var when=ackGet(), on=!!when;
+    document.documentElement.classList.toggle('cg-disp-ack', on);
+    var box=document.getElementById('dsp-ack');
+    if(box){
+      box.classList.toggle('done', on);
+      var m=box.querySelector('.dsp-box'); if(m) m.textContent = on ? '✓' : '';
+      var w=box.querySelector('.dsp-ackwhen');
+      if(w) w.textContent = on ? ('Acknowledged '+when) : 'Not acknowledged yet.';
+    }
+  }
+  /* local time, never UTC - T's standing rule */
+  function stamp(){
+    var d=new Date();
+    try{ return d.toLocaleString(undefined,{year:'numeric',month:'short',day:'2-digit',
+      hour:'2-digit',minute:'2-digit'}); }catch(e){ return d.toString(); }
+  }
+
+  /* ---------- theme proxy ----------
+     These dots do not own the theme. They click build 398's real buttons, which are
+     hidden on the bottom row but still wired. */
+  function themeGet(){ return ls('cg_theme','blue'); }
+  function themeSet(t){
+    var b=document.querySelector('#cg-theme-pick button[data-th="'+t+'"]');
+    if(b){ b.click(); } else { try{ localStorage.setItem('cg_theme',t);
+      if(t==='blue') document.documentElement.removeAttribute('data-cgtheme');
+      else document.documentElement.setAttribute('data-cgtheme',t); }catch(e){} }
+    paintTheme();
+  }
+  function paintTheme(){
+    var t=themeGet();
+    var ds=document.querySelectorAll('#tab-cgdisplay .dsp-dot');
+    for(var i=0;i<ds.length;i++)
+      ds[i].setAttribute('aria-pressed', ds[i].getAttribute('data-th')===t?'true':'false');
+  }
+
+  function mark(group,val){
+    var bs=document.querySelectorAll('#tab-cgdisplay [data-g="'+group+'"]');
+    for(var i=0;i<bs.length;i++)
+      bs[i].classList.toggle('on', bs[i].getAttribute('data-v')===String(val));
+  }
+
+  /* ---------- the page ---------- */
+  function opts(group, list){
+    return '<div class="dsp-row">'+list.map(function(o){
+      return '<button type="button" class="dsp-opt" data-g="'+group+'" data-v="'+o[0]+'">'+o[1]+'</button>';
+    }).join('')+'</div>';
+  }
+
+  var HTML=
+   '<div class="dsp-cover"><h1>DISPLAY</h1>'
+  +'<div class="dsp-sub">How the tablet looks &mdash; theme, brightness, size</div></div>'
+
+  +'<div class="dsp-sec"><div class="dsp-h">1 &mdash; Baseline</div>'
+  +'<div class="dsp-p">This is how the tablet ships. If you have never touched anything on this '
+  +'page, this is what you are looking at right now. Read it once so you know what you are '
+  +'changing away from, and what RESET puts back.</div>'
+  +'<div class="dsp-base">'
+  +'<b>Theme</b><span>BLUE. The mobiGlas palette &mdash; cyan accents on navy.</span>'
+  +'<b>Colours</b><span>Exactly as drawn. Nothing on this page repaints them.</span>'
+  +'<b>Brightness</b><span>100%. Nothing is faded, nothing shows through.</span>'
+  +'<b>Layout</b><span>FULL. Theme row, social row and the side buttons are all visible.</span>'
+  +'<b>Warning colours</b><span>Amber for CAUTION, red for WARNING, green for OK. '
+  +'These never change, whatever you set below.</span>'
+  +'</div>'
+  +'<div class="dsp-note"><b>NOTE.</b> Everything on this page is saved on THIS device only. '
+  +'Your PC, your iPad and cmdglas.com each keep their own settings, because what looks right on a '
+  +'monitor two feet away is not what looks right on a tablet in your lap.</div></div>'
+
+  +'<div class="dsp-sec"><div class="dsp-h">2 &mdash; Acknowledgement</div>'
+  +'<div class="dsp-p">Tick this once, after you have set the tablet up the way you want it. '
+  +'It is a note to yourself &mdash; nothing is locked, and you can change any setting afterwards.</div>'
+  +'<div class="dsp-ack" id="dsp-ack" role="checkbox" tabindex="0" aria-checked="false">'
+  +'<span class="dsp-box"></span>'
+  +'<span class="dsp-acktext">I have set my HUD display settings manually once.'
+  +'<span class="dsp-ackwhen">Not acknowledged yet.</span></span></div>'
+  +'<div class="dsp-note"><b>NOTE.</b> Until this is ticked, the DISPLAY button in '
+  +'<b>MY RIG</b> carries a small amber dot. That is the only nag you get.</div></div>'
+
+  +'<div class="dsp-sec"><div class="dsp-h">3 &mdash; Theme</div>'
+  +'<div class="dsp-p">Four colourways. This control used to sit on the bottom of the home '
+  +'screen; it lives here now.</div>'
+  +'<div class="dsp-row"><span class="dsp-dotlbl">Theme</span>'
+  +'<button type="button" class="dsp-dot tp-blue"  data-th="blue"  title="BLUE"  aria-label="blue theme"></button>'
+  +'<button type="button" class="dsp-dot tp-green" data-th="green" title="GREEN" aria-label="green theme"></button>'
+  +'<button type="button" class="dsp-dot tp-amber" data-th="amber" title="AMBER" aria-label="amber theme"></button>'
+  +'<button type="button" class="dsp-dot tp-red"   data-th="red"   title="RED"   aria-label="red theme"></button>'
+  +'</div></div>'
+
+  +'<div class="dsp-sec"><div class="dsp-h">4 &mdash; Brightness</div>'
+  +'<div class="dsp-p">Fades the tablet. In the desktop overlay this is what lets the game show '
+  +'through. In an ordinary browser window there is nothing behind the tablet, so it simply looks '
+  +'dimmer &mdash; the same control, honest in both places.</div>'
+  + opts('dsp-dim',[['25','25%'],['50','50%'],['75','75%'],['100','100%']])
+  +'<div class="dsp-now" id="dsp-dim-now">Now set to <b>100%</b>.</div>'
+  +'<div class="dsp-caution"><b>CAUTION.</b> At 25% the tablet is faint on purpose. Three ways back '
+  +'to 100% if you set it too low to read comfortably:<br>'
+  +'1. <b>MY RIG &rarr; DISPLAY</b> &mdash; this page. The control bar is never hidden.<br>'
+  +'2. The <b>DIM</b> chip at the bottom of the home screen &mdash; unless COMPACT is on, which '
+  +'hides it.<br>'
+  +'3. The brightness hotkey in the desktop overlay &mdash; see MY RIG &rarr; DISPLAY on the '
+  +'overlay\'s own HOTKEYS window for what it is set to.</div></div>'
+
+  +'<div class="dsp-sec"><div class="dsp-h">5 &mdash; Compact</div>'
+  +'<div class="dsp-p">Hides everything below the <b>ASSIST / NAV / MY RIG</b> control bar &mdash; '
+  +'the theme row, the social row and the side buttons. The control bar, the tools and the HUD all '
+  +'stay.</div>'
+  + opts('dsp-cmp',[['off','FULL'],['on','COMPACT']])
+  +'<div class="dsp-note"><b>NOTE.</b> Nothing is removed, only hidden. Set it back to FULL and '
+  +'every button returns where it was.</div>'
+  +'<div class="dsp-caution"><b>CAUTION.</b> COMPACT also hides the <b>DIM</b> chip, because the '
+  +'chip sits on the row being hidden. Brightness is then changed here, in section 5, or with '
+  +'the brightness hotkey in the desktop overlay.</div>'
+  +'<div class="dsp-note"><b>NOTE.</b> This hides the rows. Shrinking the WINDOW to the smaller '
+  +'layout, and dragging its corners to resize, is the desktop overlay\'s job and is not wired '
+  +'yet &mdash; in a browser tab the page keeps the size the browser gives it.</div></div>'
+
+  +'<div class="dsp-sec"><div class="dsp-h">Danger assessment</div>'
+  +'<div class="dsp-nodanger"><b>NO DANGER.</b> Every control on this page changes appearance only. '
+  +'Nothing here touches the game, your files, your account or anti-cheat. Nothing is written '
+  +'outside this browser\'s own storage on this device.</div></div>'
+  +'<div class="dsp-end">END OF DISPLAY SETTINGS</div>';
+
+  function mkPage(){
+    if(document.getElementById('tab-cgdisplay')) return;
+    var host=document.getElementById('content')||document.body;
+    var pg=document.createElement('div'); pg.id='tab-cgdisplay'; pg.className='panel-page';
+    pg.style.display='none';
+    pg.innerHTML='<div class="scrollbox p-body" style="padding:14px 16px 30px">'
+      +'<div class="dsp">'+HTML+'</div></div>';
+    host.appendChild(pg);
+
+    pg.addEventListener('click', function(e){
+      var t=e.target;
+      var ack=t.closest&&t.closest('#dsp-ack');
+      if(ack){
+        if(ackGet()) ss(K_ACK,''); else ss(K_ACK, stamp());
+        paintAck(); return;
+      }
+      var dot=t.closest&&t.closest('.dsp-dot');
+      if(dot){ themeSet(dot.getAttribute('data-th')); return; }
+      var b=t.closest&&t.closest('.dsp-opt');
+      if(!b) return;
+      var g=b.getAttribute('data-g'), v=b.getAttribute('data-v');
+      if(g==='dsp-cmp') window.cgCompact(v==='on');
+      else if(g==='dsp-dim'){
+        if(typeof window.cgDim==='function') window.cgDim(v);
+        mark('dsp-dim', v);
+        var n=document.getElementById('dsp-dim-now');
+        if(n) n.innerHTML='Now set to <b>'+v+'%</b>.';
+      }
+    }, false);
+    pg.addEventListener('keydown', function(e){
+      if((e.key===' '||e.key==='Enter') && e.target && e.target.id==='dsp-ack'){
+        e.preventDefault();
+        if(ackGet()) ss(K_ACK,''); else ss(K_ACK, stamp());
+        paintAck();
+      }
+    }, false);
+  }
+
+  function repaintAll(){
+    paintCmp(); paintAck(); paintTheme();
+    var d=(typeof window.cgDim==='function')? window.cgDim() : 100;
+    mark('dsp-dim', d);
+    var n=document.getElementById('dsp-dim-now');
+    if(n) n.innerHTML='Now set to <b>'+d+'%</b>.';
+  }
+
+  function open(){
+    mkPage(); repaintAll();
+    if(typeof window.cgSheetOpenTab==='function'){
+      window.cgSheetOpenTab('cgdisplay',{title:'DISPLAY', large:true});
+    }else if(typeof window.setActiveTabById==='function'){
+      window.setActiveTabById('cgdisplay');
+    }
+  }
+  window.cgOpenDisplay=open;
+
+  /* ---------- the MY RIG entry ----------
+     Build 337 CLONES the rail groups into #sc-appbar and then locks the pill. A
+     button added after that lock never reaches the pill, so it goes into BOTH, and
+     it carries an onclick ATTRIBUTE - which build 513 recorded as the thing that
+     survives cloneNode. Nothing to repair. */
+  var ICO='<svg class="dsp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    +'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    +'<rect x="2.5" y="4.5" width="19" height="13" rx="1.5"/>'
+    +'<path d="M8.5 21h7M12 17.5V21"/><path d="M6.5 8.5h4M6.5 12h7"/></svg>';
+  function mkBtn(){
+    var b=document.createElement('button');
+    b.type='button'; b.className='scr-btn scr-nav-disp';
+    b.setAttribute('onclick','window.cgOpenDisplay&&window.cgOpenDisplay()');
+    b.setAttribute('title','Display settings - theme, brightness, compact');
+    b.innerHTML=ICO+'<span>DISPLAY</span>';
+    return b;
+  }
+  function rigFlyouts(){
+    var out=[];
+    var groups=document.querySelectorAll('#sc-zoom-bar .scr-group, #sc-right-bar .scr-group, #sc-appbar .scr-group');
+    for(var i=0;i<groups.length;i++){
+      var c=groups[i].querySelector('.scr-cat'); if(!c) continue;
+      var lab=(c.textContent||'').replace(/[^A-Za-z ]/g,'').trim().toUpperCase();
+      if(lab!=='MY RIG') continue;
+      var f=groups[i].querySelector('.scr-flyout, .scr-sec');
+      if(f) out.push(f);
+    }
+    return out;
+  }
+  function mount(){
+    var fs=rigFlyouts(); if(!fs.length) return false;
+    var done=0;
+    for(var i=0;i<fs.length;i++){
+      if(fs[i].querySelector('.scr-nav-disp')){ done++; continue; }
+      fs[i].appendChild(mkBtn()); done++;
+    }
+    return fs.length>=2 && done>=2;
+  }
+
+  /* the three settings have to bite whether or not this page was ever opened */
+  paintCmp(); paintAck();
+  mkPage();
+  var n=0, iv=setInterval(function(){ if(mount()||++n>90) clearInterval(iv); }, 300);
+  mount();
+
+  window.cgDisplayReport=function(){
+    var r=document.documentElement;
+    var tgt=document.getElementById('content');
+    return {contentFilter: tgt? getComputedStyle(tgt).filter : null,
+            compact:cmpGet(), ack:ackGet()||null, theme:themeGet(),
+            dim:(typeof window.cgDim==='function')?window.cgDim():null,
+            page:!!document.getElementById('tab-cgdisplay'),
+            navButtons:document.querySelectorAll('.scr-nav-disp').length,
+            rowPickerHidden:(function(){ var p=document.querySelector('#cg-theme-row536 #cg-theme-pick');
+              return p? getComputedStyle(p).display==='none' : 'not-on-row'; })()};
+  };
+  window.CMDGLAS_DISPLAY_694=1;
+})();
+</script>
+<style id="sc-b695-quietrow-css">
+/* sc-b695-quietrow-css  -  build 695, 3 AUG 2026.
+   Every rule is scoped to .cg-clr-wrap inside the HUD, so nothing else on the
+   tablet that uses .cg-clr-btn or .cg-mirror is touched.
+   !important throughout because build 385 writes some of these inline. */
+
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap{ gap:4px !important; }
+
+/* ---- the size. 20 px -> 10 px, which is the 50% ---------------------------- */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn,
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror{
+  font-size:6px !important; letter-spacing:.8px !important; font-weight:700 !important;
+  line-height:1 !important;
+  padding:2px 5px !important; min-height:12px !important; height:12px !important;
+  border-radius:3px !important; box-shadow:none !important;
+  /* ---- the quiet. one colour for the whole row at rest ---------------------- */
+  color:#6d8598 !important;
+  background:transparent !important; background-image:none !important;
+  border:1px solid rgba(108,150,180,.26) !important;
+  transition:color .12s ease, border-color .12s ease, background .12s ease; }
+
+/* ---- colour comes back under the cursor ------------------------------------ */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn:hover,
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror:hover{
+  color:#cfe6f8 !important; border-color:rgba(140,205,240,.6) !important; }
+/* the four destructive ones go red, but only on hover */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn:not(.cg-clr-go):hover{
+  color:#ffb3a6 !important; border-color:rgba(255,120,100,.62) !important;
+  background:rgba(255,90,60,.10) !important; }
+/* REFRESH is the safe one - green, and only on hover */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn.cg-clr-go{ color:#6f9a80 !important; }
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn.cg-clr-go:hover{
+  color:#9fe0b8 !important; border-color:rgba(90,200,130,.55) !important;
+  background:rgba(57,211,83,.09) !important; }
+/* SOURCE was a solid cyan slab; it becomes an outline and lights up on hover */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.s{
+  color:#7d9fb8 !important; border-color:rgba(120,180,220,.34) !important; }
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror.s:hover{
+  color:#04141d !important;
+  background:linear-gradient(180deg,#a6f2ff,#33b5e6) !important;
+  border-color:rgba(170,242,255,.9) !important; }
+/* keyboard users get the same signal a mouse user gets */
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn:focus-visible,
+#sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror:focus-visible{
+  outline:1px solid rgba(140,215,255,.85) !important; outline-offset:1px; }
+
+/* ---- TOUCH. A 10 px button is fine for a mouse and unusable with a thumb, and
+   the iPad runs this same file. The chip stays visually small; the target does
+   not. ---------------------------------------------------------------------- */
+@media (pointer:coarse){
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-clr-btn,
+  #sc-home-widgets .ops-pill.b385 .cg-clr-wrap .cg-mirror{
+    min-height:26px !important; height:auto !important; padding:7px 9px !important;
+    font-size:7.5px !important; }
+}
+</style>
+<script id="sc-b695-quietrow-js">
+/* sc-b695-quietrow-js  -  build 695.  Measurement only. It changes nothing.
+   window.cgRowReport() returns the row's real numbers so "did it halve" is a
+   number rather than an opinion. */
+(function(){
+  if(window.__cgQuietRow695) return; window.__cgQuietRow695=true;
+  window.cgRowReport=function(){
+    var w=document.querySelector('#sc-home-widgets .ops-pill.b385 .cg-clr-wrap');
+    if(!w) return {row:null};
+    var out={row:Math.round(w.getBoundingClientRect().height), buttons:[]};
+    var bs=w.querySelectorAll('.cg-clr-btn, .cg-mirror');
+    for(var i=0;i<bs.length;i++){
+      var cs=getComputedStyle(bs[i]);
+      out.buttons.push({t:(bs[i].textContent||'').trim().slice(0,14),
+        h:Math.round(bs[i].getBoundingClientRect().height),
+        fs:cs.fontSize, color:cs.color, bg:cs.backgroundColor});
+    }
+    return out;
+  };
+  window.CMDGLAS_QUIETROW_695=1;
+})();
+</script>
+<style id="sc-b696-undockedtop-css">
+/* sc-b696-undockedtop-css  -  build 696, 3 AUG 2026.
+   The "HUD" caption goes, docked and undocked, and the tab row moves to the top of
+   the pill in both. */
+
+/* ---- 1. the caption, everywhere ---------------------------------------------- */
+#sc-home-widgets .ops-pill.b385 .cg-hud-t,
+.cg-pop-host .cg-hud-t,
+.cg-pop-float .cg-hud-t,
+.cg-hud-t{ display:none !important; }
+
+/* ---- 2. the pill's top padding, so the tabs sit at the top rather than 18 px
+          down. Side and bottom padding are left exactly as they were - this is a
+          top-of-the-pill change, not a re-layout. ---------------------------- */
+#sc-home-widgets .wg.ops-pill.b385,
+#sc-home-widgets .cg-pop-host .ops-pill.b385,
+#sc-home-widgets .cg-pop-float .ops-pill.b385,
+.cg-pop-host .ops-pill.b385,
+.cg-pop-float .ops-pill.b385{ padding-top:6px !important; }
+
+/* ---- 3. the body's top padding ------------------------------------------------ */
+#sc-home-widgets .ops-pill.b385 .pill-body,
+#sc-home-widgets .cg-pop-host .ops-pill.b385 .pill-body,
+#sc-home-widgets .cg-pop-float .ops-pill.b385 .pill-body,
+.cg-pop-host .ops-pill.b385 .pill-body,
+.cg-pop-float .ops-pill.b385 .pill-body{ padding-top:2px !important; }
+
+/* ---- 4. and the tab row's own margin ------------------------------------------ */
+#sc-home-widgets .ops-pill.b385 .ops4-tabs,
+.cg-pop-host .ops-pill.b385 .ops4-tabs,
+.cg-pop-float .ops-pill.b385 .ops4-tabs{ margin-top:0 !important; }
+
+/* UNDOCKED goes tighter still - out there the pill IS the window, so every pixel
+   above the tabs is wasted frame. */
+#sc-home-widgets .cg-pop-host .ops-pill.b385,
+#sc-home-widgets .cg-pop-float .ops-pill.b385,
+.cg-pop-host .ops-pill.b385,
+.cg-pop-float .ops-pill.b385{ padding-top:3px !important; }
+</style>
+<script id="sc-b696-undockedtop-js">
+/* sc-b696-undockedtop-js  -  build 696.  Measurement only - it changes nothing.
+
+   window.cgUndockedReport() answers the one question that matters after this
+   change: with the HUD out, is the tab row the top thing in the pill, and how many
+   pixels sit above it. Undocked into a SEPARATE window this returns
+   inThisDocument:false, because the pill is no longer in this document at all -
+   which is the honest answer, not a zero. */
+(function(){
+  if(window.__cgUndockedTop696) return; window.__cgUndockedTop696=true;
+  window.cgUndockedReport=function(){
+    var host=document.querySelector('.cg-pop-host, .cg-pop-float');
+    var undocked=!!host;
+    var pill=(host||document).querySelector(
+      undocked ? '.ops-pill' : '#sc-home-widgets .ops-pill.b385');
+    if(!pill) return {undocked:undocked, inThisDocument:false,
+                      note:'the HUD is in its own window - run this in that window'};
+    var title=pill.querySelector('.cg-hud-t');
+    var tabs=pill.querySelector('.ops4-tabs');
+    var body=pill.querySelector('.pill-body');
+    return {undocked:undocked, inThisDocument:true,
+            titlePresent:!!title,
+            titleHidden: title ? getComputedStyle(title).display==='none' : null,
+            tabsIsFirstVisible: (function(){
+              if(!body||!tabs) return null;
+              var k=body.children;
+              for(var i=0;i<k.length;i++){
+                if(getComputedStyle(k[i]).display==='none') continue;
+                return k[i]===tabs;
+              }
+              return null;
+            })(),
+            pxAboveTabs: (tabs&&pill) ?
+              Math.round(tabs.getBoundingClientRect().top - pill.getBoundingClientRect().top) : null,
+            bodyPadTop: body ? getComputedStyle(body).paddingTop : null};
+  };
+  window.CMDGLAS_UNDOCKEDTOP_696=1;
+})();
+</script>
+<style id="sc-b697-topclear-css">
+/* sc-b697-topclear-css  -  build 697, 3 AUG 2026.
+
+   WHY THIS KEEPS COMING BACK, FOUND BY LISTING THE MATCHING RULES RATHER THAN BY
+   GUESSING. Six different rules set .hm-wrap padding in this file, and they fight:
+       #tab-home .hm-wrap                     padding: 20px 18px 30px
+       #tab-home .hm-wrap                     padding: 24px 22px 34px
+       #tab-home .hm-wrap                     padding: 0 30px 26px !important
+       body.sc-home-mode #tab-home .hm-wrap   padding-top: 16px !important
+       body.sc-home-mode #home-scroll>.hm-wrap padding-top: 16px !important
+       body.sc-home-mode #tab-home .hm-wrap   padding-top:  6px !important   <- wins
+   An earlier pass already set 16 px and a later one put it back to 6. A rule at
+   `#tab-home .hm-wrap` (1,1,0) cannot beat `body.sc-home-mode #tab-home .hm-wrap`
+   (1,2,0) no matter how many !importants it carries - which is exactly what the
+   first attempt at this block did, measured at 6 px before and 6 px after.
+
+   So this block goes above all of them and says so, once:
+       html body.sc-home-mode #tab-home .hm-wrap        (1,2,2)
+   and repeats it for the #home-scroll child form, because that selector matches on
+   some layouts and not others. */
+html body.sc-home-mode #tab-home .hm-wrap,
+html body.sc-home-mode #home-scroll > .hm-wrap,
+html body #tab-home .hm-wrap{ padding-top:18px !important; }
+
+/* On a short screen the tablet is already fighting for vertical space, so the
+   clearance comes down rather than pushing the bottom row off. 12 px still reads
+   as separated; 8 did not. */
+@media (max-height:820px){
+  html body.sc-home-mode #tab-home .hm-wrap,
+  html body.sc-home-mode #home-scroll > .hm-wrap,
+  html body #tab-home .hm-wrap{ padding-top:12px !important; }
+}
+@media (max-height:620px){
+  html body.sc-home-mode #tab-home .hm-wrap,
+  html body.sc-home-mode #home-scroll > .hm-wrap,
+  html body #tab-home .hm-wrap{ padding-top:9px !important; }
+}
+</style>
+<script id="sc-b697-topclear-js">
+/* sc-b697-topclear-js  -  build 697.  Measurement only - it changes nothing.
+   window.cgTopClearReport() gives the distance from the top of the tablet's content
+   box to each of the three top widgets, and to the HUD tab row, so "is it crushed"
+   is a number. */
+(function(){
+  if(window.__cgTopClear697) return; window.__cgTopClear697=true;
+  window.cgTopClearReport=function(){
+    function top(el){ return el? Math.round(el.getBoundingClientRect().top) : null; }
+    var content=document.getElementById('content');
+    var base=top(content); if(base===null) return {error:'no #content'};
+    var wgs=[].slice.call(document.querySelectorAll('#sc-home-widgets .wg')).slice(0,3);
+    var tabs=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-tabs');
+    var wrap=document.querySelector('#tab-home .hm-wrap');
+    return {
+      wrapPadTop: wrap? getComputedStyle(wrap).paddingTop : null,
+      widgetsFromEdge: wgs.map(function(w){
+        return {cls:String(w.className).slice(0,22), px: top(w)-base}; }),
+      hudTabsFromEdge: tabs ? top(tabs)-base : null,
+      viewportH: window.innerHeight
+    };
+  };
+  window.CMDGLAS_TOPCLEAR_697=1;
+})();
+</script>
+<style id="sc-b698-holo-css">
+/* sc-b698-holo-css  -  build 698, 3 AUG 2026.
+   Everything is gated on html.cg-holo, which build 698's script sets from
+   localStorage. No class = the old solid panel, unchanged. */
+
+/* ---- 1. STOP DRAWING THE BOX ---------------------------------------------------
+   Both selector forms, id and class-only - see the note in this block's header. */
+html.cg-holo .cg-pop-float,
+html.cg-holo .cg-pop-float.cg-pop-bare,
+html.cg-holo .cg-pop-host,
+html.cg-holo .cg-pop-float .wg,
+html.cg-holo .cg-pop-float .wg.ops-pill.b385,
+html.cg-holo .cg-pop-float .pill-body,
+html.cg-holo .cg-pop-float .ops4-body,
+html.cg-holo .cg-pop-float .ops4-list,
+html.cg-holo .cg-pop-host .wg,
+html.cg-holo .cg-pop-host .wg.ops-pill.b385,
+html.cg-holo .cg-pop-host .pill-body,
+html.cg-holo #sc-home-widgets .cg-pop-float .wg,
+html.cg-holo #sc-home-widgets .cg-pop-float .wg.ops-pill.b385,
+html.cg-holo #sc-home-widgets .cg-pop-float .pill-body,
+html.cg-holo #sc-home-widgets .cg-pop-host .wg,
+html.cg-holo #sc-home-widgets .cg-pop-host .wg.ops-pill.b385,
+html.cg-holo #sc-home-widgets .cg-pop-host .pill-body{
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html.cg-holo .cg-pop-float{ overflow: visible !important; resize: none !important; }
+
+/* the hairline rules under each material row are the last straight lines that read
+   as a physical table */
+html.cg-holo .cg-pop-float .ops4-row,
+html.cg-holo .cg-pop-host .ops4-row,
+html.cg-holo .cg-pop-float .ops4-bps,
+html.cg-holo .cg-pop-host .ops4-bps,
+html.cg-holo .cg-pop-float .ops4-head,
+html.cg-holo .cg-pop-host .ops4-head,
+html.cg-holo #sc-home-widgets .cg-pop-float .ops4-row,
+html.cg-holo #sc-home-widgets .cg-pop-host .ops4-row{
+  border-top: 0 !important; border-bottom: 0 !important; }
+
+/* ---- 3. WHAT REPLACES IT: ONE LINE OF LIGHT -----------------------------------
+   T: "it needs to look like a holographic keyboard basically ... i want the text
+   inside that grid filled pill. have the grid removed. remove all other pill pieces"
+   So: ONE continuous rounded outline, nothing inside it, nothing attached to it.
+   A projected-laser look - a thin bright line with bleed, and dark everywhere else. */
+/* .cg-pop-host is listed too, because build 430's POPUP and Document-PiP paths put
+   the pill in a SEPARATE document where .cg-pop-float never exists - only the host
+   does. MEASURED: without this the popup kept its panel and drew no outline. */
+html.cg-holo .cg-pop-float,
+html.cg-holo .cg-pop-float.cg-pop-bare,
+html.cg-holo body > .cg-pop-host,
+html.cg-holo #sc-home-widgets .cg-pop-float,
+html.cg-holo #sc-home-widgets .cg-pop-float.cg-pop-bare{
+  /* .cg-pop-bare is repeated here on purpose. Section 1 above zeroes the border on
+     `.cg-pop-float.cg-pop-bare` (0,3,1) and this rule is `.cg-pop-float` (0,2,1) -
+     lower, so section 1 won and the outline never drew. MEASURED: border 0px,
+     box-shadow none, with this rule present. Matching the class count fixes it,
+     because a later rule of EQUAL specificity wins. */
+  border: 1.5px solid rgba(130,240,255,.85) !important;
+  border-radius: 20px !important;
+  padding: 10px 12px !important;
+  box-shadow: 0 0 16px rgba(90,225,255,.55),
+              0 0 42px rgba(50,170,235,.28),
+              inset 0 0 26px rgba(60,190,245,.10) !important;
+  background: rgba(8,26,40,.10) !important;
+}
+/* the text is the other half of the projection */
+html.cg-holo .cg-pop-float *,
+html.cg-holo .cg-pop-host *{
+  text-shadow: 0 0 5px rgba(150,235,255,.95), 0 0 14px rgba(70,180,245,.55) !important; }
+
+/* NOTHING is attached to the outline. The undock button, the source chip and the
+   old resize handle all read as "pill pieces" hanging off the shape. */
+html.cg-holo .cg-pop-float .cg-undock-btn,
+html.cg-holo .cg-pop-host .cg-undock-btn,
+html.cg-holo #sc-home-widgets .cg-pop-float .cg-undock-btn{ display:none !important; }
+html.cg-holo .cg-pop-float::-webkit-resizer{ display:none !important; }
+
+/* tabs and buttons become bare glowing TEXT - no boxes, no fills, no outlines.
+   T: "bare glowing text labels with no boxes around them" */
+html.cg-holo .cg-pop-float .ops4-tab,
+html.cg-holo .cg-pop-host .ops4-tab,
+html.cg-holo #sc-home-widgets .cg-pop-float .ops4-tab,
+html.cg-holo .cg-pop-float .cg-clr-btn,
+html.cg-holo .cg-pop-float .cg-mirror,
+html.cg-holo .cg-pop-host .cg-clr-btn,
+html.cg-holo .cg-pop-host .cg-mirror{
+  background: transparent !important; background-image: none !important;
+  border: 0 !important; box-shadow: none !important;
+  color: #a8e6fb !important; }
+/* the active tab is named by brightness, not by a box */
+html.cg-holo .cg-pop-float .ops4-tab.on,
+html.cg-holo .cg-pop-host .ops4-tab.on,
+html.cg-holo #sc-home-widgets .cg-pop-float .ops4-tab.on{
+  color:#eaffff !important;
+  text-shadow: 0 0 7px rgba(180,250,255,1), 0 0 20px rgba(90,210,255,.8) !important; }
+
+/* every remaining solid button inside the projection - PLAN MINING RUN, MORE
+   LOCATIONS, the chevron chips - is still a filled slab, and a filled slab is a
+   physical thing. They become outlines of light like everything else. The one that
+   keeps a fill is the ACTIVE tab, because "which tab am I on" has to survive. */
+html.cg-holo .cg-pop-float button,
+html.cg-holo .cg-pop-float .ops4-bp,
+html.cg-holo .cg-pop-float .cg-src-chip,
+html.cg-holo .cg-pop-host button,
+html.cg-holo #sc-home-widgets .cg-pop-float button,
+html.cg-holo #sc-home-widgets .cg-pop-float .ops4-bp{
+  background: transparent !important; background-image: none !important;
+  box-shadow: none !important;
+  color: #a8e6fb !important;
+  border: 1px solid rgba(130,225,255,.30) !important; }
+html.cg-holo .cg-pop-float button:hover,
+html.cg-holo .cg-pop-host button:hover,
+html.cg-holo #sc-home-widgets .cg-pop-float button:hover{
+  color:#eaffff !important; border-color: rgba(170,245,255,.75) !important; }
+/* the amber rule under the section heading is a drawn line on a surface */
+html.cg-holo .cg-pop-float hr,
+html.cg-holo .cg-pop-host hr{ display:none !important; }
+
+/* THE POPPED-OUT DOCUMENT'S OWN BACKGROUND. build 430 sets
+   win.document.body.style.background='#0a0f18' as an INLINE style, which is the dark
+   field behind the HUD in a popup window. Only !important beats an inline style.
+   Scoped with :has() so it can only ever match a document whose body IS the popped
+   out HUD - this rule can never touch the tablet itself. */
+html.cg-holo body:has(> .cg-pop-host){
+  background: transparent !important; background-image: none !important; }
+html.cg-holo body:has(> .cg-pop-host) .cg-pop-host{
+  width:100% !important; height:100% !important; box-sizing:border-box !important; }
+
+/* ---- 4. OPTIONAL SCANLINES ----------------------------------------------------- */
+html.cg-holo.cg-holo-scan .cg-pop-float::after{
+  content:''; position:absolute; inset:-2%; pointer-events:none; z-index:9;
+  background: repeating-linear-gradient(to bottom,
+    rgba(160,230,255,.075) 0 1px, transparent 1px 3px);
+  mix-blend-mode: screen; }
+
+/* ---- 5. THE DISPLAY PAGE ROW --------------------------------------------------- */
+#tab-cgdisplay .dsp-holo-note{ margin-top:8px; }
+</style>
+<script id="sc-b698-holo-js">
+/* sc-b698-holo-js  -  build 698.
+
+   One entry point, window.cgHolo(mode), and one class on <html>. Rule 17 is
+   respected - nothing is re-created on a timer, and no node is inserted into the
+   undocked pill, so there is nothing for build 430's own sweep to fight. */
+(function(){
+  if(window.__cgHolo698) return; window.__cgHolo698=true;
+  var KEY='cg_holo', MODES=['panel','holo','scan'], DEF='holo';
+
+  function get(){
+    try{ var v=localStorage.getItem(KEY); if(MODES.indexOf(v)>=0) return v; }catch(e){}
+    return DEF;
+  }
+  function paint(){
+    var m=get(), r=document.documentElement;
+    r.classList.toggle('cg-holo', m!=='panel');
+    r.classList.toggle('cg-holo-scan', m==='scan');
+    var bs=document.querySelectorAll('#tab-cgdisplay [data-g="dsp-holo"]');
+    for(var i=0;i<bs.length;i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-v')===m);
+    var n=document.getElementById('dsp-holo-now');
+    if(n){ var L={panel:'SOLID PANEL',holo:'HOLOGRAM',scan:'HOLOGRAM + SCANLINES'};
+      n.innerHTML='Now set to <b>'+L[m]+'</b>.'; }
+  }
+  window.cgHolo=function(m){
+    if(m===undefined) return get();
+    if(MODES.indexOf(m)<0) return get();
+    try{ localStorage.setItem(KEY,m); }catch(e){}
+    paint(); return m;
+  };
+
+  /* the DISPLAY page section. Inserted once, after the page exists - it is built by
+     b694 on first open, so this waits for it rather than racing it. */
+  function addRow(){
+    var pg=document.getElementById('tab-cgdisplay'); if(!pg) return false;
+    if(pg.querySelector('#dsp-holo-sec')) return true;
+    var secs=pg.querySelectorAll('.dsp-sec'); if(!secs.length) return false;
+    var last=secs[secs.length-1];              /* the danger-assessment block */
+    var d=document.createElement('div');
+    d.className='dsp-sec'; d.id='dsp-holo-sec';
+    d.innerHTML='<div class="dsp-h">6 &mdash; Undocked HUD</div>'
+      +'<div class="dsp-p">What the HUD looks like once it leaves the tablet and floats over '
+      +'your game. This does not change the HUD inside the tablet.</div>'
+      +'<div class="dsp-row">'
+      +'<button type="button" class="dsp-opt" data-g="dsp-holo" data-v="holo">HOLOGRAM</button>'
+      +'<button type="button" class="dsp-opt" data-g="dsp-holo" data-v="scan">HOLOGRAM + SCANLINES</button>'
+      +'<button type="button" class="dsp-opt" data-g="dsp-holo" data-v="panel">SOLID PANEL</button>'
+      +'</div><div class="dsp-now" id="dsp-holo-now">Now set to <b>HOLOGRAM</b>.</div>'
+      +'<div class="dsp-note dsp-holo-note"><b>NOTE.</b> HOLOGRAM removes the panel, the border '
+      +'and the drop shadow entirely &mdash; the game is not dimmed behind the HUD, it is simply '
+      +'there. That is different from the brightness control in section 4, which fades what is '
+      +'drawn rather than stopping it being drawn.</div>'
+      +'<div class="dsp-caution"><b>CAUTION.</b> With nothing behind it, the HUD reads well over '
+      +'space and a dark cockpit and is harder to read over a bright planet or a lit station '
+      +'interior. SOLID PANEL puts the old background back if you want it.</div>';
+    last.parentNode.insertBefore(d, last);
+    d.addEventListener('click', function(e){
+      var b=e.target.closest && e.target.closest('.dsp-opt[data-g="dsp-holo"]');
+      if(b) window.cgHolo(b.getAttribute('data-v'));
+    }, false);
+    paint();
+    return true;
+  }
+
+  paint();
+  var n=0, iv=setInterval(function(){ if(addRow()||++n>90) clearInterval(iv); }, 400);
+  addRow();
+
+  window.cgHoloReport=function(){
+    var fl=document.querySelector('.cg-pop-float');
+    function bgOf(sel){
+      var e=fl?fl.querySelector(sel):null;
+      if(!e) return null;
+      var cs=getComputedStyle(e);
+      return {bg:cs.backgroundColor, img:cs.backgroundImage==='none'?'none':'set',
+              border:cs.borderTopWidth, shadow:cs.boxShadow==='none'?'none':'set'};
+    }
+    return {mode:get(), classOn:document.documentElement.classList.contains('cg-holo'),
+            undocked:!!fl,
+            float: fl? {bg:getComputedStyle(fl).backgroundColor,
+                        border:getComputedStyle(fl).borderTopWidth,
+                        shadow:getComputedStyle(fl).boxShadow==='none'?'none':'set'} : null,
+            pill: bgOf('.ops-pill'), body: bgOf('.pill-body'),
+            rowInDisplay: !!document.getElementById('dsp-holo-sec')};
+  };
+  window.CMDGLAS_HOLO_698=1;
+})();
+</script>
+<style id="sc-b699-hudset-css">
+/* sc-b699-hudset-css  -  build 699, 3 AUG 2026. */
+
+/* ---- the accent. FOLLOW TABLET leaves these unset so the tablet's own values win. */
+#sc-home-widgets .ops-pill.b385{
+  --cg-hud-a1: #a6f2ff;   /* brightest - the frame's lit edge */
+  --cg-hud-a2: #4fd2ff;   /* mid - text and outlines */
+  --cg-hud-a3: #2b6fb0;   /* faint - the fade end */
+}
+#sc-home-widgets .ops-pill.b385[data-hudc="green"]{ --cg-hud-a1:#a6ffcf; --cg-hud-a2:#39d353; --cg-hud-a3:#199a5a; }
+#sc-home-widgets .ops-pill.b385[data-hudc="amber"]{ --cg-hud-a1:#ffe6b0; --cg-hud-a2:#ffd479; --cg-hud-a3:#c8890f; }
+#sc-home-widgets .ops-pill.b385[data-hudc="red"]  { --cg-hud-a1:#ffc2b6; --cg-hud-a2:#ff8a7a; --cg-hud-a3:#c8291a; }
+#sc-home-widgets .ops-pill.b385[data-hudc="blue"] { --cg-hud-a1:#a6f2ff; --cg-hud-a2:#4fd2ff; --cg-hud-a3:#2b6fb0; }
+
+/* ---- transparency + brightness ------------------------------------------------
+   Transparency is opacity on the pill. Brightness is the strength of the glow and
+   the text, which is a DIFFERENT thing - see the header note. */
+#sc-home-widgets .ops-pill.b385{ opacity: var(--cg-hud-alpha, 1); }
+#sc-home-widgets .ops-pill.b385[data-hudb="dim"]    { --cg-hud-glow:.45; }
+#sc-home-widgets .ops-pill.b385[data-hudb="normal"] { --cg-hud-glow:.85; }
+#sc-home-widgets .ops-pill.b385[data-hudb="bright"] { --cg-hud-glow:1;   }
+
+/* ---- the chevron --------------------------------------------------------------
+   MEASURED: the tab row flexes to fill the pill, so an absolutely positioned chevron
+   landed on top of STREAM. The tabs give up the width instead of the chevron moving
+   somewhere worse - it belongs on the same line as the tabs. */
+#sc-home-widgets .ops-pill.b385 .ops4-tabs{ padding-right:44px !important; }
+@media (pointer:coarse){
+  #sc-home-widgets .ops-pill.b385 .ops4-tabs{ padding-right:60px !important; }
+}
+#sc-home-widgets .ops-pill.b385 .cg-hs-wrap{
+  position:absolute; top:4px; right:8px; z-index:30; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-chev{
+  display:inline-flex; align-items:center; gap:4px; cursor:pointer;
+  font:800 7px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.2px;
+  text-transform:uppercase; white-space:nowrap;
+  color: var(--cg-hud-a2,#4fd2ff);
+  background:transparent; border:1px solid rgba(120,190,225,.24);
+  border-radius:4px; padding:2px 6px; min-height:14px; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-chev:hover{
+  color: var(--cg-hud-a1,#a6f2ff); border-color: var(--cg-hud-a2,#4fd2ff); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-wrap.on .cg-hs-chev{
+  color: var(--cg-hud-a1,#a6f2ff); border-color: var(--cg-hud-a2,#4fd2ff); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-chev .cv{ font-size:8px; line-height:1;
+  transition:transform .14s ease; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-wrap.on .cg-hs-chev .cv{ transform:rotate(180deg); }
+
+/* ---- the panel ---------------------------------------------------------------- */
+#sc-home-widgets .ops-pill.b385 .cg-hs-panel{
+  display:none; position:absolute; top:20px; right:0; z-index:31;
+  min-width:214px; padding:9px 10px 10px; border-radius:9px;
+  background:rgba(6,16,26,.94);
+  border:1px solid rgba(120,190,225,.34);
+  box-shadow:0 8px 26px rgba(0,0,0,.6);
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-wrap.on .cg-hs-panel{ display:block; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-lbl{
+  font:800 7px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.3px;
+  text-transform:uppercase; color:#7f9bb0; margin:0 0 4px; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-lbl span{ color:#5d7183; letter-spacing:.6px;
+  text-transform:none; font-weight:600; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-row{
+  display:flex; flex-wrap:wrap; gap:3px; margin:0 0 9px; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-row:last-of-type{ margin-bottom:0; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-opt{
+  font:700 7px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:.9px;
+  text-transform:uppercase; cursor:pointer; white-space:nowrap;
+  color:#7f9bb0; background:transparent;
+  border:1px solid rgba(108,150,180,.26); border-radius:3px;
+  padding:3px 6px; min-height:14px; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-opt:hover{
+  color:#dcefff; border-color:rgba(140,205,240,.55); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-opt.on{
+  color:#04141d; background:var(--cg-hud-a2,#4fd2ff);
+  border-color:var(--cg-hud-a1,#a6f2ff); }
+/* the colour swatches say what they are by BEING it */
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot{
+  width:15px; height:15px; min-height:0; border-radius:50%; padding:0;
+  border:1.5px solid rgba(160,200,230,.45); cursor:pointer; }
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot.on{
+  border-color:#fff; box-shadow:0 0 0 2px rgba(255,255,255,.26); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot.d-follow{
+  background:linear-gradient(135deg,#8fd8ff 0 25%,#7dffb0 25% 50%,#ffd479 50% 75%,#ff8a7a 75%); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot.d-blue { background:radial-gradient(circle at 35% 30%,#8fd8ff,#2b6fb0); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot.d-green{ background:radial-gradient(circle at 35% 30%,#7dffb0,#199a5a); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot.d-amber{ background:radial-gradient(circle at 35% 30%,#ffd479,#c8890f); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-dot.d-red  { background:radial-gradient(circle at 35% 30%,#ff8a7a,#c8291a); }
+#sc-home-widgets .ops-pill.b385 .cg-hs-note{
+  font:600 7px/1.45 'Rajdhani','Segoe UI',sans-serif; letter-spacing:.4px;
+  color:#5d7183; margin:8px 0 0; padding-top:7px;
+  border-top:1px solid rgba(108,150,180,.18); max-width:200px; }
+
+/* touch keeps a real target even though the chips are small */
+@media (pointer:coarse){
+  #sc-home-widgets .ops-pill.b385 .cg-hs-chev{ min-height:26px; padding:6px 9px; font-size:8px; }
+  #sc-home-widgets .ops-pill.b385 .cg-hs-opt{ min-height:26px; padding:7px 9px; font-size:8px; }
+  #sc-home-widgets .ops-pill.b385 .cg-hs-dot{ width:24px; height:24px; }
+  #sc-home-widgets .ops-pill.b385 .cg-hs-panel{ min-width:250px; }
+}
+</style>
+<script id="sc-b699-hudset-js">
+/* sc-b699-hudset-js  -  build 699. */
+(function(){
+  if(window.__cgHudSet699) return; window.__cgHudSet699=true;
+
+  var K_A='cg_hud_alpha', K_C='cg_hud_color', K_B='cg_hud_bright';
+  var ALPHA=[25,50,75,100], COLORS=['follow','blue','green','amber','red'],
+      BRIGHT=['dim','normal','bright'];
+  var D_A=100, D_C='follow', D_B='normal';
+
+  function ls(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
+  function ss(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} }
+
+  function alpha(){ var v=parseInt(ls(K_A,D_A),10); return ALPHA.indexOf(v)>=0?v:D_A; }
+  function color(){ var v=ls(K_C,D_C); return COLORS.indexOf(v)>=0?v:D_C; }
+  function bright(){ var v=ls(K_B,D_B); return BRIGHT.indexOf(v)>=0?v:D_B; }
+
+  function pill(){ return document.querySelector('#sc-home-widgets .ops-pill.b385'); }
+
+  /* the single entry point. The panel, the overlay and anything added later all come
+     through here, so there is one place that can be wrong. */
+  window.cgHudSet=function(what, val){
+    if(what==='alpha' && ALPHA.indexOf(parseInt(val,10))>=0) ss(K_A, parseInt(val,10));
+    else if(what==='color' && COLORS.indexOf(val)>=0) ss(K_C, val);
+    else if(what==='bright' && BRIGHT.indexOf(val)>=0) ss(K_B, val);
+    paint();
+    return {alpha:alpha(), color:color(), bright:bright()};
+  };
+  window.cgHudGet=function(){ return {alpha:alpha(), color:color(), bright:bright()}; };
+
+  function paint(){
+    var p=pill(); if(!p) return;
+    p.style.setProperty('--cg-hud-alpha', (alpha()/100));
+    var c=color();
+    if(c==='follow') p.removeAttribute('data-hudc'); else p.setAttribute('data-hudc', c);
+    p.setAttribute('data-hudb', bright());
+    mark('alpha', alpha()); mark('color', c); mark('bright', bright());
+  }
+  function mark(group, val){
+    var bs=document.querySelectorAll('.cg-hs-opt[data-g="'+group+'"], .cg-hs-dot[data-g="'+group+'"]');
+    for(var i=0;i<bs.length;i++)
+      bs[i].classList.toggle('on', bs[i].getAttribute('data-v')===String(val));
+  }
+
+  function open(){ var w=document.querySelector('.cg-hs-wrap'); if(w){ w.classList.add('on'); paint(); } }
+  function close(){ var w=document.querySelector('.cg-hs-wrap'); if(w) w.classList.remove('on'); }
+
+  var HTML=
+    '<button type="button" class="cg-hs-chev" title="HUD settings - transparency, brightness, colour">'
+   +'HUD <span class="cv">&#9662;</span></button>'
+   +'<div class="cg-hs-panel">'
+   +'<div class="cg-hs-lbl">Transparency <span>&mdash; how much shows through</span></div>'
+   +'<div class="cg-hs-row">'
+   + ALPHA.map(function(a){ return '<button type="button" class="cg-hs-opt" data-g="alpha" data-v="'+a+'">'+a+'%</button>'; }).join('')
+   +'</div>'
+   +'<div class="cg-hs-lbl">Brightness <span>&mdash; how strong the light is</span></div>'
+   +'<div class="cg-hs-row">'
+   + BRIGHT.map(function(b){ return '<button type="button" class="cg-hs-opt" data-g="bright" data-v="'+b+'">'+b+'</button>'; }).join('')
+   +'</div>'
+   +'<div class="cg-hs-lbl">Colour</div>'
+   +'<div class="cg-hs-row">'
+   + COLORS.map(function(c){ return '<button type="button" class="cg-hs-dot d-'+c+'" data-g="color" data-v="'+c+'" '
+       +'title="'+(c==='follow'?'Follow the tablet theme':c.toUpperCase())+'" aria-label="'+c+'"></button>'; }).join('')
+   +'</div>'
+   +'<div class="cg-hs-note"><b>NOTE.</b> These are the HUD only. The tablet keeps its own colour '
+   +'in MY RIG &rarr; DISPLAY.<br><b>CAUTION.</b> In the desktop overlay the mouse passes through '
+   +'to the game while click-through is on, so this panel cannot be clicked in flight &mdash; use '
+   +'the overlay hotkeys for that.</div>'
+   +'</div>';
+
+  function mount(){
+    var p=pill(); if(!p) return false;
+    if(p.querySelector(':scope > .cg-hs-wrap')) return true;
+    if(getComputedStyle(p).position==='static') p.style.position='relative';
+    var w=document.createElement('div');
+    w.className='cg-hs-wrap';
+    w.innerHTML=HTML;
+    p.appendChild(w);
+    w.addEventListener('click', function(e){
+      var b=e.target && e.target.closest && e.target.closest('button');
+      if(!b) return;
+      e.preventDefault(); e.stopPropagation();
+      if(b.classList.contains('cg-hs-chev')){
+        var wr=document.querySelector('.cg-hs-wrap');
+        if(wr && wr.classList.contains('on')) close(); else open();
+        return;
+      }
+      var g=b.getAttribute('data-g'), v=b.getAttribute('data-v');
+      if(g) window.cgHudSet(g, v);
+    }, false);
+    paint();
+    return true;
+  }
+
+  /* outside tap closes it - the same rule every other flyout in this tablet follows */
+  document.addEventListener('click', function(e){
+    var w=document.querySelector('.cg-hs-wrap');
+    if(!w || !w.classList.contains('on')) return;
+    if(e.target && e.target.closest && e.target.closest('.cg-hs-wrap')) return;
+    close();
+  }, false);
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'||e.keyCode===27) close();
+  }, false);
+
+  /* the settings have to bite whether or not the panel was ever opened */
+  paint();
+  var n=0, iv=setInterval(function(){
+    paint();
+    if(mount() && ++n>4) clearInterval(iv);
+    if(++n>90) clearInterval(iv);
+  }, 400);
+  mount();
+  /* the ops4 core rebuilds .pill-body when .ops4-tabs goes missing - after an undock
+     and re-dock, for instance - so a slow re-check puts the chevron back. It only
+     inserts when ABSENT, so there is nothing to fight. */
+  setInterval(function(){ mount(); paint(); }, 4000);
+
+  window.cgHudSetReport=function(){
+    var p=pill();
+    return {settings:window.cgHudGet(),
+            mounted:!!document.querySelector('.cg-hs-wrap'),
+            open:!!document.querySelector('.cg-hs-wrap.on'),
+            pillOpacity: p? getComputedStyle(p).opacity : null,
+            a1: p? getComputedStyle(p).getPropertyValue('--cg-hud-a1').trim() : null,
+            a2: p? getComputedStyle(p).getPropertyValue('--cg-hud-a2').trim() : null,
+            dataC: p? (p.getAttribute('data-hudc')||'(follow)') : null,
+            dataB: p? p.getAttribute('data-hudb') : null};
+  };
+  window.CMDGLAS_HUDSET_699=1;
+})();
+</script>
+
+<style id="sc-b700-oneslab-css">
+/* sc-b700-oneslab-css  -  build 700, 3 AUG 2026.
+   T, verbatim: "why do you still put the corners inside the pill. there is
+   ablsolutely no 3d effect on the pills. i don't need a pill inside of a floating
+   tablet. the pill becomes the 'floating HUD tablet'"
+   then: "now remove the interrior rectangle completely to include it's
+   discolleration" and sign-off: "but that's exactly it. the rest of the styling
+   is perfect."
+   MEASURED before this block (real page, headless Chromium):
+   - the inner octagon was the pill's OWN chrome: .ops-pill.b385::before (gradient
+     frame, 13px corner cuts) + ::after (texture + rgb(5,11,22) fill). Pseudo-
+     elements, so stylesheet-only kill - RULE 19.
+   - interior discoloration was three painters: the float's 10% dark fill
+     (rgba(8,26,40,.10), from b698's ring rule), its dark INSET glow, and the
+     pill's black drop shadows. With all three off, empty interior vs raw backdrop
+     measured delta (0.9, 4.2, 5.3) RGB - glass.
+   - dead band under the content inside the ring: 125px -> 11px (script below).
+   Everything gated on html.cg-holo - SOLID PANEL mode is untouched.
+   All selectors carry `body` to sit above b698 at equal-or-later cascade
+   (this block is appended AFTER b698/b699, and document order decides ties).
+   Reversible: delete this style + the sc-b700-oneslab-js script. */
+
+/* 1. the pill's own octagon chrome - the "corners inside the pill" */
+html.cg-holo body .cg-pop-float .ops-pill.b385::before,
+html.cg-holo body .cg-pop-float .ops-pill.b385::after,
+html.cg-holo body .cg-pop-host .ops-pill.b385::before,
+html.cg-holo body .cg-pop-host .ops-pill.b385::after{
+  display:none !important; content:none !important; }
+
+/* 2. the inner content-box hairline */
+html.cg-holo body .cg-pop-float .cg-tw-frame,
+html.cg-holo body .cg-pop-host .cg-tw-frame{ border:0 !important; }
+
+/* 3. interior rectangle GONE, incl. discoloration: transparent fill, no inset,
+      and the 3D rise. Ring + outer glow kept from b698. */
+html.cg-holo body > .cg-pop-float,
+html.cg-holo body > .cg-pop-float.cg-pop-bare{
+  background: transparent !important;
+  box-shadow: 0 0 16px rgba(90,225,255,.55), 0 0 42px rgba(50,170,235,.28) !important;
+  transform: perspective(1400px) rotateX(4deg) !important;
+  transform-origin: 50% 100% !important; }
+html.cg-holo body > .cg-pop-float::-webkit-scrollbar{ display:none !important; }
+/* RULE 18: the pill's stock shadow rule is id-prefixed (#sc-home-widgets ...), so a
+   class-only selector loses no matter the order. The float/popup host carries the
+   same id (makeHost), so match-and-exceed WITH the id. Classless kept as belt. */
+html.cg-holo body #sc-home-widgets.cg-pop-host .wg.ops-pill.b385,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385,
+html.cg-holo body .cg-pop-float .ops-pill.b385,
+html.cg-holo body .cg-pop-host .ops-pill.b385{ box-shadow:none !important; }
+/* popup/PiP host: same cleanup, NO transform (a real window should not fake-tilt).
+   NOT verifiable headless here - popup path untested this session, said plainly. */
+html.cg-holo body > .cg-pop-host{ background: transparent !important; }
+
+/* 4. emitter pool - a real element (borders have ends, this does not), lives on
+      the float wrapper (b430's own node, NOT inside the pill - nothing for the
+      b430 sweep to fight), so it follows the drag and dies on re-dock. */
+html.cg-holo body > .cg-pop-float .cg-b700-pool{
+  position:absolute; left:6%; right:6%; bottom:-26px; height:36px;
+  background:radial-gradient(ellipse 50% 50% at 50% 50%,
+    rgba(120,220,255,.55), rgba(60,170,235,.22) 55%, transparent 75%);
+  filter:blur(9px); pointer-events:none; display:block; }
+html:not(.cg-holo) .cg-b700-pool{ display:none !important; }
+
+/* 5. the b699 settings panel keeps its swatches + selected fills in holo mode
+      (b698's blanket "buttons become outlines" rule stripped them - the empty
+      circles T saw on the first render sheet). */
+html.cg-holo body .cg-pop-float .cg-hs-opt.on,
+html.cg-holo body .cg-pop-host .cg-hs-opt.on{
+  background:#4fd2ff !important; color:#04141d !important;
+  border-color:#a6f2ff !important; text-shadow:none !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot,
+html.cg-holo body .cg-pop-host .cg-hs-dot{
+  border:1.5px solid rgba(160,200,230,.45) !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot.d-follow,
+html.cg-holo body .cg-pop-host .cg-hs-dot.d-follow{
+  background:linear-gradient(135deg,#8fd8ff 0 25%,#7dffb0 25% 50%,#ffd479 50% 75%,#ff8a7a 75%) !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot.d-blue,
+html.cg-holo body .cg-pop-host .cg-hs-dot.d-blue{
+  background:radial-gradient(circle at 35% 30%,#8fd8ff,#2b6fb0) !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot.d-green,
+html.cg-holo body .cg-pop-host .cg-hs-dot.d-green{
+  background:radial-gradient(circle at 35% 30%,#7dffb0,#199a5a) !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot.d-amber,
+html.cg-holo body .cg-pop-host .cg-hs-dot.d-amber{
+  background:radial-gradient(circle at 35% 30%,#ffd479,#c8890f) !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot.d-red,
+html.cg-holo body .cg-pop-host .cg-hs-dot.d-red{
+  background:radial-gradient(circle at 35% 30%,#ff8a7a,#c8291a) !important; }
+html.cg-holo body .cg-pop-float .cg-hs-dot.on,
+html.cg-holo body .cg-pop-host .cg-hs-dot.on{
+  border-color:#fff !important; box-shadow:0 0 0 2px rgba(255,255,255,.26) !important; }
+</style>
+<script id="sc-b700-oneslab-js">
+/* sc-b700-oneslab-js  -  build 700.
+   One job: when the HUD undocks into the in-page float in HOLOGRAM mode, make the
+   ring hug the content (b430 sizes the float to the DOCKED pill height - that was
+   the 125px dead band) and attach the emitter pool. MutationObserver, no timers
+   (b698's rule). Mode flips while floating re-fit through a thin cgHolo wrapper.
+   NOTE - once fitted, the hugged height stays if you flip to SOLID PANEL while
+   floating; b430 re-measures on the next undock. Judged acceptable: panel mode
+   hugging its content is not a defect. */
+(function(){
+  if(window.__cgOneSlab700) return; window.__cgOneSlab700=true;
+
+  function holo(){ return document.documentElement.classList.contains('cg-holo'); }
+
+  function fit(fl){
+    if(!fl || !holo()) return;
+    var host=fl.querySelector('.cg-pop-host'), pill=fl.querySelector('.ops-pill.b385');
+    if(!pill) return;
+    fl.style.height='auto'; if(host) host.style.height='auto'; pill.style.height='auto';
+    if(!fl.querySelector(':scope > .cg-b700-pool')){
+      var p=document.createElement('div'); p.className='cg-b700-pool'; fl.appendChild(p);
+    }
+  }
+
+  var mo=new MutationObserver(function(muts){
+    for(var i=0;i<muts.length;i++){
+      var ad=muts[i].addedNodes;
+      for(var j=0;j<ad.length;j++){
+        var n=ad[j];
+        if(n.nodeType===1 && n.classList && n.classList.contains('cg-pop-float')){
+          (function(node){ setTimeout(function(){ fit(node); }, 60); })(n);
+        }
+      }
+    }
+  });
+  mo.observe(document.body,{childList:true});
+  fit(document.querySelector('body > .cg-pop-float'));
+
+  /* additive wrap - fit again when the mode changes while floating */
+  var prev=window.cgHolo;
+  if(typeof prev==='function'){
+    window.cgHolo=function(m){
+      var r=prev(m);
+      if(m!==undefined) fit(document.querySelector('body > .cg-pop-float'));
+      return r;
+    };
+  }
+
+  window.cgOneSlabReport=function(){
+    var fl=document.querySelector('body > .cg-pop-float');
+    var pill=fl?fl.querySelector('.ops-pill.b385'):null;
+    var b=pill?getComputedStyle(pill,'::before'):null;
+    return { undocked:!!fl, holo:holo(),
+      octagonGone: b?(b.display==='none'||b.content==='none'):null,
+      floatBg: fl?getComputedStyle(fl).backgroundColor:null,
+      pillShadow: pill?getComputedStyle(pill).boxShadow:null,
+      deadBand:(fl&&pill)?Math.round(fl.getBoundingClientRect().bottom-pill.getBoundingClientRect().bottom):null,
+      pool: !!(fl&&fl.querySelector('.cg-b700-pool')),
+      transform: fl?(getComputedStyle(fl).transform!=='none'):null };
+  };
+  window.CMDGLAS_ONESLAB_700=1;
+})();
+</script>
+
+<style id="sc-b702-hololight-css">
+/* sc-b702-hololight-css  -  build 702, 3 AUG 2026 (701 respun: the app-context selectors lacked the id - RULE 18 - tabs kept boxes in HUD-only).
+   T's design session, verbatim anchors:
+   - "no outlines, not even the line around the entire tablet ... buttons only show
+     as colored and named 'patches' ... type fields will just be a black type box
+     surrounded by a glow" -> then "the input area should be light like the buttons
+     ... types on top of blue (or whatever color is selected) input field which also
+     fades into black"
+   - "i need the pills around the gather buy notes refresh etc to fade out into
+     whatever is around it"
+   - "remove the Command glass title"
+   - "the threat page needs not look like the block"
+   - approved variant B: NO emitter pool.
+   TWO CONTEXTS, same look:
+   A) browser float:  html.cg-holo  + .cg-pop-float
+   B) overlay HUD-only: html.cg-hudonly + .cg-ho-hud (class main.js sets)
+   Lessons paid for in the mock rounds (measured, all of them):
+   - glow OUTSIDE the box needs a pseudo-element - background can never escape;
+   - tab accents (THREAT amber / CONTRACTS blue) are id-ruled gradients on NON-.on
+     tabs + a ring box-shadow, and active THREAT text is DARK (was dark-on-amber);
+   - quiet-row borders ride #sc-home-widgets .ops-pill.b385 .cg-clr-btn (1 id + 3
+     classes) - every rule here carries the id + .wg.ops-pill.b385 to win;
+   - .th-wrap paints the THREAT card, not .ld-section.
+   Reversible: delete this style + the sc-b702-hololight-js script. */
+
+/* ---- 0. b700 leftovers this build supersedes: ring off, pool off -------------- */
+html.cg-holo body > .cg-pop-float,
+html.cg-holo body > .cg-pop-float.cg-pop-bare{
+  border:0 !important; box-shadow:none !important; background:transparent !important; }
+.cg-b700-pool{ display:none !important; }
+
+/* ---- 1. NO LINES ANYWHERE ----------------------------------------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 *,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 *{ border-color: transparent !important; }
+html.cg-holo body .cg-pop-float .cg-tw-frame,  html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-frame,
+html.cg-holo body .cg-pop-float .cg-tw-bar,    html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-bar{ border:0 !important; }
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385::after{ display:none !important; content:none !important; }
+
+/* ---- 2. the Command Glass standby title goes (HUD contexts only) --------------- */
+html.cg-holo body .cg-pop-float .cg-tw-ph,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-ph{ display:none !important; }
+
+/* ---- 3. BUTTONS + TABS = glow patches, light outside the box ------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 button,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-bp,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 button,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-bp{
+  border:0 !important; outline:0 !important; box-shadow:none !important;
+  background:transparent !important; background-image:none !important;
+  position:relative !important; z-index:0 !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 button::before,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 button::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::before{
+  content:'' !important; position:absolute !important; inset:-65% -30% !important;
+  z-index:-1 !important; pointer-events:none !important; border:0 !important;
+  box-shadow:none !important; border-radius:0 !important;
+  background: radial-gradient(50% 50% at 50% 50%,
+    color-mix(in srgb, currentcolor 34%, transparent) 0%,
+    color-mix(in srgb, currentcolor 13%, transparent) 42%,
+    transparent 70%) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::after,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::after{ display:none !important; content:none !important; }
+/* per-mode accent schemes paint DARK labels for slabs that no longer exist */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab{
+  color:#cfeefc !important; box-shadow:none !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on.on{
+  background:transparent !important; background-image:none !important; color:#eaffff !important; }
+
+/* ---- 4. TYPE FIELDS + DROPDOWNS = lit accent wash, dies before any edge -------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 input,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 textarea,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 input,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 textarea{
+  background: radial-gradient(58% 130% at 50% 50%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 30%, transparent) 0%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 11%, transparent) 55%,
+    transparent 86%) !important;
+  border:0 !important; outline:0 !important; box-shadow:none !important;
+  color:#eaffff !important; caret-color:#eaffff !important; }
+html.cg-holo body .cg-pop-float input::placeholder,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 input::placeholder{ color:rgba(200,235,255,.55) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 select,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 select{
+  background-color:transparent !important;
+  background-image: radial-gradient(58% 130% at 50% 50%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 26%, transparent) 0%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 9%, transparent) 55%,
+    transparent 86%) !important;
+  border:0 !important; outline:0 !important; box-shadow:none !important; color:#eaffff !important; }
+
+/* ---- 5. cards dissolve: THREAT block + party rows ------------------------------ */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .th-wrap,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ld-section,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-cm,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-id,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-task,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-note,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .th-wrap,   html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ld-section,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-cm,     html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-id,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-task,   html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-note{
+  background:transparent !important; background-image:none !important; box-shadow:none !important; }
+
+/* ---- 6. settings panel: readable edge-fading card, selected states survive ----- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-panel,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-panel{
+  border:0 !important; box-shadow:none !important;
+  background: radial-gradient(130% 130% at 50% 35%,
+    rgba(5,13,22,.95) 0%, rgba(5,13,22,.85) 60%, rgba(5,13,22,.35) 88%, transparent 100%) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-opt.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-opt.on{
+  background:#4fd2ff !important; color:#04141d !important; text-shadow:none !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-follow, html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-follow{ background:linear-gradient(135deg,#8fd8ff 0 25%,#7dffb0 25% 50%,#ffd479 50% 75%,#ff8a7a 75%) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-blue,  html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-blue { background:radial-gradient(circle at 35% 30%,#8fd8ff,#2b6fb0) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-green, html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-green{ background:radial-gradient(circle at 35% 30%,#7dffb0,#199a5a) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-amber, html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-amber{ background:radial-gradient(circle at 35% 30%,#ffd479,#c8890f) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-red,   html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.d-red  { background:radial-gradient(circle at 35% 30%,#ff8a7a,#c8291a) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-dot.on{ box-shadow:0 0 0 2px rgba(255,255,255,.4) !important; }
+
+/* ---- 7. the resize grip (browser float; the overlay keeps its own corner grips) */
+html.cg-holo body > .cg-pop-float .cg-b701-grip{
+  position:absolute; right:6px; bottom:6px; width:38px; height:38px;
+  cursor:nwse-resize; opacity:.62; z-index:40; }
+html.cg-holo body > .cg-pop-float .cg-b701-grip:hover{ opacity:1; }
+html:not(.cg-holo) .cg-b701-grip{ display:none !important; }
+.cg-b701-grip .g-halo{ position:absolute; inset:-40%; pointer-events:none;
+  background:radial-gradient(50% 50% at 60% 60%, rgba(90,190,240,.20), transparent 72%); }
+.cg-b701-grip .g-dot{ position:absolute; width:5px; height:5px; border-radius:50%;
+  pointer-events:none; filter:blur(.3px);
+  background:radial-gradient(circle, rgba(170,235,255,.95), rgba(120,210,255,.3) 70%, transparent); }
+.cg-b701-grip .g-arrow{ position:absolute; left:1px; top:1px; pointer-events:none;
+  font:700 15px sans-serif; color:rgba(160,230,255,.85); transform:rotate(90deg);
+  text-shadow:0 0 6px rgba(120,215,255,.8); }
+</style>
+<script id="sc-b702-hololight-js">
+/* sc-b702-hololight-js  -  build 701.
+   One job: the resize grip on the browser float. T: "bottom right corner to be
+   draggeable so user can recise ... barely visable interface" then "draw a little
+   bit of attention to the 3 dots with a recize symbol". Rides b700's observer
+   pattern; grip lives on the float wrapper (b430's node), dies on re-dock. */
+(function(){
+  if(window.__cgHoloLight702) return; window.__cgHoloLight702=true;
+
+  function addGrip(fl){
+    if(!fl || fl.querySelector(':scope > .cg-b701-grip')) return;
+    var g=document.createElement('div'); g.className='cg-b701-grip';
+    g.innerHTML='<span class="g-halo"></span>'
+      +'<span class="g-dot" style="left:26px;top:26px"></span>'
+      +'<span class="g-dot" style="left:17px;top:26px"></span>'
+      +'<span class="g-dot" style="left:26px;top:17px"></span>'
+      +'<span class="g-arrow">&#10530;</span>';
+    fl.appendChild(g);
+    var d=false, sx=0, sy=0, sw=0, sh=0;
+    g.addEventListener('pointerdown', function(e){
+      d=true; sx=e.clientX; sy=e.clientY;
+      var r=fl.getBoundingClientRect(); sw=r.width; sh=r.height;
+      try{ g.setPointerCapture(e.pointerId); }catch(_){}
+      e.preventDefault(); e.stopPropagation();
+    });
+    g.addEventListener('pointermove', function(e){
+      if(!d) return;
+      fl.style.width=Math.max(340, Math.round(sw+e.clientX-sx))+'px';
+      fl.style.height=Math.max(200, Math.round(sh+e.clientY-sy))+'px';
+      e.preventDefault();
+    });
+    function end(e){ if(!d) return; d=false; try{ g.releasePointerCapture(e.pointerId); }catch(_){} }
+    g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+  }
+
+  var mo=new MutationObserver(function(muts){
+    for(var i=0;i<muts.length;i++){
+      var ad=muts[i].addedNodes;
+      for(var j=0;j<ad.length;j++){
+        var n=ad[j];
+        if(n.nodeType===1 && n.classList && n.classList.contains('cg-pop-float')){
+          (function(node){ setTimeout(function(){ addGrip(node); }, 80); })(n);
+        }
+      }
+    }
+  });
+  mo.observe(document.body,{childList:true});
+  addGrip(document.querySelector('body > .cg-pop-float'));
+
+  window.cgHoloLightReport=function(){
+    var fl=document.querySelector('body > .cg-pop-float');
+    var pill=fl?fl.querySelector('.ops-pill.b385'):null;
+    var tab=fl?fl.querySelector('.ops4-tab'):null;
+    var inp=fl?fl.querySelector('.cg-tw-in'):null;
+    return { undocked:!!fl,
+      ringGone: fl?(getComputedStyle(fl).borderTopWidth==='0px'):null,
+      titleGone: fl?(!fl.querySelector('.cg-tw-ph')||getComputedStyle(fl.querySelector('.cg-tw-ph')).display==='none'):null,
+      tabPatch: tab?(getComputedStyle(tab,'::before').backgroundImage.indexOf('radial')>=0):null,
+      inputLit: inp?(getComputedStyle(inp).backgroundImage.indexOf('radial')>=0):null,
+      grip: !!(fl&&fl.querySelector('.cg-b701-grip')),
+      poolHidden: (function(){var p=document.querySelector('.cg-b700-pool');return !p||getComputedStyle(p).display==='none';})() };
+  };
+  window.CMDGLAS_HOLOLIGHT_702=1;
+})();
+</script>
+
+<style id="sc-b703-readable-css">
+/* sc-b703-readable-css  -  build 703, 3 AUG 2026.
+   T, verbatim: "the writing is too hard to make up. fix it. that is on my main
+   monitor." Readability pass over the b702 hololight look - the language stays,
+   the writing gets BIGGER, BRIGHTER and CRISPER. Both HUD contexts.
+   Also: the HUD chevron BRIGHTNESS control finally BITES (the b699 finding -
+   --cg-hud-glow was consumed by nothing). It now drives a filter on the pill:
+   DIM .8 / NORMAL 1 / BRIGHT 1.3 - so T can push it per monitor.
+   Reversible: delete this block. */
+
+/* ---- 1. crisper glow: tight bright core + soft halo (blurry glow mushes small text) */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 *,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 *{
+  text-shadow: 0 0 1px rgba(235,252,255,.95), 0 0 7px rgba(120,215,255,.55) !important; }
+
+/* ---- 2. size + brightness bumps on the small offenders ------------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab{
+  font-size:10px !important; letter-spacing:1.6px !important; color:#e8f7ff !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on{ color:#ffffff !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-clr-btn,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-clr-btn{
+  font-size:10px !important; letter-spacing:1.2px !important; color:#dff2ff !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-in,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-in{
+  font-size:14px !important; color:#ffffff !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-go,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-open,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-go,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-open{
+  font-size:10px !important; color:#e8f7ff !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev{
+  font-size:9px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-lbl,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-opt,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-lbl,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-opt{
+  font-size:8.5px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-note,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-note{
+  font-size:13px !important; color:#d5ecfa !important; }
+
+/* ---- 3. BRIGHTNESS finally bites: the chevron control drives the whole HUD ----- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385[data-hudb="dim"],
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385[data-hudb="dim"]{
+  filter: brightness(.8) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385[data-hudb="bright"],
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385[data-hudb="bright"]{
+  filter: brightness(1.3) contrast(1.05) !important; }
+</style>
+
+<style id="sc-b704-tintglow-css">
+/* sc-b704-tintglow-css  -  build 704, 3 AUG 2026.
+   T, verbatim: "the gather buy notes etc background need to match the tablet color.
+   blue. they are qhite. so the blue tint or whatever theme is selected shows the
+   little cloud surrounding the writing"
+   MEASURED CAUSE: b701/b702 drew every patch with color-mix(... currentcolor ...),
+   and currentcolor is the element's TEXT colour. b703 then raised text to #e8f7ff /
+   #ffffff for readability - so the clouds went white with it. Text colour and cloud
+   colour were the same input; they are separated here.
+   The cloud now reads --cg-hud-a2, the HUD accent the chevron COLOUR control sets
+   (blue default; green/amber/red follow the pick). Text stays bright white.
+   Reversible: delete this block. */
+
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 button::before,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 button::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::before{
+  background: radial-gradient(50% 50% at 50% 50%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 40%, transparent) 0%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 16%, transparent) 42%,
+    transparent 70%) !important; }
+/* the tab you are ON reads by a STRONGER tint, not by a white slab */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on::before{
+  background: radial-gradient(50% 50% at 50% 50%,
+    color-mix(in srgb, var(--cg-hud-a1,#a6f2ff) 62%, transparent) 0%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 26%, transparent) 45%,
+    transparent 72%) !important; }
+/* the chevron chip joins the same tint */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev::before{
+  background: radial-gradient(50% 50% at 50% 50%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 34%, transparent), transparent 70%) !important; }
+/* and the glow ON the letters carries the tint too, so the whole cloud is one colour */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 *,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 *{
+  text-shadow: 0 0 1px rgba(240,253,255,.95),
+               0 0 8px color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 70%, transparent) !important; }
+</style>
+
+<style id="sc-b705-c3-css">
+/* sc-b705-c3-css  -  build 705, 3 AUG 2026.
+   T picked variant C3 off the refinement sheet: "c3". Plus his defect report:
+   "the twitch channel 'pill' is too small height wise it cuts of the words".
+   MEASURED CAUSE of the clipping: .cg-tw-in carries a hard height:10px with
+   box-sizing:border-box. Build 703 raised its font to 14px (text needs 16px) and
+   never touched the height - so the words were cut. Mine. Height is freed here.
+   C3 = only the tab you are ON is lit; everything else is sharp plain text.
+   The sharpness comes from a tight DARK contact shadow under each letter, not from
+   more glow - glow was what made it look washed out.
+   Also carried: the tab row may SHRINK (each .ops4-tab shipped with a ~260px
+   min-width sized for the docked tablet, which overflowed a narrow HUD window and
+   cut STREAM off / wrapped GATHER & BUY onto two lines).
+   Reversible: delete this block. */
+
+/* ---- 1. the tab row fits any window ------------------------------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab{
+  white-space:nowrap !important; min-width:0 !important; width:auto !important;
+  flex:0 1 auto !important;
+  letter-spacing:1.05px !important; padding:4px 10px !important;
+  font:800 10.5px 'Rajdhani','Segoe UI',sans-serif !important; color:#cfe6f6 !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tabs,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tabs{
+  flex-wrap:nowrap !important; overflow:hidden !important; min-width:0 !important;
+  gap:0 !important; justify-content:space-around !important; padding:2px 6px 3px !important; }
+
+/* ---- 2. CRISP: dark contact shadow, minimal bloom ------------------------------ */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 *,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 *{
+  text-shadow: 0 1px 2px rgba(0,7,14,.9), 0 0 3px rgba(0,10,20,.75),
+               0 0 6px color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 26%, transparent) !important; }
+
+/* ---- 3. C3: light ONLY on the tab you are on ---------------------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::before,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 button::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 button::before{
+  background:none !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on{
+  color:#ffffff !important;
+  text-shadow: 0 1px 2px rgba(0,7,14,.9),
+    0 0 8px color-mix(in srgb, var(--cg-hud-a1,#a6f2ff) 85%, transparent) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab.on::before{
+  inset:-30% -12% !important;
+  background: radial-gradient(62% 54% at 50% 52%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 22%, transparent) 0%,
+    transparent 72%) !important; }
+
+/* ---- 4. THE INPUT: height freed, wash feathered at both ends ------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-in,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-in{
+  height:auto !important; min-height:26px !important; line-height:1.35 !important;
+  font:600 13px 'Rajdhani','Segoe UI',sans-serif !important; letter-spacing:.4px !important;
+  padding:5px 12px !important; box-sizing:border-box !important;
+  background: linear-gradient(90deg, transparent 0%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 15%, transparent) 12%,
+    color-mix(in srgb, var(--cg-hud-a2,#4fd2ff) 15%, transparent) 88%, transparent 100%) !important; }
+/* the bar has to give the taller field room */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-bar,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-bar{
+  height:auto !important; min-height:30px !important; align-items:center !important; }
+/* every other text field in the HUD had the same fixed-height trap */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 input,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 input{
+  height:auto !important; min-height:24px !important; line-height:1.35 !important; }
+
+/* ---- 5. the bottom row sits back so the tabs lead ------------------------------ */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-clr-btn,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-clr-btn{
+  white-space:nowrap !important;
+  font:700 9px 'Rajdhani','Segoe UI',sans-serif !important; letter-spacing:1.1px !important;
+  color:#9fbdd2 !important; padding:3px 8px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-clr-wrap,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-clr-wrap{ gap:10px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev{ font-size:8.5px !important; }
+</style>
+
+<style id="sc-b706-quietchrome-css">
+/* sc-b706-quietchrome-css  -  build 706, 3 AUG 2026.
+   T picked possibility 2 off the chrome sheet, plus: "killing that inset shadow on
+   the input".
+   WHY: light means information in this HUD. The active tab is information. A
+   permanently lit "HUD" chip and a permanently lit X are furniture - they sit
+   exactly where the eye leaves the row. Both keep their function; neither keeps
+   its resting glow.
+   MEASURED before this block (real app, 106 elements walked): 0 visible borders,
+   0 solid fills, and exactly ONE box-shadow left in the whole HUD - the inset on
+   .cg-tw-in. That inset was the last thing suggesting a container. Gone here.
+   The X uses :placeholder-shown - pure CSS, no timer, no script: an empty field
+   still shows its placeholder, so the button is hidden; type one character and it
+   returns. Rule 17 friendly.
+   Reversible: delete this block. */
+
+/* ---- 1. the chevron: caret only, bare ----------------------------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev{
+  background:none !important; border:0 !important; box-shadow:none !important;
+  padding:0 4px !important; min-height:0 !important; font-size:0 !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev::before,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev::before{
+  background:none !important; box-shadow:none !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev .cv,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev .cv{
+  font-size:13px !important; line-height:1 !important; color:#9dc4da !important;
+  text-shadow:0 1px 2px rgba(0,7,14,.9) !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev:hover .cv,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev:hover .cv,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap.on .cg-hs-chev .cv,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap.on .cg-hs-chev .cv{
+  color:#ffffff !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap{
+  top:5px !important; right:8px !important; }
+/* the tab row gave up 44px for the old chip; it does not need it now */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tabs,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tabs{
+  padding-right:22px !important; }
+
+/* ---- 2. the X exists only when there is something to clear --------------------- */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-in:placeholder-shown ~ .cg-tw-clear,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-in:placeholder-shown ~ .cg-tw-clear{
+  opacity:0 !important; pointer-events:none !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-clear,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-clear{
+  background:none !important; border:0 !important; box-shadow:none !important;
+  color:#7f9bb0 !important; font-size:12px !important; padding:0 6px !important;
+  transition:opacity .15s ease !important; }
+
+/* ---- 3. the last container hint in the HUD ------------------------------------- */
+/* RULE 18, the specificity edition: the tablet styles every field with
+   `#content input:not([type=checkbox]):not(...)...{box-shadow: inset ... !important}`
+   - 1 id + SIX :not() attribute tests. Two !important rules resolve on specificity,
+   so a 1-id selector lost. #content is an ancestor here too, so the id is claimed
+   back and the count exceeded. MEASURED via CSS.getMatchedStylesForNode. */
+html.cg-holo body #content #sc-home-widgets .wg.ops-pill.b385 input.cg-tw-in,
+html.cg-hudonly body #content #sc-home-widgets .wg.ops-pill.b385 input.cg-tw-in,
+html.cg-holo body #content #sc-home-widgets .wg.ops-pill.b385 input,
+html.cg-hudonly body #content #sc-home-widgets .wg.ops-pill.b385 input{
+  box-shadow:none !important; }
+</style>
+
+<style id="sc-b707-backing-css">
+/* sc-b707-backing-css  -  build 707, 4 AUG 2026.
+   The open item from the 3 AUG handoff, finally decided: "Readability over bright
+   scenes. The hologram washes out over a planet. Proposed BACKING row
+   (NONE/FAINT/DARK) in the chevron panel - T has NOT decided." T decided: build it.
+   WHY IT IS APPLIED INLINE FROM SCRIPT AND NOT AS A CSS RULE:
+   in the desktop overlay, HUD-only sweeps every element with INLINE
+   background:transparent !important (main.js). A stylesheet rule - at any
+   specificity - loses to an inline !important. So the backing is written to the
+   pill's own style property, last-write-wins, one code path for both contexts.
+   MEASURED: with no backing, light text over a lit planet drops to roughly the
+   contrast of the planet itself; DARK restores it. Numbers in the ship report.
+   The backing is a soft radial, never a rectangle - it fades out before any edge,
+   so it obeys the no-boxes rule T set for this HUD.
+   Reversible: delete this block (the stored setting is then simply ignored). */
+#sc-home-widgets .ops-pill.b385 .cg-hs-row.cg-b707-row{ margin-bottom:9px !important; }
+</style>
+<script id="sc-b707-backing-js">
+/* sc-b707-backing-js  -  build 707. */
+(function(){
+  if(window.__cgBack707) return; window.__cgBack707=true;
+
+  var KEY='cg_hud_back', MODES=['none','faint','dark'], DEF='none';
+  var WASH={
+    none:'',
+    faint:'radial-gradient(115% 130% at 50% 42%, rgba(2,7,13,.50) 0%, rgba(2,7,13,.34) 55%,'
+         +' rgba(2,7,13,.10) 84%, rgba(2,7,13,0) 100%)',
+    dark: 'radial-gradient(115% 130% at 50% 42%, rgba(2,7,13,.84) 0%, rgba(2,7,13,.66) 55%,'
+         +' rgba(2,7,13,.22) 84%, rgba(2,7,13,0) 100%)'
+  };
+
+  function get(){ try{ var v=localStorage.getItem(KEY); if(MODES.indexOf(v)>=0) return v; }catch(e){}
+    return DEF; }
+  function pill(){ return document.querySelector('#sc-home-widgets .ops-pill.b385'); }
+
+  /* the only place the wash is written. Inline, important, last write wins - see the
+     style block header for why a CSS rule cannot do this job in the overlay. */
+  function paint(){
+    var p=pill(); if(!p) return;
+    var m=get();
+    if(m==='none'){ p.style.removeProperty('background-image'); }
+    else{ p.style.setProperty('background-image', WASH[m], 'important'); }
+    p.setAttribute('data-hudback', m);
+    var bs=document.querySelectorAll('.cg-hs-opt[data-g="back"]');
+    for(var i=0;i<bs.length;i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-v')===m);
+  }
+
+  window.cgHudBack=function(m){
+    if(m===undefined) return get();
+    if(MODES.indexOf(m)<0) return get();
+    try{ localStorage.setItem(KEY,m); }catch(e){}
+    paint(); return m;
+  };
+
+  /* the row goes into the b699 chevron panel, above its NOTE/CAUTION footer, and
+     reuses .cg-hs-lbl/.cg-hs-row/.cg-hs-opt so it inherits every styling build since. */
+  function addRow(){
+    var panel=document.querySelector('.cg-hs-panel'); if(!panel) return false;
+    if(panel.querySelector('.cg-b707-row')) return true;
+    var lbl=document.createElement('div');
+    lbl.className='cg-hs-lbl';
+    lbl.innerHTML='Backing <span>&mdash; for bright scenes</span>';
+    var row=document.createElement('div');
+    row.className='cg-hs-row cg-b707-row';
+    row.innerHTML=MODES.map(function(m){
+      return '<button type="button" class="cg-hs-opt" data-g="back" data-v="'+m+'">'+m+'</button>';
+    }).join('');
+    var note=panel.querySelector('.cg-hs-note');
+    if(note){ panel.insertBefore(lbl, note); panel.insertBefore(row, note); }
+    else { panel.appendChild(lbl); panel.appendChild(row); }
+    row.addEventListener('click', function(e){
+      var b=e.target && e.target.closest && e.target.closest('button[data-v]');
+      if(!b) return;
+      e.preventDefault(); e.stopPropagation();
+      window.cgHudBack(b.getAttribute('data-v'));
+    }, false);
+    paint();
+    return true;
+  }
+
+  paint();
+  var n=0, iv=setInterval(function(){ if(addRow()||++n>90) clearInterval(iv); }, 400);
+  addRow();
+  /* the overlay re-runs its HUD-only sweep on every dock/undock and that sweep writes
+     inline background:transparent - so the wash is re-asserted on the same slow
+     re-check the chevron itself uses. One timer, 4s, no measurable cost (b699). */
+  setInterval(function(){ addRow(); paint(); }, 4000);
+
+  window.cgHudBackReport=function(){
+    var p=pill();
+    return { mode:get(), rowInPanel: !!document.querySelector('.cg-b707-row'),
+             applied: p? (p.style.getPropertyValue('background-image')||'(none)').slice(0,40) : null,
+             dataAttr: p? p.getAttribute('data-hudback') : null };
+  };
+  window.CMDGLAS_BACKING_707=1;
+})();
+</script>
+
+<style id="sc-b708-partyhud-css">
+/* sc-b708-partyhud-css  -  build 708, 4 AUG 2026.
+   T: "i need to see the org/party view actually populated with party and chat
+   stuff" -> approved through mock rounds R5-R9: chat LEFT, EVE-style member
+   stack RIGHT (portrait + name only, no chips, no indicators, no frames;
+   pictures feather into transparency; no picture = empty see-through slot),
+   then: "yes 1 as well. the final product."
+   THE REAL THING: reads/writes public.org_messages (org_id 'gamerpool',
+   channel 'party') and public.org_members - the SAME tables the org site's
+   #party uses, via the same REST pattern build 549 already trusts, with the
+   same localStorage auth token. Self-contained: shares no closure with b549.
+   HUD CONTEXTS ONLY. The docked tablet keeps b549's glance view untouched.
+   In the floating HUD the ORG VIEW switch is hidden with it - org admin is
+   desk work, the HUD is for flying. Reversible: delete style + script. */
+
+/* the ORG/PARTY mode paints its active tab through a DEEPER rule than the other
+   modes (measured: the b705 kill beat CONTRACTS/THREAT but lost here - same Rule 18
+   economy, one class deeper). Full-chain kill, both contexts, .on doubled. */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab.on,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab.on.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab.on,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab.on.on{
+  background:transparent !important; background-image:none !important;
+  box-shadow:none !important; }
+
+/* b549's own render + switch step aside in HUD contexts only */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 #cg-op-body,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-switch,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-op-body,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-switch{ display:none !important; }
+#cg-b708{ display:none; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 #cg-b708,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-b708{
+  display:flex !important; gap:30px; align-items:flex-start; width:100%;
+  padding:4px 2px 0; box-sizing:border-box; }
+#cg-b708 .b708-chat{ flex:1.4 1 0; min-width:0; }
+#cg-b708 .b708-hd{ font:800 10px 'Rajdhani','Segoe UI',sans-serif; letter-spacing:2.4px;
+  color:#7fd0f4; margin:0 0 6px; }
+#cg-b708 .b708-feed{ font:600 12.5px 'Rajdhani','Segoe UI',sans-serif; line-height:1.9;
+  color:#cfe6f4; max-height:180px; overflow-y:auto; overflow-x:hidden;
+  scrollbar-width:none; }
+#cg-b708 .b708-feed::-webkit-scrollbar{ display:none; }
+#cg-b708 .b708-t{ color:#5d7183; margin-right:4px; }
+#cg-b708 .b708-n{ color:#8fd8ff; font-weight:700; }
+#cg-b708 .b708-n.me{ color:#a6f2ff; }
+#cg-b708 .b708-sys{ color:#7d93a8; }
+#cg-b708 .b708-send{ margin-top:8px; }
+#cg-b708 .b708-send input{ width:92%; }
+#cg-b708 .b708-roster{ flex:0 0 auto; min-width:170px; max-width:240px; }
+#cg-b708 .b708-m{ display:flex; align-items:center; gap:9px; margin:0 0 4px; line-height:1; }
+#cg-b708 .b708-av, #cg-b708 .b708-slot{ width:30px; height:30px; flex:0 0 30px; }
+#cg-b708 .b708-av{ border:0; outline:0; display:block; object-fit:cover;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 42%, transparent 74%);
+  mask-image:radial-gradient(circle at 50% 50%, #000 42%, transparent 74%); }
+#cg-b708 .b708-mn{ font:700 13.5px 'Rajdhani','Segoe UI',sans-serif; color:#dcefff;
+  letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#cg-b708 .b708-note{ font:600 12.5px 'Rajdhani','Segoe UI',sans-serif; line-height:1.6;
+  color:#9db8cb; max-width:420px; }
+</style>
+<script id="sc-b708-partyhud-js">
+/* sc-b708-partyhud-js  -  build 708. Data plumbing notes:
+   - token: localStorage 'sb-rvbxbrgvsdjdtsjdusfh-auth-token' (same source b549
+     reads). uid decoded from the JWT payload's sub claim - no library needed.
+   - roster: org_members WHERE org_id=gamerpool AND party_id = my party_id.
+     No party -> roster shows just you + the join hint b549 uses.
+   - feed: org_messages WHERE org_id=gamerpool AND channel=party, last 40.
+     #party is the POOL lobby channel by design (phase 8: "players who log on
+     to play together can easily join each others chat") - one shared feed.
+   - portraits: ONLY your own gamer picture exists client-side today
+     (localStorage 'cmdglas_avatar', build 334). Other pilots render the
+     approved empty see-through slot until pictures sync server-side - that is
+     a data gap, not a styling choice, and it is stated in the ship report.
+   - timers: one 1.5s mount-check (holo contexts only), one 5s poll while the
+     panel is actually visible. Matches the b699/b707 pattern. */
+(function(){
+  if(window.__cgPartyHud708) return; window.__cgPartyHud708=true;
+
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
+  var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
+  var POOL='gamerpool';
+
+  var msgs=[], members=[], myRow=null, uid=null, lastErr='', lastPoll=0, sending=false;
+
+  function esc(x){ return String(x==null?'':x).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function tok(){ try{
+      var raw=localStorage.getItem('sb-rvbxbrgvsdjdtsjdusfh-auth-token'); if(!raw) return null;
+      var j=JSON.parse(raw);
+      return (j&&(j.access_token||(j.currentSession&&j.currentSession.access_token)))||null;
+    }catch(e){ return null; } }
+  function uidOf(t){ try{
+      var p=JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+      return p.sub||null; }catch(e){ return null; } }
+  function hudContext(){
+    var r=document.documentElement;
+    if(r.classList.contains('cg-hudonly')) return true;
+    return r.classList.contains('cg-holo') && !!document.querySelector('body > .cg-pop-float');
+  }
+  function get(path, cb){
+    var t=tok(); if(!t){ lastErr='signedout'; cb(null); return; }
+    fetch(SB_URL+'/rest/v1/'+path,{headers:{apikey:SB_KEY,Authorization:'Bearer '+t}})
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(function(j){ lastErr=''; cb(j); },function(e){ lastErr=String(e&&e.message||e); cb(null); });
+  }
+
+  function poll(){
+    var t=tok();
+    if(!t){ uid=null; paint(); return; }
+    if(!uid) uid=uidOf(t);
+    get('org_messages?org_id=eq.'+POOL+'&channel=eq.party&select=user_id,callsign,body,created_at&order=created_at.desc&limit=40',
+      function(rows){ if(rows){ msgs=rows.reverse(); } paint(); });
+    get('org_members?org_id=eq.'+POOL+'&select=user_id,callsign,party_id,party_role&user_id=eq.'+uid,
+      function(rows){
+        myRow=(rows&&rows[0])||null;
+        if(myRow&&myRow.party_id){
+          get('org_members?org_id=eq.'+POOL+'&select=user_id,callsign,party_id,party_role&party_id=eq.'+encodeURIComponent(myRow.party_id),
+            function(mem){ if(mem) members=mem; paint(); });
+        } else { members=myRow?[myRow]:[]; paint(); }
+      });
+  }
+
+  function send(){
+    if(sending) return;
+    var inp=document.getElementById('cg-b708-in'); if(!inp) return;
+    var body=(inp.value||'').trim(); if(!body) return;
+    var t=tok(); if(!t) return;
+    sending=true;
+    fetch(SB_URL+'/rest/v1/org_messages',{method:'POST',
+      headers:{apikey:SB_KEY,Authorization:'Bearer '+t,'Content-Type':'application/json',Prefer:'return=minimal'},
+      body:JSON.stringify({org_id:POOL,channel:'party',user_id:uid,
+        callsign:(myRow&&myRow.callsign)||'CMDR',body:body.slice(0,900)})})
+      .then(function(r){ sending=false;
+        if(!r.ok){ lastErr='send HTTP '+r.status; paint(); return; }
+        inp.value=''; poll(); },
+      function(e){ sending=false; lastErr='send '+String(e&&e.message||e); paint(); });
+  }
+
+  function avatarFor(m){
+    if(uid&&m.user_id===uid){
+      try{ var img=localStorage.getItem('cmdglas_avatar');
+        if(img) return '<img class="b708-av" src="'+img+'" alt="">'; }catch(e){}
+    }
+    /* approved design: no picture uploaded -> nothing, a see-through slot */
+    return '<span class="b708-slot"></span>';
+  }
+  function tstr(iso){ try{ var d=new Date(iso);
+    return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }catch(e){ return ''; } }
+
+  function paint(){
+    var el=document.getElementById('cg-b708'); if(!el) return;
+    var t=tok();
+    if(!t){
+      el.innerHTML='<div class="b708-note">Sign in from the <b>ACCOUNT</b> pill on the tablet, '
+        +'then come back to the HUD &mdash; #party and your crew appear here.</div>';
+      return;
+    }
+    var feed=msgs.length? msgs.map(function(m){
+        return '<div><span class="b708-t">'+tstr(m.created_at)+'</span>'
+          +'<span class="b708-n'+(uid&&m.user_id===uid?' me':'')+'">'+esc(m.callsign||'CMDR')+'</span>'
+          +' &mdash; '+esc(m.body)+'</div>';
+      }).join('')
+      : '<div class="b708-sys">No transmissions in #party yet.</div>';
+    var roster=members.length? members.map(function(m){
+        return '<div class="b708-m">'+avatarFor(m)
+          +'<span class="b708-mn">'+esc(m.callsign||'CMDR')+(uid&&m.user_id===uid?' (you)':'')+'</span></div>';
+      }).join('')
+      : '<div class="b708-note">No party yet &mdash; open COMMS &rarr; <b>#party</b> on the tablet '
+        +'to create one or join by code.</div>';
+    var hdr=(myRow&&myRow.party_id)?('PARTY '+esc(myRow.party_id)+' &middot; '+members.length):'PILOTS';
+    el.innerHTML=
+      '<div class="b708-chat"><div class="b708-hd">#PARTY &mdash; LIVE</div>'
+      +'<div class="b708-feed" id="cg-b708-feed">'+feed+'</div>'
+      +'<div class="b708-send"><input id="cg-b708-in" placeholder="message #party..." maxlength="900" autocomplete="off"></div></div>'
+      +'<div class="b708-roster"><div class="b708-hd">'+hdr+'</div>'+roster+'</div>'
+      +(lastErr&&lastErr!=='signedout'?'<div class="b708-note" style="flex-basis:100%">comms error: '+esc(lastErr)+'</div>':'');
+    var f=document.getElementById('cg-b708-feed'); if(f) f.scrollTop=f.scrollHeight;
+    var inp=document.getElementById('cg-b708-in');
+    if(inp&&!inp.__cg708){ inp.__cg708=true;
+      inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } }); }
+  }
+
+  function mount(){
+    if(!hudContext()) return false;
+    var host=document.getElementById('cg-orgparty'); if(!host) return false;
+    if(document.getElementById('cg-b708')) return true;
+    var el=document.createElement('div'); el.id='cg-b708';
+    host.appendChild(el);
+    paint(); poll();
+    return true;
+  }
+
+  setInterval(function(){
+    if(!hudContext()) return;
+    mount();
+    var el=document.getElementById('cg-b708');
+    if(el && el.offsetParent!==null && Date.now()-lastPoll>5000){ lastPoll=Date.now(); poll(); }
+  }, 1500);
+
+  window.cgPartyHudReport=function(){
+    var el=document.getElementById('cg-b708');
+    return { mounted:!!el, visible:!!(el&&el.offsetParent!==null),
+      signedIn:!!tok(), uid:uid, members:members.length, msgs:msgs.length, lastErr:lastErr };
+  };
+  window.CMDGLAS_PARTYHUD_708=1;
+})();
+</script>
+
+<style id="sc-b709-partyfield-css">
+/* sc-b709-partyfield-css  -  build 709, 4 AUG 2026.
+   T: "it looks too open as if it's just completely detached from everything ...
+   just words spread over an area" -> shown 3 compositions -> "i'm at a loss.
+   what do you recommend" -> my call: variant 3, ONE shared soft field.
+   The group is capped and centred, both columns share a top line, each header
+   hangs from a small accent dot in the theme colour, and one radial field sits
+   behind the whole group - fading to nothing before any edge, so it is a place,
+   not a box. The field also acts as local bright-scene backing for this panel.
+   All rules ride my own #cg-b708 elements - no specificity war possible.
+   Reversible: delete this block. */
+#cg-b708{ position:relative; z-index:0;
+  max-width:660px !important; margin:2px auto 0 !important;
+  gap:44px !important; padding:10px 14px 12px !important; box-sizing:border-box; }
+#cg-b708::before{ content:''; position:absolute; inset:-6px -10px; z-index:-1;
+  pointer-events:none;
+  background:radial-gradient(105% 130% at 50% 38%, rgba(4,11,19,.58) 0%,
+    rgba(4,11,19,.36) 60%, rgba(4,11,19,.10) 86%, transparent 100%); }
+#cg-b708 .b708-hd{ position:relative; padding-left:10px; }
+#cg-b708 .b708-hd::before{ content:''; position:absolute; left:0; top:50%;
+  width:5px; height:5px; transform:translateY(-50%); border-radius:50%;
+  background:radial-gradient(circle, var(--cg-hud-a2,#4fd2ff), transparent 75%);
+  box-shadow:0 0 6px var(--cg-hud-a2,#4fd2ff); }
+#cg-b708 .b708-feed{ line-height:1.75 !important; }
+#cg-b708 .b708-feed > div{ padding-left:10px; }
+#cg-b708 .b708-send{ padding-left:10px; }
+#cg-b708 .b708-send input{ width:88% !important; }
+#cg-b708 .b708-roster{ padding-left:10px; padding-top:2px; }
+#cg-b708 .b708-roster .b708-m{ margin:0 0 6px !important; }
+</style>
+
+<style id="sc-b710-typefloor-css">
+/* sc-b710-typefloor-css  -  build 710, 4 AUG 2026.
+   T, with a screenshot of a wide short HUD window: "the font is too small. you
+   have to set a minimum font size because that is unreadable."
+   Every HUD-context type size gets a FLOOR roughly 30% up. These override the
+   b703/b705/b708 sizes by coming later at the same or deeper specificity.
+   The auto-zoom (overlay v1.2.5) still scales further on tall windows; this is
+   the size below which nothing may fall. Reversible: delete this block. */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .pill-body .ops4-tabs .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab{
+  font-size:13px !important; letter-spacing:1.2px !important; padding:5px 12px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-clr-btn,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-clr-btn{
+  font-size:11px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-undock-btn,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-undock-btn{
+  font-size:11px !important; }
+html.cg-holo body #content #sc-home-widgets .wg.ops-pill.b385 input.cg-tw-in,
+html.cg-hudonly body #content #sc-home-widgets .wg.ops-pill.b385 input.cg-tw-in{
+  font-size:15px !important; min-height:30px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-go,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-tw-open,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-go,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-open{
+  font-size:12px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev .cv,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev .cv{
+  font-size:16px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-lbl,
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-opt,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-lbl,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-opt{
+  font-size:10.5px !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-note,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-note{
+  font-size:9.5px !important; line-height:1.5 !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .op-note,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .op-note{ font-size:14px !important; }
+#cg-b708 .b708-hd{ font-size:12px !important; }
+#cg-b708 .b708-feed{ font-size:14px !important; }
+#cg-b708 .b708-mn{ font-size:15px !important; }
+#cg-b708 .b708-note{ font-size:14px !important; }
+</style>
+
+<style id="sc-b711-hitfix-css">
+/* sc-b711-hitfix-css  -  build 711, 4 AUG 2026.
+   T: "the hud options don't open. why does it say undock?"
+   TWO OF MY OWN COLLISIONS, both measured:
+   1. b706 set the chevron to font-size:0 keeping only the caret glyph - and the
+      BUTTON collapsed with it. My check clicked it with element.click(), which
+      ignores geometry; a real pointer had a ~0px target. The button gets a real
+      hit area here, verified this time by clicking COORDINATES.
+   2. b710's type floor (.cg-undock-btn font-size:11px !important) out-ranked the
+      v1.2.8 relabel (font-size:0, no !important) - the original UNDOCK text came
+      back over the DOCK TABLET pseudo. Later block, same selector, !important:
+      this file wins, one label renders.
+   Reversible: delete this block. */
+
+/* 1. the caret gets a real target: 30x26 minimum, centred glyph */
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-chev{
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  width:30px !important; height:26px !important; min-height:26px !important;
+  padding:0 !important; cursor:pointer !important; }
+html.cg-holo body .cg-pop-float #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap{
+  z-index:60 !important; }
+
+/* 2. one label: the stock text stays dead in HUD-only, DOCK TABLET renders */
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-undock-btn{
+  font-size:0 !important; }
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-undock-btn::after{
+  content:'DOCK TABLET' !important;
+  font:700 11px 'Rajdhani','Segoe UI',sans-serif !important; letter-spacing:1.1px !important;
+  color:#9fbdd2 !important; text-shadow:0 1px 2px rgba(0,7,14,.9) !important; }
+</style>
+
+<style id="sc-b712-dragglass-css">
+/* sc-b712-dragglass-css  -  build 712, 4 AUG 2026.
+   T: "there's no place to drag it and theres a visible undock button even though
+   it's already undocked. keep everything else the same."
+   1. The dock control leaves the HUD row entirely. You are IN the hud - a button
+      about leaving it is furniture. Docking stays reachable two ways that already
+      exist: the drag strip's WHOLE TABLET button, and Ctrl+Alt+Shift+H.
+   2. DRAG ANY EMPTY GLASS. -webkit-app-region:drag on the pill makes the OS move
+      the window when you grab it; every interactive element is carved back out
+      with no-drag so tabs, fields and buttons still click. Both gated on
+      html.cg-hudonly - the docked tablet and the browser are untouched.
+   CAUTION noted in ship report: a drag region swallows clicks - that is why the
+   carve-outs below matter, and why they were VERIFIED by real coordinate clicks.
+   Reversible: delete this block. */
+
+/* 1. no dock button inside the HUD */
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-undock-btn{
+  display:none !important; }
+
+/* 2. the glass drags the window */
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385{
+  -webkit-app-region:drag; }
+/* everything a pilot actually clicks is carved back out */
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 button,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 input,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 select,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 textarea,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 a,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tab,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .ops4-tabs,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-wrap,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-hs-panel,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-tw-bar,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 .cg-clr-wrap,
+html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-b708{
+  -webkit-app-region:no-drag; }
+</style>
 </body>
 </html>
