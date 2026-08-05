@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 717;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 714;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -43615,85 +43615,6 @@ html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-b708{
       if(mm && mm.classList.contains('sca-open')) place(btn);
     },0);
   }, true);
-})();
-</script>
-<style id="sc-b716-clocks-css">
-/* 4 AUG 2026 build 716.  b715 put the clocks INTO the tab row as a real flex
-   item. That added to the pill's intrinsic width and shoved the bottom button
-   row past the edge - T's screenshot, SOURCE clipped. Out of the flow entirely
-   now: absolutely positioned against the pill, with the tab row given a matching
-   left padding. The clocks cost the pill no width, so nothing downstream can be
-   pushed by them. Reversible: delete this block and its script. */
-#sc-home-widgets .ops-pill.b385{ position:relative; }
-/* b717 - T: the b716 block measured 39.9x13.5 on his screen, about 6px of
-   type after the tablet's own zoom. Right place, unreadable size. Type up, and
-   the gap and padding follow it. */
-#sc-home-widgets .ops-pill.b385 #cg-clocks{
-  position:absolute !important; left:12px; top:7px; z-index:3;
-  display:flex; align-items:flex-start; gap:14px;
-  pointer-events:none; user-select:none; white-space:nowrap; }
-#sc-home-widgets .ops-pill.b385 #cg-clocks .cgc{
-  display:flex; flex-direction:column; align-items:flex-start; line-height:1; }
-#sc-home-widgets .ops-pill.b385 #cg-clocks .cgc b{
-  font:400 9px/1 'Audiowide','Rajdhani',sans-serif; letter-spacing:1.4px;
-  color:#6d93af; margin:0 0 3px 1px; }
-#sc-home-widgets .ops-pill.b385 #cg-clocks .cgc i{
-  font:400 16px/1 'Audiowide','Rajdhani',sans-serif; font-style:normal;
-  letter-spacing:.8px; color:#8fb8d4; }
-html:not(.cg-clocks-off) #sc-home-widgets .ops-pill.b385 .ops4-tabs{
-  padding-left:112px !important; }
-html.cg-clocks-off #cg-clocks{ display:none !important; }
-/* T: "fix alignment" - the HUD caret hung past the pill's right border. Both of
-   these are inert if they do not apply, so whichever way the wrapper is
-   positioned, it is pulled back inside. */
-#sc-home-widgets .ops-pill.b385 .cg-hs-wrap{
-  right:10px !important; margin-right:8px !important; }
-.cg-hs-panel .cg-clk-row{ display:flex; align-items:center; gap:9px;
-  margin-top:9px; font:700 11px/1.2 'Rajdhani','Segoe UI',sans-serif;
-  letter-spacing:1.1px; color:#bcdcf0; cursor:pointer; }
-.cg-hs-panel .cg-clk-row input{ accent-color:#4fd2ff; }
-</style>
-<script id="sc-b716-clocks-js">
-(function(){
-  if(window.__cgB716) return; window.__cgB716=1;
-  var KEY='cg_show_clocks';
-  function on(){ try{ return localStorage.getItem(KEY)!=='0'; }catch(e){ return true; } }
-  function apply(){ document.documentElement.classList.toggle('cg-clocks-off', !on()); }
-  function two(n){ return (n<10?'0':'')+n; }
-  function build(){
-    var pill=document.querySelector('#sc-home-widgets .ops-pill.b385');
-    if(!pill) return false;
-    var c=document.getElementById('cg-clocks');
-    if(!c){
-      c=document.createElement('div'); c.id='cg-clocks';
-      c.innerHTML='<span class="cgc"><b>&nbsp;</b><i id="cg-clk-loc">--:--</i></span>'
-                 +'<span class="cgc"><b>UTC</b><i id="cg-clk-utc">--:--</i></span>';
-    }
-    if(c.parentElement!==pill) pill.appendChild(c);
-    return true;
-  }
-  function tick(){
-    var d=new Date();
-    var l=document.getElementById('cg-clk-loc'), u=document.getElementById('cg-clk-utc');
-    if(l) l.textContent=two(d.getHours())+':'+two(d.getMinutes());
-    if(u) u.textContent=two(d.getUTCHours())+':'+two(d.getUTCMinutes());
-  }
-  function settings(){
-    var p=document.querySelector('.cg-hs-panel');
-    if(!p || p.querySelector('.cg-clk-row')) return;
-    var lab=document.createElement('label'); lab.className='cg-clk-row';
-    var cb=document.createElement('input'); cb.type='checkbox'; cb.checked=on();
-    cb.addEventListener('change',function(){
-      try{ localStorage.setItem(KEY, cb.checked?'1':'0'); }catch(e){}
-      apply();
-    });
-    lab.appendChild(cb); lab.appendChild(document.createTextNode('SHOW CLOCKS'));
-    p.appendChild(lab);
-  }
-  apply();
-  var n=0, iv=setInterval(function(){ if(build()||++n>60) clearInterval(iv); },400);
-  setInterval(function(){ build(); settings(); tick(); apply(); },1000);
-  tick();
 })();
 </script>
 </body>
