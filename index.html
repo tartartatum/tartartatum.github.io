@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 718;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 720;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -29869,9 +29869,16 @@ body.sc-home-mode:not([data-portable="1"]) #home-scroll > .hm-wrap{margin-top:au
   function fit(){
     try{
       if(!isTouch()) return; /* desktop keeps using the original SC-FIT */
-      if(isCompact()){ de.style.zoom=''; de.style.removeProperty('--sc-touchfill'); return; } /* compact mode owns its own layout */
+      if(isCompact()){ de.style.removeProperty('zoom'); de.style.removeProperty('--sc-touchfill'); return; } /* compact mode owns its own layout */
       var z=Math.round(Math.min(1.8,Math.max(0.5,Math.min(window.innerWidth/DESIGN_W,window.innerHeight/DESIGN_H)))*1000)/1000;
-      de.style.zoom=z;
+      /* b719: sc-b585-slotlabel-css added @media(pointer:coarse){ html{zoom:1 !important} }
+         (the July fix for the zoom-4.5 unclickable-tabs bug) which silently DEFEATED this
+         plain inline write - every iPad has rendered 1:1 with the page bottom cut off
+         since. Traced live on T's Air: inline 0.642, computed 1. A stylesheet !important
+         beats a plain inline declaration; setProperty(...,'important') beats both
+         (RULE 18). z stays clamped 0.5-1.8, so the 4.5 runaway b585 guarded against
+         cannot come back through this writer. */
+      de.style.setProperty('zoom', String(z), 'important');
       de.style.setProperty('--sc-touchfill', Math.max(1, Math.round(window.innerHeight / z))+'px');
     }catch(e){}
   }
@@ -41144,6 +41151,81 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
   window.CMDGLAS_UPDBAR_687=1;
 })();
 </script>
+
+<style id="cg-b720-updchip-css">
+/* cg-b720-updchip-css - build 720. T: "just make it one small button not an entire
+   banner across the top." The b687 bar spanned the full width at top:0 and landed on
+   the BACK / topbar / HOME row, stacking two rows of buttons in the same 40px so the
+   wrong one got pressed. Geometry only - sc-b687-updbar-css/-js are NOT edited, and
+   the .cur/.new spans stay in the DOM (hidden) so b687's bar() keeps working. */
+#cg-updbar{
+  left:auto !important; right:14px !important; top:auto !important; bottom:calc(26px + env(safe-area-inset-bottom,0px)) !important;
+  width:auto !important; max-width:none;
+  height:30px; box-sizing:border-box;
+  padding:0 9px 0 10px !important;
+  gap:7px !important;
+  border-radius:8px; border:1px solid #0a2b3f;
+  box-shadow:0 3px 10px rgba(0,0,0,.5);
+  font:800 10px/1 'Rajdhani','Segoe UI',sans-serif !important; letter-spacing:1.4px;
+  white-space:nowrap; cursor:pointer;
+}
+#cg-updbar.on{ display:inline-flex !important; }
+#cg-updbar .t{ display:none !important; }   /* the two-line banner text - gone */
+#cg-updbar .go{ display:none !important; }  /* whole chip is the Update button now */
+#cg-updbar .cgchip-dot{ width:7px; height:7px; border-radius:50%; background:#0d3a55;
+  flex:0 0 auto; box-shadow:0 0 0 3px rgba(13,58,85,.22); }
+#cg-updbar .cgchip-lbl{ flex:0 0 auto; text-transform:uppercase; }
+#cg-updbar .no{ /* "Later" -> a small dismiss x */
+  font-size:0 !important; line-height:0 !important;
+  min-height:0 !important; height:20px; padding:0 0 0 8px !important;
+  margin-left:1px; border:none !important; border-left:1px solid rgba(4,20,29,.32) !important;
+  border-radius:0 !important; background:transparent !important; opacity:.65; }
+#cg-updbar .no::after{ content:"\00D7"; font:800 13px/20px 'Rajdhani','Segoe UI',sans-serif; }
+#cg-updbar .no:hover{ opacity:1; }
+#cg-updbar:hover{ filter:brightness(1.06); }
+@media (max-width:620px){
+  #cg-updbar{ font-size:10px !important; padding:0 8px 0 9px !important; }
+}
+</style>
+<script id="cg-b720-updchip-js">
+/* cg-b720-updchip-js - build 720. Adds the dot + "UPDATE . <build>" label, makes the
+   whole chip the update button, leaves .no as the dismiss. b687 untouched. */
+(function(){
+  if(window.__cgUpdChip720) return; window.__cgUpdChip720=true;
+  var MOVE=false;
+  function deco(b){
+    if(!b || b.__cgchip) return; b.__cgchip=true;
+    var dot=document.createElement('span'); dot.className='cgchip-dot';
+    var lbl=document.createElement('span'); lbl.className='cgchip-lbl'; lbl.textContent='UPDATE';
+    b.insertBefore(lbl, b.firstChild); b.insertBefore(dot, b.firstChild);
+    b.addEventListener('click', function(ev){
+      var t=ev.target;
+      while(t && t!==b){ if(t.classList && t.classList.contains('no')) return; t=t.parentNode; }
+      var g=b.querySelector('.go'); if(g) g.click();
+    });
+    var nw=b.querySelector('.new');
+    function sync(){
+      var s=nw?String(nw.textContent||''):'';
+      var m=s.match(/(\d+)\s*$/);
+      lbl.textContent = m ? ('UPDATE \u00B7 '+m[1]) : 'UPDATE';
+    }
+    sync();
+    if(window.MutationObserver && nw){
+      try{ new MutationObserver(sync).observe(nw,{childList:true,characterData:true,subtree:true}); }catch(e){}
+    }
+    if(MOVE){
+      var host=document.getElementById('tb-flankwrap');
+      if(host) host.appendChild(b);
+    }
+  }
+  var n=0, iv=setInterval(function(){
+    var b=document.getElementById('cg-updbar');
+    if(b){ deco(b); clearInterval(iv); }
+    if(++n>240) clearInterval(iv);
+  },250);
+  window.cgUpdChipDeco=function(){ deco(document.getElementById('cg-updbar')); };
+})();
+</script>
 <style id="sc-b689-pilllock-css">
 /* sc-b689-pilllock-css  -  build 689, 3 AUG 2026.
    --cg-pilllock is written by the twin script. Until it is, this resolves to
@@ -43706,6 +43788,72 @@ html.cg-clocks-off #cg-clocks{ display:none !important; }
   var n=0, iv=setInterval(function(){ if(build()||++n>60) clearInterval(iv); },400);
   setInterval(function(){ build(); settings(); tick(); apply(); },1000);
   tick();
+})();
+</script>
+<style id="cg-fixE-labelclamp-css">
+/* cg-fixE — 5 AUG 2026. MEASURED ON T'S IPAD AIR, build 715, viewport 1180x726, zoom 1:
+   every label sat at the stylesheet value 8.7374px and NONE had been shrunk, textW 78-94
+   against a 66px cell, worst 28px over. The label SPAN is wider than its cell, so the
+   span's own overflow:hidden clips nothing - the span itself spills across the neighbour.
+   Clamp the span to the cell so it can never exceed it, and so scrollWidth vs clientWidth
+   becomes a valid overflow test for the b596 fitter. Touch only. Reversible: delete. */
+@media (pointer:coarse){
+  /* b719: iOS FONT AUTOSIZING. On T's Air (real WebKit only - headless has no autosizer,
+     which is why the sandbox render was clean) every label computed 104.188px against the
+     authored 8-17px. That is Safari's text-size-adjust boost reacting to the b389 zoomed
+     layout (1838px layout viewport). The global html{-webkit-text-size-adjust:100%} at
+     ~L1353 did not reach these labels; kill it per-element where it bites. */
+  #tab-home, #tab-home *, body{
+    -webkit-text-size-adjust:none !important;
+    text-size-adjust:none !important;
+  }
+  html #tab-home .hm-cell .hm-lab-out,
+  html #tab-home .hm-cell .hm-lab{
+    max-width:100% !important; width:100% !important;
+    overflow:hidden !important; text-overflow:clip !important;
+    box-sizing:border-box !important;
+  }
+  html #tab-home .hm-cell{ overflow:hidden !important; }
+}
+</style>
+<script id="cg-fixE-selfheal-js">
+/* cg-fixE — the fitter is never reaching these labels on the Air. Every trigger in
+   sc-b596-dock-js is anchored to page LOAD (DOMContentLoaded, a 25x800ms interval that
+   expires at 20s, resize, orientationchange) but the dock is built AFTER the start page is
+   dismissed, and something re-renders the tools row afterwards. So instead of guessing which
+   trigger is missed: watch for the defect itself and re-fit whenever it appears.
+   Cost is 10 elements every 400ms. Reversible: delete this block. */
+(function(){
+  if(window.__cgFixE) return; window.__cgFixE=1;
+  function labels(){ return document.querySelectorAll('#tab-home .hm-cell .hm-lab-out, #tab-home .hm-cell .hm-lab'); }
+  function worst(){
+    var L=labels(), w=0;
+    for(var i=0;i<L.length;i++){
+      var c=L[i].closest && L[i].closest('.hm-cell'); if(!c) continue;
+      var o=L[i].scrollWidth-c.clientWidth; if(o>w) w=o;
+    }
+    return w;
+  }
+  function fit(){ try{ if(window.cgFitLabels) window.cgFitLabels(); }catch(e){} }
+  var clean=0;
+  setInterval(function(){
+    try{
+      if(!labels().length){ clean=0; return; }
+      if(worst()>0.5){ fit(); clean=0; }
+      else if(clean<9999) clean++;
+    }catch(e){}
+  },400);
+  try{
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(fit,80); });
+    if(document.fonts && document.fonts.addEventListener)
+      document.fonts.addEventListener('loadingdone',function(){ setTimeout(fit,80); });
+  }catch(e){}
+  try{
+    new MutationObserver(function(){ clearTimeout(window.__fixEt); window.__fixEt=setTimeout(fit,150); })
+      .observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  addEventListener('pageshow',function(){ setTimeout(fit,250); });
+  window.cgFixE={worst:worst,fit:fit};
 })();
 </script>
 </body>

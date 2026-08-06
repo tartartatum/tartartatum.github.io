@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CmdGlas - returning to your tablet</title>
+<!-- auth-bounce.html - 5 AUG 2026.
+     WHY THIS FILE EXISTS: Supabase's redirect allowlist refuses private LAN addresses
+     (http://192.168.1.192:8420 was rejected in every form - probed live with the
+     error-callback trick; loopback and cmdglas.com pass). So Discord sign-in from the
+     LOCAL tablet lands here (cmdglas.com IS allowlisted), and this page forwards the
+     browser straight back to the local tablet with the sign-in tokens still in the
+     URL fragment. The fragment never reaches any server - it rides the browser only.
+     SECURITY: the targets are HARDCODED below. The ?to= key only picks from this map,
+     so this page cannot be abused as an open redirect.
+     NOTE: if the PC's LAN address ever changes from 192.168.1.192, edit the map and
+     republish. -->
+<style>body{background:#070d16;color:#dbeeff;font-family:'Segoe UI',sans-serif;
+display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+div{text-align:center}small{color:#7fa0bd}</style>
+</head>
+<body>
+<div><b>Returning to your CmdGlas tablet...</b><br><small id="m">one moment</small></div>
+<script>
+(function(){
+  var MAP={
+    lantest:'http://192.168.1.192:8420/New_SC_CMD_TabletV2.TEST.html',
+    lan:'http://192.168.1.192:8420/New_SC_CMD_TabletV2.html'
+  };
+  var to=null;
+  try{ to=new URLSearchParams(location.search).get('to'); }catch(e){}
+  var t=MAP[to];
+  if(t){ location.replace(t+location.hash); }
+  else{ document.getElementById('m').textContent='Unknown destination - open your tablet manually.'; }
+})();
+</script>
+</body>
+</html>
