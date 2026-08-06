@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 720;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 721;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -41224,6 +41224,183 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
     if(++n>240) clearInterval(iv);
   },250);
   window.cgUpdChipDeco=function(){ deco(document.getElementById('cg-updbar')); };
+})();
+</script>
+<style id="cg-b721-dcauth-css">
+/* cg-b721-dcauth-css - build 721, 5 AUG 2026. T: "build that into the local tablet ...
+   so i never deal with address bars again for the app". Diagnostic box is hidden unless
+   debug is on (add ?dcdebug=1 to the URL). */
+#cg-dcdiag{ position:fixed; left:10px; top:10px; z-index:2147483646; display:none;
+  max-width:min(560px,92vw); max-height:70vh; overflow:auto;
+  background:rgba(4,12,20,.94); border:1px solid #2f6f92; border-radius:10px;
+  padding:10px 12px; color:#cfe9ff; font:12px/1.45 'Share Tech Mono',monospace;
+  box-shadow:0 10px 30px rgba(0,0,0,.6); white-space:pre-wrap; }
+#cg-dcdiag.on{ display:block; }
+#cg-dcdiag b{ color:#7fe0ff; }
+#cg-dcdiag .ok{ color:#7fffb0; }
+#cg-dcdiag .bad{ color:#ff8b7d; }
+#cg-dcdiag .cls{ position:absolute; right:6px; top:4px; cursor:pointer; color:#7fa0bd;
+  font:800 15px/1 sans-serif; padding:4px 6px; }
+</style>
+<script id="cg-b721-dcauth-js">
+/* cg-b721-dcauth-js - build 721, 5 AUG 2026.
+   WHY: scAuthDiscord() used to navigate the WHOLE page to supabase.co -> discord.com.
+   On an iPad home-screen app that is an off-origin navigation, so iOS hands the page to
+   Safari (address bar comes back) and the sign-in lands in the wrong browser context.
+   HOW: run the provider round-trip in a child window instead; the app never navigates.
+   Three hand-back paths cover the return trip; whichever fires first wins.
+   LAN DETOUR: Supabase's allowlist refuses private LAN addresses (probed live, 5 AUG:
+   every http(s)://192.168.x form fell back to the Site URL; loopback and cmdglas.com
+   pass). So on 192.168.1.192 the redirect goes via cmdglas.com/auth-bounce.html?to=lan,
+   which forwards the tokens straight back. On any other origin the redirect is direct.
+   FACTS verified against @supabase/auth-js 2.112.1 source: skipBrowserRedirect is
+   honoured; this project's client runs the implicit flow (tokens in the URL fragment),
+   so no PKCE verifier is involved. Popup blocked -> falls back to the old full-page
+   redirect so the button is never dead. Reversible: delete this block. */
+(function(){
+  if(window.__cgDcAuth721) return; window.__cgDcAuth721=true;
+
+  var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
+  var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
+
+  function dbg(){ try{ if(/[?&]dcdebug=1/.test(location.search)) return true;
+    return localStorage.getItem('cg_dcdebug')==='1'; }catch(e){ return false; } }
+
+  var LOG=[], T0=0;
+  function box(){
+    var d=document.getElementById('cg-dcdiag');
+    if(!d){ d=document.createElement('div'); d.id='cg-dcdiag';
+      d.innerHTML='<span class="cls">&times;</span><span class="body"></span>';
+      document.body.appendChild(d);
+      d.querySelector('.cls').addEventListener('click',function(){ d.classList.remove('on'); });
+    }
+    return d;
+  }
+  function log(msg, cls){
+    try{ console.log('[cg-dcauth] '+msg); }catch(e){}
+    if(!dbg()) return;
+    var t=T0?(((Date.now()-T0)/1000).toFixed(1)):'0.0';
+    LOG.push('['+t+'s] '+(cls?'<span class="'+cls+'">'+msg+'</span>':msg));
+    var d=box(); d.classList.add('on');
+    d.querySelector('.body').innerHTML='<b>DISCORD SIGN-IN</b>\n'+LOG.join('\n');
+  }
+
+  function client(){
+    if(window.__cgSb) return window.__cgSb;
+    try{
+      if(window.supabase && window.supabase.createClient){
+        window.__cgSb=window.supabase.createClient(SB_URL,SB_KEY,
+          {auth:{persistSession:true,autoRefreshToken:false,detectSessionInUrl:false}});
+        return window.__cgSb;
+      }
+    }catch(e){ log('createClient threw: '+e,'bad'); }
+    return null;
+  }
+
+  function tokenKey(){
+    try{ for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i);
+      if(/^sb-.*-auth-token$/.test(k)) return k; } }catch(e){}
+    return null;
+  }
+
+  function parseHash(h){
+    var o={}; String(h||'').replace(/^#/,'').split('&').forEach(function(p){
+      var i=p.indexOf('='); if(i>0) o[decodeURIComponent(p.slice(0,i))]=decodeURIComponent(p.slice(i+1)); });
+    return o;
+  }
+
+  function done(){ setTimeout(function(){ try{ location.reload(); }catch(e){} },1200); }
+
+  window.scAuthDiscordPopup=function(){
+    LOG.length=0; T0=Date.now();
+    log('start. standalone='+(window.navigator.standalone===true?'YES':
+        (window.matchMedia&&matchMedia('(display-mode: standalone)').matches?'YES(dm)':'no')));
+
+    var sb=client();
+    if(!sb){ log('no client - falling back to full-page redirect','bad');
+      if(window.__cgOldDiscord) window.__cgOldDiscord(); return; }
+
+    var back;
+    if(location.hostname==='192.168.1.192'){
+      back='https://cmdglas.com/auth-bounce.html?to=lan';
+    } else {
+      back=location.href.split('#')[0].split('?')[0];
+    }
+    log('redirectTo = '+back);
+
+    var before=tokenKey();
+
+    sb.auth.signInWithOAuth({provider:'discord',options:{redirectTo:back,skipBrowserRedirect:true}})
+      .then(function(r){
+        if(r.error||!r.data||!r.data.url){ log('signInWithOAuth failed: '+(r.error&&r.error.message||'no url'),'bad'); return; }
+        var w=null;
+        try{ w=window.open(r.data.url,'cgdiscord','width=520,height=780'); }catch(e){}
+        if(!w){ log('popup blocked - falling back to full-page redirect','bad');
+          if(window.__cgOldDiscord) window.__cgOldDiscord(); return; }
+        log('child window opened');
+
+        var n=0, hit=false;
+        var iv=setInterval(function(){
+          n++;
+          /* PATH A - child landed back same-origin; read the tokens off its hash */
+          try{
+            var h=w.location.hash||'';
+            if(h.indexOf('access_token')>-1){
+              var p=parseHash(h);
+              clearInterval(iv); hit=true;
+              log('signed in (A)','ok');
+              sb.auth.setSession({access_token:p.access_token,refresh_token:p.refresh_token})
+                .then(function(rr){
+                  if(rr.error) log('setSession failed: '+rr.error.message,'bad');
+                  else done();
+                  try{ w.close(); }catch(e){}
+                });
+              return;
+            }
+          }catch(e){ /* cross-origin mid-flight - expected */ }
+
+          /* PATH B - child wrote the session to same-origin storage */
+          try{
+            var kb=w.localStorage && (function(){ for(var i=0;i<w.localStorage.length;i++){
+              var k=w.localStorage.key(i); if(/^sb-.*-auth-token$/.test(k)) return k; } return null; })();
+            if(kb){
+              clearInterval(iv); hit=true;
+              var raw=w.localStorage.getItem(kb);
+              try{ localStorage.setItem(kb, raw); }catch(e){}
+              log('signed in (B)','ok');
+              try{ w.close(); }catch(e){}
+              done();
+              return;
+            }
+          }catch(e){}
+
+          /* PATH C - the session appeared in our own storage (shared across tabs) */
+          var kc=tokenKey();
+          if(kc && kc!==before){
+            clearInterval(iv); hit=true;
+            log('signed in (C)','ok');
+            try{ w.close(); }catch(e){}
+            done();
+            return;
+          }
+
+          if(w.closed && !hit){ clearInterval(iv);
+            log('sign-in window closed without a session','bad'); return; }
+          if(n>450){ clearInterval(iv); log('sign-in timed out','bad'); }
+        },400);
+      })
+      .catch(function(e){ log('signInWithOAuth threw: '+e,'bad'); });
+  };
+
+  function grab(){
+    if(window.scAuthDiscord && window.scAuthDiscord!==window.scAuthDiscordPopup){
+      window.__cgOldDiscord=window.scAuthDiscord;
+      window.scAuthDiscord=window.scAuthDiscordPopup;
+    }
+  }
+  var g=0, gi=setInterval(function(){ grab(); if(++g>40) clearInterval(gi); },250);
+  addEventListener('load', grab);
+  window.cgDcRestore=function(){ if(window.__cgOldDiscord) window.scAuthDiscord=window.__cgOldDiscord; };
 })();
 </script>
 <style id="sc-b689-pilllock-css">
