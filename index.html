@@ -8698,7 +8698,7 @@ function __syncNav(tid){
    BUMP IT WHEN YOU SHIP, not when you edit. See #43 (pre-release checklist) and #36: SmartScreen
    reputation is per FILE HASH, so every rebuild restarts it regardless of what this string says. */
 window.CMDGLAS_VERSION='1.2';/* 30 JUL 2026 T: "change version number to v1.1. v1.2 will be the org chat implementation." 0.9.2 predated the 4.9 weapons-builder rebuild, the PDC work, the 4.9 blueprint pull and the site badge. 1.2 IS RESERVED - do not spend it on anything but org chat. */
-window.CMDGLAS_BUILD = 721;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
+window.CMDGLAS_BUILD = 725;/* 2026-07-18 user: version should climb with the work, like the CIG build number. This tracks the tablet's own iteration count - BUMP IT EACH SHIP so v0.9.1.<build> reflects what we've done. 2026-07-28: NOT BUMPING THIS COST US - three builds shipped as "553" and nobody could tell a stale cached tablet from the fresh one. The update nag (sc-b555) COMPARES this number against the published version.json, so from now on an unbumped build also means pilots are never told to refresh. BUMP IT EACH SHIP. */
 window.CMDGLAS_VERSTR=function(){return (window.CMDGLAS_VERSION||'0.9.1')+'.'+(window.CMDGLAS_BUILD||0);};
 window.CMDGLAS_BUILD_DATE='2026-07-30';
 /* === TOPBAR ACTIVE STATE (2026-07-16 user: "when the tablet lands on the homepage the home button
@@ -27213,7 +27213,7 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
     if(out){ out.addEventListener('click',function(e){ if(e.target.closest&&e.target.closest('.cg-dn-i')){ e.stopPropagation(); infoOpen=!infoOpen; paint(); } }); }
     function fmtDur(h){ var m=Math.round(h*60); return (m>=60?Math.floor(m/60)+'h ':'')+(m%60)+'m'; }
     function paint(){ if(!out) return; if(!window.CGDN){ out.innerHTML='<div class="cg-dn-note">Day-night engine not loaded.</div>'; return; }
-      if(!selOp){ out.innerHTML='<div class="cg-dn-note">Type an outpost or planet (e.g. Lorville, Shubin, Daymar) to see whether it is day or night there. 498 Stanton outposts.</div>'; return; }
+      if(!selOp){ out.innerHTML='<div class="cg-dn-note">Type an outpost or planet (e.g. Lorville, Shubin, Daymar) to see whether it is day or night there. 1,013 outposts across Stanton and Pyro.</div>'; return; }
       var st=window.CGDN.outpostStatus(selOp,Date.now()); if(!st){ out.innerHTML=''; return; }
       if(st.locked){ out.innerHTML='<div class="cg-dn-card"><div class="cg-dn-state night"><span class="cg-dn-dot"></span>'+esc(selOp.n)+'</div><div class="cg-dn-note">'+esc(st.body)+' has no rotation data in the dataset, so a day-night cycle cannot be computed for its outposts.</div></div>'; return; }
       var nx=st.next, nxLbl='—', nxTime='';
@@ -31348,6 +31348,24 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     for(var i=0;i<ops.length && out.length<40;i++){ var o=ops[i]; if(!q || o.n.toLowerCase().indexOf(q)>=0 || o.b.toLowerCase().indexOf(q)>=0) out.push(o); }
     return out; }
   window.CGDN={ data:DATA, bodies:DATA.bodies, outposts:DATA.outposts, subSolarLon:subSolarLon, elevAt:elevAt, outpostStatus:outpostStatus, nextTrans:nextTrans, search:search };
+})();
+</script>
+<script id="sc-b726-pyro-daynight-js">/* build 726 (2026-08-07) — PYRO SYSTEM day/night.
+   Source: Murphy's Navigation Tool v2.742, Nav Database tab, active DB "4.2.0-LIVE 9884616 PYR Prelim".
+   rot/adj taken verbatim from that sheet. sMer derived as mod(atan2(y,x)+90,360) from body position —
+   validated to 0.0000000 deg against the sheet's own Meridian for Vatra, Bloom and Terminus.
+   decl = 0 for every Pyro body: the Pyro star sits at exact system origin (unlike Stanton, +2,923,345 km off-plane).
+   End-to-end check: this engine reproduces Murphy's own sub-stellar Longitude to 0.000001 deg for Bloom and Terminus.
+   Fuego has rot 0 in the source, so it correctly reports "no rotation data" rather than a guessed sunrise.
+   Extends window.CGDN in place. REVERSIBLE: delete this entire block. */
+(function(){
+  if(!window.CGDN||!window.CGDN.bodies||!window.CGDN.outposts) return;
+  if(window.__cgPyro726) return; window.__cgPyro726=1;
+  var PB={"Pyro I":{"kind":"Planet","rot":2.4200001,"adj":292.46725,"sMer":286.7702368,"decl":0},"Monox":{"kind":"Planet","rot":3.1099999,"adj":88.55253,"sMer":34.7702525,"decl":0},"Bloom":{"kind":"Planet","rot":5.0300002,"adj":109.52846,"sMer":244.7708264,"decl":0},"Pyro V":{"kind":"Planet (gas giant)","rot":5.0999999,"adj":170.083,"sMer":354.7720002,"decl":0},"Ignis":{"kind":"Moon of Pyro V","rot":3.4400001,"adj":286.1031,"sMer":354.703679,"decl":0},"Vatra":{"kind":"Moon of Pyro V","rot":3.4200001,"adj":265.82951,"sMer":354.7934601,"decl":0},"Adir":{"kind":"Moon of Pyro V","rot":2.3699999,"adj":227.34091,"sMer":354.8971215,"decl":0},"Fairo":{"kind":"Moon of Pyro V","rot":5.0799999,"adj":264.48979,"sMer":354.741621,"decl":0},"Fuego":{"kind":"Moon of Pyro V","rot":0.0,"adj":184.77006,"sMer":354.95591,"decl":0},"Vuur":{"kind":"Moon of Pyro V","rot":5.1599998,"adj":40.52824,"sMer":354.5754047,"decl":0},"Pyro IV":{"kind":"Planet","rot":4.0900002,"adj":140.02846,"sMer":355.0847004,"decl":0},"Terminus":{"kind":"Planet","rot":2.8699999,"adj":36.21199,"sMer":224.7717934,"decl":0}};
+  var PO=[{"b":"Pyro I","n":"Stag's Rut","la":-14.594,"lo":164.44},{"b":"Pyro I","n":"Rustville","la":24.526,"lo":-121.543},{"b":"Pyro I","n":"Derelict Outpost 08S","la":33.711,"lo":-137.218},{"b":"Pyro I","n":"Derelict Outpost 10Q-U","la":20.638,"lo":-122.561},{"b":"Pyro I","n":"Derelict Outpost 10Q-Y","la":20.622,"lo":-120.939},{"b":"Pyro I","n":"Sand Cave 04R","la":28.217,"lo":-160.262},{"b":"Pyro I","n":"Rock Cave 08N","la":3.765,"lo":-135.65},{"b":"Pyro I","n":"Sand Cave 08R","la":31.59,"lo":-136.823},{"b":"Pyro I","n":"Rock Cave 09Q","la":21.2,"lo":-126.057},{"b":"Pyro I","n":"Sand Cave 09R","la":25.316,"lo":-129.771},{"b":"Pyro I","n":"Sand Cave 10Q-T","la":18.307,"lo":-123.098},{"b":"Pyro I","n":"Rock Cave 10Q-V","la":22.194,"lo":-122.212},{"b":"Pyro I","n":"Rock Cave 10Q-XQ1","la":23.258,"lo":-121.435},{"b":"Pyro I","n":"Sand Cave 10Q-XQ2","la":23.333,"lo":-121.08},{"b":"Pyro I","n":"Sand Cave 10R-TA","la":24.242,"lo":-123.128},{"b":"Pyro I","n":"Rock Cave 10R-TB","la":24.987,"lo":-123.121},{"b":"Pyro I","n":"Rock Cave 10R-V","la":25.162,"lo":-122.255},{"b":"Pyro I","n":"Rock Cave 10R-WA","la":24.313,"lo":-121.843},{"b":"Pyro I","n":"Rock Cave 10R-WC","la":25.225,"lo":-121.53},{"b":"Pyro I","n":"Sand Cave 10R-XA","la":24.45,"lo":-121.014},{"b":"Pyro I","n":"Sand Cave 10R-XC2","la":25.304,"lo":-121.018},{"b":"Pyro I","n":"Sand Cave 10R-XC4","la":25.125,"lo":-121.185},{"b":"Pyro I","n":"Rock Cave 10R-Z","la":24.643,"lo":-120.011},{"b":"Pyro I","n":"Rock Cave 11Q","la":17.266,"lo":-118.289},{"b":"Pyro I","n":"Sand Cave 11S","la":34.166,"lo":-116.458},{"b":"Pyro I","n":"Rock Cave 13R","la":24.056,"lo":-103.282},{"b":"Pyro I","n":"Sand Cave 14N","la":6.545,"lo":-97.409},{"b":"Pyro I","n":"Sand Cave 19G","la":-44.199,"lo":-71.614},{"b":"Pyro I","n":"Rock Cave 21N","la":1.354,"lo":-57.349},{"b":"Pyro I","n":"Rock Cave 25H","la":-33.839,"lo":-35.669},{"b":"Pyro I","n":"Rock Cave 30R","la":31.001,"lo":-2.696},{"b":"Pyro I","n":"Sand Cave 31T","la":43.441,"lo":2.694},{"b":"Pyro I","n":"Rock Cave 38J","la":-28.634,"lo":47.214},{"b":"Pyro I","n":"Sand Cave 49M","la":-0.78,"lo":108.361},{"b":"Pyro I","n":"Rock Cave 51S","la":32.161,"lo":122.08},{"b":"Pyro I","n":"Rock Cave 55R","la":27.781,"lo":148.944},{"b":"Pyro I","n":"Sand Cave 59B","la":-83.249,"lo":168.609},{"b":"Pyro I","n":"Sand Cave 59K-D","la":-20.785,"lo":169.884},{"b":"Pyro I","n":"Rock Cave 59K-E","la":-20.073,"lo":170.235},{"b":"Pyro I","n":"Sand Cave 60Q","la":20.684,"lo":174.76},{"b":"Monox","n":"Arid Reach","la":-10.088,"lo":90.695},{"b":"Monox","n":"Jackson's Swap","la":-30.903,"lo":-32.687},{"b":"Monox","n":"Last Ditch","la":73.842,"lo":-166.292},{"b":"Monox","n":"Ostler's Claim","la":-14.877,"lo":-6.096},{"b":"Monox","n":"Yang's Place","la":-25.684,"lo":-15.112},{"b":"Monox","n":"Sunset Mesa","la":-30.555,"lo":-35.119},{"b":"Monox","n":"Derelict Outpost 03X","la":72.945,"lo":-166.967},{"b":"Monox","n":"Derelict Outpost 55G","la":-41.05,"lo":149.698},{"b":"Monox","n":"Derelict Outpost 56G","la":-43.912,"lo":153.12},{"b":"Monox","n":"Derelict Outpost 60W","la":69.092,"lo":179.016},{"b":"Monox","n":"Rock Cave 01W","la":71.248,"lo":-174.507},{"b":"Monox","n":"Sand Cave 03T","la":40.648,"lo":-162.625},{"b":"Monox","n":"Fortified Cave 03X-CD","la":73.851,"lo":-166.598},{"b":"Monox","n":"Fortified Cave 03X-CE","la":74.342,"lo":-166.627},{"b":"Monox","n":"Fortified Cave 03X-D","la":74.31,"lo":-166.283},{"b":"Monox","n":"Fortified Cave 03X-EC","la":73.418,"lo":-165.943},{"b":"Monox","n":"Fortified Cave 03X-ED","la":73.902,"lo":-165.91},{"b":"Monox","n":"Rock Cave 03X-K","la":72.749,"lo":-163.411},{"b":"Monox","n":"Sand Cave 04L","la":-8.439,"lo":-160.639},{"b":"Monox","n":"Sand Cave 04W","la":71.546,"lo":-157.397},{"b":"Monox","n":"Sand Cave 05K","la":-23.467,"lo":-151.215},{"b":"Monox","n":"Rock Cave 10Q","la":17.958,"lo":-125.462},{"b":"Monox","n":"Rock Cave 14K-Y","la":-22.849,"lo":-96.645},{"b":"Monox","n":"Sand Cave 14K-Z","la":-19.885,"lo":-96.125},{"b":"Monox","n":"Rock Cave 16G","la":-43.04,"lo":-84.328},{"b":"Monox","n":"Fortified Cave 16S","la":33.883,"lo":-89.011},{"b":"Monox","n":"Rock Cave 21J-H","la":-29.832,"lo":-56.104},{"b":"Monox","n":"Sand Cave 21J-M","la":-29.415,"lo":-54.435},{"b":"Monox","n":"Sand Cave 22K","la":-17.616,"lo":-51.14},{"b":"Monox","n":"Rock Cave 24J-S","la":-28.032,"lo":-39.528},{"b":"Monox","n":"Rock Cave 24J-ZB","la":-31.497,"lo":-36.333},{"b":"Monox","n":"Sand Cave 24J-ZD","la":-30.391,"lo":-36.468},{"b":"Monox","n":"Sand Cave 25H","la":-32.221,"lo":-32.654},{"b":"Monox","n":"Rock Cave 25J-BA","la":-31.917,"lo":-35.155},{"b":"Monox","n":"Fortified Cave 25J-BC","la":-30.73,"lo":-35.108},{"b":"Monox","n":"Fortified Cave 25J-BD","la":-30.479,"lo":-35.455},{"b":"Monox","n":"Fortified Cave 25J-CC","la":-30.79,"lo":-34.691},{"b":"Monox","n":"Fortified Cave 25J-CD2","la":-30.164,"lo":-34.735},{"b":"Monox","n":"Fortified Cave 25J-CD3","la":-30.406,"lo":-34.958},{"b":"Monox","n":"Sand Cave 25J-EB2","la":-31.103,"lo":-33.737},{"b":"Monox","n":"Rock Cave 25J-EB3","la":-31.395,"lo":-33.861},{"b":"Monox","n":"Rock Cave 25J-EE","la":-29.703,"lo":-33.591},{"b":"Monox","n":"Rock Cave 25J-FB","la":-31.418,"lo":-33.182},{"b":"Monox","n":"Sand Cave 25J-FC2","la":-30.689,"lo":-33.051},{"b":"Monox","n":"Fortified Cave 25J-FC4","la":-30.956,"lo":-33.093},{"b":"Monox","n":"Rock Cave 25J-FD","la":-30.337,"lo":-33.198},{"b":"Monox","n":"Fortified Cave 25J-GB","la":-31.041,"lo":-32.634},{"b":"Monox","n":"Fortified Cave 25J-GC1","la":-30.632,"lo":-32.757},{"b":"Monox","n":"Fortified Cave 25J-GC4","la":-30.812,"lo":-32.646},{"b":"Monox","n":"Fortified Cave 25J-HB","la":-31.178,"lo":-32.324},{"b":"Monox","n":"Fortified Cave 25J-HD","la":-30.5,"lo":-32.378},{"b":"Monox","n":"Sand Cave 25J-HE","la":-29.931,"lo":-32.115},{"b":"Monox","n":"Rock Cave 25J-JA","la":-31.53,"lo":-31.866},{"b":"Monox","n":"Rock Cave 25J-JC","la":-30.788,"lo":-31.945},{"b":"Monox","n":"Sand Cave 25J-K","la":-31.092,"lo":-31.352},{"b":"Monox","n":"Rock Cave 26P","la":8.543,"lo":-24.934},{"b":"Monox","n":"Sand Cave 27J","la":-25.743,"lo":-19.443},{"b":"Monox","n":"Sand Cave 28J-SM1","la":-26.016,"lo":-15.786},{"b":"Monox","n":"Rock Cave 28J-SM4","la":-26.375,"lo":-15.626},{"b":"Monox","n":"Rock Cave 28J-SN","la":-25.872,"lo":-15.534},{"b":"Monox","n":"Rock Cave 28J-SR","la":-24.405,"lo":-15.982},{"b":"Monox","n":"Fortified Cave 28J-TM","la":-26.184,"lo":-15.182},{"b":"Monox","n":"Sand Cave 28J-TN1","la":-25.669,"lo":-15.456},{"b":"Monox","n":"Fortified Cave 28J-TN25","la":-25.588,"lo":-15.125},{"b":"Monox","n":"Fortified Cave 28J-TN29","la":-25.713,"lo":-15.008},{"b":"Monox","n":"Sand Cave 28J-TP2","la":-25.119,"lo":-15.069},{"b":"Monox","n":"Fortified Cave 28J-TP3","la":-25.318,"lo":-15.446},{"b":"Monox","n":"Rock Cave 28J-TQ","la":-24.69,"lo":-15.077},{"b":"Monox","n":"Rock Cave 28J-UL","la":-26.973,"lo":-14.601},{"b":"Monox","n":"Rock Cave 28J-UM","la":-26.365,"lo":-14.842},{"b":"Monox","n":"Sand Cave 28J-UP","la":-25.344,"lo":-14.649},{"b":"Monox","n":"Sand Cave 28J-V","la":-25.862,"lo":-14.158},{"b":"Monox","n":"Rock Cave 28J-W","la":-25.335,"lo":-13.629},{"b":"Monox","n":"Rock Cave 30L","la":-13.542,"lo":-5.298},{"b":"Monox","n":"Sand Cave 31L","la":-12.659,"lo":1.187},{"b":"Monox","n":"Sand Cave 33M","la":-0.58,"lo":14.136},{"b":"Monox","n":"Rock Cave 38M","la":-4.908,"lo":44.05},{"b":"Monox","n":"Sand Cave 44Q","la":18.553,"lo":83.823},{"b":"Monox","n":"Rock Cave 45R","la":30.633,"lo":88.758},{"b":"Monox","n":"Rock Cave 50E","la":-56.273,"lo":116.386},{"b":"Monox","n":"Sand Cave 56G","la":-40.594,"lo":153.895},{"b":"Monox","n":"Sand Cave 60W-U","la":67.933,"lo":177.322},{"b":"Monox","n":"Rock Cave 60W-W","la":70.141,"lo":178.131},{"b":"Monox","n":"mng_twr_b_final-003","la":75.215,"lo":-170.745},{"b":"Monox","n":"mng_twr_b_final-002","la":75.027,"lo":-168.007},{"b":"Monox","n":"mng_twr_b_final-004","la":71.664,"lo":-167.001},{"b":"Monox","n":"p2_col_xs_otpst_027","la":74.06,"lo":-167.984},{"b":"Monox","n":"mng_twr_b_final-001","la":72.764,"lo":-167.173},{"b":"Monox","n":"p2_col_xs_otpst_024","la":73.997,"lo":-166.031},{"b":"Monox","n":"mng_twr_b_final","la":74.384,"lo":-166.344},{"b":"Monox","n":"p2_col_xs_otpst_026","la":73.487,"lo":-165.964},{"b":"Monox","n":"p2_col_xs_otpst_025","la":73.829,"lo":-164.762},{"b":"Monox","n":"p2_col_xs_otpst_013","la":-30.96,"lo":-35.351},{"b":"Monox","n":"p2_col_xs_otpst_012","la":-30.967,"lo":-35.304},{"b":"Monox","n":"p2_col_xs_otpst_011","la":-30.768,"lo":-35.109},{"b":"Monox","n":"p2_col_xs_otpst_009","la":-30.746,"lo":-34.742},{"b":"Monox","n":"p2_col_xs_otpst_010","la":-30.825,"lo":-34.778},{"b":"Monox","n":"p2_col_xs_otpst_014","la":-30.221,"lo":-34.801},{"b":"Monox","n":"p2_col_xs_otpst_015","la":-30.213,"lo":-34.743},{"b":"Monox","n":"p2_col_xs_otpst_008","la":-30.985,"lo":-33.124},{"b":"Monox","n":"p2_col_xs_otpst_007","la":-31.385,"lo":-32.866},{"b":"Monox","n":"p2_col_xs_otpst_006","la":-31.39,"lo":-32.798},{"b":"Monox","n":"p2_col_xs_otpst_003","la":-30.615,"lo":-32.815},{"b":"Monox","n":"p2_col_xs_otpst_005","la":-31.104,"lo":-32.35},{"b":"Monox","n":"p2_col_xs_otpst_004","la":-31.157,"lo":-32.268},{"b":"Monox","n":"p2_col_xs_otpst_001","la":-30.435,"lo":-32.455},{"b":"Monox","n":"p2_col_xs_otpst_002","la":-30.48,"lo":-32.484},{"b":"Monox","n":"p2_col_xs_otpst_016","la":-25.365,"lo":-15.517},{"b":"Monox","n":"p2_col_xs_otpst_017","la":-25.46,"lo":-15.654},{"b":"Monox","n":"p2_col_xs_otpst_018","la":-25.48,"lo":-15.565},{"b":"Monox","n":"p2_col_xs_otpst_019","la":-26.059,"lo":-15.216},{"b":"Monox","n":"p2_col_xs_otpst_023","la":-25.456,"lo":-15.211},{"b":"Monox","n":"p2_col_xs_otpst_022","la":-25.484,"lo":-15.245},{"b":"Monox","n":"p2_col_xs_otpst_020","la":-25.792,"lo":-14.797},{"b":"Monox","n":"p2_col_xs_otpst_021","la":-25.852,"lo":-14.749},{"b":"Bloom","n":"Frigid Knot","la":-55.931,"lo":5.902},{"b":"Bloom","n":"The Golden Riviera","la":0.803,"lo":158.258},{"b":"Bloom","n":"Bueno Ravine","la":-7.971,"lo":-65.355},{"b":"Bloom","n":"Carver's Ridge","la":-6.665,"lo":-61.537},{"b":"Bloom","n":"Windfall","la":-1.688,"lo":-71.749},{"b":"Bloom","n":"Narena's Rest","la":-1.629,"lo":162.733},{"b":"Bloom","n":"Shadowfall","la":-7.916,"lo":102.924},{"b":"Bloom","n":"Shepherd's Rest","la":-29.231,"lo":85.326},{"b":"Bloom","n":"The Yard","la":18.606,"lo":28.773},{"b":"Bloom","n":"Derelict Outpost 10R","la":26.645,"lo":-123.769},{"b":"Bloom","n":"Derelict Outpost 20M","la":-4.316,"lo":-60.181},{"b":"Bloom","n":"Derelict Outpost 31M","la":-5.352,"lo":3.151},{"b":"Bloom","n":"Derelict Outpost 36Q","la":18.13,"lo":33.484},{"b":"Bloom","n":"Derelict Outpost 57M","la":-3.172,"lo":158.856},{"b":"Bloom","n":"Derelict Outpost 57P","la":15.937,"lo":160.775},{"b":"Bloom","n":"Rock Cave 04P","la":10.999,"lo":-158.97},{"b":"Bloom","n":"Sand Cave 09R-C","la":25.741,"lo":-130.925},{"b":"Bloom","n":"Sand Cave 09R-H","la":24.979,"lo":-128.454},{"b":"Bloom","n":"Rock Cave 11H","la":-35.726,"lo":-119.265},{"b":"Bloom","n":"Rock Cave 11R","la":29.627,"lo":-115.064},{"b":"Bloom","n":"Rock Cave 12N","la":2.297,"lo":-109.87},{"b":"Bloom","n":"Rock Cave 13N","la":6.124,"lo":-104.27},{"b":"Bloom","n":"Rock Cave 17N","la":4.217,"lo":-80.209},{"b":"Bloom","n":"Rock Cave 18K","la":-17.056,"lo":-73.026},{"b":"Bloom","n":"Sand Cave 18P","la":13.882,"lo":-76.942},{"b":"Bloom","n":"Sand Cave 19M","la":-4.071,"lo":-66.939},{"b":"Bloom","n":"Rock Cave 19N","la":4.084,"lo":-70.079},{"b":"Bloom","n":"Rock Cave 20N","la":2.967,"lo":-60.784},{"b":"Bloom","n":"Sand Cave 21M","la":-7.875,"lo":-58.107},{"b":"Bloom","n":"Sand Cave 22R","la":28.093,"lo":-50.844},{"b":"Bloom","n":"Rock Cave 23N","la":4.669,"lo":-44.925},{"b":"Bloom","n":"Rock Cave 26E","la":-56.56,"lo":-24.064},{"b":"Bloom","n":"Sand Cave 29U","la":53.202,"lo":-9.934},{"b":"Bloom","n":"Sand Cave 32H","la":-33.548,"lo":9.611},{"b":"Bloom","n":"Rock Cave 32R","la":31.916,"lo":10.179},{"b":"Bloom","n":"Sand Cave 35Q","la":16.556,"lo":27.933},{"b":"Bloom","n":"Sand Cave 39T","la":43.488,"lo":53.304},{"b":"Bloom","n":"Rock Cave 41T","la":42.204,"lo":61.695},{"b":"Bloom","n":"Sand Cave 42H","la":-32.971,"lo":69.313},{"b":"Bloom","n":"Sand Cave 44J","la":-28.754,"lo":83.574},{"b":"Bloom","n":"Sand Cave 44N","la":6.995,"lo":83.961},{"b":"Bloom","n":"Sand Cave 45J-A","la":-29.571,"lo":84.065},{"b":"Bloom","n":"Rock Cave 45J-BC","la":-30.658,"lo":84.672},{"b":"Bloom","n":"Fortified Cave 45J-BF","la":-29.325,"lo":84.75},{"b":"Bloom","n":"Sand Cave 45J-BG2","la":-28.666,"lo":84.789},{"b":"Bloom","n":"Rock Cave 45J-BG4","la":-28.966,"lo":84.77},{"b":"Bloom","n":"Rock Cave 45J-BH","la":-28.103,"lo":84.946},{"b":"Bloom","n":"Fortified Cave 45J-CF","la":-29.253,"lo":85.137},{"b":"Bloom","n":"Fortified Cave 45J-CG1","la":-28.643,"lo":85.232},{"b":"Bloom","n":"Sand Cave 45J-CG3","la":-28.928,"lo":85.072},{"b":"Bloom","n":"Rock Cave 45J-DD","la":-30.036,"lo":85.567},{"b":"Bloom","n":"Fortified Cave 45J-DF","la":-29.309,"lo":85.831},{"b":"Bloom","n":"Rock Cave 45J-FE","la":-29.614,"lo":86.518},{"b":"Bloom","n":"Sand Cave 45J-FG","la":-28.72,"lo":86.659},{"b":"Bloom","n":"Rock Cave 47L","la":-8.016,"lo":101.616},{"b":"Bloom","n":"Sand Cave 47M","la":-6.71,"lo":100.639},{"b":"Bloom","n":"Fortified Cave 48L-P","la":-8.377,"lo":102.588},{"b":"Bloom","n":"Fortified Cave 48L-Q","la":-8.367,"lo":103.211},{"b":"Bloom","n":"Fortified Cave 48M-PA","la":-7.725,"lo":102.751},{"b":"Bloom","n":"Fortified Cave 48M-PB","la":-7.389,"lo":102.992},{"b":"Bloom","n":"Fortified Cave 48M-QA","la":-7.906,"lo":103.134},{"b":"Bloom","n":"Fortified Cave 48M-QB","la":-7.444,"lo":103.345},{"b":"Bloom","n":"Rock Cave 48N","la":5.712,"lo":104.3},{"b":"Bloom","n":"Sand Cave 49G","la":-42.991,"lo":113.983},{"b":"Bloom","n":"Rock Cave 53N","la":1.848,"lo":133.671},{"b":"Bloom","n":"Rock Cave 56L","la":-11.329,"lo":153.642},{"b":"Bloom","n":"Rock Cave 57L","la":-10.491,"lo":159.378},{"b":"Bloom","n":"Sand Cave 57M-B","la":-0.259,"lo":156.887},{"b":"Bloom","n":"Rock Cave 57M-C","la":-0.692,"lo":157.468},{"b":"Bloom","n":"Rock Cave 57M-E","la":-0.072,"lo":158.249},{"b":"Bloom","n":"Sand Cave 57M-K","la":-4.757,"lo":160.821},{"b":"Bloom","n":"Rock Cave 57N-C","la":0.742,"lo":157.315},{"b":"Bloom","n":"Rock Cave 57N-DA","la":0.37,"lo":157.589},{"b":"Bloom","n":"Sand Cave 57N-DB","la":0.706,"lo":157.941},{"b":"Bloom","n":"Rock Cave 57N-DP","la":6.569,"lo":157.557},{"b":"Bloom","n":"Sand Cave 57N-E","la":1.093,"lo":158.285},{"b":"Bloom","n":"Sand Cave 57N-F","la":0.336,"lo":158.837},{"b":"Bloom","n":"Rock Cave 57N-GB","la":0.542,"lo":159.395},{"b":"Bloom","n":"Sand Cave 57N-GD","la":1.56,"lo":159.039},{"b":"Bloom","n":"Sand Cave 57N-H","la":1.115,"lo":159.788},{"b":"Bloom","n":"Sand Cave 58L","la":-8.448,"lo":166.522},{"b":"Bloom","n":"Rock Cave 59J","la":-27.934,"lo":171.069},{"b":"Bloom","n":"Sand Cave 59P","la":15.021,"lo":173.961},{"b":"Bloom","n":"p3_col_xs_otpst_006","la":-29.446,"lo":84.621},{"b":"Bloom","n":"p3_col_xs_otpst_007","la":-29.466,"lo":84.719},{"b":"Bloom","n":"p3_col_xs_otpst_001","la":-29.527,"lo":85.299},{"b":"Bloom","n":"p3_col_xs_otpst_004","la":-28.655,"lo":85.392},{"b":"Bloom","n":"p3_col_xs_otpst_005","la":-28.605,"lo":85.453},{"b":"Bloom","n":"p3_col_xs_otpst_002","la":-29.395,"lo":85.78},{"b":"Bloom","n":"p3_col_xs_otpst_003","la":-29.373,"lo":85.966},{"b":"Bloom","n":"p3_col_xs_otpst_013","la":-8.239,"lo":102.584},{"b":"Bloom","n":"p3_col_xs_otpst_014","la":-8.259,"lo":102.51},{"b":"Bloom","n":"p3_col_xs_otpst_009","la":-7.716,"lo":102.597},{"b":"Bloom","n":"p3_col_xs_otpst_008","la":-7.742,"lo":102.652},{"b":"Bloom","n":"p3_col_xs_otpst_011","la":-7.529,"lo":103.26},{"b":"Bloom","n":"p3_col_xs_otpst_012","la":-7.876,"lo":103.231},{"b":"Bloom","n":"p3_col_xs_otpst_010","la":-7.426,"lo":103.079},{"b":"Ignis","n":"Ashland","la":42.138,"lo":-175.004},{"b":"Ignis","n":"Kabir's Post","la":15.926,"lo":114.122},{"b":"Ignis","n":"Derelict Outpost 02S","la":35.345,"lo":-169.948},{"b":"Ignis","n":"Rock Cave 01M","la":-3.269,"lo":-179.315},{"b":"Ignis","n":"Sand Cave 01Q-B","la":20.822,"lo":-179.41},{"b":"Ignis","n":"Rock Cave 01Q-K","la":23.351,"lo":-175.283},{"b":"Ignis","n":"Sand Cave 01S","la":36.857,"lo":-179.826},{"b":"Ignis","n":"Rock Cave 01T","la":40.643,"lo":-177.465},{"b":"Ignis","n":"Rock Cave 03S-A","la":35.46,"lo":-167.721},{"b":"Ignis","n":"Rock Cave 03S-C","la":38.764,"lo":-166.881},{"b":"Ignis","n":"Sand Cave 04N","la":0.275,"lo":-161.803},{"b":"Ignis","n":"Sand Cave 07F","la":-51.016,"lo":-138.087},{"b":"Ignis","n":"Sand Cave 07L","la":-8.1,"lo":-140.539},{"b":"Ignis","n":"Sand Cave 07Q","la":18.489,"lo":-139.49},{"b":"Ignis","n":"Rock Cave 08P","la":15.24,"lo":-135.808},{"b":"Ignis","n":"Sand Cave 08S","la":39.325,"lo":-137.519},{"b":"Ignis","n":"Sand Cave 12J","la":-24.486,"lo":-108.047},{"b":"Ignis","n":"Sand Cave 13Q","la":22.839,"lo":-105.729},{"b":"Ignis","n":"Rock Cave 28Q","la":21.506,"lo":-17.87},{"b":"Ignis","n":"Sand Cave 32L","la":-8.016,"lo":9.767},{"b":"Ignis","n":"Rock Cave 37L","la":-15.233,"lo":39.863},{"b":"Ignis","n":"Sand Cave 41R","la":26.262,"lo":62.169},{"b":"Ignis","n":"Rock Cave 43P","la":10.12,"lo":73.709},{"b":"Ignis","n":"Rock Cave 44J","la":-25.511,"lo":80.45},{"b":"Ignis","n":"Rock Cave 52H","la":-39.745,"lo":129.359},{"b":"Ignis","n":"Rock Cave 53K","la":-23.209,"lo":134.529},{"b":"Ignis","n":"Sand Cave 55T-D","la":42.058,"lo":145.915},{"b":"Ignis","n":"Rock Cave 55T-H","la":42.635,"lo":147.596},{"b":"Ignis","n":"Sand Cave 56R","la":31.585,"lo":153.538},{"b":"Ignis","n":"Sand Cave 56T","la":45.308,"lo":155.805},{"b":"Ignis","n":"Rock Cave 58U","la":49.861,"lo":164.483},{"b":"Ignis","n":"Sand Cave 58V","la":59.574,"lo":164.247},{"b":"Ignis","n":"Sand Cave 59T","la":46.685,"lo":170.055},{"b":"Ignis","n":"Sand Cave 60T","la":43.352,"lo":179.723},{"b":"Ignis","n":"Rock Cave 60U","la":48.902,"lo":174.713},{"b":"Vatra","n":"Seer's Canyon","la":-18.994,"lo":76.013},{"b":"Vatra","n":"Derelict Outpost 43K","la":-18.228,"lo":76.122},{"b":"Vatra","n":"Sand Cave 12M","la":-3.139,"lo":-111.659},{"b":"Vatra","n":"Rock Cave 13N","la":2.261,"lo":-105.432},{"b":"Vatra","n":"Sand Cave 16K","la":-18.334,"lo":-87.63},{"b":"Vatra","n":"Sand Cave 24R","la":24.611,"lo":-40.354},{"b":"Vatra","n":"Sand Cave 28E","la":-62.463,"lo":-15.381},{"b":"Vatra","n":"Sand Cave 28P","la":10.472,"lo":-15.963},{"b":"Vatra","n":"Sand Cave 33N","la":2.749,"lo":13.956},{"b":"Vatra","n":"Sand Cave 36H","la":-39.812,"lo":30.584},{"b":"Vatra","n":"Rock Cave 39L","la":-13.449,"lo":49.547},{"b":"Vatra","n":"Rock Cave 41J","la":-25.809,"lo":65.002},{"b":"Vatra","n":"Sand Cave 41K","la":-22.887,"lo":64.307},{"b":"Vatra","n":"Sand Cave 41L-B","la":-11.601,"lo":60.581},{"b":"Vatra","n":"Rock Cave 41L-G","la":-9.037,"lo":63.213},{"b":"Vatra","n":"Rock Cave 41L-L","la":-14.844,"lo":65.376},{"b":"Vatra","n":"Sand Cave 42J","la":-25.47,"lo":69.29},{"b":"Vatra","n":"Rock Cave 43K-A","la":-22.129,"lo":72.465},{"b":"Vatra","n":"Rock Cave 43K-K","la":-17.059,"lo":76.683},{"b":"Vatra","n":"Rock Cave 44Q","la":21.113,"lo":83.751},{"b":"Vatra","n":"Rock Cave 56U","la":53.639,"lo":152.48},{"b":"Vatra","n":"Rock Cave 59M","la":-2.397,"lo":171.508},{"b":"Adir","n":"Prophet's Peak","la":20.966,"lo":-125.456},{"b":"Adir","n":"Derelict Outpost 12R","la":25.139,"lo":-111.507},{"b":"Adir","n":"Rock Cave 05T","la":45.904,"lo":-153.756},{"b":"Adir","n":"Rock Cave 06G","la":-41.493,"lo":-145.762},{"b":"Adir","n":"Rock Cave 06H","la":-38.252,"lo":-144.106},{"b":"Adir","n":"Rock Cave 07V","la":58.323,"lo":-140.002},{"b":"Adir","n":"Rock Cave 08R","la":25.258,"lo":-136.763},{"b":"Adir","n":"Rock Cave 08S","la":32.181,"lo":-132.457},{"b":"Adir","n":"Rock Cave 09Q","la":21.733,"lo":-130.577},{"b":"Adir","n":"Rock Cave 09R","la":24.369,"lo":-127.309},{"b":"Adir","n":"Rock Cave 11R-H","la":29.313,"lo":-116.066},{"b":"Adir","n":"Rock Cave 11R-K","la":24.251,"lo":-115.159},{"b":"Adir","n":"Rock Cave 12R","la":26.828,"lo":-110.038},{"b":"Adir","n":"Rock Cave 13Q","la":21.81,"lo":-106.009},{"b":"Adir","n":"Rock Cave 16T","la":47.059,"lo":-87.859},{"b":"Adir","n":"Rock Cave 18F","la":-55.026,"lo":-73.792},{"b":"Adir","n":"Rock Cave 21C","la":-74.519,"lo":-54.236},{"b":"Adir","n":"Rock Cave 21J","la":-28.136,"lo":-58.277},{"b":"Adir","n":"Rock Cave 21K","la":-23.893,"lo":-57.223},{"b":"Adir","n":"Rock Cave 22M","la":-6.524,"lo":-53.78},{"b":"Adir","n":"Rock Cave 22T","la":40.542,"lo":-49.004},{"b":"Adir","n":"Rock Cave 24T","la":44.862,"lo":-37.635},{"b":"Adir","n":"Rock Cave 26G","la":-44.32,"lo":-26.898},{"b":"Adir","n":"Rock Cave 36P","la":11.121,"lo":31.484},{"b":"Adir","n":"Rock Cave 36Q","la":20.876,"lo":35.597},{"b":"Adir","n":"Rock Cave 44Q","la":17.169,"lo":78.602},{"b":"Adir","n":"Rock Cave 45N-H","la":4.399,"lo":87.551},{"b":"Adir","n":"Rock Cave 45N-M","la":5.003,"lo":89.951},{"b":"Adir","n":"Rock Cave 46J","la":-25.352,"lo":95.445},{"b":"Adir","n":"Rock Cave 52J","la":-29.424,"lo":126.71},{"b":"Adir","n":"Rock Cave 58K","la":-22.404,"lo":163.163},{"b":"Adir","n":"Rock Cave 59K","la":-21.233,"lo":171.568},{"b":"Fairo","n":"Derelict Outpost 08P","la":10.882,"lo":-135.697},{"b":"Fairo","n":"Rock Cave 02G","la":-47.612,"lo":-170.679},{"b":"Fairo","n":"Sand Cave 04N","la":2.253,"lo":-157.984},{"b":"Fairo","n":"Sand Cave 07N","la":5.082,"lo":-138.907},{"b":"Fairo","n":"Sand Cave 08P","la":8.073,"lo":-135.319},{"b":"Fairo","n":"Rock Cave 08Q","la":20.725,"lo":-132.354},{"b":"Fairo","n":"Rock Cave 09M","la":-5.295,"lo":-129.284},{"b":"Fairo","n":"Rock Cave 09P","la":12.715,"lo":-130.943},{"b":"Fairo","n":"Sand Cave 10H","la":-37.241,"lo":-123.362},{"b":"Fairo","n":"Rock Cave 18Q","la":21.134,"lo":-77.826},{"b":"Fairo","n":"Sand Cave 23K","la":-18.005,"lo":-47.236},{"b":"Fairo","n":"Sand Cave 24L","la":-13.266,"lo":-36.284},{"b":"Fairo","n":"Rock Cave 27M","la":-5.336,"lo":-21.988},{"b":"Fairo","n":"Sand Cave 27R","la":31.874,"lo":-23.383},{"b":"Fairo","n":"Rock Cave 36H","la":-39.504,"lo":31.761},{"b":"Fairo","n":"Rock Cave 50N","la":3.537,"lo":118.964},{"b":"Fuego","n":"Derelict Outpost 60F","la":-53.728,"lo":175.77},{"b":"Fuego","n":"Sand Cave 03E","la":-59.894,"lo":-164.916},{"b":"Fuego","n":"Sand Cave 20P","la":12.027,"lo":-63.251},{"b":"Fuego","n":"Rock Cave 22K","la":-22.156,"lo":-48.65},{"b":"Fuego","n":"Rock Cave 22M","la":-0.266,"lo":-52.222},{"b":"Fuego","n":"Rock Cave 29K-F","la":-22.589,"lo":-9.109},{"b":"Fuego","n":"Rock Cave 29K-H","la":-22.527,"lo":-8.013},{"b":"Fuego","n":"Rock Cave 29K-J","la":-20.951,"lo":-7.671},{"b":"Fuego","n":"Sand Cave 29K-M","la":-22.155,"lo":-6.136},{"b":"Fuego","n":"Rock Cave 33L","la":-12.862,"lo":13.42},{"b":"Fuego","n":"Rock Cave 47P","la":9.345,"lo":100.545},{"b":"Fuego","n":"Sand Cave 53K","la":-22.762,"lo":134.156},{"b":"Fuego","n":"Sand Cave 56H","la":-35.361,"lo":151.037},{"b":"Fuego","n":"Sand Cave 59F","la":-49.661,"lo":171.846},{"b":"Fuego","n":"Sand Cave 59G","la":-47.707,"lo":172.633},{"b":"Fuego","n":"Sand Cave 60F","la":-55.965,"lo":178.768},{"b":"Vuur","n":"Derelict Outpost 15Q","la":17.436,"lo":-92.739},{"b":"Vuur","n":"Sand Cave 02X","la":77.846,"lo":-169.764},{"b":"Vuur","n":"Acidic Cave 03J","la":-27.322,"lo":-163.451},{"b":"Vuur","n":"Rock Cave 09P","la":10.259,"lo":-131.013},{"b":"Vuur","n":"Acidic Cave 15Q-A","la":21.967,"lo":-95.629},{"b":"Vuur","n":"Acidic Cave 15Q-G","la":19.103,"lo":-92.936},{"b":"Vuur","n":"Rock Cave 15Q-KE","la":18.27,"lo":-91.462},{"b":"Vuur","n":"Sand Cave 15Q-KN","la":22.046,"lo":-91.118},{"b":"Vuur","n":"Acidic Cave 16Q","la":19.109,"lo":-89.907},{"b":"Vuur","n":"Acidic Cave 17P-J","la":13.142,"lo":-79.576},{"b":"Vuur","n":"Rock Cave 17P-K","la":12.324,"lo":-79.188},{"b":"Vuur","n":"Sand Cave 17P-M","la":13.229,"lo":-78.292},{"b":"Vuur","n":"Sand Cave 17Q","la":22.91,"lo":-81.296},{"b":"Vuur","n":"Rock Cave 17R","la":25.246,"lo":-78.707},{"b":"Vuur","n":"Acidic Cave 18P-R","la":13.51,"lo":-76.026},{"b":"Vuur","n":"Rock Cave 18P-V","la":14.888,"lo":-74.241},{"b":"Vuur","n":"Sand Cave 18Q","la":16.963,"lo":-73.214},{"b":"Vuur","n":"Acidic Cave 19Q","la":16.855,"lo":-67.757},{"b":"Vuur","n":"Acidic Cave 40Q","la":17.066,"lo":54.218},{"b":"Vuur","n":"Acidic Cave 41K","la":-19.534,"lo":63.013},{"b":"Vuur","n":"Acidic Cave 41Q","la":20.933,"lo":62.105},{"b":"Vuur","n":"Sand Cave 44L","la":-8.989,"lo":78.08},{"b":"Vuur","n":"Rock Cave 45U","la":53.534,"lo":89.819},{"b":"Vuur","n":"Sand Cave 47Q","la":17.013,"lo":97.075},{"b":"Vuur","n":"Acidic Cave 48J-SK13","la":-27.009,"lo":104.238},{"b":"Vuur","n":"Acidic Cave 48J-SK18","la":-27.196,"lo":104.137},{"b":"Vuur","n":"Acidic Cave 48J-U","la":-27.161,"lo":105.394},{"b":"Vuur","n":"Acidic Cave 51L","la":-11.148,"lo":121.416},{"b":"Vuur","n":"Sand Cave 52L","la":-10.43,"lo":130.799},{"b":"Vuur","n":"Rock Cave 52U","la":55.883,"lo":127.046},{"b":"Vuur","n":"Rock Cave 53M","la":-1.633,"lo":132.789},{"b":"Vuur","n":"Acidic Cave 56K","la":-20.932,"lo":150.603},{"b":"Pyro IV","n":"Fallow Field","la":54.179,"lo":-68.84},{"b":"Pyro IV","n":"Goner's Deal","la":55.169,"lo":-55.416},{"b":"Pyro IV","n":"Sacren's Plot","la":37.261,"lo":-157.538},{"b":"Pyro IV","n":"Chawla's Beach","la":36.106,"lo":-160.691},{"b":"Pyro IV","n":"Derelict Outpost 13M","la":-1.567,"lo":-105.724},{"b":"Pyro IV","n":"Derelict Outpost 19K","la":-17.488,"lo":-66.234},{"b":"Pyro IV","n":"Derelict Outpost 19V","la":56.095,"lo":-71.742},{"b":"Pyro IV","n":"Derelict Outpost 21U","la":52.846,"lo":-58.713},{"b":"Pyro IV","n":"Derelict Outpost 41U","la":55.217,"lo":62.311},{"b":"Pyro IV","n":"Derelict Outpost 49M","la":-3.303,"lo":112.853},{"b":"Pyro IV","n":"Sand Cave 03S","la":36.621,"lo":-162.407},{"b":"Pyro IV","n":"Fortified Cave 04S-NH","la":35.749,"lo":-161.592},{"b":"Pyro IV","n":"Rock Cave 04S-NJ","la":36.476,"lo":-161.912},{"b":"Pyro IV","n":"Fortified Cave 04S-PJ2","la":36.392,"lo":-161.04},{"b":"Pyro IV","n":"Fortified Cave 04S-PJ4","la":36.147,"lo":-161.044},{"b":"Pyro IV","n":"Fortified Cave 04S-PK","la":36.564,"lo":-161.302},{"b":"Pyro IV","n":"Sand Cave 04S-PL","la":37.251,"lo":-161.232},{"b":"Pyro IV","n":"Sand Cave 04S-Q","la":36.752,"lo":-160.554},{"b":"Pyro IV","n":"Fortified Cave 04S-R","la":36.521,"lo":-160.22},{"b":"Pyro IV","n":"Rock Cave 04S-S","la":36.381,"lo":-159.973},{"b":"Pyro IV","n":"Rock Cave 04S-T","la":37.083,"lo":-159.211},{"b":"Pyro IV","n":"p4_col_xs_otpst_007","la":35.894,"lo":-161.624},{"b":"Pyro IV","n":"p4_col_xs_otpst_008","la":35.896,"lo":-161.381},{"b":"Pyro IV","n":"p4_col_xs_otpst_009","la":36.131,"lo":-161.16},{"b":"Pyro IV","n":"p4_col_xs_otpst_001","la":36.701,"lo":-161.16},{"b":"Pyro IV","n":"p4_col_xs_otpst_006","la":36.332,"lo":-160.919},{"b":"Pyro IV","n":"p4_col_xs_otpst_005","la":36.158,"lo":-160.61},{"b":"Pyro IV","n":"p4_col_xs_otpst_003","la":36.744,"lo":-160.108},{"b":"Pyro IV","n":"p4_col_xs_otpst_002","la":36.63,"lo":-160.101},{"b":"Pyro IV","n":"p4_col_xs_otpst_004","la":36.658,"lo":-159.894},{"b":"Terminus","n":"Blackrock Exchange","la":-6.3,"lo":137.964},{"b":"Terminus","n":"Canard View","la":-20.814,"lo":138.147},{"b":"Terminus","n":"Rough Landing","la":15.876,"lo":-136.481},{"b":"Terminus","n":"Last Landings","la":-1.579,"lo":-177.445},{"b":"Terminus","n":"Stonetree","la":-23.856,"lo":171.627},{"b":"Terminus","n":"Bullock's Reach","la":-19.024,"lo":2.001},{"b":"Terminus","n":"Kinder Plots","la":-23.798,"lo":168.577},{"b":"Terminus","n":"Scarper's Turn","la":0.05,"lo":172.074},{"b":"Terminus","n":"Derelict Outpost 53K","la":-16.957,"lo":136.843},{"b":"Terminus","n":"Derelict Outpost 54K","la":-18.175,"lo":138.693},{"b":"Terminus","n":"Derelict Outpost 56L","la":-10.328,"lo":154.242},{"b":"Terminus","n":"Derelict Outpost 57M","la":-6.621,"lo":156.92},{"b":"Terminus","n":"Rock Cave 01M-B","la":-0.969,"lo":-179.337},{"b":"Terminus","n":"Rock Cave 01M-CM","la":-2.061,"lo":-178.504},{"b":"Terminus","n":"Sand Cave 01M-CP","la":-1.141,"lo":-178.689},{"b":"Terminus","n":"Fortified Cave 01M-D","la":-1.439,"lo":-178.215},{"b":"Terminus","n":"Sand Cave 01M-E","la":-1.928,"lo":-177.807},{"b":"Terminus","n":"Fortified Cave 01M-FN","la":-1.949,"lo":-177.395},{"b":"Terminus","n":"Fortified Cave 01M-FP","la":-1.445,"lo":-177.185},{"b":"Terminus","n":"Fortified Cave 01M-FQ","la":-0.705,"lo":-177.377},{"b":"Terminus","n":"Rock Cave 01M-GM","la":-2.485,"lo":-176.844},{"b":"Terminus","n":"Rock Cave 01M-GP","la":-1.046,"lo":-176.627},{"b":"Terminus","n":"Sand Cave 01M-HM","la":-2.064,"lo":-176.272},{"b":"Terminus","n":"Rock Cave 01M-HP","la":-1.486,"lo":-176.495},{"b":"Terminus","n":"Sand Cave 01M-K","la":-2.132,"lo":-175.208},{"b":"Terminus","n":"Rock Cave 01N","la":0.471,"lo":-178.368},{"b":"Terminus","n":"Rock Cave 03M","la":-6.347,"lo":-162.464},{"b":"Terminus","n":"Rock Cave 03P","la":10.337,"lo":-167.174},{"b":"Terminus","n":"Rock Cave 04L","la":-15.51,"lo":-156.81},{"b":"Terminus","n":"Rock Cave 05M","la":-0.139,"lo":-152.709},{"b":"Terminus","n":"Rock Cave 06M","la":-4.804,"lo":-146.187},{"b":"Terminus","n":"Rock Cave 06P","la":11.071,"lo":-146.653},{"b":"Terminus","n":"Rock Cave 08Q","la":16.321,"lo":-133.476},{"b":"Terminus","n":"Rock Cave 09G","la":-46.073,"lo":-129.191},{"b":"Terminus","n":"Rock Cave 09Q","la":20.486,"lo":-128.395},{"b":"Terminus","n":"Rock Cave 14R","la":26.935,"lo":-101.998},{"b":"Terminus","n":"Rock Cave 17K","la":-20.816,"lo":-79.652},{"b":"Terminus","n":"Rock Cave 23S","la":36.097,"lo":-45.083},{"b":"Terminus","n":"Rock Cave 25U","la":49.056,"lo":-35.939},{"b":"Terminus","n":"Rock Cave 31G","la":-43.362,"lo":3.899},{"b":"Terminus","n":"Rock Cave 32M","la":-0.304,"lo":6.713},{"b":"Terminus","n":"Rock Cave 32Q","la":18.289,"lo":8.455},{"b":"Terminus","n":"Rock Cave 35K","la":-23.794,"lo":24.134},{"b":"Terminus","n":"Rock Cave 44T","la":44.421,"lo":81.758},{"b":"Terminus","n":"Rock Cave 49P","la":12.556,"lo":112.285},{"b":"Terminus","n":"Rock Cave 52M","la":-1.625,"lo":126.015},{"b":"Terminus","n":"Rock Cave 53H","la":-39.147,"lo":135.791},{"b":"Terminus","n":"Rock Cave 53K","la":-20.575,"lo":136.126},{"b":"Terminus","n":"Rock Cave 53M","la":-7.689,"lo":134.636},{"b":"Terminus","n":"Rock Cave 54K","la":-19.539,"lo":142.8},{"b":"Terminus","n":"Rock Cave 54L","la":-11.268,"lo":139.766},{"b":"Terminus","n":"Rock Cave 54M","la":-2.296,"lo":143.019},{"b":"Terminus","n":"Rock Cave 55L","la":-9.134,"lo":149.113},{"b":"Terminus","n":"Rock Cave 55M","la":-2.998,"lo":147.031},{"b":"Terminus","n":"Rock Cave 55N","la":3.531,"lo":145.855},{"b":"Terminus","n":"Rock Cave 55P","la":14.837,"lo":145.337},{"b":"Terminus","n":"Rock Cave 56N","la":7.455,"lo":155.373},{"b":"Terminus","n":"Rock Cave 56P","la":12.411,"lo":151.92},{"b":"Terminus","n":"Rock Cave 57L","la":-9.356,"lo":156.702},{"b":"Terminus","n":"Rock Cave 58M","la":-3.05,"lo":165.175},{"b":"Terminus","n":"Fortified Cave 59J-F","la":-24.182,"lo":170.868},{"b":"Terminus","n":"Fortified Cave 59J-H","la":-24.349,"lo":171.602},{"b":"Terminus","n":"Fortified Cave 59J-J","la":-24.293,"lo":172.391},{"b":"Terminus","n":"Fortified Cave 59K-F","la":-23.405,"lo":170.834},{"b":"Terminus","n":"Fortified Cave 59K-H","la":-23.65,"lo":171.81},{"b":"Terminus","n":"Rock Cave 59M","la":-5.47,"lo":172.337},{"b":"Terminus","n":"Rock Cave 59N","la":2.605,"lo":173.968},{"b":"Terminus","n":"Rock Cave 60M-U","la":-2.193,"lo":177.14},{"b":"Terminus","n":"Sand Cave 60M-Z","la":-2.475,"lo":179.897},{"b":"Terminus","n":"p6_col_xs_otpst_001","la":-1.547,"lo":-178.225},{"b":"Terminus","n":"p6_col_xs_otpst_003","la":-1.361,"lo":-178.236},{"b":"Terminus","n":"p6_col_xs_otpst_002","la":-1.489,"lo":-178.145},{"b":"Terminus","n":"p6_col_xs_otpst_006","la":-2.026,"lo":-177.004},{"b":"Terminus","n":"p6_col_xs_otpst_007","la":-1.499,"lo":-177.144},{"b":"Terminus","n":"p6_col_xs_otpst_004","la":-0.732,"lo":-177.466},{"b":"Terminus","n":"p6_col_xs_otpst_005","la":-1.925,"lo":-176.836},{"b":"Terminus","n":"p6_col_xs_otpst_010","la":-24.302,"lo":171.686},{"b":"Terminus","n":"p6_col_xs_otpst_009","la":-24.049,"lo":172.322},{"b":"Terminus","n":"p6_col_xs_otpst_008","la":-24.113,"lo":172.476},{"b":"Terminus","n":"p6_col_xs_otpst_011","la":-23.457,"lo":170.959}];
+  for(var k in PB){ if(!window.CGDN.bodies[k]) window.CGDN.bodies[k]=PB[k]; }
+  var have={}; for(var i=0;i<window.CGDN.outposts.length;i++){ var o=window.CGDN.outposts[i]; have[o.b+"|"+String(o.n).toLowerCase()]=1; }
+  for(var j=0;j<PO.length;j++){ var p=PO[j]; if(!have[p.b+"|"+String(p.n).toLowerCase()]) window.CGDN.outposts.push(p); }
 })();
 </script>
 <style id="sc-b445-crimestat-css">/* 2026-07-24 build 445 (user: account pill — CrimeStat badge + gamer-picture placeholder side by side, equal size; SIGN IN moved to the bottom above UNDOCK. CrimeStat morphs slowly through the level series 0(clean)->1->2->3->4 with matching glow colour, as a preview until CIG Link is wired. Reversible: delete this block + its script and revert setupLogin. */
@@ -41401,6 +41419,226 @@ html body #tab-home #home-scroll{ overflow-y:hidden !important; }
   var g=0, gi=setInterval(function(){ grab(); if(++g>40) clearInterval(gi); },250);
   addEventListener('load', grab);
   window.cgDcRestore=function(){ if(window.__cgOldDiscord) window.scAuthDiscord=window.__cgOldDiscord; };
+})();
+</script>
+<style id="cg-b722-hudmax-css">
+/* cg-b722-hudmax-css - build 722, 5 AUG 2026. T: "double tap one of the 6 top pills and
+   maximizes it ... double tap again closes it ... use the interior of the larger pill as
+   if it was still docked". The REAL HUD pill is pinned fullscreen over a dim backdrop -
+   same DOM node, so every control inside keeps working exactly as docked.
+   Insets are PX on purpose: the iPad runs under html zoom (b389), where vw/vh units end
+   up scaled to ~64% of the screen - inset pinning is zoom-proof.
+   touch-action:manipulation on the tabs removes iOS's double-tap-zoom gesture AND its
+   ~350ms click delay, so double-taps are cleanly detectable.
+   Specificity: body.cg-hudmax + id + 2 classes out-ranks b689's pilllock max-height. */
+#sc-home-widgets .wg.ops-pill.b385 .ops4-tab{ touch-action:manipulation; }
+body.cg-hudmax #sc-home-widgets .wg.ops-pill.b385{
+  position:fixed !important; left:12px !important; right:12px !important;
+  top:12px !important; bottom:26px !important;
+  width:auto !important; height:auto !important;
+  max-height:none !important; min-height:0 !important; margin:0 !important;
+  z-index:2147482900 !important;
+  display:flex !important; flex-direction:column !important;
+  box-shadow:0 24px 70px rgba(0,0,0,.78),0 0 42px rgba(80,190,255,.22);
+}
+body.cg-hudmax #sc-home-widgets .wg.ops-pill.b385 .pill-body{
+  flex:1 1 auto !important; min-height:0 !important; max-height:none !important;
+  display:flex !important; flex-direction:column !important;
+}
+body.cg-hudmax #sc-home-widgets .wg.ops-pill.b385 .ops4-body{
+  flex:1 1 auto !important; min-height:0 !important; overflow:auto !important;
+}
+#cg-hudmax-back{ display:none; position:fixed; inset:0; z-index:2147482890;
+  background:rgba(3,7,11,.74); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); }
+body.cg-hudmax #cg-hudmax-back{ display:block; }
+</style>
+<script id="cg-b722-hudmax-js">
+/* cg-b722-hudmax-js - build 722. Double-tap (two taps on the SAME tab within 450ms)
+   toggles the maximize. Detection runs on touchend, NOT click - MEASURED in WebKit:
+   during a double-tap gesture iOS delays or swallows the synthetic clicks, so a
+   click-based detector misses. Desktop double-click uses the click path (no touchend
+   there, and a touch device suppresses the click path via the lastTouch stamp so one
+   physical tap is never counted twice). Esc or tapping the backdrop also closes.
+   Single taps still switch tabs exactly as before. Reversible: delete this block. */
+(function(){
+  if(window.__cgHudMax722) return; window.__cgHudMax722=true;
+
+  function pill(){ return document.querySelector('#sc-home-widgets .wg.ops-pill.b385'); }
+  function isOn(){ return document.body.classList.contains('cg-hudmax'); }
+
+  function setMax(v){
+    var bd=document.getElementById('cg-hudmax-back');
+    if(!bd){ bd=document.createElement('div'); bd.id='cg-hudmax-back';
+      document.body.appendChild(bd);
+      bd.addEventListener('click',function(){ setMax(false); });
+      bd.addEventListener('touchend',function(e){ e.preventDefault(); setMax(false); }); }
+    document.body.classList.toggle('cg-hudmax', !!v);
+    try{ window.dispatchEvent(new Event('resize')); }catch(e){}
+  }
+
+  var tT=0, tTab=null;      /* touch tracker */
+  var cT=0, cTab=null;      /* click (mouse) tracker */
+  var lastTouchAt=0;
+
+  function wire(){
+    var p=pill(); if(!p||p.__cgHudMax) return; p.__cgHudMax=true;
+
+    p.addEventListener('touchend',function(e){
+      var t=e.target && e.target.closest ? e.target.closest('.ops4-tab') : null;
+      if(!t) return;
+      lastTouchAt=Date.now();
+      /* b725 revision, T: "make them single tap to open". Touch: ONE tap on any tab
+         maximizes it (the same tap's own click still switches the view). While
+         maximized, tapping the ALREADY-ACTIVE tab closes; tapping another tab just
+         switches. Backdrop tap and Esc still close. Desktop mouse keeps double-click
+         (the click path below) so a docked PC click still only switches tabs. */
+      if(!isOn()){ setMax(true); }
+      else if(t.classList.contains('on')){ e.preventDefault(); setMax(false); }
+    },true);
+
+    p.addEventListener('click',function(e){
+      if(Date.now()-lastTouchAt<800) return;   /* touch already handled this finger */
+      var t=e.target && e.target.closest ? e.target.closest('.ops4-tab') : null;
+      if(!t) return;
+      var now=Date.now();
+      if(cTab===t && (now-cT)<450){ cT=0; cTab=null; setMax(!isOn()); }
+      else { cT=now; cTab=t; }
+    },true);
+  }
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&isOn()) setMax(false); });
+
+  var n=0,iv=setInterval(function(){ wire(); if(++n>80) clearInterval(iv); },400);
+  window.cgHudMax=setMax;   /* manual hook: cgHudMax(true/false) */
+})();
+</script>
+<style id="cg-b723-hudtext-css">
+/* cg-b723-hudtext-css - build 723, 5 AUG 2026. T: "a way to increase text size inside
+   the pills once they've expanded. also the top row of buttons gather buy notes
+   contracts org party etc. are hard to read due to small size."
+   1. Tab labels: b385 set them at font 8.5px - under the iPad's 0.642 zoom that renders
+      ~5.5px. Raised to 10.5px docked (same row height class of change), 14px maximized.
+   2. --cg-maxzoom scales EVERYTHING in the pill body while maximized (zoom compounds
+      fine under b389's html zoom - measured). Set by the A-/A+ chips, kept in
+      localStorage. Tabs row excluded so the controls row itself stays put. */
+#sc-home-widgets .wg.ops-pill.b385 .ops4-tab{
+  font-size:10.5px !important; padding:6px 2px !important; letter-spacing:.8px !important; }
+body.cg-hudmax #sc-home-widgets .wg.ops-pill.b385 .ops4-tab{
+  font-size:14px !important; padding:9px 4px !important; letter-spacing:1.4px !important; }
+body.cg-hudmax #sc-home-widgets .wg.ops-pill.b385 .pill-body>*:not(.ops4-tabs){
+  zoom:var(--cg-maxzoom,1); }
+#cg-maxfont{ display:none; position:fixed; right:26px; bottom:34px; z-index:2147482910;
+  gap:8px; }
+body.cg-hudmax #cg-maxfont{ display:flex; }
+#cg-maxfont button{ font:800 13px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1px;
+  color:#dbeeff; background:linear-gradient(180deg,#1a2434,#101826);
+  border:1px solid #4f9fe0; border-radius:9px; padding:9px 13px; min-height:36px;
+  cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.5); touch-action:manipulation; }
+#cg-maxfont button:hover{ filter:brightness(1.15); }
+#cg-maxfont .v{ font:800 11px/36px 'Share Tech Mono',monospace; color:#7fc4de;
+  min-width:38px; text-align:center; }
+</style>
+<script id="cg-b723-hudtext-js">
+/* cg-b723-hudtext-js - build 723. A- / A+ chips, visible only while the HUD is
+   maximized (bottom-right, clear of the tabs and the update chip's spot only when
+   docked - the chip hides behind the backdrop while maximized anyway). Steps of 0.1
+   from 1.0 to 1.8, stored in localStorage cg_maxzoom, applied via --cg-maxzoom.
+   Reversible: delete this block. */
+(function(){
+  if(window.__cgHudText723) return; window.__cgHudText723=true;
+
+  function get(){ var v=1; try{ v=parseFloat(localStorage.getItem('cg_maxzoom'))||1; }catch(e){}
+    return Math.min(1.8, Math.max(1, v)); }
+  function apply(v){
+    try{ document.documentElement.style.setProperty('--cg-maxzoom', String(v)); }catch(e){}
+    var el=document.getElementById('cg-maxfont-v'); if(el) el.textContent=Math.round(v*100)+'%';
+    try{ window.dispatchEvent(new Event('resize')); }catch(e){}
+  }
+  function set(v){
+    v=Math.min(1.8, Math.max(1, Math.round(v*10)/10));
+    try{ localStorage.setItem('cg_maxzoom', String(v)); }catch(e){}
+    apply(v);
+  }
+  function build(){
+    if(document.getElementById('cg-maxfont')) return;
+    if(!document.body) return;
+    var d=document.createElement('div'); d.id='cg-maxfont';
+    d.innerHTML='<button type="button" id="cg-mf-dn">A&minus;</button>'
+      +'<span class="v" id="cg-maxfont-v"></span>'
+      +'<button type="button" id="cg-mf-up">A+</button>';
+    document.body.appendChild(d);
+    d.querySelector('#cg-mf-dn').addEventListener('click',function(){ set(get()-0.1); });
+    d.querySelector('#cg-mf-up').addEventListener('click',function(){ set(get()+0.1); });
+    apply(get());
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build);
+  else build();
+  var n=0,iv=setInterval(function(){ build(); if(document.getElementById('cg-maxfont')||++n>40) clearInterval(iv); },500);
+  window.cgMaxFont=set;   /* manual hook: cgMaxFont(1.3) */
+})();
+</script>
+<style id="cg-b724-fullscreen-css">
+/* cg-b724-fullscreen-css - build 724, 5 AUG 2026. T: "hide indicators from the ipad
+   time date wifi symbol battery everything gone". iPadOS has NO system toggle for the
+   status bar; the one sanctioned route is the web Fullscreen API, which on iPad hides
+   the whole bar. It cannot auto-start - Apple requires a user gesture - hence a chip.
+   Touch devices only: PC has the app window / F11 already. */
+#cg-fschip{ display:none; position:fixed; right:14px; top:calc(14px + env(safe-area-inset-top,0px));
+  z-index:2147483625; align-items:center; gap:6px; height:30px; padding:0 11px;
+  font:800 10px/1 'Rajdhani','Segoe UI',sans-serif; letter-spacing:1.2px; color:#dbeeff;
+  background:linear-gradient(180deg,#1a2434,#101826); border:1px solid #4f9fe0;
+  border-radius:8px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,.5);
+  touch-action:manipulation; text-transform:uppercase; }
+@media (pointer:coarse){ #cg-fschip{ display:inline-flex; } }
+#cg-fschip svg{ width:14px; height:14px; stroke:#7fc4de; fill:none; stroke-width:2;
+  stroke-linecap:round; }
+#cg-fschip:active{ filter:brightness(1.2); }
+</style>
+<script id="cg-b724-fullscreen-js">
+/* cg-b724-fullscreen-js - build 724. One chip: enter fullscreen (status bar gone),
+   tap again to exit. Uses the unprefixed API with the webkit fallback iPads answer to.
+   VERIFIED here: chip renders touch-only, no errors, handlers wired. NOT verifiable
+   from a sandbox: the actual status-bar hide - that only exists on real glass.
+   Reversible: delete this block. */
+(function(){
+  if(window.__cgFs724) return; window.__cgFs724=true;
+
+  function fsEl(){ return document.fullscreenElement||document.webkitFullscreenElement||null; }
+  function enter(){
+    var de=document.documentElement;
+    try{
+      if(de.requestFullscreen) return de.requestFullscreen();
+      if(de.webkitRequestFullscreen) return de.webkitRequestFullscreen();
+    }catch(e){}
+    /* API absent (some iOS contexts refuse it) - say so instead of playing dead */
+    var c=document.getElementById('cg-fschip');
+    if(c) c.querySelector('.t').textContent='N/A';
+  }
+  function leave(){
+    try{
+      if(document.exitFullscreen) return document.exitFullscreen();
+      if(document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    }catch(e){}
+  }
+  function paint(){
+    var c=document.getElementById('cg-fschip'); if(!c) return;
+    c.querySelector('.t').textContent = fsEl() ? 'EXIT' : 'FULL';
+  }
+  function build(){
+    if(document.getElementById('cg-fschip')||!document.body) return;
+    var c=document.createElement('button'); c.type='button'; c.id='cg-fschip';
+    c.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'
+      +'<span class="t">FULL</span>';
+    c.addEventListener('click',function(){ if(fsEl()) leave(); else enter(); });
+    document.body.appendChild(c);
+    document.addEventListener('fullscreenchange',paint);
+    document.addEventListener('webkitfullscreenchange',paint);
+    paint();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build);
+  else build();
+  var n=0,iv=setInterval(function(){ build(); if(document.getElementById('cg-fschip')||++n>40) clearInterval(iv); },500);
 })();
 </script>
 <style id="sc-b689-pilllock-css">
