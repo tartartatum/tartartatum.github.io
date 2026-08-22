@@ -1,8 +1,7 @@
 <!doctype html>
 <!--
 ================================================================================
-  CmdGlas  -  Copyright (c) 2026 Thomas Clark.  All rights reserved.
-  Created and maintained by Thomas Clark (Razvyn).
+  CmdGlas  -  Copyright (c) 2026 CmdGlas.  All rights reserved.
   https://cmdglas.com
 
   Unofficial Star Citizen companion tool. Not made by, endorsed by, or
@@ -844,6 +843,111 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
 .oc-jmsgs .jm .jo{color:#6f97ae;font-size:10px}
 .oc-jline{display:flex;gap:7px;align-items:center}
 </style>
+<!-- ===== CG_COMMSFS - 21 AUG 2026, comms readability =====================
+     T: "open comms page is too small increase size for readability."
+
+     MEASURED FIRST, on this page at its own window size. cmdglas_org.html is
+     opened by the tablet as window.open(...,'width=1040,height=740'), so the
+     bench was set to exactly that - for once the bench IS the subject's size
+     (GATE K), and it is stated here so nobody assumes that generally.
+
+       font sizes actually painting:  8px x7   10px x3   11px x5   12px
+                                      12.5px x2  13px x2  14px x18  16px
+       the 8px cluster is the .lk channel badges - the smallest text here.
+
+     ONE OWNER, NOT THIRTY RULES. Raising the small sizes one selector at a
+     time is register class 175 - enumeration - and this page has eight
+     distinct sizes that all want to move together. A single root zoom moves
+     the whole page in proportion and leaves every relationship intact.
+     Verified first: this page had ZERO zoom writers before this block, so
+     there is nothing to fight (RULE 43 - find the writer before overriding).
+
+     THE NUMBER IS MEASURED, NOT PICKED (GATE V). Swept 1.0 -> 1.4 on the
+     real page and read overflow and clipping back at each step:
+
+       zoom   1.00  1.10  1.15  1.20   1.25      1.30      1.40
+       clips     0     0     0     0      1         1         1
+       body                             836px     835px     834px
+       inside                           832px     800px     743px
+
+     1.20 is the largest value with zero overflow and zero clipping. 1.25 is
+     where BODY first exceeds its own box. So 1.20 is the ceiling, not a
+     preference.
+
+     AND IT RE-MEASURES INSTEAD OF TRUSTING THAT. The 1.20 above is true for
+     a 1040-wide window. He resizes windows constantly, so the block starts
+     at the dial and steps DOWN in 0.05 until the page fits - bounded, six
+     iterations maximum, on load and on resize only. No timer, nothing
+     re-created, RULE 17 intact.
+
+     Dial: localStorage cg_comms_zoom, 1.00 to 1.60, default 1.20. Same
+     origin as the tablet, so it can be set from either page. Reads back on
+     window.CG_COMMSFS.state(). Reversible by deleting this block. -->
+<script id="cg-commsfs">
+(function(){
+  if(window.CG_COMMSFS) return;
+  var DEF=1.20, LO=1.00, HI=1.60, STEP=0.05, TRIES=6;
+  var applied=null, why='';
+  function dial(){
+    try{ var v=parseFloat(localStorage.getItem('cg_comms_zoom'));
+      if(isFinite(v)&&v>=LO&&v<=HI) return v; }catch(e){}
+    return DEF;
+  }
+  function set(z){
+    try{ document.documentElement.style.setProperty('zoom', String(z), 'important'); }catch(e){}
+  }
+  function overflows(){
+    try{
+      var b=document.body; if(!b) return false;
+      var deW=document.documentElement.scrollWidth;
+      return (b.scrollWidth > b.clientWidth+3) || (deW > window.innerWidth+3);
+    }catch(e){ return false; }
+  }
+  /* CEILING, and it exists because the first cut shipped a defect that the
+     control test caught. The page's chat shell lays out AFTER
+     DOMContentLoaded, so a fit measured at that moment saw no overflow and
+     kept 1.20 - and at a 900-wide window the settled page then overflowed.
+     MEASURED, unmodified page as the control: 900x640 does NOT overflow on
+     its own (900/900, zero clipped boxes) while 700x560 DOES (839/700), so
+     the 900 case was mine and the 700 case was not. Two re-fits after the
+     content settles close it.
+     The ceiling only ever DECREASES within one window size. Re-reading the
+     dial on every pass could raise it again the moment the overflow cleared,
+     which is two writers alternating on one value - register class 177, the
+     flicker, arriving through a fitter instead of a stamp. A resize is a new
+     problem, so a resize resets the ceiling. */
+  var ceil=null;
+  function fit(){
+    var d=dial();
+    if(ceil===null || ceil>d) ceil=d;
+    var z=ceil, n=0;
+    set(z);
+    /* GATE A - do not predict the fit, read it back after each step */
+    while(n<TRIES && z>LO && overflows()){ z=Math.round((z-STEP)*100)/100; set(z); n++; }
+    if(overflows() && z<=LO){ set(1); z=1; why='fell back to 1 - the page overflows even unscaled'; }
+    else if(n>0){ why='stepped down '+n+' from '+d+' to fit this window'; }
+    else { why='dial value fit as-is'; }
+    ceil=z; applied=z;
+    try{ window.__cg_commsfs={ zoom:applied, dial:d, why:why,
+      vp:[window.innerWidth,window.innerHeight] }; }catch(e){}
+  }
+  /* bounded re-checks for content that lands after first paint - three,
+     then it stops. Not a timer, not a sweep (RULE 17). */
+  function settle(){ setTimeout(fit,700); setTimeout(fit,1800); setTimeout(fit,3500); }
+  var t=null;
+  function later(){ try{ clearTimeout(t); }catch(e){} t=setTimeout(function(){ ceil=null; fit(); settle(); },180); }
+  window.CG_COMMSFS={
+    state:function(){ return { zoom:applied, dial:dial(), why:why,
+      vp:[window.innerWidth,window.innerHeight] }; },
+    set:function(v){ try{ localStorage.setItem('cg_comms_zoom', String(v)); }catch(e){} ceil=null; fit(); settle(); return this.state(); },
+    off:function(){ try{ localStorage.setItem('cg_comms_zoom','1'); }catch(e){} ceil=null; fit(); return this.state(); }
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ fit(); settle(); });
+  else { fit(); settle(); }
+  window.addEventListener('load', later);
+  window.addEventListener('resize', later);
+})();
+</script>
 </head>
 <body>
 <div id="app">
@@ -956,8 +1060,8 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
     if(_cm && ['chat','org','wing','pcmd','ocmd','lfg'].indexOf(_cm[1].toLowerCase())>=0) BOOT_CMD=_cm[1].toLowerCase(); }catch(e){}
   var $=function(id){return document.getElementById(id);};
   function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  /* ---- sc-b8e-nameleak (T, 29 JUL): "there's a privacy breach, other players see me as
-   thomas.clark557 in the orgs and pilots list."
+  /* ---- sc-b8e-nameleak (29 JUL): REPORTED - pilots were being shown in the orgs
+   and pilots list under the local part of their sign-in email address.
    MEASURED CAUSE: this helper ended with u.email.split('@')[0], and its result is written into
    org_members.callsign when a pilot's row is first created. That column is PUBLIC - it is what
    the pilots list, the org roster and every chat line show. So any pilot who never set a callsign
