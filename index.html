@@ -7303,7 +7303,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 761;
+window.CMDGLAS_BUILD = 765;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -38877,26 +38877,34 @@ body.sc-home-mode #cg-onebar{margin:2px 0 4px !important;}
     var right=bar && bar.querySelector('.cg-ob-right');
     var more=document.getElementById('cg-more-btn');
     if(!right || !more){ if(++tries<60) setTimeout(install,300); return; }
-    /* CG_MORESORT - 24 AUG 2026. T: "put the more button in to the assist tablet
-       controls bar row and reassign the rest alphabetically inside that pill only.
-       don't mess or add anything else."
-       MEASURED with an appendChild/insertBefore hook on #cg-more-btn: a first
-       attempt from a separate block DID move it, and THIS LINE ran afterwards and
-       pulled it straight back to cg-ob-right. install() is the OWNER and it
-       re-runs about ten times. So the owner is retargeted rather than fought -
-       the same shape that worked for the version chip's lift(). That separate
-       block was deleted, not layered on top: one owner, not two.
-       Placement AND ordering happen here so a single function decides the result.
-       Falls back to the original target if the flyout is not built yet. */
-    var _tcFly=null, _gs=document.querySelectorAll('#sc-appbar .scr-group');
-    for(var _i=0;_i<_gs.length;_i++){ var _c=_gs[_i].querySelector('.scr-cat');
-      if(_c && /TABLET CONTROLS/i.test(_c.textContent||'')){ _tcFly=_gs[_i].querySelector('.scr-sec'); break; } }
-    if(_tcFly){
-      if(more.parentNode!==_tcFly){ more.classList.add('scr-btn'); _tcFly.appendChild(more); }
-      var _bs=[]; for(var _j=0;_j<_tcFly.children.length;_j++){ if(_tcFly.children[_j].tagName==='BUTTON') _bs.push(_tcFly.children[_j]); }
-      _bs.sort(function(a,b){ var L=function(e){ return (e.textContent||'').replace(/[^A-Za-z0-9& ]/g,'').trim().toUpperCase(); };
-        return L(a).localeCompare(L(b)); });
-      for(var _k=0;_k<_bs.length;_k++) _tcFly.appendChild(_bs[_k]);
+    /* CG_MORESORT rev2 - 24 AUG 2026. T: "it's now between fullscreen and no url
+       bar. it was suppose to go between my rig and learn. same single stack bubble
+       height but inside the assist through tablet controls row."
+       I put it INSIDE the TABLET CONTROLS flyout. He meant the ROW ITSELF - the
+       ASSIST | NAV | MY RIG | LEARN | MISSION CONTROLS | TABLET CONTROLS strip.
+       MEASURED: every bubble in that row is a .scr-cat, 101x24, font 16px,
+       padding 0 13px, radius 11px, one per .scr-group. So MORE gets its own group
+       and wears .scr-cat, and lands before the LEARN group.
+       install() is still the ONE owner - retargeted, not layered. */
+    var _bar=document.getElementById('sc-appbar');
+    var _learn=null;
+    if(_bar){ var _gs=_bar.querySelectorAll('.scr-group');
+      for(var _i=0;_i<_gs.length;_i++){ var _c=_gs[_i].querySelector('.scr-cat');
+        if(_c && /^LEARN$/i.test((_c.textContent||'').trim())){ _learn=_gs[_i]; break; } } }
+    if(_bar && _learn){
+      var _wrap=document.getElementById('cg-more-group');
+      if(!_wrap){ _wrap=document.createElement('div'); _wrap.id='cg-more-group';
+        _wrap.className='scr-group sc-acc-group'; }
+      if(_wrap.parentNode!==_bar || _wrap.nextElementSibling!==_learn) _bar.insertBefore(_wrap,_learn);
+      if(more.parentNode!==_wrap){ more.classList.add('scr-cat'); more.classList.remove('scr-btn'); _wrap.appendChild(more); }
+      /* the flyout still gets its alphabetical order, MORE just is not in it */
+      var _tc=null, _g2=_bar.querySelectorAll('.scr-group');
+      for(var _k=0;_k<_g2.length;_k++){ var _c2=_g2[_k].querySelector('.scr-cat');
+        if(_c2 && /TABLET CONTROLS/i.test(_c2.textContent||'')){ _tc=_g2[_k].querySelector('.scr-sec'); break; } }
+      if(_tc){ var _bs=[]; for(var _m=0;_m<_tc.children.length;_m++){ if(_tc.children[_m].tagName==='BUTTON') _bs.push(_tc.children[_m]); }
+        _bs.sort(function(a,b){ var L=function(e){ return (e.textContent||'').replace(/[^A-Za-z0-9& ]/g,'').trim().toUpperCase(); };
+          return L(a).localeCompare(L(b)); });
+        for(var _n=0;_n<_bs.length;_n++) _tc.appendChild(_bs[_n]); }
     } else if(more.parentNode!==right) right.insertBefore(more, right.firstChild);
     right.classList.remove('cg-ob-empty');
     sync();
@@ -56088,76 +56096,71 @@ html body #tab-home .hm-cols .hm-col .hm-tray:not(.hm-tray-gen) .hm-cell .hm-lab
    replaced. Something else constrains that box and it has not been found yet.
    Shipping a half-applied size would have been a defect dressed as a fix. */
 </style>
-<style id="cg-b761-hudoff-css">
-/* CG_HUDOFF - GATE F: the button is HIDDEN, never deleted. b738/b767 re-create
-   and re-label it (CG_DOCKLBL), and deleting a node a page re-inserts is how
-   743 and 773 broke things. Rollback is removing this one rule. */
-.cg-undock-btn{display:none !important}
-#cg-hudoff-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;margin:0 6px;
-  border:1px solid rgba(255,178,107,.5);border-radius:6px;background:rgba(255,178,107,.10);
-  font:700 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#ffb26b;
-  cursor:help;white-space:nowrap}
-#cg-hudoff-note{display:block;margin:5px 0 0;font:700 12px 'Rajdhani','Segoe UI',sans-serif;
-  letter-spacing:.6px;color:#ffb26b;opacity:.95}
-#cg-hudoff-toast{position:fixed;left:50%;top:14%;transform:translateX(-50%);z-index:2147483640;
-  max-width:560px;padding:14px 18px;border-radius:10px;border:1px solid rgba(255,178,107,.55);
-  background:rgba(12,20,30,.97);color:#ffd9b0;font:600 15px/1.45 'Rajdhani','Segoe UI',sans-serif;
-  box-shadow:0 10px 30px rgba(0,0,0,.6);display:none}
-#cg-hudoff-toast.on{display:block}
-#cg-hudoff-toast b{color:#fff;letter-spacing:1px}
+
+<!-- CG_HUDOFF removed in build 765. It was a temporary disable while root 218
+     was diagnosed: it hid the undock button, wrapped cgPillToggle to refuse the
+     outbound undock, and drew an advisory. The pop-out repair now handles
+     Hauling, Account and Media, so the disable is withdrawn WHOLE - removed,
+     not left switched off, so nothing dead is carried forward.
+     STILL OPEN: UTILITY and Notes render nothing in the pop-out. -->
+<style id="cg-b763-popfix-css">
+/* CG_POPFIX - 24 AUG 2026, build 763. Scoped to .cg-pop-host so the DOCKED pill
+   is untouched - docked, menter() already works and a second mechanism there
+   would be two writers on one property (the flicker family, 177/180/192/196). */
+.cg-pop-host .pill-body.cg-b218-haul  #cg-haul738,
+.cg-pop-host .pill-body.cg-b218-acct  #cg-acct738,
+.cg-pop-host .pill-body.cg-b218-media #cg-media739{display:flex !important}
+.cg-pop-host .pill-body.cg-b218-haul  > .ops4-body,
+.cg-pop-host .pill-body.cg-b218-acct  > .ops4-body,
+.cg-pop-host .pill-body.cg-b218-media > .ops4-body{display:none !important}
 </style>
-<script id="cg-b761-hudoff-js">
-/* CG_HUDOFF - 24 AUG 2026, build 761. T: "disable it and add banner disabled until
-   fixed" / "disable the popout function, remove the undock button or hide it and
-   replace with the advisory."
-   MEASURED: window.cgPillToggle is the SINGLE choke point. The undock button, the
-   keyboard shortcut at 5313265 and the HUD-BRIDGE poller at 5445882 (Stream Deck /
-   VoiceAttack via 127.0.0.1:8423) all call it. Hiding only the button would have
-   left Stream Deck popping it out anyway, so the toggle is closed as well.
-   REGISTER 213 - DO NOT DELETE THE ONLY WAY OUT. If a pilot is ALREADY floating
-   the call passes straight through so they can dock BACK. Only outbound is refused. */
+<script id="cg-b763-popfix-js">
+/* CG_POPFIX - root 218, and the register's stated program for it was impossible.
+   MEASURED in the pop-out document: scripts 0, stylesheets 433. cgPillToggle,
+   cgPillView, scMediaSetup, cgB739Leave, __cg767tabwire are ALL undefined there.
+   The pill's DOM is transplanted; the code that runs it stays behind. So
+   "quiet the legacy writers, then arm 767" could never work - there are no
+   writers there to quiet. That correction matters more than this build.
+   MEASURED per press in the pop-out:
+     CONTRACTS -> .pill-body gains cg-ct-on, pane none->flex   (a MOVED listener)
+     HAULING   -> only turns contracts OFF, turns nothing on
+     MEDIA     -> nothing changes at all
+   So CSS alone had no state hook to key off - option A was dead on measurement.
+   WHY A LISTENER ON THE TAB STRIP: addEventListener bindings travel with the NODE
+   when it is adopted into the pop-out. That is precisely why Contracts survives.
+   Binding to document would NOT travel. One listener, three classes, no timer,
+   no window.opener, no getElementById redirect. */
 (function(){
-  if(window.__cgHudOff761) return; window.__cgHudOff761=true;
-  function floating(){ try{ return !!(document.querySelector('.cg-pop-float')||
-    document.querySelector('.cg-pop-ph')||document.querySelector('.cg-pop-host')); }catch(_){ return false; } }
-  var MSG='<b>POP-OUT HUD IS OFF</b><br>Switched off on purpose while its buttons are repaired '+
-          '- undocked, they opened the wrong panels. The docked tablet is unaffected. '+
-          'It comes back when it works.';
-  function toast(){
-    try{ var t=document.getElementById('cg-hudoff-toast');
-      if(!t){ t=document.createElement('div'); t.id='cg-hudoff-toast'; t.innerHTML=MSG; document.body.appendChild(t); }
-      t.classList.add('on'); clearTimeout(window.__cgHudOffT);
-      window.__cgHudOffT=setTimeout(function(){ t.classList.remove('on'); },6000);
-    }catch(_){}
+  if(window.__cgPopFix763) return; window.__cgPopFix763=true;
+  var OWN=[['cg-haul-tab','cg-b218-haul','cg-haul738'],
+           ['cg-acct-tab','cg-b218-acct','cg-acct738'],
+           ['cg-media-tab','cg-b218-media','cg-media739']];
+  function apply(tab){
+    var body=tab.closest && tab.closest('.pill-body'); if(!body) return;
+    /* pop-out only - docked keeps its own mechanism */
+    if(!(body.closest && body.closest('.cg-pop-host'))) return;
+    var want=null;
+    for(var i=0;i<OWN.length;i++) if(tab.id===OWN[i][0]) want=OWN[i][1];
+    for(var j=0;j<OWN.length;j++) if(OWN[j][1]!==want) body.classList.remove(OWN[j][1]);
+    /* MEASURED: with only my three classes handled, the pop-out showed
+       "cg-twitch+cg-haul738" - the Twitch pane rides along because cg-tw-on is
+       left on the body by the moved b418 listener and nothing there clears it.
+       When one of MINE is chosen the sibling pane-classes are cleared too, so one
+       pane is on at a time. Cleared, never re-stamped - the 748/749 pattern. */
+    if(want){ body.classList.remove('cg-tw-on'); body.classList.remove('cg-ct-on'); }
+    if(want) body.classList.add(want);
   }
-  var prev=window.cgPillToggle;
-  window.cgPillToggle=function(k){
-    if(k==='ops' && !floating()){ toast(); return; }
-    return (typeof prev==='function') ? prev.apply(this,arguments) : undefined;
-  };
-  /* the advisory that replaces the button, in the pill where the button lived */
-  function chip(){
-    try{
-      var btn=document.querySelector('.cg-undock-btn'); if(!btn||!btn.parentElement) return false;
-      if(document.getElementById('cg-hudoff-chip')) return true;
-      var c=document.createElement('span'); c.id='cg-hudoff-chip';
-      c.textContent='HUD OFF - BEING FIXED';
-      c.title='The pop-out HUD is disabled while its buttons are repaired. The docked tablet is unaffected.';
-      c.addEventListener('click',toast,false);
-      btn.parentElement.insertBefore(c, btn);
-      return true;
-    }catch(_){ return false; }
+  function wire(){
+    var strip=document.querySelector('#sc-home-widgets .ops-pill.b385 .ops4-tabs');
+    if(!strip || strip.__cgPopFix763) return false;
+    strip.__cgPopFix763=1;
+    strip.addEventListener('click',function(e){
+      var t=e.target && e.target.closest && e.target.closest('.ops4-tab'); if(!t) return;
+      setTimeout(function(){ try{ apply(t); }catch(_){} },0);
+    },true);
+    return true;
   }
-  /* and the standing line under the pilot count */
-  function note(){
-    try{ var g=document.getElementById('cg-b743-corner'); if(!g) return false;
-      if(document.getElementById('cg-hudoff-note')) return true;
-      var n=document.createElement('div'); n.id='cg-hudoff-note';
-      n.textContent='POP-OUT HUD DISABLED UNTIL FIXED';
-      g.appendChild(n); return true;
-    }catch(_){ return false; }
-  }
-  var i=0; (function tick(){ var a=chip(), b=note(); if(a&&b) return; if(++i>20) return; setTimeout(tick,500); })();
+  var n=0; (function tick(){ if(wire()) return; if(++n>20) return; setTimeout(tick,500); })();
 })();
 </script>
 </body>
