@@ -7303,7 +7303,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 754;
+window.CMDGLAS_BUILD = 760;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -19839,13 +19839,23 @@ var b=document.getElementById('scv-build'); if(!b) return;
 b.textContent='v'+(window.CMDGLAS_VERSION||'2.0');
 try{ b.title=(window.CMDGLAS_VERSTR?window.CMDGLAS_VERSTR():''); }catch(_t){}
 function lift(){
-  var n=document.getElementById('cg-cig-notice');
+  /* CG_VCHIPMOVE - 24 AUG 2026. T: "move v2.0 between UTC and number of pilots
+     online on start and home page." MEASURED: #cg-b743-corner holds the UTC clock
+     and then #cg-pilots-corner, so inserting the chip before the pilots element
+     puts it exactly between the two.
+     GATE F - lift() is the EXISTING owner of this chip's position and it re-applies
+     on a guard. Retargeting lift() keeps ONE owner; adding a second mover would be
+     the cg-tw-on mistake again. Falls back to the old notice target when the corner
+     is absent, so a surface without it cannot lose the chip. */
+  var n=document.getElementById('cg-pilots-corner')||document.getElementById('cg-cig-notice');
+  var inRow=!!(n&&n.id==='cg-pilots-corner');
   if(!n || !n.parentElement) return false;
   if(b.previousElementSibling!==n && b.nextElementSibling!==n){ }
   if(n.previousElementSibling!==b) n.parentElement.insertBefore(b,n);
   var S=function(k,v){ b.style.setProperty(k,v,'important'); };
-  S('position','static'); S('display','block'); S('text-align','center');
-  S('margin','8px auto 2px'); S('left','auto'); S('bottom','auto');
+  S('position','static'); S('display', inRow?'inline-block':'block');
+  S('text-align', inRow?'left':'center'); S('vertical-align','middle');
+  S('margin', inRow?'0 10px 0 0':'8px auto 2px'); S('left','auto'); S('bottom','auto');
   S('background','none'); S('padding','0'); S('border-radius','0');
   /* CG_VCHIPCOLOR - colour copied live from the disclaimer above which it sits,
      not picked. Beats the three stylesheet literals because inline wins. */
@@ -38867,7 +38877,27 @@ body.sc-home-mode #cg-onebar{margin:2px 0 4px !important;}
     var right=bar && bar.querySelector('.cg-ob-right');
     var more=document.getElementById('cg-more-btn');
     if(!right || !more){ if(++tries<60) setTimeout(install,300); return; }
-    if(more.parentNode!==right) right.insertBefore(more, right.firstChild);
+    /* CG_MORESORT - 24 AUG 2026. T: "put the more button in to the assist tablet
+       controls bar row and reassign the rest alphabetically inside that pill only.
+       don't mess or add anything else."
+       MEASURED with an appendChild/insertBefore hook on #cg-more-btn: a first
+       attempt from a separate block DID move it, and THIS LINE ran afterwards and
+       pulled it straight back to cg-ob-right. install() is the OWNER and it
+       re-runs about ten times. So the owner is retargeted rather than fought -
+       the same shape that worked for the version chip's lift(). That separate
+       block was deleted, not layered on top: one owner, not two.
+       Placement AND ordering happen here so a single function decides the result.
+       Falls back to the original target if the flyout is not built yet. */
+    var _tcFly=null, _gs=document.querySelectorAll('#sc-appbar .scr-group');
+    for(var _i=0;_i<_gs.length;_i++){ var _c=_gs[_i].querySelector('.scr-cat');
+      if(_c && /TABLET CONTROLS/i.test(_c.textContent||'')){ _tcFly=_gs[_i].querySelector('.scr-sec'); break; } }
+    if(_tcFly){
+      if(more.parentNode!==_tcFly){ more.classList.add('scr-btn'); _tcFly.appendChild(more); }
+      var _bs=[]; for(var _j=0;_j<_tcFly.children.length;_j++){ if(_tcFly.children[_j].tagName==='BUTTON') _bs.push(_tcFly.children[_j]); }
+      _bs.sort(function(a,b){ var L=function(e){ return (e.textContent||'').replace(/[^A-Za-z0-9& ]/g,'').trim().toUpperCase(); };
+        return L(a).localeCompare(L(b)); });
+      for(var _k=0;_k<_bs.length;_k++) _tcFly.appendChild(_bs[_k]);
+    } else if(more.parentNode!==right) right.insertBefore(more, right.firstChild);
     right.classList.remove('cg-ob-empty');
     sync();
     if(tries<10){ tries++; setTimeout(install,1200); }    
@@ -45174,7 +45204,7 @@ var CG767_PANES=[
   ['cg-threat',   function(v,id){return v==='threat';}],
   ['cg-orgparty', function(v,id){return v==='orgparty';}],
   ['cg-contracts',function(v,id){return v==='contracts';}],
-  ['cg-twitch',   function(v,id){return v==='status';}],
+  ['cg-twitch',   function(v,id){return v==='status'||(id==='cg-media-tab'&&(function(){var e=document.getElementById('cg-twitch');return !!(e&&e.ownerDocument===document&&!(e.closest&&e.closest('.cg-pop-float,.cg-pop-ph')));})());}] /* CG_MEDIAGATE: docked only. T, 24 AUG, on the pop-out: 'media has utility and media together'. Undocked the arbiter is dead and adding twitch to media just fed the pane fight. getElementById is REDIRECTED to the pop-out after undock (732), so ownerDocument!==document IS the undocked detector from main-realm code; the closest() covers float mode. */,   /* CG_MEDIAALL: 'status' is the Stream tab, which is hidden and can never be lit, so Twitch had NO owner and cg767PaneGate imposed inline display:none !important on it forever. Same shape as cg-route's two-clause predicate on the next line - the arbiter's own extension point, not a new writer. */
   ['cg-route',    function(v,id){return v==='cgroute'||id==='cg-route-tab';}],
   ['cg-haul738',  function(v,id){return id==='cg-haul-tab';}],
   ['cg-acct738',  function(v,id){return id==='cg-acct-tab';}],
@@ -55933,5 +55963,130 @@ html body #tab-home .hm-cols .hm-col .hm-tray:not(.hm-tray-gen) .hm-cell .hm-lab
 }
 </style>
 
+<style id="cg-b755-mediaall-css">
+/* CG_MEDIAALL - 22 AUG 2026, build 755.
+   T: media subtab shows only Spotify; "no i don't want to see the stream button
+   anymore. only media".
+   MEASURED on published 754 with three services seeded into sc_media_playlists:
+   #cg-media739 held 94 chars, named only spotify, and none of the three titles.
+   Reproduced WITH data, so not an empty-bench artifact.
+   MEASURED: the Stream tab was ALREADY not painting on 754 - T was right and my
+   first probe was wrong because it listed tabs without filtering for visibility.
+   The rule below is belt only.
+   The real defect was cg767PaneGate: Twitch's owner predicate was v==='status',
+   the hidden Stream tab, so the gate wrote inline display:none !important on it
+   on every pass - register 204, the write no selector can beat. Fixed at the
+   predicate. This CSS only paints it once the gate stops hiding it. */
+#sc-home-widgets .ops-pill.b385 .ops4-tab[data-v="status"]{display:none !important}
+#sc-home-widgets .ops-pill.b385 .pill-body.cg-mediaall #cg-twitch{display:flex !important;min-height:140px}
+#cg-mediaall-list{display:flex;flex-direction:column;gap:5px;margin:6px 0 2px}
+#cg-mediaall-list .mal-h{font:800 9px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;color:var(--amber2,#ffd070);opacity:.85}
+#cg-mediaall-list .mal-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border:1px solid rgba(108,180,214,.22);border-radius:7px;background:rgba(4,10,18,.4)}
+#cg-mediaall-list .mal-b{font:800 8.5px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.5px;padding:2px 6px;border-radius:4px;color:#04210f}
+#cg-mediaall-list .mal-t{font:600 11px 'Rajdhani','Segoe UI',sans-serif;color:#dfeaf2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cg-mediaall-list .mal-none{font:600 11px 'Rajdhani','Segoe UI',sans-serif;color:#8fa6b8}
+</style>
+<script id="cg-b755-mediaall-js">
+/* CG_MEDIAALL. One class of my own, no timer, no stolen nodes.
+   cg-tw-on is NOT used: it also hides > .ops4-body, which would be a second
+   writer on the same property. Subtraction, not addition. */
+(function(){
+  if(window.__cgMediaAll755) return; window.__cgMediaAll755=true;
+  var BR={spotify:['SPOTIFY','#1DB954'],spotifyconnect:['SPOTIFY','#1DB954'],
+          youtube:['YOUTUBE','#FF0000'],soundcloud:['SOUNDCLOUD','#FF5500']};
+  function pane(){ return document.getElementById('cg-media739'); }
+  function body(){ var p=pane(); return p?p.parentElement:null; }
+  function saved(){ try{ var v=JSON.parse(localStorage.getItem('sc_media_playlists')||'[]');
+                         return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+  function paint(){
+    var p=pane(); if(!p) return;
+    var box=document.getElementById('cg-mediaall-list');
+    if(!box){ box=document.createElement('div'); box.id='cg-mediaall-list'; p.appendChild(box); }
+    var L=saved(), h='<div class="mal-h">YOUR SERVICES</div>';
+    if(!L.length){ h+='<div class="mal-none">No services saved yet. Paste a share link in CONNECT MUSIC to add one.</div>'; }
+    /* CG_MEDIAALL FIELDFIX. 755 read it.provider and it.title. MEASURED against
+       renderSetup(): the real item is {id, name, embed:{provider}} - it reads
+       BRAND[p.embed && p.embed.provider] and p.name. On T's real data 755 would
+       have rendered every row as "MEDIA / (untitled)". The 755 simulation passed
+       only because the bench was seeded in MY invented shape - the bench proved
+       my own assumption, not his file. Both spellings are accepted now so a
+       hand-made item cannot blank the row. */
+    else { for(var i=0;i<L.length;i++){ var it=L[i]||{};
+      var k=String((it.embed&&it.embed.provider)||it.provider||'').toLowerCase();
+      var b=BR[k]||[String(k||'MEDIA').toUpperCase(),'#6cb4d6'];
+      var t=String(it.name||it.title||it.pid||'(untitled)');
+      h+='<div class="mal-row"><span class="mal-b" style="background:'+b[1]+'">'+b[0]+'</span>'
+       +'<span class="mal-t">'+t.replace(/[<>&]/g,'')+'</span></div>'; } }
+    box.innerHTML=h;
+  }
+  function docked(){ try{ var e=pane(); return !!(e&&e.ownerDocument===document&&!(e.closest&&e.closest('.cg-pop-float,.cg-pop-ph'))); }catch(_){ return false; } }
+  /* CG_MEDIAGATE - this feature was asked for on the DOCKED pill and undocked it
+     was one more writer in the 218 fight (his words: prev/play/next on top of
+     something else; utility and media together). Undocked, stand down. */
+  function on(){ if(!docked()) return; var b=body(); if(b) b.classList.add('cg-mediaall'); paint(); }
+  function off(){ var b=body(); if(b) b.classList.remove('cg-mediaall');
+    try{ var L=document.getElementById('cg-mediaall-list'); if(L&&L.parentNode) L.parentNode.removeChild(L); }catch(_){}
+  }
+  /* CG_MEDIAGATE part 2. Content painted while DOCKED rides along when the pill
+     is moved into the pop-out - measured: the gate alone left the list and the
+     forced twitch in the popup. cgPillToggle is the dock/undock owner, so my
+     content is withdrawn AT the toggle, both directions, idempotent. Same
+     wrap-the-owner pattern as cgB739Leave below and lift() before it. */
+  var prevT=window.cgPillToggle;
+  if(typeof prevT==='function'){ window.cgPillToggle=function(){ try{ off(); }catch(_){} return prevT.apply(this,arguments); }; }
+  var prev=window.cgB739Leave;                 /* symmetry - 213 punishes the missing leave */
+  window.cgB739Leave=function(){ off(); if(typeof prev==='function') return prev.apply(this,arguments); };
+  document.addEventListener('click',function(e){
+    var t=e.target&&e.target.closest?e.target.closest('.ops4-tab'):null; if(!t) return;
+    setTimeout(function(){ if(t.id==='cg-media-tab') on(); else off(); },0);
+  },true);
+  /* lesson 7.4 - the tab's own tooltip still said "Spotify Connect". It is
+     built after this runs, so it is swept on the click, not at load. */
+  document.addEventListener('click',function(){ try{ var mt=document.getElementById('cg-media-tab');
+    if(mt && /Spotify Connect/i.test(mt.title||'')) mt.title='Media - your saved services and Twitch.'; }catch(e){} },true);
+})();
+</script>
+<style id="cg-b758-mediabig-css">
+/* CG_MEDIABIG - 24 AUG 2026, build 758.
+   T: "all buttons on the Media Page are too small and hard to read to include
+   the album art in the spotify tab."
+   MEASURED in a render, panel opened via scMediaSetup(), effective zoom 0.793
+   (documentElement 0.891 x .zoom-wrapper 0.9), so painted = css * 0.793:
+       .ms-badge  css  8 -> painted  6.4     <- worst
+       .ms-hint   css 11 -> painted  8.8
+       .ms-err    css 12 -> painted  9.5
+       .ms-nm     css 13 -> painted 10.3
+       buttons    css 16 -> painted 12.7
+   FLOOR CHOSEN: 13 px painted for text, 14 px for anything clickable. Every css
+   value below is that floor divided by 0.793 and rounded up - COMPUTED from the
+   live measurement, not picked (GATE V).
+   The album art measured 87x87 painted; raised to 120 so the cover is legible
+   beside the track name.
+   Scoped entirely inside #sc-media-setup and the media pane, so nothing else on
+   the tablet can move (GATE Y). !important because the panel's own rules carry
+   literals; if a 767 fitter overrides inline this will show in the re-render,
+   which is why it is simulated before it ships. */
+#sc-media-setup .ms-sub,
+#sc-media-setup .ms-hint,
+#sc-media-setup .ms-err,
+#sc-media-setup .ms-sc-err,
+#sc-media-setup .ms-empty,
+#sc-media-setup .ms-sc-desc,
+#sc-media-setup .ms-sc-status,
+#sc-media-setup .ms-optin label{font-size:17px !important;line-height:1.45 !important}
+#sc-media-setup h2{font-size:22px !important;letter-spacing:2px !important}
+#sc-media-setup .ms-nm{font-size:18px !important}
+#sc-media-setup .ms-badge,
+#sc-media-setup .ms-sc-badge{font-size:17px !important;padding:3px 9px !important}  /* 16px measured 12.7 painted - 0.3 under the stated 13px floor. Raised rather than rounded the floor down. */
+#sc-media-setup button,
+#sc-media-setup input[type="text"]{font-size:18px !important;padding:9px 14px !important;line-height:1.25 !important}
+#sc-media-setup .ms-row{gap:9px !important;padding:8px 10px !important}
+#sc-media-setup .ms-optin input[type="checkbox"]{width:18px !important;height:18px !important}
+/* THE ALBUM ART IS NOT SIZED HERE, DELIBERATELY. A 120px rule was written,
+   simulated, and PULLED: it measured 86x86 -> 96x86. The width moved and the
+   height did not, so the cover came out distorted - worse than the square it
+   replaced. Something else constrains that box and it has not been found yet.
+   Shipping a half-applied size would have been a defect dressed as a fix. */
+</style>
 </body>
 </html>
