@@ -7303,7 +7303,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 760;
+window.CMDGLAS_BUILD = 761;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -56088,5 +56088,77 @@ html body #tab-home .hm-cols .hm-col .hm-tray:not(.hm-tray-gen) .hm-cell .hm-lab
    replaced. Something else constrains that box and it has not been found yet.
    Shipping a half-applied size would have been a defect dressed as a fix. */
 </style>
+<style id="cg-b761-hudoff-css">
+/* CG_HUDOFF - GATE F: the button is HIDDEN, never deleted. b738/b767 re-create
+   and re-label it (CG_DOCKLBL), and deleting a node a page re-inserts is how
+   743 and 773 broke things. Rollback is removing this one rule. */
+.cg-undock-btn{display:none !important}
+#cg-hudoff-chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;margin:0 6px;
+  border:1px solid rgba(255,178,107,.5);border-radius:6px;background:rgba(255,178,107,.10);
+  font:700 10px 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1px;color:#ffb26b;
+  cursor:help;white-space:nowrap}
+#cg-hudoff-note{display:block;margin:5px 0 0;font:700 12px 'Rajdhani','Segoe UI',sans-serif;
+  letter-spacing:.6px;color:#ffb26b;opacity:.95}
+#cg-hudoff-toast{position:fixed;left:50%;top:14%;transform:translateX(-50%);z-index:2147483640;
+  max-width:560px;padding:14px 18px;border-radius:10px;border:1px solid rgba(255,178,107,.55);
+  background:rgba(12,20,30,.97);color:#ffd9b0;font:600 15px/1.45 'Rajdhani','Segoe UI',sans-serif;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);display:none}
+#cg-hudoff-toast.on{display:block}
+#cg-hudoff-toast b{color:#fff;letter-spacing:1px}
+</style>
+<script id="cg-b761-hudoff-js">
+/* CG_HUDOFF - 24 AUG 2026, build 761. T: "disable it and add banner disabled until
+   fixed" / "disable the popout function, remove the undock button or hide it and
+   replace with the advisory."
+   MEASURED: window.cgPillToggle is the SINGLE choke point. The undock button, the
+   keyboard shortcut at 5313265 and the HUD-BRIDGE poller at 5445882 (Stream Deck /
+   VoiceAttack via 127.0.0.1:8423) all call it. Hiding only the button would have
+   left Stream Deck popping it out anyway, so the toggle is closed as well.
+   REGISTER 213 - DO NOT DELETE THE ONLY WAY OUT. If a pilot is ALREADY floating
+   the call passes straight through so they can dock BACK. Only outbound is refused. */
+(function(){
+  if(window.__cgHudOff761) return; window.__cgHudOff761=true;
+  function floating(){ try{ return !!(document.querySelector('.cg-pop-float')||
+    document.querySelector('.cg-pop-ph')||document.querySelector('.cg-pop-host')); }catch(_){ return false; } }
+  var MSG='<b>POP-OUT HUD IS OFF</b><br>Switched off on purpose while its buttons are repaired '+
+          '- undocked, they opened the wrong panels. The docked tablet is unaffected. '+
+          'It comes back when it works.';
+  function toast(){
+    try{ var t=document.getElementById('cg-hudoff-toast');
+      if(!t){ t=document.createElement('div'); t.id='cg-hudoff-toast'; t.innerHTML=MSG; document.body.appendChild(t); }
+      t.classList.add('on'); clearTimeout(window.__cgHudOffT);
+      window.__cgHudOffT=setTimeout(function(){ t.classList.remove('on'); },6000);
+    }catch(_){}
+  }
+  var prev=window.cgPillToggle;
+  window.cgPillToggle=function(k){
+    if(k==='ops' && !floating()){ toast(); return; }
+    return (typeof prev==='function') ? prev.apply(this,arguments) : undefined;
+  };
+  /* the advisory that replaces the button, in the pill where the button lived */
+  function chip(){
+    try{
+      var btn=document.querySelector('.cg-undock-btn'); if(!btn||!btn.parentElement) return false;
+      if(document.getElementById('cg-hudoff-chip')) return true;
+      var c=document.createElement('span'); c.id='cg-hudoff-chip';
+      c.textContent='HUD OFF - BEING FIXED';
+      c.title='The pop-out HUD is disabled while its buttons are repaired. The docked tablet is unaffected.';
+      c.addEventListener('click',toast,false);
+      btn.parentElement.insertBefore(c, btn);
+      return true;
+    }catch(_){ return false; }
+  }
+  /* and the standing line under the pilot count */
+  function note(){
+    try{ var g=document.getElementById('cg-b743-corner'); if(!g) return false;
+      if(document.getElementById('cg-hudoff-note')) return true;
+      var n=document.createElement('div'); n.id='cg-hudoff-note';
+      n.textContent='POP-OUT HUD DISABLED UNTIL FIXED';
+      g.appendChild(n); return true;
+    }catch(_){ return false; }
+  }
+  var i=0; (function tick(){ var a=chip(), b=note(); if(a&&b) return; if(++i>20) return; setTimeout(tick,500); })();
+})();
+</script>
 </body>
 </html>
