@@ -7303,7 +7303,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 765;
+window.CMDGLAS_BUILD = 766;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -56161,6 +56161,47 @@ html body #tab-home .hm-cols .hm-col .hm-tray:not(.hm-tray-gen) .hm-cell .hm-lab
     return true;
   }
   var n=0; (function tick(){ if(wire()) return; if(++n>20) return; setTimeout(tick,500); })();
+})();
+</script>
+<script id="cg-b766-tabdrop-js">
+/* CG_TABDROP - 24 AUG 2026, build 766. T: the iPad tablet "is not correctly laid out".
+   Method and diagnosis credited to the Personal Tablet Handler's handover; the NUMBER
+   and every rule below were RE-DERIVED on THIS file (GATE N - their table was measured
+   against 754 and 8 of its 9 "already yours" rows were absent here).
+
+   THE OWNER, asked of the live cascade with el.matches(), not grepped:
+     !IMP -6px  html:not(.cg-hudonly) body #sc-home-widgets .ops-pill.b385
+                  .ops4-tabs.ops4-tabs.ops4-tabs
+     !IMP  0px  #sc-home-widgets .ops-pill.b385 .ops4-tabs        <- loses on SPECIFICITY
+   CLASS I: more !important does nothing. The -6px rule wins by tripling .ops4-tabs and
+   prefixing html:not(.cg-hudonly) body. Nothing is inline, so no reset list is involved.
+   The clipper is .pill-body (overflow:hidden, padding-top 2px).
+
+   MEASURED ON THIS FILE - painted-px overlap of the tab row by the pill's inner top.
+   COARSE (hasTouch:true, matchMedia coarse verified true, two agreeing reads each):
+     viewport            zoom     -6      0      1      2      3      4
+     1366x1024 12.9     0.501   4.00   1.00   0.50   0.00  -0.50  -1.00
+     1180x820  11       0.450   3.80   1.11   0.67   0.22  -0.23  -0.69
+     1024x768  9.7      0.450   3.80   1.11   0.67   0.22  -0.23  -0.69
+     834x1194  11 port  0.450   3.80   1.11   0.67   0.22  -0.23  -0.69
+   FINE (hasTouch:false):
+     1920x1080          0.615   4.47   0.78   0.17  -0.44  -1.06  -1.67
+     2560x1400          0.796   5.19   0.42  -0.36  -1.16  -1.95  -2.75
+   2px clears the 12.9 exactly (0.00) and STILL CLIPS the other three iPads at 0.22.
+   3px is the SMALLEST value that clears every size measured here, and it matches the
+   independent fine sweep in the handover (which needed 3 for 1280 and 1024).
+   Before: 4px hidden at 1366x1024 = 18.1% of the tab row. Applied to BOTH pointer
+   modes because both sweeps land on the same number - one rule, one owner.
+
+   It wins by carrying ONE MORE .ops4-tabs than the -6px rule. Dials:
+   cg767_tabdrop='0' stands it down; cg767_tabdrop_px overrides the 3. */
+(function(){
+  try{ if(localStorage.getItem('cg767_tabdrop')==='0') return; }catch(_d){}
+  var px=3; try{ var v=parseFloat(localStorage.getItem('cg767_tabdrop_px')); if(isFinite(v)) px=v; }catch(_v){}
+  var s=document.getElementById('cg-b766-tabdrop-style');
+  if(!s){ s=document.createElement('style'); s.id='cg-b766-tabdrop-style'; document.head.appendChild(s); }
+  s.textContent='html:not(.cg-hudonly) body #sc-home-widgets .ops-pill.b385'
+    +' .ops4-tabs.ops4-tabs.ops4-tabs.ops4-tabs{margin-top:'+px+'px !important;}';
 })();
 </script>
 </body>
