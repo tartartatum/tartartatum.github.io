@@ -7303,7 +7303,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 766;
+window.CMDGLAS_BUILD = 767;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -56203,6 +56203,43 @@ html body #tab-home .hm-cols .hm-col .hm-tray:not(.hm-tray-gen) .hm-cell .hm-lab
   s.textContent='html:not(.cg-hudonly) body #sc-home-widgets .ops-pill.b385'
     +' .ops4-tabs.ops4-tabs.ops4-tabs.ops4-tabs{margin-top:'+px+'px !important;}';
 })();
+</script>
+<style id="cg-b767-artbig-css">
+/* CG_ARTBIG - 24 AUG 2026, build 767. T: the album art in the media pane is too
+   small. A 120px attempt in build 758 was written, SIMULATED, and PULLED because it
+   produced 96x86 - a distorted cover, worse than the square it replaced.
+   THE REASON, asked of the live cascade with el.matches():
+     !IMP width:108px   html:not(.cg-hudonly) #cg-media739 .cgp-art
+     !IMP height:108px  html:not(.cg-hudonly) #cg-media739 .cgp-art
+   That selector outranks a bare "#cg-media739 .cgp-art", so BOTH halves of the 758
+   rule lost. Width still moved only because its min-width had no competitor, and no
+   min-height was written - hence one axis moving and the other not. CLASS I: the
+   answer was specificity, never more !important.
+   This matches their prefix, adds body, and writes width, height, min-width,
+   min-height and flex-basis together so one axis cannot move without the other.
+   SWEPT, not picked (GATE V) - painted size and clearance below the art:
+     css    desktop 2560x1400      iPad 1366x1024 coarse
+     108      86x86  210px gap       54x54   fits
+     130     103x103 203px gap
+     150     119x119 193px gap       75x75   fits    <- chosen
+     190     151x151 179px gap
+   Every value stayed square once min-height was written. 150 is a ~38% lift with
+   clearance to spare on both surfaces. Dial: cg767_artpx overrides it. */
+html:not(.cg-hudonly) body #cg-media739 .cgp-art,
+html:not(.cg-hudonly) body .cgmp-pill .cgp-art{
+  width:150px !important; height:150px !important;
+  min-width:150px !important; min-height:150px !important;
+  flex:0 0 150px !important;}
+</style>
+<script id="cg-b767-artbig-js">
+/* CG_ARTBIG dial only - lets T resize the cover without a build. */
+(function(){ try{ var v=parseFloat(localStorage.getItem('cg767_artpx')); if(!isFinite(v)||v<40||v>400) return;
+  var s=document.getElementById('cg-b767-artbig-dial');
+  if(!s){ s=document.createElement('style'); s.id='cg-b767-artbig-dial'; document.head.appendChild(s); }
+  s.textContent='html:not(.cg-hudonly) body #cg-media739 .cgp-art,html:not(.cg-hudonly) body .cgmp-pill .cgp-art{'
+    +'width:'+v+'px !important;height:'+v+'px !important;min-width:'+v+'px !important;'
+    +'min-height:'+v+'px !important;flex:0 0 '+v+'px !important;}';
+}catch(_){} })();
 </script>
 </body>
 </html>
