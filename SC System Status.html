@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SC System Status</title>
+<style>
+  :root{--bg:#0a0f16;--panel:#131c28;--card:#0f1824;--edge:#39414d;--edge2:#4a5a70;--accent:#6ecdff;--orange:#ffd070;
+        --amber3:#ffd479;--green:#39d353;--red:#ff6b6b;--grey:#8fa1b3;--txt:#dfe9f2;--mut:#8fa1b3;}
+  *{box-sizing:border-box}
+  /* 2026-07-12: no wiggle — page always fits its frame edge-to-edge; only
+     vertical scrolling inside, no horizontal pan, no rubber-band bounce */
+  html,body{max-width:100vw;overflow-x:hidden;overscroll-behavior:none}
+  body{margin:0;color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;padding:16px;min-height:100vh;
+       background:var(--bg) radial-gradient(1100px 480px at 50% -8%, rgba(110,205,255,.07), transparent 62%);}
+  @media (max-width:760px){ body{padding:10px} }
+  h1{font-size:23px;margin:0 0 2px;letter-spacing:1px;font-weight:800}
+  h1::before{content:"";display:inline-block;width:4px;height:20px;background:var(--accent);margin-right:10px;vertical-align:-3px;box-shadow:0 0 8px var(--accent)}
+  h1 .o{color:var(--orange)}
+  .sub{color:var(--mut);font-size:13px;margin-bottom:18px;line-height:1.6}
+  .master{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:13px}
+  .master b{color:var(--orange)}
+  /* --- simple product cards (new-player view) --- */
+  /* fit-at-any-width rule (2026-07-12): min() lets every card collapse to the
+     container width — no fixed floor can ever force horizontal overflow,
+     including under panel zoom */
+  #products{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px;margin-bottom:18px}
+  .prod{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:16px 18px;border-left:5px solid var(--green)}
+  .prod.bad{border-left-color:var(--red)}
+  .prod-h{display:flex;align-items:center;gap:10px}
+  .prod-h .dot{width:14px;height:14px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor}
+  .prod-h .nm{font-weight:800;font-size:17px;letter-spacing:1px}
+  .prod-h .pill{margin-left:auto;font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:.5px}
+  .prod .pill.ok{background:#12331f;color:var(--green)} .prod .pill.stale{background:#3a1613;color:var(--red)}
+  .prod-desc{color:var(--mut);font-size:13px;margin:8px 0 0;line-height:1.55}
+  .prod-when{color:var(--mut);font-size:11px;margin-top:8px}
+  .prod-fix{margin-top:10px;background:#1d1206;border:1px solid var(--edge2);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.6;color:var(--amber3)}
+  .prod-fix b{color:#fff}
+  .prod-fix button{margin-top:8px}
+  /* --- shared bits --- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:12px;margin-bottom:20px}
+  .name,.meta,.prod-desc,.prod-fix,#required-body{overflow-wrap:anywhere}
+  #required-body b{word-break:break-all}
+  .row{min-width:0} .row>div{min-width:0}
+  .row{background:var(--card);border:1px solid var(--edge);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px}
+  .dot{width:15px;height:15px;border-radius:50%;flex:0 0 auto;background:currentColor;box-shadow:0 0 9px currentColor,0 0 2px currentColor}
+  .ok{color:var(--green)} .stale{color:var(--red)} .master-d{color:var(--orange)} .missing{color:var(--red)}
+  .row .name{font-weight:600;font-size:15px}
+  .row .meta{color:var(--mut);font-size:12px;margin-top:2px}
+  .pill{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+  .pill.ok{background:#12331f;color:var(--green)} .pill.stale{background:#3a1613;color:var(--red)}
+  .pill.master-d{background:#33210f;color:var(--orange)} .pill.missing{background:#3a1613;color:var(--red)}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  button{background:#242424;color:#ffd479;border:1px solid var(--edge2);border-radius:6px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px}
+  button:hover{background:#2e2a18;border-color:#6a5522} button.g{background:#152615;border-color:#2a4a22;color:#7fffaa} button:disabled{opacity:.5;cursor:default}
+  .mini{padding:7px 13px;font-size:12.5px;margin-left:auto;background:#152615;border:1px solid #2a4a22;color:#7fffaa}
+  .mini+.pill{margin-left:8px}
+  .legend{color:var(--mut);font-size:12px;margin:8px 0 16px;line-height:1.7}
+  .legend b.g{color:var(--green)} .legend b.r{color:var(--red)}
+  #log{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:12px 14px;font-family:Consolas,monospace;font-size:13px;color:var(--green);min-height:44px;white-space:pre-wrap}
+  .foot{color:var(--mut);font-size:12px;margin-top:12px}
+  .warn{color:#d9a441;font-size:12px;margin-top:6px}
+  .scstat{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+  .scstat-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .scstat-title{font-weight:800;letter-spacing:.5px;font-size:14px;color:var(--amber3)}
+  .scpill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+  .scpill.ok{background:#12331f;color:var(--green)} .scpill.bad{background:#3a1613;color:var(--red)}
+  .scwhen{margin-left:auto;color:var(--mut);font-size:11px}
+  .scsys{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:10px}
+  .scsys .s{display:flex;align-items:center;gap:7px;font-size:12.5px}
+  .scsys .sd{width:11px;height:11px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor}
+  .scsrc{color:var(--mut);font-size:10.5px;margin-top:10px}
+  #details{display:none;border-top:1px dashed var(--edge2);padding-top:14px;margin-top:6px}
+  #details.open{display:block}
+  /* Circled-i INFO pattern (2026-07-13): tuck verbose text behind a tappable ⓘ */
+  .info-i{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--accent);color:var(--amber3);font:italic 700 12px/1 Georgia,'Times New Roman',serif;cursor:pointer;background:#1a1206;flex:0 0 auto;-webkit-user-select:none;user-select:none}
+  .info-i:hover{background:var(--accent);color:#000}
+  .info-wrap{position:relative;display:inline-flex;align-items:center}
+  .info-body{display:none;position:absolute;top:26px;left:0;z-index:50;min-width:240px;max-width:min(88vw,560px);background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:11px 13px;font-size:12.5px;line-height:1.65;color:var(--txt);box-shadow:0 10px 34px rgba(0,0,0,.65);text-align:left;font-weight:400}
+  .info-body.on{display:block}
+  .info-body code{color:var(--amber3);word-break:break-all}
+
+/* ===== 2026-08-03  ONE COHESIVE PAGE  (T: "consolidate ... not fractured pieces")
+   Presentation only. Every rule below is scoped to the new wrappers so nothing
+   that already existed can be restyled by accident. ===================== */
+.sysx-sec{ margin:0 0 18px; }
+.sysx-hd{ display:flex; align-items:center; gap:10px; font-size:11px; font-weight:800;
+  letter-spacing:2.2px; color:var(--accent,#4fd2ff); text-transform:uppercase;
+  border-left:3px solid var(--accent,#4fd2ff); padding:5px 0 5px 10px;
+  background:linear-gradient(90deg,rgba(79,210,255,.10),transparent); margin:0 0 10px; }
+.sysx-hd .n{ margin-left:auto; color:var(--mut,#8b98a5); font-weight:600; letter-spacing:1px;
+  text-transform:none; font-size:11.5px; }
+.sysx-bar{ display:flex; flex-wrap:wrap; gap:9px; padding:12px 13px; background:var(--card,#15181d);
+  border:1px solid var(--edge,#252a31); border-radius:11px; }
+.sysx-b{ font:700 12.5px/1 "Segoe UI",system-ui,sans-serif; padding:11px 16px; border-radius:8px;
+  cursor:pointer; border:1px solid var(--edge2,#2f3640); background:#1b2027; color:var(--txt,#e6ebf0); }
+.sysx-b:hover{ border-color:#4fa3dd; }
+.sysx-b.pri{ background:linear-gradient(180deg,#2a6fa8,#1d4f79); border-color:#4fa3dd;
+  color:#eaf6ff; font-size:13.5px; padding:12px 20px; }
+.sysx-b.mark{ background:#152615; border-color:#2a4a22; color:#7fffaa; }
+.sysx-b.sm{ padding:8px 12px; font-size:11.5px; }
+.sysx-note{ color:var(--mut,#8b98a5); font-size:11.5px; margin:6px 2px 0; }
+.sysx-coll{ background:var(--card,#15181d); border:1px solid var(--edge,#252a31); border-radius:11px;
+  padding:11px 13px; color:var(--mut,#8b98a5); display:flex; align-items:center; gap:10px;
+  cursor:pointer; font-size:12.5px; margin-bottom:8px; }
+.sysx-coll b{ color:var(--txt,#e6ebf0); letter-spacing:1.5px; font-size:11.5px; }
+.sysx-coll .ar{ margin-left:auto; color:var(--accent,#4fd2ff); font-weight:800; }
+.sysx-hold{ display:none; margin:0 0 10px; }
+.sysx-hold.open{ display:block; }
+/* the rebuilt peripheral card */
+.prod .sysx-chk{ display:flex; align-items:center; gap:8px; font-size:12.5px; padding:5px 0;
+  border-top:1px solid rgba(255,255,255,.06); }
+.prod .sysx-chk .s{ width:15px; text-align:center; font-weight:800; }
+.prod .sysx-chk .who{ margin-left:auto; font-size:10.5px; letter-spacing:1px;
+  color:var(--mut,#8b98a5); text-transform:uppercase; }
+.prod .sysx-acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.06); }
+@media (max-width:620px){ .sysx-b{ flex:1 1 100%; text-align:center; } }
+</style></head>
+<body>
+  <script>function scInfoToggle(btn,ev){var b=btn.parentNode.querySelector('.info-body');if(!b)return;var open=b.classList.contains('on');document.querySelectorAll('.info-body.on').forEach(function(e){e.classList.remove('on');});if(!open)b.classList.add('on');if(ev&&ev.stopPropagation)ev.stopPropagation();}document.addEventListener('click',function(e){if(!e.target.closest('.info-wrap'))document.querySelectorAll('.info-body.on').forEach(function(x){x.classList.remove('on');});});</script>
+  <h1>SC <span class="o">SYSTEM</span> STATUS</h1>
+  <div class="sub">All four control systems, checked against the newest in-game keybind export. Red cards carry their fix.</div>
+
+  <div class="scstat" id="scstat">
+    <div class="scstat-top">
+      <div class="dot stale" id="sc-ov-dot"></div>
+      <span class="scstat-title">STAR CITIZEN SERVERS</span>
+      <span class="scpill bad" id="sc-ov-txt">checking...</span>
+      <span class="scwhen" id="sc-when"></span>
+    </div>
+    <div class="scsys" id="sc-sys"></div>
+    <div class="scsrc">Live from status.robertsspaceindustries.com &middot; refreshes automatically &middot; if these are red, the game itself is having a bad day — not your setup</div>
+    <div style="text-align:center;margin-top:10px"><button type="button" onclick="try{parent.setActiveTabById('shard')}catch(e){}" style="font-size:11px;padding:6px 14px;letter-spacing:.5px" title="Open the r_displayInfo shard-health analyzer">&#9656; Shard Health analyzer</button></div>
+  </div>
+
+  <div class="master">
+    <div>Game master: <b id="mname">...</b> <span id="mver" style="color:var(--mut)"></span></div>
+    <div style="color:var(--mut)">Last checked: <span id="checked">-</span></div>
+  </div>
+
+  <div id="products"></div>
+
+  <!-- 2026-07-12: MAINTENANCE — desktop shortcuts retired, these run from here now -->
+  <div class="scstat" id="maint-card">
+    <div class="scstat-top">
+      <span class="scstat-title">MAINTENANCE</span>
+      <span class="info-wrap"><span class="info-i" onclick="scInfoToggle(this,event)" title="What these buttons do">i</span><div class="info-body"><b style="color:var(--amber3)">UPDATE ALL</b> &mdash; run AFTER you change keybinds in game (Options &rarr; Keybindings &rarr; Control Profiles &rarr; Save, which writes the export). Regenerates VoiceAttack + master + Azeron + planner palette, backs up deck/VA/tablet, then lists the manual steps. Quit VoiceAttack first. Its window must show a <b>PLANNER PALETTE SYNC:</b> section; any <b>MANUAL:</b> lines are changes it refused to guess &mdash; handle those by hand.<br><br><b style="color:var(--amber3)">BACKUP TABLET &rarr; ICLOUD</b> &mdash; run at the END of a session where the tablet, gear tracker, or its data changed. Keeps exactly one backup (overwrites the old one).<br><br><b style="color:var(--amber3)">BACKUP SC USER FOLDER</b> &mdash; zips your whole Star Citizen USER folder (keybinds, graphics/audio settings, and saved character .chf files) into a timestamped zip in <b>USER_Backups</b>, beside the tablet. Run it before every patch so a wipe can never empty you out again. Keeps the 5 newest.</div></span>
+      <span class="scwhen">run from here &middot; opens its own window on the PC</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button onclick="act('update_all','QUIT VOICEATTACK first (tray icon, right-click, Exit) and close the Stream Deck app.\n\nRun SC UPDATE ALL on the PC? It pauses there so you can confirm the newest export.')">&#9889; UPDATE ALL</button>
+      <button onclick="act('backup_icloud','Copy tablet + tracker + data files to iCloud, overwriting the previous backup?')">&#9729; BACKUP TABLET &rarr; ICLOUD</button>
+      <button onclick="act('backup_user','Back up your ENTIRE Star Citizen USER folder (keybinds, settings, saved character .chf files) to a timestamped zip in USER_Backups? Keeps the 5 newest.')">&#128190; BACKUP SC USER FOLDER</button>
+      <button onclick="act('open_smartcitizen','Launch the Smart Citizen app on the PC?')">&#128640; OPEN SMART CITIZEN</button>
+    </div>
+  </div>
+
+  <!-- VR MODE card removed 2026-07-14 (user): tablet ships without VR for now.
+       Server /api/vr_state & /api/vr_toggle endpoints left dormant (unused, harmless). -->
+
+  <div class="scstat" id="required-card">
+    <div class="scstat-top">
+      <span class="scstat-title">REQUIRED SETTINGS &mdash; select EXACTLY this</span>
+      <span class="scwhen">names follow the newest export automatically</span>
+    </div>
+    <div id="required-body" style="margin-top:10px;font-size:13.5px;line-height:2">loading...</div>
+  </div>
+
+  <!-- TABLET THEME picker removed 2026-07-13 (user): superseded by the top-bar color dots. -->
+
+
+  <button id="cfg-toggle" onclick="toggleCfg()">▸ CONFIGURATION — peripherals &amp; folders</button>
+  <div id="cfg-card" class="scstat" style="display:none;margin-top:10px">
+    <div class="scstat-top"><span class="scstat-title">CONFIGURATION</span>
+      <span class="scwhen">toggles apply instantly &middot; folder changes apply after Restart SC Control Server.bat</span></div>
+    <div id="cfg-body" style="margin-top:10px;font-size:13px">loading&hellip;</div>
+    <!-- === READ-ONLY GUARANTEE (2026-07-16 user order) ==========================================
+         User: "note on the config page that every file being looked at is READ only... the ingame
+         keybind list will never be edited by the tablet... it will not add to or change gamefiles.
+         only the bindings of peripherals."
+
+         EVERY CLAIM BELOW WAS VERIFIED AGAINST SC Control Server.py BEFORE BEING WRITTEN - a false
+         safety promise is worse than none, and this one is load-bearing for the public build.
+           - MAPPINGS (the game export folder) appears exactly 5 times in the server: line 16 define,
+             29 default, 60 config read, 66 glob(), 329 glob(). glob() LISTS files. There is no
+             open(...,"w"), no os.remove, no os.replace and no json.dump anywhere near it. The game
+             folder is READ-ONLY as a matter of fact, not intent.
+           - Every write in the server targets either the tablet's OWN files (sc_config.json,
+             state, caches) or a BUILDER's OWN OUTPUT folder (Azeron zip / VoiceAttack .vap /
+             Stream Deck profile). Never the game.
+           - ONE EXCEPTION, deliberately not claimed away: run_vr_toggle() CAN write the RSI
+             LAUNCHER's settings json (it takes a .pre-vr.bak first). It is DORMANT - grep of every
+             .html shows no UI calls /api/vr_toggle. It is reachable only by hand-POSTing the
+             endpoint. If that button is ever wired up, THIS NOTE MUST CHANGE - it would no longer
+             be true that nothing outside the tablet's own folders is written.
+         Do not soften this into "the tablet never writes anything": that is false (the builders do
+         write) and one false line poisons the credibility of the true ones. ==================== -->
+    <div style="margin-top:12px;border:1px solid var(--ok,#39d353);border-radius:6px;padding:9px 11px;font-size:12px;color:var(--mut);line-height:1.75;background:rgba(57,211,83,.06)">
+      <b style="color:var(--ok,#39d353);letter-spacing:1px">READ-ONLY WHERE IT COUNTS &mdash; WHAT THIS APP WILL AND WILL NOT TOUCH</b><br>
+      <b style="color:var(--ok,#39d353)">It will not add to or change your game files.</b> Every file this app looks at is opened
+      <b>READ ONLY</b>. Nothing is written back, renamed, moved or deleted.<br>
+      <b style="color:var(--ok,#39d353)">Your in-game keybind list is never edited by the tablet.</b> It only <i>reads</i> the newest
+      <code>layout_&lt;name&gt;_exported.xml</code> in your GAME EXPORT FOLDER and measures everything against it.
+      Your bindings inside Star Citizen are yours; this app has no way to alter them.<br>
+      <b>The only things it writes are PERIPHERAL BINDINGS</b> &mdash; and only for the devices <b>you tick
+      above</b>, and only when you run a builder. Each builder regenerates <i>its own</i> import file into
+      <i>its own</i> folder; you then import that file using the peripheral's own software. Nothing else on
+      your PC is touched, and your game files are never one of them.<br>
+      <b style="color:var(--ok,#39d353)">Mouse and keyboard only? Tick nothing.</b> With no peripherals
+      selected there is nothing to build, and this app writes nothing at all beyond its own settings file.
+      It becomes a pure read-only reference.
+    </div>
+    <div style="margin-top:12px;border-top:1px dashed var(--edge2);padding-top:10px;font-size:12px;color:var(--mut);line-height:1.8">
+      <b style="color:var(--amber3)">CONNECTING YOUR FILES (fresh machine / new user):</b><br>
+      <b>1. Game keybinds:</b> in Star Citizen &rarr; Options &rarr; KEYBINDINGS &rarr; Advanced Customization &rarr; Control Profiles &rarr; save/export your profile. The game writes <code>layout_&lt;name&gt;_exported.xml</code> into <code>&hellip;\StarCitizen\LIVE\user\client\0\controls\mappings</code> inside YOUR install — paste that folder into GAME EXPORT FOLDER below. Everything is measured against the newest export there.<br>
+      <b>2. Tools folder:</b> holds the sync engine (SC UPDATE ALL.bat / sc_sync.py) and MASTER_KEYBINDS.json. Migrating PCs = copy the whole folder across (USB / cloud / network share), then paste its new path below.<br>
+      <b>3. VoiceAttack:</b> the regenerated <code>SC Voice MFD &lt;profile&gt;.vap</code> is written to the VOICEATTACK FOLDER. Import inside VoiceAttack: Profile menu &rarr; Import Profile &rarr; pick the .vap.<br>
+      <b>4. Stream Deck:</b> import by double-clicking the <code>&lt;profile&gt;_*.streamDeckProfile</code> in the DECK PROFILE FOLDER with the Stream Deck app running.<br>
+      <b>5. Azeron:</b> the regenerated <code>AZERON_SC_KEYBINDS_&lt;profile&gt;.zip</code> sits in the AZERON FOLDER. Azeron software &rarr; Profiles &rarr; Import &rarr; pick the zip.<br>
+      <b>NOTE:</b> where the engine WRITES the .vap and deck profiles is set in <code>Tools\sc_sync.py</code> (CONFIG block at the top — open with Notepad). This page controls where the STATUS system READS from.<br>
+      <b style="color:var(--ok,#39d353)">Reminder:</b> the GAME EXPORT FOLDER above is read-only to this app &mdash; it is watched, never written. The builder folders for the peripherals you ticked are the only places anything is created, and only when you run a build.<!-- 2026-07-16: deliberately NOT a peripheral count or a vendor list. It read "The three builder folders (VoiceAttack / Deck / Azeron)" and would have become FALSE the moment flight sticks (VKB / VIRPIL / Logitech) were added - a stale safety claim is worse than none. Keep every statement in this card vendor-neutral and count-free so new devices never require rewording it. -->
+    </div>
+  </div>
+  <style>
+  /* 2026-07-16: the path rows used to be a bare width:100% input, so on a wide
+     monitor a 40-character path stretched the entire page. Capped and paired with
+     a BROWSE button on the same line. */
+  #cfg-body .cfg-row{margin:12px 0;max-width:780px}
+  #cfg-body .cfg-lab{font-size:11px;color:var(--mut);letter-spacing:1px;margin-bottom:4px}
+  #cfg-body .cfg-in{display:flex;gap:8px;align-items:stretch}
+  /* min-width:0 is load-bearing: a flex item defaults to min-width:auto, which
+     refuses to shrink below its content - a long path would blow the cap right
+     back out to full page width. */
+  #cfg-body .cfg-in input{flex:1 1 auto;min-width:0;background:#0d0d0d;border:1px solid var(--edge2);
+    color:var(--amber3);padding:8px 10px;font-family:Consolas,monospace;font-size:12.5px;border-radius:6px}
+  #cfg-body .cfg-in input:focus{outline:none;border-color:var(--amber3)}
+  #cfg-body .cfg-br{flex:0 0 auto;white-space:nowrap;border-radius:6px;padding:8px 14px;cursor:pointer}
+  #cfg-body .cfg-br[disabled]{opacity:.4;cursor:not-allowed}
+  @keyframes cfgLand{0%,100%{box-shadow:none}20%,80%{box-shadow:0 0 0 2px var(--amber3)}}
+  #cfg-body .cfg-landed{animation:cfgLand 1.6s ease-in-out}
+  </style>
+  <script>
+  function toggleCfg(){
+    var c=document.getElementById('cfg-card'), t=document.getElementById('cfg-toggle');
+    var open=c.style.display==='none';
+    c.style.display=open?'block':'none';
+    t.textContent=(open?'▾ HIDE CONFIGURATION':'▸ CONFIGURATION — peripherals & folders');
+    // returns cfgLoad's promise so the deep-link can wait for the inputs to exist
+    // before trying to put the cursor in one
+    if(open) return cfgLoad();
+    return Promise.resolve();
+  }
+  // BROWSE pops a dialog on the machine RUNNING the server. Served to an iPad, the
+  // button would open a window on the PC that nobody is standing at - so it only
+  // arms on localhost. The server enforces this too (403); this is just so the
+  // button tells the truth before you press it.
+  var CFG_LOCAL=['localhost','127.0.0.1','::1','[::1]'].indexOf(location.hostname)>-1;
+  var CFG_FIELDS=[
+    ['mappings','GAME EXPORT FOLDER','where Star Citizen writes layout_*_exported.xml'],
+    ['tools','TOOLS FOLDER','sync engine + MASTER_KEYBINDS.json'],
+    ['azeron_dir','AZERON FOLDER','azeron backups + regenerated import zip'],
+    ['va_dir','VOICEATTACK FOLDER','where the regenerated .vap lands'],
+    ['deck_load_dir','DECK PROFILE FOLDER','the deck profile file to load']
+  ];
+  var CFG_PERIPH=[['deck','Stream Deck'],['voice','VoiceAttack + HCS'],['azeron','Azeron keypads']];
+  async function cfgLoad(){
+    var b=document.getElementById('cfg-body');
+    try{
+      var r=await fetch('/api/config',{cache:'no-store'}); var j=await r.json();
+      var c=j.config||{};
+      var html='<div style="margin-bottom:10px"><b style="color:var(--amber3)">MY PERIPHERALS</b> — untick what you don\'t own; its card and checks disappear:<br>';
+      CFG_PERIPH.forEach(function(p){
+        var on=(c.enabled||{})[p[0]]!==false;
+        html+='<label style="display:inline-flex;align-items:center;gap:6px;margin:8px 18px 0 0;cursor:pointer"><input type="checkbox" data-per="'+p[0]+'" '+(on?'checked':'')+'> '+p[1]+'</label>';
+      });
+      html+='<label style="display:inline-flex;align-items:center;gap:6px;margin:8px 18px 0 0;color:var(--mut)"><input type="checkbox" checked disabled> CMD Tablet (always on)</label></div>';
+      CFG_FIELDS.forEach(function(f){
+        var v=((c.paths||{})[f[0]]||'');
+        var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');};
+        html+='<div class="cfg-row">'
+          +'<div class="cfg-lab">'+f[1]+' <span style="text-transform:none">— '+f[2]+'</span></div>'
+          +'<div class="cfg-in">'
+            +'<input type="text" spellcheck="false" data-path="'+f[0]+'" value="'+esc(v)+'">'
+            +'<button type="button" class="cfg-br" data-browse="'+f[0]+'" data-label="'+esc(f[1].toLowerCase())+'"'
+              +(CFG_LOCAL?'':' disabled title="BROWSE only works on the PC running the server — the dialog would open there, not on this device. Type or paste the path instead."')
+              +' onclick="cfgBrowse(this)">&#128193; BROWSE</button>'
+          +'</div></div>';
+      });
+      html+='<button class="g" onclick="cfgSave()" style="margin-top:8px">&#10003; SAVE CONFIGURATION</button>';
+      b.innerHTML=html;
+    }catch(e){ b.innerHTML='<span style="color:var(--red)">Config unavailable — server needs a restart to gain the /api/config endpoint (Restart SC Control Server.bat), then reopen this card.</span>'; }
+  }
+  // 2026-07-16: BROWSE. The picker HAS to run server-side - the browser refuses to give
+  // a page an absolute path (webkitdirectory yields only a relative path; showDirectoryPicker
+  // yields a handle with .name). See browse_folder() in SC Control Server.py.
+  async function cfgBrowse(btn){
+    var key=btn.getAttribute('data-browse');
+    var inp=document.querySelector('#cfg-body input[data-path="'+key+'"]');
+    var log=document.getElementById('log'), old=btn.innerHTML;
+    btn.disabled=true; btn.textContent='PICKING…';
+    log.textContent='Folder picker is open ON THE PC — pick a folder, or Cancel. (Check behind this window.)';
+    try{
+      var r=await fetch('/api/browse?field='+encodeURIComponent(key)
+        +'&label='+encodeURIComponent(btn.getAttribute('data-label')||''),{cache:'no-store'});
+      // A server started BEFORE this feature existed has no /api/browse, so it falls
+      // through to static file serving and answers 404 with an HTML error page. Catch that
+      // here: r.json() on HTML throws "Unexpected token '<'", which tells you nothing.
+      if(r.status===404){
+        log.textContent='✗ This control server was started before BROWSE existed, so it has no /api/browse. '
+          +'Close the SC Control Server window completely and run Restart SC Control Server.bat, then reload this page.';
+        btn.disabled=false; btn.innerHTML=old; return;
+      }
+      var ct=(r.headers.get('content-type')||'');
+      if(ct.indexOf('json')<0){
+        log.textContent='✗ /api/browse answered '+r.status+' with '+(ct||'no content-type')+' instead of JSON — the server is not the version that has this endpoint.';
+        btn.disabled=false; btn.innerHTML=old; return;
+      }
+      var j=await r.json();
+      if(j.ok&&j.path){
+        inp.value=j.path; inp.focus();
+        log.textContent='✓ '+key+' → '+j.path+(j.exists?'':'  (heads up: that folder does not exist)')
+          +'   — NOT saved yet, press SAVE CONFIGURATION.';
+      }
+      else if(j.cancelled){ log.textContent='Picker cancelled — nothing changed.'; }
+      else { log.textContent='✗ '+(j.error||'picker failed'); }
+    }catch(e){ log.textContent='✗ '+e; }
+    btn.disabled=false; btn.innerHTML=old;
+  }
+  // 2026-07-16: deep link from the tablet's READY button — SC System Status.html#configure
+  // opens the CONFIGURATION card and lands the cursor in the first EMPTY path.
+  function cfgFocusFirstEmpty(){
+    var ins=[].slice.call(document.querySelectorAll('#cfg-body input[data-path]'));
+    if(!ins.length) return;
+    var tgt=ins.filter(function(i){return !i.value.trim();})[0]||ins[0];
+    try{ tgt.scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){ tgt.scrollIntoView(); }
+    tgt.focus(); tgt.select();
+    tgt.classList.add('cfg-landed');
+    setTimeout(function(){ tgt.classList.remove('cfg-landed'); },1700);
+  }
+  // The tablet's READY / START HERE button calls this straight through the iframe
+  // (both pages are served from localhost:8420, so it is same-origin). Kept as a named
+  // window function rather than a hash-only trigger because when the iframe is ALREADY
+  // loaded, re-setting src to the same #configure hash fires nothing at all.
+  async function cfgOpenAndFocus(){
+    var c=document.getElementById('cfg-card');
+    var painted=document.querySelectorAll('#cfg-body input[data-path]').length>0;
+    if(c.style.display==='none'){ await toggleCfg(); }        /* closed -> open + load */
+    else if(!painted){ await cfgLoad(); }                     /* open but never painted -> load */
+    /* else: already open AND painted -> deliberately do NOT refetch. cfgLoad() rebuilds
+       every row from the server's saved config, so calling it here would silently discard
+       a path you had typed but not yet SAVED. Found 2026-07-16: pressing READY with unsaved
+       text in a box threw the text away. */
+    cfgFocusFirstEmpty();
+  }
+  window.cfgOpenAndFocus=cfgOpenAndFocus;
+  async function cfgDeepLink(){
+    if(!/configure/i.test(location.hash||'')) return;
+    await cfgOpenAndFocus();
+  }
+  window.addEventListener('hashchange',cfgDeepLink);   // fragment nav does NOT re-fire DOMContentLoaded
+  if(document.readyState==='loading') window.addEventListener('DOMContentLoaded',cfgDeepLink);
+  else cfgDeepLink();
+  async function cfgSave(){
+    var enabled={}; document.querySelectorAll('#cfg-body input[data-per]').forEach(function(i){enabled[i.getAttribute('data-per')]=i.checked;});
+    var paths={}; document.querySelectorAll('#cfg-body input[data-path]').forEach(function(i){paths[i.getAttribute('data-path')]=i.value.trim();});
+    var log=document.getElementById('log'); log.textContent='Saving configuration…';
+    try{
+      var r=await fetch('/api/config',{method:'POST',body:JSON.stringify({enabled:enabled,paths:paths})}); var j=await r.json();
+      log.textContent=(j.ok?'✓ ':'✗ ')+(j.message||j.error||'saved');
+      if(j.status)render(j.status);
+    }catch(e){ log.textContent='✗ '+e; }
+  }
+  </script>
+  <button id="details-toggle" onclick="toggleDetails()" style="margin-top:10px">▸ SHOW TECHNICAL DETAILS</button>
+  <div id="details">
+    <div class="legend">
+      <b class="g">&#9679; green</b> = in sync with the master &nbsp;&middot;&nbsp;
+      <b class="r">&#9679; red</b> = out of sync &mdash; click <b>Sync now</b> / <b>Mark done</b> in that box &nbsp;&middot;&nbsp;
+      <b class="g">&#9679; Game</b> = your master reference (always green) &nbsp;&middot;&nbsp;
+      AUTO boxes are verified on disk; Mark-done boxes flag red on every new export until you confirm them
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="controls">
+      <button class="g" onclick="check()">&#8635; Refresh status</button>
+      <button onclick="act('backup','Backup Stream Deck?')">&#11015; Backup Stream Deck</button>
+      <button onclick="act('sync_azeron','Rebuild the Azeron SYNCED backup from the master?')">&#8646; Re-sync Azeron</button>
+      <button onclick="act('sync_voiceattack','Quit VoiceAttack first (tray icon, right-click, Exit) so the new profile imports cleanly.\n\nRegenerate the VoiceAttack .vap + MASTER_KEYBINDS.json from the newest in-game export?')">&#127908; Sync VoiceAttack</button>
+    </div>
+  </div>
+
+  <div id="log">Connecting to control server...</div>
+  <div class="warn" id="offline" style="display:none">&#9888; Control server not reachable. Start it with <b>Launch System Control.bat</b> (green/red needs the server running).</div>
+  <div class="foot">Config-files only &mdash; no game files touched, nothing that trips anti-cheat.</div>
+
+<script>
+const $=s=>document.querySelector(s);
+function toggleDetails(){
+  const d=$('#details'), t=$('#details-toggle');
+  const open=!d.classList.contains('open');
+  d.classList.toggle('open',open);
+  t.textContent=(open?'▾ HIDE TECHNICAL DETAILS':'▸ SHOW TECHNICAL DETAILS');
+  try{localStorage.setItem('sc_status_details',open?'1':'');}catch(e){}
+}
+try{ if(localStorage.getItem('sc_status_details')==='1'){ $('#details').classList.add('open'); $('#details-toggle').textContent='▾ HIDE TECHNICAL DETAILS'; } }catch(e){}
+
+/* ---- new-player product cards: aggregate the raw surfaces into 4 systems ---- */
+const PRODUCTS=[
+  {id:'deck',   name:'STREAM DECK',  match:function(s){return s.key==='deck'||/deck/i.test(s.label);},
+   desc:'Deck buttons → game keybinds.',
+   fix:'Press <b>FIX IT</b> below. It rebuilds the master keybind data and the deck change report. If the report names a deck button, rebuild in the planner, then load the deck profile file above.'},
+  {id:'voice',  name:'VOICEATTACK',  match:function(s){return s.key==='voice'||s.key==='vaimport'||s.key==='hcs'||/voiceattack|hcs|\.vap/i.test(s.label);},
+   desc:'Voice profile + HCS crew integration.',
+   fix:'Click <b>FIX IT</b> to regenerate the voice profile from your newest keybinds (quit VoiceAttack first: tray icon &rarr; Exit). Then in VoiceAttack: <b>Import Profile</b>, and confirm the two in-app settings shown in REQUIRED SETTINGS — mark them done in the details view.'},
+  {id:'azeron', name:'AZERON KEYPADS', match:function(s){return s.key==='azeron'||/azeron|cyborg|cryo/i.test(s.label);},
+   desc:'Cyborg (left) + Cryo (right) keypad maps.',
+   fix:'Click <b>FIX IT</b> to rebuild the Azeron import file from your newest keybinds, then import the regenerated keybinds zip in the Azeron app.'},
+  {id:'tablet', name:'CMD TABLET',  match:function(s){return s.key==='tablet'||/tablet|master keybind file/i.test(s.label);},
+   desc:'Tablet keybind pages — follow the master live.',
+   fix:'Press <b>FIX IT</b> below. It regenerates MASTER_KEYBINDS.json, which every tablet keybind page reads.'}
+];
+function renderProducts(d){
+  /* 2026-08-03 - rebuilt as a TICK LIST (T approved the mockup).
+     Every check the card is made of is printed, with who can fix it, and the
+     Mark buttons that used to hide inside TECHNICAL DETAILS now sit on the card.
+     WHY THAT MATTERS: vaimport and hcs cannot be verified from disk - MEASURED,
+     VoiceAttack's own .dat holds no readable profile names, not even "HCS" - so
+     marking is the ONLY way those two ever go green. Hiding the button behind a
+     collapsed panel is what made the card look permanently broken. */
+  const host=$('#products'); if(!host) return;
+  const used={};
+  const REBUILD={deck:'sync_master', voice:'sync_voiceattack', azeron:'sync_azeron', tablet:'sync_master'};
+  const REBUILD_MSG={
+    deck:'Rebuild the master keybind data and the Stream Deck change report from your newest in-game export?',
+    voice:'Quit VoiceAttack first (tray icon, right-click, Exit).\n\nRegenerate the voice profile from the newest keybinds?',
+    azeron:'Rebuild the Azeron import file from the newest keybinds?',
+    tablet:'Regenerate MASTER_KEYBINDS.json from your newest in-game export?'};
+  /* a surface nothing on disk can prove - only the pilot can say it is done */
+  const MANUAL={vaimport:'Mark import done', hcs:'Mark HCS done'};
+  host.innerHTML=PRODUCTS.map(function(p){
+    const members=(d.surfaces||[]).filter(function(s){
+      if(s.key==='game'||used[s.key])return false;
+      if(p.match(s)){used[s.key]=1;return true;} return false; });
+    if(!members.length) return '';
+    const bad=members.filter(function(s){return s.state==='stale'||s.state==='missing';});
+    const ok=bad.length===0;
+    let when=''; members.forEach(function(s){ if(s.ts&&s.ts!=='never'&&s.ts>when) when=s.ts; });
+
+    const rows=members.map(function(s){
+      const good=(s.state!=='stale'&&s.state!=='missing');
+      const who=good?'done':(MANUAL[s.key]?'you':(s.auto?'rebuild':'you'));
+      return '<div class="sysx-chk"><span class="s" style="color:'+(good?'var(--green)':'var(--red)')+'">'
+        +(good?'&#10003;':'&#10007;')+'</span><span>'+s.label+'</span>'
+        +'<span class="who">'+who+'</span></div>';
+    }).join('');
+
+    let acts='';
+    if(REBUILD[p.id]){
+      acts+='<button class="sysx-b sm" onclick="act(\''+REBUILD[p.id]+'\',\''
+        +REBUILD_MSG[p.id].replace(/\n/g,'\\n')+'\')">&#8635; Rebuild</button>';
+    }
+    members.forEach(function(s){
+      if(!MANUAL[s.key]) return;
+      if(s.state!=='stale'&&s.state!=='missing') return;
+      acts+='<button class="sysx-b sm mark" onclick="syncOne(\''+s.key+'\')">&#10003; '+MANUAL[s.key]+'</button>';
+    });
+
+    const prof=d.profile||'?', mfile=d.master||'?';
+    const line = ok
+      ? '<div class="prod-when" style="color:var(--green);font-weight:700">on master: '+prof+' <span style="color:var(--mut);font-weight:400">('+mfile+')</span></div>'
+      : '<div class="prod-when" style="color:var(--red);font-weight:700">NOT on '+prof+' yet <span style="color:var(--mut);font-weight:400">(newest: '+mfile+')</span></div>';
+
+    return '<div class="prod '+(ok?'':'bad')+'">'
+      +'<div class="prod-h" style="color:'+(ok?'var(--green)':'var(--red)')+'"><span class="dot"></span>'
+      +'<span class="nm" style="color:var(--txt)">'+p.name+'</span>'
+      +'<span class="pill '+(ok?'ok':'stale')+'">'+(ok?'READY':'NEEDS YOU')+'</span></div>'
+      +'<div class="prod-desc">'+p.desc+'</div>'
+      +line
+      +(when?'<div class="prod-when">last confirmed: '+when+'</div>':'')
+      +rows
+      +(acts?'<div class="sysx-acts">'+acts+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function render(d){
+  $('#offline').style.display='none';
+  $('#mname').textContent=d.master||'(none)';
+  $('#mver').textContent=d.master_ver?('· v'+d.master_ver):'';
+  $('#checked').textContent=d.checked||'-';
+  renderProducts(d);
+  const g=$('#grid'); g.innerHTML='';
+  for(const s of d.surfaces){
+    const cls=s.state;
+    const pill={ok:'IN SYNC',stale:'OUT OF SYNC',master:'MASTER',missing:'MISSING'}[cls]||cls;
+    const pcls=(cls==='master')?'ok':cls;
+    const manual=(s.key==='hcs'||s.key==='vaimport');
+    const btn=(cls==='stale'&&!s.auto)?'<button class="mini" onclick="syncOne(\''+s.key+'\')">'+(manual?'Mark done':'Sync now')+'</button>':'';
+    g.insertAdjacentHTML('beforeend',
+      '<div class="row"><div class="dot '+pcls+'"></div>'+
+        '<div><div class="name">'+s.label+(s.auto?' <span style="font-size:10px;color:var(--mut)">AUTO</span>':'')+'</div><div class="meta">'+s.detail+(s.ts&&s.ts!=='never'?' &middot; '+s.ts:'')+'</div></div>'+
+        btn+'<div class="pill '+pcls+'">'+pill+'</div></div>');
+  }
+  if(d.required){
+    $('#required-body').innerHTML=
+      'VoiceAttack main screen &mdash; Profile: <b style="color:var(--amber3)">'+d.required.va_main_profile+'</b><br>'+
+      'HCS Customiser &mdash; Custom binds: <b style="color:var(--amber3)">'+d.required.hcs_custom_binds+'</b><br>'+
+      'VoiceAttack import file: <b style="color:var(--amber3)">'+d.required.vap_file+'</b><br>'+
+      'Deck profile file: <b style="color:var(--amber3)">'+d.required.deck_file+'</b>';
+  }
+}
+async function check(){
+  try{ const r=await fetch('/api/status',{cache:'no-store'}); render(await r.json()); if(!$('#log').dataset.busy)$('#log').textContent='Status refreshed.'; }
+  catch(e){ $('#offline').style.display='block'; $('#log').textContent='Control server offline.'; }
+}
+async function act(name,confirmMsg){
+  if(!confirm(confirmMsg))return;
+  const log=$('#log'); log.dataset.busy=1; log.textContent='Running '+name+'...';
+  try{
+    const r=await fetch('/api/'+name,{method:'POST'}); const j=await r.json();
+    log.textContent=(j.ok?'✓ ':'✗ ')+(j.message||name); if(j.status)render(j.status);
+  }catch(e){ log.textContent='✗ '+e; }
+  log.dataset.busy='';
+}
+async function syncOne(key){
+  const log=$('#log'); log.dataset.busy=1;
+  try{
+    if(key==='azeron'){
+      log.textContent='Rebuilding Azeron backup...';
+      const r=await fetch('/api/sync_azeron',{method:'POST'}); const j=await r.json();
+      log.textContent=(j.ok?'✓ ':'✗ ')+(j.message||''); if(j.status)render(j.status);
+    }else if(key==='voice'){
+      log.textContent='Regenerating VoiceAttack profile from newest export...';
+      const r=await fetch('/api/sync_voiceattack',{method:'POST'}); const j=await r.json();
+      log.textContent=(j.ok?'✓ ':'✗ ')+(j.message||''); if(j.status)render(j.status);
+    }else{
+      const r=await fetch('/api/mark?surface='+key,{method:'POST'}); const j=await r.json();
+      log.textContent='✓ '+key+' recorded as in sync with the master.'; if(j.status)render(j.status);
+    }
+  }catch(e){ log.textContent='✗ '+e; }
+  log.dataset.busy='';
+}
+async function scStatus(){
+  const ovDot=$('#sc-ov-dot'), ovTxt=$('#sc-ov-txt'), sys=$('#sc-sys'), when=$('#sc-when');
+  try{
+    const r=await fetch('/api/sc_status',{cache:'no-store'}); const d=await r.json();
+    if(d.error){ ovDot.className='dot stale'; ovTxt.className='scpill bad'; ovTxt.textContent='status unavailable'; when.textContent=d.fetched?('tried '+d.fetched):''; sys.innerHTML=''; return; }
+    const ok=!!d.overall_ok;
+    ovDot.className='dot '+(ok?'ok':'stale');
+    ovTxt.className='scpill '+(ok?'ok':'bad');
+    ovTxt.textContent=ok?'All Operational':'Service Issue';
+    when.textContent=d.fetched?('checked '+d.fetched):'';
+    if(d.systems && d.systems.length){
+      sys.innerHTML=d.systems.map(function(s){
+        return '<span class="s" style="color:'+(s.ok?'var(--green)':'var(--red)')+'"><span class="sd"></span><span style="color:var(--txt)">'+s.name+' &mdash; '+s.status+'</span></span>';
+      }).join('');
+    } else { sys.innerHTML='<span class="s" style="color:var(--mut)">'+(d.no_issues?'No issues detected':'&mdash;')+'</span>'; }
+  }catch(e){ ovDot.className='dot stale'; ovTxt.className='scpill bad'; ovTxt.textContent='server offline'; sys.innerHTML=''; }
+}
+/* VR MODE card + vrLoad/vrToggle removed 2026-07-14 (user): ships without VR for now. */
+check(); setInterval(check,30000);
+scStatus(); setInterval(scStatus,60000);
+
+/* ===================================================================== */
+/*  ONE COHESIVE PAGE - layout pass.  2026-08-03                          */
+/*  Builds four numbered sections and MOVES the existing cards into them. */
+/*  appendChild moves a node, it does not clone it - so every id, every    */
+/*  handler and every render target survives. Runs once, guarded.         */
+/* ===================================================================== */
+(function(){
+  if(window.__sysxLaid) return;
+  function el(t,c,h){ var e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; }
+  function sec(num,title,note){
+    var d=el('div','sysx-sec');
+    d.appendChild(el('div','sysx-hd', num+' &middot; '+title+(note?'<span class="n">'+note+'</span>':'')));
+    return d;
+  }
+  function coll(title,sub,node){
+    var head=el('div','sysx-coll','<b>'+title+'</b><span>'+sub+'</span><span class="ar">&#9656;</span>');
+    var hold=el('div','sysx-hold');
+    if(node) hold.appendChild(node);
+    head.addEventListener('click',function(){
+      var open=hold.classList.toggle('open');
+      head.querySelector('.ar').innerHTML=open?'&#9662;':'&#9656;';
+    });
+    return [head,hold];
+  }
+  function lay(){
+    var products=document.getElementById('products');
+    var scstat=document.getElementById('scstat');
+    if(!products||!scstat) return false;
+    if(window.__sysxLaid) return true;
+    window.__sysxLaid=true;
+
+    var maint=document.getElementById('maint-card');
+    var req=document.getElementById('required-card');
+    var cfg=document.getElementById('cfg-card');
+    var det=document.getElementById('details');
+    var detToggle=document.getElementById('details-toggle');
+    var root=products.parentNode;
+
+    /* 1 - rebuild bar */
+    var s1=sec('1','Rebuild from your newest keybinds','files only &mdash; nothing in-app');
+    var bar=el('div','sysx-bar');
+    bar.innerHTML=
+      '<button class="sysx-b pri" onclick="rebuildAll()">&#8635; REBUILD EVERYTHING</button>'
+     +'<button class="sysx-b" onclick="act(\'sync_voiceattack\',\'Quit VoiceAttack first (tray icon, right-click, Exit).\\n\\nRegenerate the voice profile from the newest keybinds?\')">&#8635; Voice profile</button>'
+     +'<button class="sysx-b" onclick="act(\'sync_azeron\',\'Rebuild the Azeron import file from the newest keybinds?\')">&#8635; Azeron file</button>'
+     +'<button class="sysx-b" onclick="act(\'sync_master\',\'Rebuild the master keybind data and the Stream Deck change report?\')">&#8635; Deck data</button>'
+     +'<button class="sysx-b" onclick="act(\'sync_master\',\'Regenerate MASTER_KEYBINDS.json from your newest in-game export?\')">&#8635; Tablet keybind data</button>';
+    s1.appendChild(bar);
+    s1.appendChild(el('div','sysx-note',
+      'Every button here writes files. None of them can press a button inside VoiceAttack, HCS, the Stream Deck app or the Azeron app.'));
+    root.insertBefore(s1, products);
+
+    /* 2 - peripherals */
+    var s2=sec('2','Your peripherals','');
+    root.insertBefore(s2, products);
+    s2.appendChild(products);
+
+    /* 3 - servers */
+    var s3=sec('3','Star Citizen servers','');
+    root.insertBefore(s3, products.parentNode.nextSibling);
+    s3.appendChild(scstat);
+    root.insertBefore(s3, s2.nextSibling);
+
+    /* 4 - setup and tools */
+    var s4=sec('4','Setup &amp; tools','collapsed &mdash; nothing here is needed day to day');
+    root.appendChild(s4);
+    if(cfg){ cfg.style.display=''; var c=coll('FOLDERS &amp; PATHS','mappings &middot; tools &middot; azeron &middot; voiceattack &middot; deck load folder',cfg);
+             s4.appendChild(c[0]); s4.appendChild(c[1]); }
+    if(maint){ var m=coll('BACKUPS &amp; LAUNCHERS','tablet &rarr; iCloud &middot; Stream Deck backup &middot; Smart Citizen',maint);
+             s4.appendChild(m[0]); s4.appendChild(m[1]); }
+    if(req){ var r=coll('REQUIRED IN-APP SETTINGS','the exact VoiceAttack and HCS selections',req);
+             s4.appendChild(r[0]); s4.appendChild(r[1]); }
+    if(det){ if(detToggle && detToggle.parentNode) detToggle.parentNode.removeChild(detToggle);
+             det.classList.add('open'); det.style.display='';
+             var t=coll('TECHNICAL DETAILS','all raw surfaces and their versions',det);
+             s4.appendChild(t[0]); s4.appendChild(t[1]); }
+
+    /* the old CONFIGURATION toggle button, wherever it lives, now just opens
+       section 4's first row - so there is one way in, not two */
+    var ct=document.getElementById('cfg-toggle');
+    if(ct && ct.parentNode) ct.parentNode.removeChild(ct);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ if(lay()||++n>60) clearInterval(iv); },200);
+  lay();
+})();
+
+/* REBUILD EVERYTHING - the file half of a full sync, in one press.
+   Runs the engine first (master json + .vap + deck change report), then the
+   Azeron rebuild, and reports BOTH results. It deliberately does not open the
+   SC UPDATE ALL console window: that one pauses for input and cannot be driven
+   from the iPad. */
+async function rebuildAll(){
+  if(!confirm('Rebuild everything from your newest in-game export?\n\nQuit VoiceAttack first (tray icon, right-click, Exit).')) return;
+  const log=$('#log'); log.dataset.busy=1;
+  const out=[];
+  for(const step of [['sync_master','keybind master + voice profile'],['sync_azeron','Azeron file']]){
+    log.textContent='Rebuilding '+step[1]+'...';
+    try{
+      const r=await fetch('/api/'+step[0],{method:'POST'}); const j=await r.json();
+      out.push((j.ok?'\u2713 ':'\u2717 ')+step[1]+': '+(j.message||''));
+      if(j.status) render(j.status);
+    }catch(e){ out.push('\u2717 '+step[1]+': '+e); }
+  }
+  log.textContent=out.join('   |   ');
+  log.dataset.busy='';
+}
+</script>
+</body></html>

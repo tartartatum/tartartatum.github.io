@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keybind Reference</title>
+<style>
+  :root{--bg:#0a0a0a;--edge2:#4a3d18;--amber:#ffb000;--amber3:#ffd479;--txt:#e8dcc0;--mut:#9a8c6a;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;overflow:hidden;overscroll-behavior:none}
+  #bar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px;position:sticky;top:0;background:#0a0a0a;border-bottom:1px solid #241c08;z-index:2}
+  .kt{background:transparent;color:var(--amber3);border:1px solid var(--edge2);border-radius:4px;padding:6px 13px;font-family:'Share Tech Mono',Consolas,monospace;font-size:12px;letter-spacing:1px;cursor:pointer}
+  .kt.active{background:var(--amber);color:#000;border-color:var(--amber);font-weight:700}
+  .pane{display:none;height:calc(100% - 52px)}
+  .pane.active{display:block}
+  /* 2026-07-12: image always fits ONE screen — scaled to the pane, no scrolling */
+  .imgwrap{width:100%;height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:8px}
+  .imgwrap img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+  iframe{width:100%;height:100%;border:0;background:#0a0a0a}
+</style></head><body>
+  <div id="bar">
+    <button type="button" class="kt active" data-p="fps" onclick="kp('fps')">[ FPS KEYBINDS ]</button>
+    <button type="button" class="kt" data-p="ship" onclick="kp('ship')">[ FLIGHT KEYBINDS ]</button>
+    <button type="button" class="kt" data-p="targ" onclick="kp('targ')">[ CUSTOM KEYBINDS ]</button>
+    <button type="button" class="kt" data-p="sd" onclick="kp('sd')">[ STREAM DECK CATALOG ]</button>
+  </div>
+  <div class="pane active" id="p-fps"><div class="imgwrap"><div><p>No FPS keybind reference configured.</p><p>This public tablet starts without personal device profiles or assignments.</p><p><a style="color:var(--amber3)" href="planner/SC_Deck_Planner.html">OPEN EMPTY PLANNER</a></p></div></div></div>
+  <div class="pane" id="p-ship"><div class="imgwrap"><div><p>No flight keybind reference configured.</p><p>This public tablet starts without personal device profiles or assignments.</p><p><a style="color:var(--amber3)" href="planner/SC_Deck_Planner.html">OPEN EMPTY PLANNER</a></p></div></div></div>
+  <div class="pane" id="p-targ"><div class="imgwrap"><div><p>No custom keybind reference configured.</p><p>This public tablet starts without personal device profiles or assignments.</p><p><a style="color:var(--amber3)" href="planner/SC_Deck_Planner.html">OPEN EMPTY PLANNER</a></p></div></div></div>
+  <div class="pane" id="p-sd"><iframe id="sdframe" data-src="Stream Deck Catalog.html" title="Stream Deck Catalog"></iframe></div>
+<script>
+/* Public reference tabs begin unconfigured. */
+function kp(p){
+  document.querySelectorAll('.kt').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-p')===p);});
+  document.querySelectorAll('.pane').forEach(function(x){x.classList.remove('active');});
+  document.getElementById('p-'+p).classList.add('active');
+  if(p==='sd'){ var f=document.getElementById('sdframe'); if(!f.src) f.src=f.getAttribute('data-src'); }
+}
+</script>
+</body></html>
