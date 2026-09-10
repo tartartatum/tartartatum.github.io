@@ -1,0 +1,3 @@
+# Preserve identical tablet bytes at both public URLs.
+/index.html -text
+/New_SC_CMD_TabletV2.html -text
