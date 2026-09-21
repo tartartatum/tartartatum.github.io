@@ -1011,8 +1011,8 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
 <div id="oc-signin" class="oc-overlay hidden">
   <div class="oc-card"><h2>SIGN IN REQUIRED</h2>
     <p>COMMS shares your CmdGlas login. You're not signed in on this device yet.</p>
-    <p>Sign in on the <b>CmdGlas tablet</b> (top-right account pill), then reopen this window.</p>
-    <button class="oc-btn" onclick="try{if(window.opener&&!window.opener.closed)window.opener.focus();}catch(e){}">FOCUS TABLET</button>
+    <p>Select <b>SIGN IN ON TABLET</b> below, complete sign-in, then reopen Comms.</p>
+    <button class="oc-btn" onclick="cgCommsSignin()">SIGN IN ON TABLET</button>
     <button class="oc-btn ghost" onclick="location.reload()">I'M SIGNED IN — RELOAD</button>
   </div>
 </div>
@@ -1058,6 +1058,14 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
      after sign-in, because the console tabs do not exist until then. */
   var BOOT_CMD=''; try{ var _cm=/[?&]cmd=([a-z]+)/i.exec(location.search||'');
     if(_cm && ['chat','org','wing','pcmd','ocmd','lfg'].indexOf(_cm[1].toLowerCase())>=0) BOOT_CMD=_cm[1].toLowerCase(); }catch(e){}
+  window.cgCommsSignin=function(){
+    var target=window.parent!==window?window.parent:window.opener;
+    if(target && !target.closed){
+      target.postMessage({cmdglas:'open-signin'},location.origin);
+      target.focus(); return;
+    }
+    location.assign('./?signin=1');
+  };
   var $=function(id){return document.getElementById(id);};
   function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   /* ---- sc-b8e-nameleak (29 JUL): REPORTED - pilots were being shown in the orgs

@@ -6918,7 +6918,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 780;
+window.CMDGLAS_BUILD = 781;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -21611,7 +21611,7 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
     function toggle(){ setOpen(!wrap.classList.contains('open')); }
     head.addEventListener('click',function(ev){ if(ev.target.closest('.cd-mute')||ev.target.closest('.cd-tx')) return; if(window.cgOpenComms){ cgOpenComms(); } else { toggle(); } }); 
     head.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); if(window.cgOpenComms){ cgOpenComms(); } else { toggle(); } } });
-    tx.addEventListener('click',function(ev){ ev.stopPropagation(); if(window.cgOpenComms){ cgOpenComms('party'); } else { setOpen(true); } }); 
+    tx.addEventListener('click',function(ev){ ev.stopPropagation(); if(window.cgOpenComms){ cgOpenComms(); } else { setOpen(true); } }); 
     mute.addEventListener('click',function(ev){ ev.stopPropagation(); var m=wrap.classList.toggle('muted'); mute.setAttribute('title', m?'COMMS muted':'Mute COMMS'); try{ if(frame.contentWindow) frame.contentWindow.postMessage({cmdglas:'mute',muted:m},'*'); }catch(e){} });
 
      
@@ -22889,7 +22889,7 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
      
     f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Comms</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
       +'<div class="cg-comms-btns">'
-      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')" title="Party up in game - add friends on Spectrum, pick your org job, set a meeting point">PARTY UP</button>'
+      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')" title="Find players and groups in live Comms">PARTY UP</button>'
       +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
        
       +'<div class="cg-comms-btns2">'
@@ -23117,7 +23117,7 @@ body.sc-home-mode #sc-navsearch .ns-glass .ns-chev{flex:0 0 auto;color:#a8ebff;f
   function mk(){
     if(document.getElementById('cg-sheet')) return;
     backdrop=document.createElement('div'); backdrop.id='cg-sheet-backdrop';
-    sheet=document.createElement('div'); sheet.id='cg-sheet'; sheet.setAttribute('role','dialog'); sheet.setAttribute('aria-modal','true');
+    sheet=document.createElement('div'); sheet.id='cg-sheet'; sheet.setAttribute('role','dialog'); sheet.setAttribute('aria-modal','true'); sheet.setAttribute('aria-hidden','true'); sheet.inert=true;
     sheet.innerHTML='<div class="cgs-head"><span class="cgs-grip"></span><span class="cgs-title"></span><button class="cgs-x" type="button" aria-label="Close">&#10005;</button></div><div class="cgs-body"></div>';
     var h=host(); h.appendChild(backdrop); h.appendChild(sheet);
     body=sheet.querySelector('.cgs-body'); titleEl=sheet.querySelector('.cgs-title');
@@ -23136,19 +23136,24 @@ body.sc-home-mode #sc-navsearch .ns-glass .ns-chev{flex:0 0 auto;color:#a8ebff;f
     }
     if(body){ body.innerHTML=''; body.scrollTop=0; }
   }
-  function close(){ if(!sheet||!sheet.classList.contains('open')) return; sheet.classList.remove('open'); backdrop.classList.remove('open');
+  function close(){ if(!sheet||!sheet.classList.contains('open')) return; sheet.classList.remove('open'); sheet.setAttribute('aria-hidden','true'); sheet.inert=true; backdrop.classList.remove('open');
     var h=hosted, hp=hParent, hn=hNext; hosted=null; hParent=null; hNext=null;
     pendingClose={page:h,parent:hp,next:hn}; closeTimer=setTimeout(finishClose,250);
   }
   function open(title,large){ mk(); if(hosted) restore(); }
-  window.cgSheetOpenTab=function(tabId, opts){ opts=opts||{}; mk(); finishClose();
+  window.cgSheetOpenTab=function(tabId, opts){ opts=opts||{};
+    if(tabId==='orgpage' && window.cgCommsMaxOpen){ window.cgCommsMaxOpen('&cmd=org'); return true; }
+    mk(); finishClose();
+    /* CG_PUBLIC_COMMS781: a tool and Comms never retain competing overlays. */
+    if(window.cgCommsMaxClose) window.cgCommsMaxClose();
+    var legacy=document.getElementById('cg-comms-page'); if(legacy) legacy.classList.add('cgcp-hidden');
     var page=document.getElementById('tab-'+tabId); if(!page){ return false; }
     if(hosted) restore();
     hParent=page.parentNode; hNext=page.nextSibling; hosted=page;
     titleEl.textContent=opts.title||tabId;
     sheet.classList.toggle('large', !!opts.large);
     body.innerHTML=''; body.appendChild(page); page.classList.add('active');
-    backdrop.classList.add('open'); sheet.classList.add('open');
+    backdrop.classList.add('open'); sheet.classList.add('open'); sheet.removeAttribute('aria-hidden'); sheet.inert=false;
     body.scrollTop=0;
     if(opts.anchor){ setTimeout(function(){ var a=document.getElementById(opts.anchor)||page.querySelector('#'+opts.anchor); if(a){ try{ var br=body.getBoundingClientRect(), ar=a.getBoundingClientRect(); body.scrollTop += (ar.top-br.top)-10; }catch(e){ if(a.scrollIntoView) a.scrollIntoView(); } } }, 80); }
     return true;
@@ -26996,7 +27001,13 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
       [].forEach.call(pg.querySelectorAll('.cgcp-body section'),function(s){ s.hidden=(s.getAttribute('data-sec')!==sec); });
     }
     function close(){ pg.classList.add('cgcp-hidden'); }
-    window.cgOpenComms=function(sec){ show(sec||'party'); };
+    window.cgOpenComms=function(sec){
+      /* CG_PUBLIC_COMMS781: one live Comms surface for public visitors. */
+      close();
+      if(typeof window.cgCommsMaxOpen==='function'){
+        window.cgCommsMaxOpen(sec==='setup'?'&start=1':sec==='org'?'&cmd=org':sec==='party'?'&cmd=lfg':'');
+      } else { throw new Error('Live Comms console is unavailable'); }
+    };
     pg.querySelector('.cgcp-x').addEventListener('click',close);
     pg.addEventListener('mousedown',function(ev){ if(ev.target===pg) close(); });
     document.addEventListener('keydown',function(ev){ if(ev.key==='Escape' && !pg.classList.contains('cgcp-hidden')) close(); });
@@ -27648,7 +27659,12 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close_(); });
     return o;
   }
-  function open_(qs){ var o=overlay(); var f=o.querySelector('iframe'); var ch='general'; try{ ch=localStorage.getItem('cg_comms_channel')||'general'; }catch(e){}
+  function open_(qs){
+    /* CG_PUBLIC_COMMS781: close the previous surface before opening Comms. */
+    if(window.cgSheetClose) window.cgSheetClose();
+    var legacy=document.getElementById('cg-comms-page'); if(legacy) legacy.classList.add('cgcp-hidden');
+    var more=document.getElementById('cg-more-ov'); if(more) more.classList.remove('cg-open');
+    var o=overlay(); var f=o.querySelector('iframe'); var ch='general'; try{ ch=localStorage.getItem('cg_comms_channel')||'general'; }catch(e){}
      
     if(typeof qs!=='string') qs='';
     f.src='cmdglas_org.html?ch='+encodeURIComponent(ch)+qs+'&cb='+(new Date().getTime()); o.classList.add('open'); }
@@ -27661,7 +27677,19 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
     return true;
   }
    
-  window.cgCommsMaxOpen=open_;
+  window.cgCommsMaxOpen=open_; window.cgCommsMaxClose=close_;
+  window.addEventListener('message',function(e){
+    if(e.origin!==location.origin || !e.data || e.data.cmdglas!=='open-signin') return;
+    close_(); if(window.cgSheetClose) window.cgSheetClose();
+    if(window.scAuthOpen) window.scAuthOpen('signin');
+  });
+  function requestedSignin(){
+    if(new URLSearchParams(location.search).get('signin')!=='1') return;
+    var enter=document.getElementById('cover-enter'); if(enter) enter.click();
+    if(window.scAuthOpen) window.scAuthOpen('signin');
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',requestedSignin);
+  else requestedSignin();
   var n=0, iv=setInterval(function(){ if(addBtn()||++n>80) clearInterval(iv); }, 300); addBtn();
 })();
 </script>
@@ -30663,14 +30691,13 @@ window.bpImgTag=bpImgTag;
   0%   { transform:translateY(-130%); }
   100% { transform:translateY(330%); }
 }
+.cg-pressed.cg-pressed-static{position:relative !important;}
 .cg-pressed{
-  position:relative !important;
   overflow:hidden !important;
   outline:2px solid var(--cg-pp,#7dffb0) !important;
   outline-offset:2px;
   box-shadow:0 0 24px 5px var(--cg-pp-soft,rgba(125,255,176,.8)) !important;
   filter:brightness(1.2);
-  z-index:5;
 }
 .cg-pressed::after{
   content:'';
@@ -30718,6 +30745,11 @@ window.bpImgTag=bpImgTag;
 
   function pulse(el){
     if(!el||el.disabled) return;
+    var position=getComputedStyle(el);
+    if(position.position==='static'){
+      if(['top','right','bottom','left'].some(function(side){return position[side]!=='auto';})) return;
+      el.classList.add('cg-pressed-static');
+    }
     var t=timers.get(el); if(t) clearTimeout(t);
     var c=tint(el);
     if(c){
@@ -30727,7 +30759,7 @@ window.bpImgTag=bpImgTag;
     }
     el.classList.add('cg-pressed');
     timers.set(el,setTimeout(function(){
-      el.classList.remove('cg-pressed');
+      el.classList.remove('cg-pressed','cg-pressed-static');
       el.style.removeProperty('--cg-pp');
       el.style.removeProperty('--cg-pp-soft');
       el.style.removeProperty('--cg-pp-band');
@@ -30779,11 +30811,13 @@ a.cg-sbtn:hover{ color:#eafaff !important; }
   function fix(){
     try{
       var all=document.querySelectorAll('#sc-bezel *, #cg-cmdlog *, [style*="color"]');
+      var updates=[];
       [].forEach.call(all,function(el){
-        var c=getComputedStyle(el).color;
-        var up=DARK[c];
-        if(up && (el.textContent||'').trim().length){ el.style.setProperty('color',up,'important'); }
+        if(!(el.textContent||'').trim().length) return;
+        var up=DARK[getComputedStyle(el).color];
+        if(up) updates.push([el,up]);
       });
+      updates.forEach(function(item){ item[0].style.setProperty('color',item[1],'important'); });
     }catch(e){}
   }
   var n=0, iv=setInterval(function(){ fix(); if(++n>30) clearInterval(iv); }, 500);
@@ -53493,6 +53527,7 @@ console.log('[b767] curved HUD skin armed');
       for(var i=0;i<all.length;i++){
         var e=all[i];
         if(e.children.length>2) continue;
+        if(!/DESIGNED|BUILT|NEWS/i.test(e.textContent||'')) continue;
         var t=txt(e);
         if(!isTarget(t)) continue;
         if(isKeeper(t)) continue;
@@ -53577,6 +53612,7 @@ console.log('[b767] curved HUD skin armed');
       for(var i=0;i<all.length;i++){
         var e=all[i];
         if(e.children.length>2) continue;
+        if(!/unofficial/i.test(e.textContent||'')) continue;
         if(!/unofficial Star Citizen fan site/i.test(txt(e))) continue;
         var band=bandFor(e);
         if(!band) continue;                      
