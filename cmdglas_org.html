@@ -1068,23 +1068,31 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
   };
   var $=function(id){return document.getElementById(id);};
   function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  /* ---- sc-b8e-nameleak (29 JUL): REPORTED - pilots were being shown in the orgs
-   and pilots list under the local part of their sign-in email address.
-   MEASURED CAUSE: this helper ended with u.email.split('@')[0], and its result is written into
-   org_members.callsign when a pilot's row is first created. That column is PUBLIC - it is what
-   the pilots list, the org roster and every chat line show. So any pilot who never set a callsign
-   was published under the local part of his email address, which on a firstname.lastname address
-   is a real name.
-   FIX: a callsign is never derived from an email address, and never from an OAuth provider's
-   username either (that is where a Discord handle would land). Only an explicitly chosen name
-   counts. Everyone else gets a neutral, non-identifying default until they choose one, and the
-   guided setup's callsign step stays red until they do. */
+  /* Discord defaults requested 21 SEP. Saved pilot callsigns remain authoritative.
+     Use only Discord identity fields, never email or another provider's name. */
 function cgNeutralCallsign(u){
   var id=String((u&&u.id)||''), t=id.replace(/[^0-9a-fA-F]/g,'').slice(0,4).toUpperCase();
   return 'PILOT-'+(t||'0000');
 }
-function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
-  return m.callsign || cgNeutralCallsign(u); }
+function cgDiscordCallsign(u){
+  if(!u)return '';
+  var identity=(u.identities||[]).filter(function(i){return i.provider==='discord';})[0];
+  var d=identity&&identity.identity_data;
+  if(!d&&u.app_metadata&&u.app_metadata.provider==='discord')d=u.user_metadata;
+  if(!d)return '';
+  var n=(d.custom_claims&&d.custom_claims.global_name)||d.global_name||d.full_name||d.preferred_username||d.name;
+  return typeof n==='string'?n.replace(/#0$/,'').trim().slice(0,40):'';
+}
+function callsign(u){
+  if(!u)return 'CMDR';
+  var row=(poolRoster||[]).filter(function(r){return r.user_id===u.id;})[0];
+  return (row&&row.callsign)||(u.user_metadata||{}).callsign||cgDiscordCallsign(u)||cgNeutralCallsign(u);
+}
+function cgInitialDiscordCallsign(u,pool){
+  if(!u||(u.user_metadata||{}).callsign)return '';
+  if(pool&&pool.callsign&&pool.callsign!==cgNeutralCallsign(u))return '';
+  return cgDiscordCallsign(u);
+}
   function initials(n){ n=(n||'?').trim(); var p=n.split(/[\s_.-]+/).filter(Boolean); return ((p[0]||'?')[0]+((p[1]||'')[0]||'')).toUpperCase(); }
   function fmtTime(iso){ try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
   function ago(iso){ try{var s=Math.floor((Date.now()-new Date(iso).getTime())/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago';}catch(e){return '';} }
@@ -1236,7 +1244,14 @@ function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
           if(!pool){ /* first visit: auto-join the general gamer pool */
             sb.from('org_members').insert({user_id:me.id,org_id:GAMERPOOL,callsign:callsign(me)}).then(function(res){
               if(res.error&&res.error.code!=='23505'){ handleDbError(res.error); return; } go(); },function(){ go(); });
-          } else go();
+          } else {
+            var initial=cgInitialDiscordCallsign(me,pool);
+            if(!initial){go();return;}
+            // Compare the exact old value so a concurrent custom-name save wins.
+            var q=sb.from('org_members').update({callsign:initial}).eq('user_id',me.id).eq('org_id',GAMERPOOL);
+            q=pool.callsign==null?q.is('callsign',null):q.eq('callsign',pool.callsign);
+            q.then(function(res){if(res.error)handleDbError(res.error);go();},function(){showErr('Could not save your Discord display name.');go();});
+          }
         },function(e){ showErr('Org list failed: '+(e&&e.message||e)); });
       },function(e){ showErr('Membership check failed: '+(e&&e.message||e)); });
     },function(e){ showErr('Admin check failed: '+(e&&e.message||e)); });
@@ -1593,6 +1608,8 @@ function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
     sb.from('org_members').select('*').eq('org_id',GAMERPOOL).order('callsign',{ascending:true}).limit(1000).then(function(res){
       if(res.error){ if(then)then(); return; }
       poolRoster=res.data||[]; poolLoaded=true;
+      $('oc-who').textContent=callsign(me);
+      shMirrorIdentity();
       refreshChatPirates();   /* PHASE 7: back-fill pirate chips on already-rendered chat lines */
       var sec=document.getElementById('oc-pool-sec');
       /* AUDIT 28 JUL: this rebuilt the panel every 35 s and threw the cursor out of the search
@@ -1615,7 +1632,7 @@ function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
      handle. Mirror both into localStorage from here, same origin, so the tablet's account pill
      shows RAZVYN and not a Discord handle. Written on every pool load; harmless if unchanged. */
   function shMirrorIdentity(){ try{
-    var r=(typeof roster!=='undefined' && me ? roster.filter(function(m){return m.user_id===me.id;})[0] : null) || myPoolRow();
+    var r=myPoolRow() || (typeof roster!=='undefined' && me ? roster.filter(function(m){return m.user_id===me.id;})[0] : null);
     if(!r) return;
     if(r.callsign) localStorage.setItem('cg_callsign', String(r.callsign).trim());
     if(r.handle)   localStorage.setItem('cg_rsi_handle', String(r.handle).trim());
