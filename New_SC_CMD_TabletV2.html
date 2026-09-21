@@ -1235,8 +1235,8 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
       <span id="cover-srv-txt" style="color:var(--text-mid)">checking control server...</span>
       <button type="button" id="cover-srv-get" style="display:none;font:800 11px/1 'Rajdhani',sans-serif;letter-spacing:1.2px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:0;border-radius:7px;padding:8px 14px;cursor:pointer;text-transform:uppercase" onclick="event.stopPropagation();var h=document.getElementById('cover-srv-help');h.style.display=h.style.display==='block'?'none':'block';">Get control server online</button>
   </div>
-    <div id="cover-srv-note" style="display:none;max-width:60ch;margin:-4px auto 10px;font-size:12.5px;line-height:1.75;color:var(--text-mid);text-align:center"><b style="color:#8fe9ff">Basic features work right now, no download needed.</b> To unlock the <b style="color:var(--amber2)">full tablet</b>, live server status, your real keybinds, the iPad second screen, and the Twitch &amp; music players, run the <a href="https://cmdglas.com/" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">control server</a> on your PC.</div>
-    <div id="cover-srv-help" style="display:none;max-width:54ch;margin:-2px auto 14px;font-size:12.5px;line-height:1.8;color:var(--text-mid);text-align:center"><b>How to turn the server on:</b><br>1. Open your tablet folder on your PC.<br>2. Find the file named <b style="color:var(--amber2)">Restart SC Control Server.bat</b> and double-click it.<br>3. Wait about 5 seconds, then reload this tablet.<br><br>Don't have the server yet? <a href="https://cmdglas.com/" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">Download it from GitHub</a>.</div>
+    <div id="cover-srv-note" style="display:none;max-width:60ch;margin:-4px auto 10px;font-size:12.5px;line-height:1.75;color:var(--text-mid);text-align:center"><b style="color:#8fe9ff">Basic features work right now, no download needed.</b> To unlock the <b style="color:var(--amber2)">full tablet</b>, live server status, your real keybinds, the iPad second screen, and the Twitch &amp; music players, run the <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">control server</a> on your PC.</div>
+    <div id="cover-srv-help" style="display:none;max-width:54ch;margin:-2px auto 14px;font-size:12.5px;line-height:1.8;color:var(--text-mid);text-align:center"><b>How to turn the server on:</b><br>1. Open your tablet folder on your PC.<br>2. Find the file named <b style="color:var(--amber2)">Restart SC Control Server.bat</b> and double-click it.<br>3. Wait about 5 seconds, then reload this tablet.<br><br>Don't have the server yet? <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">Download it from GitHub</a>.</div>
     <script id="sc-anon-1615472">
     (function(){
       fetch('/api/server_info',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
@@ -1246,7 +1246,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
         else{ d.style.background='#39d353';d.style.boxShadow='0 0 8px #39d353'; t.textContent='CONTROL SERVER ONLINE'; }
         b.style.display='inline-block';
       }).catch(function(){
-        document.getElementById('cover-srv-txt').innerHTML='<a href="https://cmdglas.com/" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">CONTROL SERVER</a> OFFLINE'; 
+        document.getElementById('cover-srv-txt').innerHTML='<a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">CONTROL SERVER</a> OFFLINE'; 
         var g=document.getElementById('cover-srv-get'); if(g) g.style.display='inline-block';
         var n=document.getElementById('cover-srv-note'); if(n) n.style.display='block'; 
       });
@@ -6918,7 +6918,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 781;
+window.CMDGLAS_BUILD = 782;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -20024,6 +20024,7 @@ ensure(); setInterval(ensure, 1500);
     document.body.appendChild(b);
   }
   window.openOrgApp=function(){
+    if(typeof window.cgCommsMaxOpen==='function'){ window.cgCommsMaxOpen(); return; }
     var win;
     try{ win=window.open('cmdglas_org.html','cmdglasOrg','width=1040,height=740,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes'); }
     catch(e){ win=null; }
@@ -21583,7 +21584,7 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
       +'<div class="cd-head" role="button" tabindex="0" aria-expanded="false">'+MIC
       +'<span class="cd-title">COMMS</span><span class="cd-acc">&#8250;&#8250;</span>'
       +'<select class="cd-ch cd-chsel" id="cd-chsel" title="Pick channel" aria-label="COMMS channel"></select>'+BCAST
-      +'<button class="cd-mute" type="button" title="Mute COMMS" aria-label="Mute COMMS">'+SPK_ON+SPK_OFF+'</button>'
+      +'<button class="cd-mute" type="button" title="Voice audio is controlled in Discord" aria-label="Voice audio help">'+SPK_ON+SPK_OFF+'</button>'
       +'<span class="cd-tx" role="button" title="Open COMMS to transmit"><span class="pd"></span>TX</span>'
       +'<span class="cd-chev">▾</span></div>'
       +'<div class="cd-body"><iframe data-src="cmdglas_org.html" title="CmdGlas COMMS chat"></iframe></div>'
@@ -21612,7 +21613,17 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
     head.addEventListener('click',function(ev){ if(ev.target.closest('.cd-mute')||ev.target.closest('.cd-tx')) return; if(window.cgOpenComms){ cgOpenComms(); } else { toggle(); } }); 
     head.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); if(window.cgOpenComms){ cgOpenComms(); } else { toggle(); } } });
     tx.addEventListener('click',function(ev){ ev.stopPropagation(); if(window.cgOpenComms){ cgOpenComms(); } else { setOpen(true); } }); 
-    mute.addEventListener('click',function(ev){ ev.stopPropagation(); var m=wrap.classList.toggle('muted'); mute.setAttribute('title', m?'COMMS muted':'Mute COMMS'); try{ if(frame.contentWindow) frame.contentWindow.postMessage({cmdglas:'mute',muted:m},'*'); }catch(e){} });
+    mute.addEventListener('click',function(ev){
+      ev.stopPropagation();
+      var note=wrap.querySelector('.cd-voice-help');
+      if(!note){
+        note=document.createElement('p'); note.className='cd-voice-help'; note.setAttribute('role','status');
+        note.style.cssText='margin:8px;padding:10px;border:1px solid currentColor;border-radius:8px;font-size:14px;line-height:1.5;white-space:normal;overflow-wrap:anywhere';
+        note.textContent='Voice audio is controlled in Discord. Mute stops your microphone; Deafen stops incoming voice and mutes your microphone. This tablet button does not mute Discord.';
+        head.insertAdjacentElement('afterend',note);
+      }else{ note.hidden=!note.hidden; }
+      mute.setAttribute('aria-expanded',note.hidden?'false':'true');
+    });
 
      
     if(!frame.src && frame.getAttribute('data-src')){ frame.src=frame.getAttribute('data-src'); }
@@ -21622,7 +21633,7 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
       var peek=document.createElement('div'); peek.className='cd-peek'; peek.style.display='none';
       var _body=wrap.querySelector('.cd-body');
       if(_body&&_body.parentNode) _body.parentNode.insertBefore(peek, _body); else wrap.querySelector('.cd-glass').appendChild(peek);
-      window.addEventListener('message',function(ev){ var d=ev&&ev.data; if(!d||d.cmdglas!=='peek') return;
+      window.addEventListener('message',function(ev){ if(ev.origin!==location.origin) return; var d=ev&&ev.data; if(!d||d.cmdglas!=='peek') return;
         var u=+d.unread||0;
         if(u>0 && !wrap.classList.contains('open')){
           badge.textContent=u>9?'9+':String(u); badge.style.display='inline-flex';
@@ -22776,6 +22787,7 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
 })();
 </script>
 <style id="sc-b340-acclock-css">#sc-appbar .sc-acc-group.acc-open > .scr-flyout{display:flex !important}
+#sc-appbar .sc-acc-group.cg-menu-dismissed > .scr-flyout{display:none !important}
 #sc-appbar .sc-acc-group .acc-closebar{order:-1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px 9px 14px;margin:0 0 5px;border-bottom:1px solid rgba(108,180,214,.22);cursor:pointer;background:rgba(90,205,255,.05);z-index:7}
 #sc-appbar .sc-acc-group .acc-closebar:hover{background:rgba(90,205,255,.12)}
 #sc-appbar .sc-acc-group .acc-close{color:#cfe6f5;font:800 11px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:2px;display:inline-flex;align-items:center;gap:8px;pointer-events:none}
@@ -22794,13 +22806,13 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
   function unlock(){ if(openG){ openG.classList.remove('acc-open'); var cb=openG.querySelector('.acc-closebar'); if(cb) cb.remove(); openG=null; } if(closeT){ clearTimeout(closeT); closeT=null; } }
   function lock(g){
     if(g!==openG) unlock();
-    openG=g; g.classList.add('acc-open');
+    openG=g; g.classList.remove('cg-menu-dismissed'); g.classList.add('acc-open');
     var fly=g.querySelector('.scr-flyout'); if(!fly) return;
     var cb=fly.querySelector('.acc-closebar');
     if(!cb){ cb=document.createElement('div'); cb.className='acc-closebar'; cb.setAttribute('role','button'); cb.title='Close now - auto-closes when the ring empties';
       cb.innerHTML='<span class="acc-close">&#10005;&nbsp; CLOSE</span><span class="acc-ring"><svg viewBox="0 0 24 24"><circle class="acc-ring-bg" cx="12" cy="12" r="9"></circle><circle class="acc-ring-fg" cx="12" cy="12" r="9"></circle></svg></span>';
       fly.insertBefore(cb, fly.firstChild);
-      cb.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); unlock(); });
+      cb.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); g.classList.add('cg-menu-dismissed'); unlock(); });
     }
     var ring=cb.querySelector('.acc-ring-fg');
     if(ring){ ring.style.transition='none'; ring.style.strokeDashoffset='0'; void ring.getBoundingClientRect(); ring.style.transition='stroke-dashoffset '+LOCK_MS+'ms linear'; ring.style.strokeDashoffset='56.5'; }
@@ -22810,9 +22822,9 @@ body.sc-home-mode #tab-home .hm-wrap{padding-top:16px !important}
     document.querySelectorAll('#sc-appbar .sc-acc-group').forEach(function(g){
       if(g.dataset.accLock) return; g.dataset.accLock='1';
       g.addEventListener('mouseenter', function(){ if(dwellT) clearTimeout(dwellT); dwellT=setTimeout(function(){ lock(g); }, DWELL); });
-      g.addEventListener('mouseleave', function(){ if(dwellT){ clearTimeout(dwellT); dwellT=null; } });
+      g.addEventListener('mouseleave', function(){ g.classList.remove('cg-menu-dismissed'); if(dwellT){ clearTimeout(dwellT); dwellT=null; } });
       var fly=g.querySelector('.scr-flyout');
-      if(fly){ fly.addEventListener('click', function(e){ if(e.target.closest('a,button,[onclick],.scr-btn,.scr-toggle')){ setTimeout(unlock,20); } }); }
+      if(fly){ fly.addEventListener('click', function(e){ if(e.target.closest('a,button,[onclick],.scr-btn,.scr-toggle')){ g.classList.add('cg-menu-dismissed'); unlock(); } }); }
       var cat=g.querySelector('.scr-cat'); if(cat){ cat.addEventListener('click', function(){ if(dwellT){clearTimeout(dwellT);dwellT=null;} lock(g); }); }
     });
   }
@@ -27243,11 +27255,11 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
   function save(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   var STEPS=''
     +'<p class="cg-w-lead"><b>You do NOT need to download anything to use this tablet.</b> Just open it and go.</p>'
-    +'<div class="cg-w-note">Only download the pack (the <a href="https://cmdglas.com/" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline">control server</a>) if you want the tablet on your <b>iPad</b>, or want the live extras: your real keybinds, live server status, the Twitch player, and music.</div>'
+    +'<div class="cg-w-note">Only download the pack (the <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline">control server</a>) if you want the tablet on your <b>iPad</b>, or want the live extras: your real keybinds, live server status, the Twitch player, and music.</div>'
     +'<h4>Just try it - no download</h4>'
     +'<ol class="cg-w-steps"><li>Open <b>cmdglas.com</b> in your browser.</li><li>That is it. Start using it.</li></ol>'
     +'<h4>Step 1 - get the pack (download)</h4>'
-    +'<ol class="cg-w-steps"><li>On your PC, open the <a href="https://cmdglas.com/" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline"><b>GitHub releases page</b></a> and click the newest <b>.zip</b> under <b>Assets</b>.</li><li>Save the file. It goes to your <b>Downloads</b> folder.</li><li>The file is a <b>ZIP</b> (a squished folder). Find it in Downloads, <b>right-click it</b>, choose <b>"Extract All..."</b>, then <b>"Extract."</b> That makes a normal folder.</li><li><b>Open</b> that new folder.</li><li><b>Double-click the launcher</b>, the file that starts the tablet (it also turns on the small helper program). If Windows shows a blue <b>"Windows protected your PC"</b> box, click <b>"More info" → "Run anyway."</b> It is safe; it just is not signed yet.</li><li>The tablet opens in your browser. <b>Leave the small helper window open</b> while you play.</li></ol>'
+    +'<ol class="cg-w-steps"><li>On your PC, open the <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline"><b>GitHub releases page</b></a> and click the newest <b>.zip</b> under <b>Assets</b>.</li><li>Save the file. It goes to your <b>Downloads</b> folder.</li><li>The file is a <b>ZIP</b> (a squished folder). Find it in Downloads, <b>right-click it</b>, choose <b>"Extract All..."</b>, then <b>"Extract."</b> That makes a normal folder.</li><li><b>Open</b> that new folder.</li><li><b>Double-click the launcher</b>, the file that starts the tablet (it also turns on the small helper program). If Windows shows a blue <b>"Windows protected your PC"</b> box, click <b>"More info" → "Run anyway."</b> It is safe; it just is not signed yet.</li><li>The tablet opens in your browser. <b>Leave the small helper window open</b> while you play.</li></ol>'
     +'<h4>Step 2 - put it on your iPad</h4>'
     +'<ol class="cg-w-steps"><li>In that same folder, <b>double-click "Serve Tablet to iPad."</b> It shows an address like <b>YOUR-PC-ADDRESS:8420</b>.</li><li>On your iPad, open <b>Safari</b> and type that address into the bar.</li><li>Tap <b>Share → Add to Home Screen</b> for a full-screen app.</li></ol>'
     +'<div class="cg-w-sub">Your PC and iPad must be on the same Wi-Fi.</div>'
@@ -27523,7 +27535,7 @@ body.sc-home-mode #cg-onebar #cg-server-wrap{margin-left:12px !important}
 </style>
 <script id="sc-b486-serverlight-js">
 (function(){ if(window.__cgServerLight486) return; window.__cgServerLight486=true;
-  var GH='https://cmdglas.com/';
+  var GH='https://github.com/tartartatum/tartartatum.github.io/releases/latest';
   var state='down';
   function popHTML(){
     var head, lead;
@@ -45841,7 +45853,7 @@ function cg767GBHS(){
               } else {
                 bb.textContent='GET SERVER';
                 bb.addEventListener('click',function(e){ e.stopPropagation();
-                  try{ window.open('https://cmdglas.com/','_blank','noopener'); }catch(_o){} });
+                  try{ window.open('https://github.com/tartartatum/tartartatum.github.io/releases/latest','_blank','noopener'); }catch(_o){} });
               }
               nt.appendChild(bb);
             }catch(_mb){}
@@ -52026,7 +52038,7 @@ console.log('[b767] curved HUD skin armed');
     '  max-width:100% !important; min-width:0 !important;',
     '  padding:5px 14px !important;',
     '  margin-left:auto !important; margin-right:auto !important;',
-    '  white-space:nowrap !important}',
+    '  white-space:normal !important; overflow-wrap:anywhere !important}',
      
     '#sc-home-widgets .wg.ops-pill.b385{max-height:'+CG767_PILLMAXH+'px !important}',
      

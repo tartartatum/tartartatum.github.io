@@ -1143,7 +1143,7 @@ function callsign(u){ if(!u) return 'CMDR'; var m=u.user_metadata||{};
         total:n,unread:Math.max(0,n-_peekSeen)},'*');
     }catch(e){}
   }
-  window.addEventListener('message',function(e){ var d=e&&e.data; if(!d||d.cmdglas!=='seen') return;
+  window.addEventListener('message',function(e){ if(e.origin!==location.origin) return; var d=e&&e.data; if(!d||d.cmdglas!=='seen') return;
     _peekSeen=peekMsgs().length; emitPeek(); });
   function renderMsg(m){ if(m.id!=null&&rendered[m.id])return; if(m.id!=null)rendered[m.id]=1;
     var st=$('oc-stream'); var dk=dayKey(m.created_at);
