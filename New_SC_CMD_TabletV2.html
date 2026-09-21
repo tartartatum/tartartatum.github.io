@@ -6918,7 +6918,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 782;
+window.CMDGLAS_BUILD = 783;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -21582,8 +21582,8 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
     wrap.innerHTML='<div class="cd-frame"><div class="cd-glass">'
       +'<span class="cd-sweep"></span><span class="cd-wing"></span>'
       +'<div class="cd-head" role="button" tabindex="0" aria-expanded="false">'+MIC
-      +'<span class="cd-title">COMMS</span><span class="cd-acc">&#8250;&#8250;</span>'
-      +'<select class="cd-ch cd-chsel" id="cd-chsel" title="Pick channel" aria-label="COMMS channel"></select>'+BCAST
+      +'<span class="cd-title">SOCIAL TOOLS</span><span class="cd-acc">&#8250;&#8250;</span>'
+      +'<select class="cd-ch cd-chsel" id="cd-chsel" title="Pick channel" aria-label="Social Tools channel"></select>'+BCAST
       +'<button class="cd-mute" type="button" title="Voice audio is controlled in Discord" aria-label="Voice audio help">'+SPK_ON+SPK_OFF+'</button>'
       +'<span class="cd-tx" role="button" title="Open COMMS to transmit"><span class="pd"></span>TX</span>'
       +'<span class="cd-chev">▾</span></div>'
@@ -22899,7 +22899,7 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
     f.innerHTML='<div class="logostage"><span class="oring2"><span class="dot"></span></span><span class="oring"><span class="dot"></span></span><span class="crest"></span></div><div class="cap">Search everything</div>'; return f; }
   function commsFillerEl(){ var f=document.createElement('div'); f.className='commsfill'; var bars=''; for(var i=0;i<11;i++) bars+='<i></i>';
      
-    f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Comms</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
+    f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Social Tools</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
       +'<div class="cg-comms-btns">'
       +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')" title="Find players and groups in live Comms">PARTY UP</button>'
       +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
@@ -27799,8 +27799,8 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
       var row=rows[i], par=row.parentNode; if(!par) continue;
       if(par.querySelector(':scope > .cg-comms-enter')) continue;
       var b=document.createElement('button'); b.type='button'; b.className='cg-comms-enter';
-      b.textContent='ENTER COMMS';
-      b.title='Open the full COMMS page - party voice, org chat, consoles';
+      b.textContent='ENTER SOCIAL TOOLS';
+      b.title='Open Social Tools - party voice, org chat, consoles';
        
       var row2=par.querySelector(':scope > .cg-comms-btns2');
       var after=row2||row;
@@ -51256,7 +51256,7 @@ console.log('[b767] curved HUD skin armed');
     [/^LAUNCH PLAYER$/i,'Open the always-on-top video player window.'],
     [/^WATCH$/i,'Play this channel in the panel.'],
     [/^TWITCH$/i,'Open this channel on twitch.tv - drops only count there.'],
-    [/^ENTER COMMS$/i,'Open the full comms deck.'],
+    [/^ENTER SOCIAL TOOLS$/i,'Open the full comms deck.'],
     [/^PARTY UP$/i,'Add friends, pick org jobs, set a meeting point.'],
     [/^GUIDED SETUP$/i,'Step-by-step comms setup.'],
     [/^USER MANUAL$/i,'How to use this tablet, page by page.'],
@@ -53512,7 +53512,7 @@ console.log('[b767] curved HUD skin armed');
     if(!t) return false;
     if(/unofficial Star Citizen fan site/i.test(t)) return true;    
     if(/^\s*C\s*M\s*D\s*G\s*L\s*A\s*S\s*$/i.test(t)) return true;   
-    if(/INGAME TOOLS|ENTER COMMS|CLEAR ALL|ACCOUNT|ASSIST/i.test(t)) return true;
+    if(/INGAME TOOLS|ENTER SOCIAL TOOLS|CLEAR ALL|ACCOUNT|ASSIST/i.test(t)) return true;
     return false;
   }
   function bandOf(leaf){
@@ -53577,7 +53577,7 @@ console.log('[b767] curved HUD skin armed');
   function isKeeper(t){
     if(!t) return false;
     if(/^\s*C\s*M\s*D\s*G\s*L\s*A\s*S\s*$/i.test(t)) return true;
-    if(/INGAME TOOLS|ENTER COMMS|CLEAR ALL|ACCOUNT|ASSIST|HARVESTING/i.test(t)) return true;
+    if(/INGAME TOOLS|ENTER SOCIAL TOOLS|CLEAR ALL|ACCOUNT|ASSIST|HARVESTING/i.test(t)) return true;
     return false;
   }
   function paintsBand(e){
