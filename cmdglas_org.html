@@ -4823,7 +4823,8 @@ setInterval(cgGhostBadge,4000);
                     phase-8 bot is deployed).
      kind='invite': I ask them to join ME. On their ACK they swap to my channel.
      Consent is the gate: nothing moves until the target presses ACKNOWLEDGE.
-     Tier 1 = phase-9 SQL alone (tablet swap). Tier 2 = phase-8 bot (voice too).
+     Responses use authenticated discord-jump; no browser-side accepted update.
+     Discord movement requires both pilots already connected to server voice.
      Reversible: remove this block, the two .oc-jmp button insertions, and the
      phase-9 SQL. */
   (function(){ var s=document.createElement('style'); s.textContent=
@@ -4856,20 +4857,27 @@ setInterval(cgGhostBadge,4000);
     var txt=(row.kind==='join')?(esc(row.from_callsign||'A pilot')+' asks to JOIN your channel'):(esc(row.from_callsign||'A pilot')+' INVITES you to their channel');
     d.innerHTML='<span>'+txt+'</span><button type="button" class="jb-ok">ACKNOWLEDGE</button><button type="button" class="jb-no">DECLINE</button>';
     document.body.appendChild(d);
-    d.querySelector('.jb-ok').onclick=function(){
-      var patch={status:'accepted',acted_at:new Date().toISOString()};
-      if(row.kind==='join') patch.tab_channel=curChannel;
-      sb.from('org_jump_requests').update(patch).eq('id',row.id).then(function(res){
-        d.remove(); _jmpBar=null;
-        if(res.error){ toast('Could not acknowledge: '+res.error.message); return; }
-        if(row.kind==='invite'&&row.tab_channel){ selectChannel(row.tab_channel); toast('Swapped to '+esc(row.from_callsign||'their')+"'s channel."); }
-        else toast('Acknowledged - '+esc(row.from_callsign||'they')+' is joining your channel.');
-      });
-    };
-    d.querySelector('.jb-no').onclick=function(){
-      sb.from('org_jump_requests').update({status:'declined',acted_at:new Date().toISOString()}).eq('id',row.id).then(function(){});
-      d.remove(); _jmpBar=null;
-    };
+    async function respond(decision){
+      var buttons=d.querySelectorAll('button');
+      buttons.forEach(function(b){b.disabled=true;});
+      try{
+        var res=await sb.functions.invoke('discord-jump',{body:{request_id:row.id,decision:decision,tab_channel:curChannel}});
+        var data=res.data;
+        if(res.error){
+          var message='Response was not confirmed. Check your connection and try again.';
+          try{var detail=await res.error.context.json();if(detail&&detail.error)message=detail.error;}catch(ignore){}
+          toast(message);return;
+        }
+        if(!data||data.ok!==true){toast(data&&data.error||'Response was not confirmed.');return;}
+        d.remove();_jmpBar=null;
+        if(decision==='decline'){toast('Request declined.');return;}
+        if(row.kind==='invite'&&data.tab_channel)selectChannel(data.tab_channel);
+        toast(data.note||'Acknowledged. Discord voice was not confirmed.');
+      }catch(err){toast('Response was not confirmed. Check your connection and try again.');}
+      finally{buttons.forEach(function(b){b.disabled=false;});}
+    }
+    d.querySelector('.jb-ok').onclick=function(){return respond('accept');};
+    d.querySelector('.jb-no').onclick=function(){return respond('decline');};
   }
   function jmpPoll(){
     if(!sb||!me) return;
@@ -4879,11 +4887,12 @@ setInterval(cgGhostBadge,4000);
         if(res.error||!res.data||!res.data.length) return;
         jmpBanner(res.data[0]);
       },function(){});
-    sb.from('org_jump_requests').select('*').eq('from_user',me.id).in('status',['accepted','done','failed']).gt('created_at',cutoff)
+    sb.from('org_jump_requests').select('*').eq('from_user',me.id).in('status',['accepted','done','failed','declined']).gt('created_at',cutoff)
       .order('created_at',{ascending:false}).limit(3).then(function(res){
         if(res.error||!res.data) return;
         res.data.forEach(function(row){
           var k=row.id+':'+row.status; if(_jmpSeen[k]) return; _jmpSeen[k]=1;
+          if(row.status==='declined'){toast((row.to_callsign||'The pilot')+' declined your request.');return;}
           if(row.status==='failed'){ toast('Jump failed: '+(row.note||'unknown')); return; }
           if(row.kind==='join'){
             if(row.status==='accepted'||row.status==='done'){
