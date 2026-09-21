@@ -3389,7 +3389,7 @@ function heartbeat(){ if(!sb||!me)return;
     if(!approved.length) h='<div style="color:var(--txt-dim);text-align:center;padding:20px">No approved members yet.</div>';
     box.innerHTML=h;
   }
-  function rankOpts(sel){ return RANKS.filter(function(r){return r.id!=='recruit';}).map(function(r){return '<option value="'+r.id+'"'+(r.id===sel?' selected':'')+'>'+esc(r.n)+'</option>';}).join(''); }
+  function rankOpts(sel){ return RANKS.filter(function(r){return r.id!=='recruit'||r.id===sel;}).map(function(r){return '<option value="'+r.id+'"'+(r.id===sel?' selected':'')+'>'+esc(r.n)+'</option>';}).join(''); }
   function sqnOpts(sel){ var o='<option value="">Unassigned</option>'; squadrons.forEach(function(s){ o+='<option value="'+esc(s.id)+'"'+(s.id===sel?' selected':'')+'>'+esc(s.name)+'</option>'; }); return o; }
   function renderConsole(box,approved,pending){ box.className='oc-console'; var h='';
     /* PHASE 7 (T): "minimum org size is 5 people plus. 4 and below will stay in party chat."

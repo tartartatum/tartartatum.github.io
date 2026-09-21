@@ -6918,7 +6918,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 783;
+window.CMDGLAS_BUILD = 785;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -45000,6 +45000,7 @@ function cg767NoteCoat(){
  
  
 var CG767_PANES=[
+  ['cg767-gbhs', function(v,id){return v==='gather';}],
   ['cg-threat',   function(v,id){return v==='threat';}],
   ['cg-orgparty', function(v,id){return v==='orgparty';}],
   ['cg-contracts',function(v,id){return v==='contracts';}],
@@ -45774,12 +45775,11 @@ function cg767GBHS(){
      
     var live=false;
     try{
-      var tp=String(cg767TruePage()||'');
-      if(/gather/i.test(tp)) live=true;
-      if(!live){ var lt=strip.querySelector('.ops4-tab.on');
-                 if(lt && /gather/i.test(String(lt.getAttribute('data-v')||lt.textContent||''))) live=true; }
+      // The explicit tab selection wins over stale pane visibility or classes.
       var pk=window.__cg767tabPick;
-      if(!live && pk && /gather/i.test(String(pk.v||pk.label||''))) live=true;
+      if(pk){ live=pk.v==='gather'; }
+      else { var lt=strip.querySelector('.ops4-tab.on');
+             live=!!(lt && lt.getAttribute('data-v')==='gather'); }
     }catch(_lv){}
     var host=document.getElementById('cg767-gbhs');
     if(!host){
@@ -46482,9 +46482,9 @@ function cg767TabHold(){
       if(!p.v && String(tabs[i].textContent||'').trim().slice(0,20)===p.label){ want=tabs[i]; break; }
     }
     if(!want) return;
-    if(want.classList.contains('on')) return;
-    tabs.forEach(function(b){ if(b!==want) b.classList.remove('on'); });
-    want.classList.add('on');
+    // Keep exactly one selected tab, even when another renderer re-lights Utility.
+    tabs.forEach(function(b){ if(b!==want && b.classList.contains('on')) b.classList.remove('on'); });
+    if(!want.classList.contains('on')) want.classList.add('on');
   }catch(_th){}
 }
  
