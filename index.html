@@ -3173,7 +3173,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
         </div>
           <div class="cap-card">
             <div class="cap-h">It Stays Out Of The Way</div>
-            <div class="cap-i"><b>Pop-out pills</b><span class="cap-why">Undock the STATUS, ACCOUNT, SEARCH or COMMS pill into its own always-on-top window on a second monitor; RTB snaps it back.</span></div>
+            <div class="cap-i"><b>Pop-out pills</b><span class="cap-why">Undock the STATUS, ACCOUNT, SEARCH or SOCIAL TOOLS pill into its own always-on-top window on a second monitor; RTB snaps it back.</span></div>
             <div class="cap-i"><b>Basic or Expert</b><span class="cap-why">Read the space manual, or the full tables. Your choice, per page.</span></div>
             <div class="cap-i"><b>Yours to arrange</b><span class="cap-why">Ten colourways, per-page zoom, draggable pop-out pills. It should look how you want at 2am.</span></div>
         </div>
@@ -3191,7 +3191,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
         </div>
           <div class="cap-card">
             <div class="cap-h">It Helps You Fly Together</div>
-            <div class="cap-i"><b>COMMS page - party up</b><span class="cap-why">Add friends the reliable way (through RSI Spectrum, since the in-game list is flaky past "F"), then follow the in-game steps to invite them to your party.</span></div>
+            <div class="cap-i"><b>SOCIAL TOOLS page - party up</b><span class="cap-why">Add friends the reliable way (through RSI Spectrum, since the in-game list is flaky past "F"), then follow the in-game steps to invite them to your party.</span></div>
             <div class="cap-i"><b>Org chat &amp; roles</b><span class="cap-why">Jump to your org's Spectrum, and pick the job you want, or leave it "Undecided" for your commander to assign.</span></div>
             <div class="cap-i"><b>Meeting point</b><span class="cap-why">A searchable rally-point picker, the four cities, each planet's main station, Grim HEX and every Lagrange rest stop, so the whole party or org flies to the same spot. Copy it straight to chat.</span></div>
         </div>
@@ -6917,7 +6917,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 789;
+window.CMDGLAS_BUILD = 790;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -7160,8 +7160,8 @@ function scBuildZoomBar(){
       + B('scr-nav-patch','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'patch\')" title="Patch info - live build"',window.SCRI.patch,'PATCH')
       + B('scr-nav-rep','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'reputation\')" title="Reputation ladders"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M9 12.5L8 21l4-2 4 2-1-8.5"/></svg>','REPUTATION')
     +'</div></div>' 
-    +'<div class="scr-group"><div class="scr-cat">COMMS</div><div class="scr-sec scr-flyout">'
-      + B('scr-comms','onclick="window.openOrgApp&&openOrgApp()" title="COMMS - org chat + contacts"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v10H10l-4 3v-3H4z"/></svg>','COMMS')
+    +'<div class="scr-group"><div class="scr-cat">SOCIAL TOOLS</div><div class="scr-sec scr-flyout">'
+      + B('scr-comms','onclick="window.openOrgApp&&openOrgApp()" title="SOCIAL TOOLS - org chat + contacts"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v10H10l-4 3v-3H4z"/></svg>','SOCIAL TOOLS')
       + B('scr-radio','onclick="window.scRadioToggle&&scRadioToggle()" title="RADIO - media controls"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="2"/><path d="M8 9a5 5 0 0 0 0 8M16 9a5 5 0 0 1 0 8M5 6a9 9 0 0 0 0 14M19 6a9 9 0 0 1 0 14"/></svg>','RADIO')
       + B('zb-share','onclick="window.scShareOpen&&scShareOpen()" title="Share this tablet"',window.SCRI.share,'SHARE')
     +'</div></div>'
@@ -20016,8 +20016,8 @@ ensure(); setInterval(ensure, 1500);
     if(document.getElementById('sc-org-launch')) return;
     var b=document.createElement('div');
     b.id='sc-org-launch'; b.setAttribute('role','button'); b.tabIndex=0;
-    b.title='Open COMMS in its own window (shares your CmdGlas login)';
-    b.innerHTML='<span class="ol-ic">'+COMMS_IC+'</span><span class="ol-lbl">COMMS</span><span class="ol-sub">pop-out</span>';
+    b.title='Open SOCIAL TOOLS in its own window (shares your CmdGlas login)';
+    b.innerHTML='<span class="ol-ic">'+COMMS_IC+'</span><span class="ol-lbl">SOCIAL TOOLS</span><span class="ol-sub">pop-out</span>';
     b.addEventListener('click',function(){ window.openOrgApp&&openOrgApp(); });
     b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); window.openOrgApp&&openOrgApp(); } });
     document.body.appendChild(b);
@@ -20028,7 +20028,7 @@ ensure(); setInterval(ensure, 1500);
     try{ win=window.open('cmdglas_org.html','cmdglasOrg','width=1040,height=740,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes'); }
     catch(e){ win=null; }
     if(win){ try{ win.focus(); }catch(e){} }
-    else{ try{ console.warn('[CmdGlas] ORG COMMS pop-out blocked - allow pop-ups for this site.'); }catch(e){} }
+    else{ try{ console.warn('[CmdGlas] ORG SOCIAL TOOLS pop-out blocked - allow pop-ups for this site.'); }catch(e){} }
     return win;
   };
   function anchor(el, rail, openClass){
@@ -21170,7 +21170,7 @@ button.tab:active, .scr-btn:active, .ug-go:active, #ug-btn:active, .cc-chip:acti
     [].slice.call(left.querySelectorAll('.scr-group')).forEach(function(g){
       var c=g.querySelector('.scr-cat'); if(!c) return;
       var t=(c.textContent||'').trim().toUpperCase();
-      if(t==='LIVE') live=g; else if(t==='COMMS') comms=g;
+      if(t==='LIVE') live=g; else if(t==='SOCIAL TOOLS') comms=g;
     });
     var mission=[];
     if(live) [].slice.call(live.querySelectorAll('.scr-btn')).forEach(function(b){ if(!/REPUTATION|PATCH/i.test(b.textContent||'')) mission.push(b); });
@@ -21584,9 +21584,9 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
       +'<span class="cd-title">SOCIAL TOOLS</span><span class="cd-acc">&#8250;&#8250;</span>'
       +'<select class="cd-ch cd-chsel" id="cd-chsel" title="Pick channel" aria-label="Social Tools channel"></select>'+BCAST
       +'<button class="cd-mute" type="button" title="Voice audio is controlled in Discord" aria-label="Voice audio help">'+SPK_ON+SPK_OFF+'</button>'
-      +'<span class="cd-tx" role="button" title="Open COMMS to transmit"><span class="pd"></span>TX</span>'
+      +'<span class="cd-tx" role="button" title="Open SOCIAL TOOLS to transmit"><span class="pd"></span>TX</span>'
       +'<span class="cd-chev">▾</span></div>'
-      +'<div class="cd-body"><iframe data-src="cmdglas_org.html" title="CmdGlas COMMS chat"></iframe></div>'
+      +'<div class="cd-body"><iframe data-src="cmdglas_org.html" title="CmdGlas SOCIAL TOOLS chat"></iframe></div>'
       +'</div></div>';
     document.body.appendChild(wrap);
     var head=wrap.querySelector('.cd-head'), frame=wrap.querySelector('iframe'),
@@ -21943,10 +21943,10 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
       pinned=ks.length?ks.map(function(n){return '<div class="pin"><span class="b"></span>'+n.replace(/[<>&]/g,'')+'</div>';}).join(''):''; }catch(e){}
     if(!pinned) pinned='<div class="pin"><span class="b"></span>Pin routes, loadouts &amp; manuals here</div><div class="pin" style="opacity:.6"><span class="b"></span>— nothing pinned yet —</div>';
     w.innerHTML=
-      '<div class="wg"><div class="wg-h">COMMS</div>'
+      '<div class="wg"><div class="wg-h">SOCIAL TOOLS</div>'
         +'<div class="msg" style="color:#9fb6c8">Org channels, roster &amp; live presence.</div>'
         +'<div class="msg" style="color:#9fb6c8">Sign in to see traffic in #general.</div>'
-        +'<span class="go" id="wg-comms-go">OPEN COMMS</span></div>'
+        +'<span class="go" id="wg-comms-go">OPEN SOCIAL TOOLS</span></div>'
       +'<div class="wg"><div class="wg-h">STATUS</div>'
         +'<div class="stat"><span>Patch</span><b id="wg-patch">'+patch+'</b></div>'
         +'<div class="stat"><span>Sync</span><b id="wg-sync">'+sync+'</b></div>'
@@ -21965,7 +21965,7 @@ body.scrail-on #sc-zoom-bar::after,body.scrail-on #sc-right-bar::after,
       ['spacemanuals','MANUALS','<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/>'],
       ['guide','USER GUIDE','<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>'],
       ['myops','GATHER & BUY','<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 8h4M8 12h8"/>'],
-      ['__comms','COMMS','<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>','acc'],
+      ['__comms','SOCIAL TOOLS','<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>','acc'],
       ['__radio','RADIO','<circle cx="12" cy="13" r="2"/><path d="M8 9a5 5 0 0 0 0 8M16 9a5 5 0 0 1 0 8"/>'],
       ['system','SETTINGS','<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>']
     ];
@@ -22233,7 +22233,7 @@ body.sc-home-mode #sc-chatdock{top:44px !important}
     ['spacemanuals','MANUALS','<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/>'],
     ['guide','USER GUIDE','<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>'],
     ['myops','GATHER & BUY','<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 20h10M8 8h4M8 12h8"/>'],
-    ['__comms','COMMS','<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>','acc'],
+    ['__comms','SOCIAL TOOLS','<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/>','acc'],
     ['__radio','RADIO','<circle cx="12" cy="13" r="2"/><path d="M8 9a5 5 0 0 0 0 8M16 9a5 5 0 0 1 0 8"/>'],
     ['system','SETTINGS','<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>']
   ];
@@ -22900,7 +22900,7 @@ body.sc-home-mode #cg-hometitle b{color:inherit;font-weight:400;font-family:'Ice
      
     f.innerHTML='<div class="wave">'+bars+'</div><div class="htitle">Social Tools</div><div class="hlog" id="cg-comms-chname">GENERAL</div>'
       +'<div class="cg-comms-btns">'
-      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')" title="Find players and groups in live Comms">PARTY UP</button>'
+      +'<button type="button" class="cg-comms-open" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'party\')" title="Find players and groups in Social Tools">PARTY UP</button>'
       +'<button type="button" class="cg-comms-setup" onclick="event.stopPropagation();window.cgOpenComms&&cgOpenComms(\'setup\')">SET UP</button></div>'
        
       +'<div class="cg-comms-btns2">'
@@ -23649,7 +23649,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<b>Top-right</b><span>ACCOUNT - sign in for cross-device sync.</span>',
 '<b>Left</b><span>SEARCH window - search everything, or browse By Topic.</span>',
 '<b>Center</b><span>INGAME TOOLS - the ten tool tiles.</span>',
-'<b>Right</b><span>COMMS window - org channel monitor.</span>',
+'<b>Right</b><span>SOCIAL TOOLS window - org channel monitor.</span>',
 '<b>Lower</b><span>CONTROL BAR - five grouped-shortcut buttons.</span>',
 '<b>Bottom</b><span>MORE INFO, then USER MANUAL (this document).</span></div>',
 '<div class="um-note"><b>NOTE.</b> On a phone the zones stack top-to-bottom. Positions below are for the tablet / desktop layout.</div></div>',
@@ -23674,7 +23674,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-proc">4-1. Sign in</div>',
 '<ol class="um-steps"><li>Locate the ACCOUNT window, top-right of Home.</li>',
 '<li>Tap "SIGN IN" (button, bottom of the window).</li></ol>',
-'<div class="um-note"><b>NOTE.</b> Signed out, the tablet still works fully on this device. Sign-in only adds cross-device sync and org COMMS.</div></div>',
+'<div class="um-note"><b>NOTE.</b> Signed out, the tablet still works fully on this device. Sign-in only adds cross-device sync and org SOCIAL TOOLS.</div></div>',
 '<div class="um-sec"><h2>Section 5 - Search</h2><div class="um-purpose">Find anything on the tablet, or browse by subject. Two modes on one toggle.</div>',
 '<div class="um-proc">5-1. Search everything</div>',
 '<ol class="um-steps"><li>Confirm the toggle reads "SEARCH" (cyan, left half of the toggle).</li>',
@@ -23694,12 +23694,12 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<ol class="um-steps"><li>Click the tile (mouse), or tap the preview card (touch).</li>',
 '<li>The tool opens as a reading sheet on top of Home (see Section 9).</li></ol>',
 '<div class="um-note"><b>NOTE.</b> The preview card names the tool and shows whether it pushes items to the HUD\'s Gather / Buy lists.</div></div>',
-'<div class="um-sec"><h2>Section 7 - Comms</h2><div class="um-purpose">Org chat and channel monitor.</div>',
+'<div class="um-sec"><h2>Section 7 - Social Tools</h2><div class="um-purpose">Org chat and channel monitor.</div>',
 '<div class="um-proc">7-1. Read and transmit</div>',
-'<ol class="um-steps"><li>Locate the COMMS window, top-right of Home (below ACCOUNT).</li>',
+'<ol class="um-steps"><li>Locate the SOCIAL TOOLS window, top-right of Home (below ACCOUNT).</li>',
 '<li>Read the current channel name in the face window (for example, GENERAL), or pick one from the channel selector in the header bar.</li>',
 '<li>Tap "TX" (top-right of the window) to transmit.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> Sign in first (Section 4) - COMMS needs your account before it can transmit.</div></div>',
+'<div class="um-note"><b>NOTE.</b> Sign in first (Section 4) - SOCIAL TOOLS needs your account before it can transmit.</div></div>',
 '<div class="um-sec"><h2>Section 8 - Control Bar</h2><div class="um-purpose">Five grouped-shortcut buttons below the tools. Each expands a tray upward.</div>',
 '<div class="um-proc">8-1. Use a control group</div>',
 '<ol class="um-steps"><li>Locate the row of five buttons below the tools: NAV, MY RIG, LEARN, MISSION CONTROLS, TABLET CONTROLS.</li>',
@@ -23709,7 +23709,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-groups"><div><b>NAV</b> - Notepad, Start Page.</div>',
 '<div><b>MY RIG</b> - Devices, My PC, Ship Loadouts.</div>',
 '<div><b>LEARN</b> - SC Manuals, SC Dictionary, Console, Help, Troubleshoot.</div>',
-'<div><b>MISSION CONTROLS</b> - Comms, Radio, Share.</div>',
+'<div><b>MISSION CONTROLS</b> - Social Tools, Radio, Share.</div>',
 '<div><b>TABLET CONTROLS</b> - Fit 100%, Fullscreen, No URL Bar, Refresh, Reset, Q&amp;A Log.</div></div>',
 '<div class="um-caution"><b>CAUTION.</b> TABLET CONTROLS &rarr; REFRESH reloads the whole tablet. Any unsaved entry on the current page is lost. Save before you refresh.</div></div>',
 '<div class="um-sec"><h2>Section 9 - Reading Sheets &amp; Getting Back</h2><div class="um-purpose">Every page opens as a sheet on top of Home. Home stays underneath, you never lose your place.</div>',
@@ -26416,7 +26416,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     ops:{sel:'#sc-home-widgets .ops-pill', label:'HUD'},
     account:{sel:'#sc-home-widgets .login-pill', label:'ACCOUNT'},
     search:{sel:'#sc-tools-row #sc-navsearch', label:'SEARCH'},
-    comms:{sel:'#sc-chatdock', label:'COMMS'}
+    comms:{sel:'#sc-chatdock', label:'SOCIAL TOOLS'}
   };
   var state={};
    
@@ -26870,12 +26870,12 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
   function build(){
     if(document.getElementById('cg-comms-page')) return;
     var myHandle=LS('cg_rsi_handle',''), orgSid=LS('cg_org_sid',''), role=LS('cg_org_role',''); 
-    var pg=document.createElement('div'); pg.id='cg-comms-page'; pg.className='cgcp-hidden'; pg.setAttribute('role','dialog'); pg.setAttribute('aria-label','COMMS');
+    var pg=document.createElement('div'); pg.id='cg-comms-page'; pg.className='cgcp-hidden'; pg.setAttribute('role','dialog'); pg.setAttribute('aria-label','SOCIAL TOOLS');
     var roleBtns=ROLES.map(function(r){ return '<button type="button" class="cgcp-role" data-role="'+esc(r)+'">'+esc(r)+'</button>'; }).join('')
       +'<button type="button" class="cgcp-role commander" data-role="__cmd">Undecided - let the commander assign</button>';
     pg.innerHTML=''
     +'<div class="cgcp-frame">'
-    +'<div class="cgcp-head"><span class="cgcp-title">◤ COMMS</span>'
+    +'<div class="cgcp-head"><span class="cgcp-title">◤ SOCIAL TOOLS</span>'
       +'<div class="cgcp-tabs"><button data-sec="party" class="on">Party</button><button data-sec="org">Org Chat</button><button data-sec="meet">Meet Up</button><button data-sec="setup">Set Up</button></div>'
       +'<button class="cgcp-x" type="button" title="Close" aria-label="Close">✕</button></div>'
     +'<div class="cgcp-body">'
@@ -26969,8 +26969,8 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
     +'</section>'
      
     +'<section data-sec="setup" hidden>'
-      +'<h3>Set up COMMS</h3>'
-      +'<p class="cgcp-sub">There are two ways to use COMMS and the steps are different. Pick the one you are setting up.</p>'
+      +'<h3>Set up SOCIAL TOOLS</h3>'
+      +'<p class="cgcp-sub">There are two ways to use SOCIAL TOOLS and the steps are different. Pick the one you are setting up.</p>'
        
       +'<div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:2px 0 14px">'
       +'<button type="button" class="cgcp-btn" onclick="event.stopPropagation();window.cgOpenShowcase&&cgOpenShowcase()" style="background:rgba(120,90,220,.18);border-color:rgba(165,140,255,.5);color:#d9ccff">OPEN THE SHOWCASE</button>'
@@ -26988,7 +26988,7 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
         +'<div class="cgcp-card"><h4>4 &middot; Keep a party roster</h4><ol class="cgcp-steps"><li>In <b>Party</b>, use <b>Party roster</b> to note who is flying with you, so you see the group at a glance.</li></ol></div>'
         +'<div class="cgcp-note">Live text <b>channels</b> in the tablet are an <b>org</b> feature. For personal groups, chat runs on <b>Spectrum</b> and in-game party voice/text.</div>'
          
-        +'<div class="cgcp-card"><h4>5 &middot; Discord voice link - optional</h4>'+'<p class="cgcp-sub" style="margin:0 0 10px">COMMS can hold the party leader\'s Discord link and your own, each behind a one-tap button in the <b>Party</b> tab.</p>'+'<ol class="cgcp-steps">'+'<li>In <b>Discord</b>, find the <b>voice channel</b> in the left-hand channel list.</li>'+'<li>Hover the <b>right-hand side of the channel name</b> and choose <b>Create Invite</b>.</li>'+'<li>Open the invite settings and set <b>Expire after: Never</b> and <b>Max number of uses: No limit</b>.</li>'+'<li>Press <b>Copy</b>.</li>'+'<li>Back in <b>COMMS &rarr; Party</b>, paste it into <b>Party leader / commander voice channel</b> and press <b>Save</b>.</li>'+'<li>Paste your own link into <b>My Discord</b> and press <b>Save</b>, so your group can reach you.</li>'+'</ol>'+'<div class="cgcp-note"><b>What it will not do.</b> Discord has <b>no link that connects you to a voice call by itself</b>. Discord\'s own support article <i>Invites 101</i> describes an instant invite as bringing people to the server or channel, and the request for a link that would "instantly join the voice channel" is still an <b>open feature request on Discord\'s community board with no reply from Discord</b> (checked 26 Jul 2026). So the button opens the channel and <b>you press Join</b> yourself.<br><br><b>Two link types, and they behave differently.</b> A <b>discord.gg</b> invite is the one to use, it is meant for handing to people, including people not in the server yet. A <b>discord.com/channels/...</b> link is a jump-to-channel link and is best given only to people already in that server.<br><br><b>Invites can die.</b> Discord lets you set an expiry time and a maximum number of uses when you create one. A default invite can therefore stop working and the button goes dead. Set it to <b>never expire</b> with <b>no use limit</b>.<br><br><b>What COMMS refuses.</b> Only <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> are accepted. Any other address is rejected on purpose with the reason shown, so a mistyped or hostile paste cannot send your group to some other site from inside the tablet.</div>'+'</div>'
+        +'<div class="cgcp-card"><h4>5 &middot; Discord voice link - optional</h4>'+'<p class="cgcp-sub" style="margin:0 0 10px">SOCIAL TOOLS can hold the party leader\'s Discord link and your own, each behind a one-tap button in the <b>Party</b> tab.</p>'+'<ol class="cgcp-steps">'+'<li>In <b>Discord</b>, find the <b>voice channel</b> in the left-hand channel list.</li>'+'<li>Hover the <b>right-hand side of the channel name</b> and choose <b>Create Invite</b>.</li>'+'<li>Open the invite settings and set <b>Expire after: Never</b> and <b>Max number of uses: No limit</b>.</li>'+'<li>Press <b>Copy</b>.</li>'+'<li>Back in <b>SOCIAL TOOLS &rarr; Party</b>, paste it into <b>Party leader / commander voice channel</b> and press <b>Save</b>.</li>'+'<li>Paste your own link into <b>My Discord</b> and press <b>Save</b>, so your group can reach you.</li>'+'</ol>'+'<div class="cgcp-note"><b>What it will not do.</b> Discord has <b>no link that connects you to a voice call by itself</b>. Discord\'s own support article <i>Invites 101</i> describes an instant invite as bringing people to the server or channel, and the request for a link that would "instantly join the voice channel" is still an <b>open feature request on Discord\'s community board with no reply from Discord</b> (checked 26 Jul 2026). So the button opens the channel and <b>you press Join</b> yourself.<br><br><b>Two link types, and they behave differently.</b> A <b>discord.gg</b> invite is the one to use, it is meant for handing to people, including people not in the server yet. A <b>discord.com/channels/...</b> link is a jump-to-channel link and is best given only to people already in that server.<br><br><b>Invites can die.</b> Discord lets you set an expiry time and a maximum number of uses when you create one. A default invite can therefore stop working and the button goes dead. Set it to <b>never expire</b> with <b>no use limit</b>.<br><br><b>What SOCIAL TOOLS refuses.</b> Only <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> are accepted. Any other address is rejected on purpose with the reason shown, so a mistyped or hostile paste cannot send your group to some other site from inside the tablet.</div>'+'</div>'
       +'</div>'
       +'<div class="cgcp-walk cgcp-walk-org" id="cgcp-setup-org" hidden>'
         +'<div class="cgcp-walk-head"><button type="button" class="cgcp-btn ghost" data-setup="back">&lsaquo; Back</button><span class="cgcp-path-badge org">ORG</span><h4>Org chat - full setup</h4></div>'
@@ -26996,11 +26996,11 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
           +'<div class="cgcp-note"><b>THE FIVE-PILOT RULE.</b> An org flies with <b>five registered pilots, the founder included</b>. Founding one asks for all five RSI handles up front, and the org-only channels stay locked until <b>five members are approved</b>. Four or fewer? You stay in <b>Party</b> chat, which needs no org at all. Five is where an org becomes an org.</div></div>'
         +'<div class="cgcp-card"><h4>2 &middot; Pick your role</h4><ol class="cgcp-steps"><li>In <b>Org Chat</b>, tap your role - or <b>Undecided</b> to let the commander assign it.</li></ol></div>'
         +'<div class="cgcp-card cgcp-owner"><h4>3 &middot; Turn on org chat - owner only, once</h4><p class="cgcp-sub" style="margin:2px 0 8px">The live org channels run on the tablet\'s own Supabase backend (the same login you already use). The <b>org owner</b> switches it on one time; every member just signs in.</p><ol class="cgcp-steps"><li>Owner: open your <b>Supabase</b> project &rarr; <b>SQL Editor</b>.</li><li>Run <b>cmdglas_org_phase0.sql</b> once, it creates the <b>org_messages</b> + <b>org_members</b> tables, turns on <b>Realtime</b>, and sets row-security so members only see their own org.</li><li>Members: nothing to run - just be <b>signed in</b> to the tablet.</li></ol></div>'
-        +'<div class="cgcp-card"><h4>4 &middot; Use the channels</h4><ol class="cgcp-steps"><li>Open <b>COMMS</b> and pick a channel from the header dropdown: <b>General</b>, <b>Party</b>, <b>Org</b>, and the org-only <b>CHAN 1-6</b>.</li><li>Type in the box and send. You will see who is online and the member roster.</li></ol></div>'
+        +'<div class="cgcp-card"><h4>4 &middot; Use the channels</h4><ol class="cgcp-steps"><li>Open <b>SOCIAL TOOLS</b> and pick a channel from the header dropdown: <b>General</b>, <b>Party</b>, <b>Org</b>, and the org-only <b>CHAN 1-6</b>.</li><li>Type in the box and send. You will see who is online and the member roster.</li></ol></div>'
         +'<div class="cgcp-card"><h4>5 &middot; Meet up</h4><ol class="cgcp-steps"><li>Use the <b>Meet Up</b> tab: everyone sets the <b>same</b> rally point, then quantum-travels there.</li></ol></div>'
         +'<div class="cgcp-note">Not signed in, or the owner has not run the SQL yet? The chat window will say <b>COMMS BACKEND NOT SET UP</b> until both are done.</div>'
          
-        +'<div class="cgcp-card"><h4>6 &middot; Discord voice link - optional</h4>'+'<p class="cgcp-sub" style="margin:0 0 10px">COMMS can hold the <b>org leader\'s</b> voice channel plus a <b>member directory</b>, each behind its own hotlink button in the <b>Org Chat</b> tab.</p>'+'<ol class="cgcp-steps">'+'<li>In <b>Discord</b>, find the org <b>voice channel</b> in the left-hand channel list.</li>'+'<li>Hover the <b>right-hand side of the channel name</b> and choose <b>Create Invite</b>.</li>'+'<li>Open the invite settings and set <b>Expire after: Never</b> and <b>Max number of uses: No limit</b>.</li>'+'<li>Press <b>Copy</b>.</li>'+'<li>Back in <b>COMMS &rarr; Org Chat</b>, paste it into <b>Org leader voice channel</b> and press <b>Save</b>.</li>'+'<li>Under <b>Member Discord directory</b>, type a member <b>RSI handle</b>, paste <b>their</b> Discord link, press <b>Add</b>. Repeat per member.</li>'+'<li>Each member also sets their own link in <b>Party &rarr; My Discord</b> on their own tablet.</li>'+'</ol>'+'<div class="cgcp-note"><b>What it will not do.</b> Discord has <b>no link that connects you to a voice call by itself</b>. Discord\'s own support article <i>Invites 101</i> describes an instant invite as bringing people to the server or channel, and the request for a link that would "instantly join the voice channel" is still an <b>open feature request on Discord\'s community board with no reply from Discord</b> (checked 26 Jul 2026). So the button opens the channel and <b>you press Join</b> yourself.<br><br><b>Two link types, and they behave differently.</b> A <b>discord.gg</b> invite is the one to use, it is meant for handing to people, including people not in the server yet. A <b>discord.com/channels/...</b> link is a jump-to-channel link and is best given only to people already in that server.<br><br><b>Invites can die.</b> Discord lets you set an expiry time and a maximum number of uses when you create one. A default invite can therefore stop working and the button goes dead. Set it to <b>never expire</b> with <b>no use limit</b>.<br><br><b>What COMMS refuses.</b> Only <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> are accepted. Any other address is rejected on purpose with the reason shown, so a mistyped or hostile paste cannot send your group to some other site from inside the tablet.</div>'+'</div>'
+        +'<div class="cgcp-card"><h4>6 &middot; Discord voice link - optional</h4>'+'<p class="cgcp-sub" style="margin:0 0 10px">SOCIAL TOOLS can hold the <b>org leader\'s</b> voice channel plus a <b>member directory</b>, each behind its own hotlink button in the <b>Org Chat</b> tab.</p>'+'<ol class="cgcp-steps">'+'<li>In <b>Discord</b>, find the org <b>voice channel</b> in the left-hand channel list.</li>'+'<li>Hover the <b>right-hand side of the channel name</b> and choose <b>Create Invite</b>.</li>'+'<li>Open the invite settings and set <b>Expire after: Never</b> and <b>Max number of uses: No limit</b>.</li>'+'<li>Press <b>Copy</b>.</li>'+'<li>Back in <b>SOCIAL TOOLS &rarr; Org Chat</b>, paste it into <b>Org leader voice channel</b> and press <b>Save</b>.</li>'+'<li>Under <b>Member Discord directory</b>, type a member <b>RSI handle</b>, paste <b>their</b> Discord link, press <b>Add</b>. Repeat per member.</li>'+'<li>Each member also sets their own link in <b>Party &rarr; My Discord</b> on their own tablet.</li>'+'</ol>'+'<div class="cgcp-note"><b>What it will not do.</b> Discord has <b>no link that connects you to a voice call by itself</b>. Discord\'s own support article <i>Invites 101</i> describes an instant invite as bringing people to the server or channel, and the request for a link that would "instantly join the voice channel" is still an <b>open feature request on Discord\'s community board with no reply from Discord</b> (checked 26 Jul 2026). So the button opens the channel and <b>you press Join</b> yourself.<br><br><b>Two link types, and they behave differently.</b> A <b>discord.gg</b> invite is the one to use, it is meant for handing to people, including people not in the server yet. A <b>discord.com/channels/...</b> link is a jump-to-channel link and is best given only to people already in that server.<br><br><b>Invites can die.</b> Discord lets you set an expiry time and a maximum number of uses when you create one. A default invite can therefore stop working and the button goes dead. Set it to <b>never expire</b> with <b>no use limit</b>.<br><br><b>What SOCIAL TOOLS refuses.</b> Only <b>https</b> links to <b>discord.gg</b> and <b>discord.com</b> are accepted. Any other address is rejected on purpose with the reason shown, so a mistyped or hostile paste cannot send your group to some other site from inside the tablet.</div>'+'</div>'
       +'</div>'
       +'<div class="cgcp-card" id="cgcp-setup-extras" style="margin-top:12px" hidden><h4>Optional &middot; Unlock the tablet PC extras</h4><ol class="cgcp-steps"><li>In the tablet folder, double-click <b>Create Desktop Shortcuts.bat</b> once.</li><li>Double-click <b>SC Control Server</b> and leave its window open.</li><li>Double-click <b>SC Tablet</b> to open the tablet full-screen.</li><li>No server? Everything except the live/PC-only features still works in any browser.</li></ol></div>'
     +'</section>'
@@ -27017,7 +27017,7 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
       close();
       if(typeof window.cgCommsMaxOpen==='function'){
         window.cgCommsMaxOpen(sec==='setup'?'&start=1':sec==='org'?'&cmd=org':sec==='party'?'&cmd=lfg':'');
-      } else { throw new Error('Live Comms console is unavailable'); }
+      } else { throw new Error('Social Tools console is unavailable'); }
     };
     pg.querySelector('.cgcp-x').addEventListener('click',close);
     pg.addEventListener('mousedown',function(ev){ if(ev.target===pg) close(); });
@@ -27383,7 +27383,7 @@ html.cmdglas-public #tab-system.active{display:flex !important}
       +'<label>What is the problem? (check any that apply)</label>'
       +'<div class="rp-checks">'+checks
         +'<label class="rp-chk"><input type="checkbox" id="rp-cc-toggle"> Content / manual correction</label>'
-        +'<label class="rp-chk"><input type="checkbox" id="rp-chat-toggle"> Chat / COMMS problem</label>'
+        +'<label class="rp-chk"><input type="checkbox" id="rp-chat-toggle"> Chat / SOCIAL TOOLS problem</label>'
       +'</div>'
       +'<div id="cg-report-cc">'
         +'<label>Which manual or page? (e.g. SR-5, a TM section, or the page name)</label>'
@@ -27429,7 +27429,7 @@ html.cmdglas-public #tab-system.active{display:flex !important}
     var where=(document.getElementById('rp-cc-where')||{}).value||'';
     var details=(document.getElementById('rp-details')||{}).value||'';
     if(ccOn) checked.push('Content / manual correction');
-    if(chatOn) checked.push('Chat / COMMS problem');
+    if(chatOn) checked.push('Chat / SOCIAL TOOLS problem');
     var subj = ccOn ? ('CmdGlas content correction'+(where?(' - '+where):'')) : (chatOn ? 'CmdGlas CHAT issue report' : ('CmdGlas issue report'+(checked.length?(' - '+checked[0]):'')));
     var lines=['Platform: '+plat,'','Issue type(s): '+(checked.length?checked.join(', '):'(none selected)')];
     if(ccOn) lines.push('Manual / page: '+(where||'(not specified)'));
@@ -27664,7 +27664,7 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
 (function(){ if(window.__commsMax494) return; window.__commsMax494=true;
   function overlay(){ var o=document.getElementById('cg-comms-max'); if(o) return o;
     o=document.createElement('div'); o.id='cg-comms-max';
-    o.innerHTML='<div class="ccm-bar"><span>◤ COMMS - WING CONSOLE</span><button type="button" class="ccm-x">CLOSE ✕</button></div><iframe title="CmdGlas COMMS"></iframe>';
+    o.innerHTML='<div class="ccm-bar"><span>◤ SOCIAL TOOLS - WING CONSOLE</span><button type="button" class="ccm-x">CLOSE ✕</button></div><iframe title="CmdGlas SOCIAL TOOLS"></iframe>';
     document.body.appendChild(o);
     o.querySelector('.ccm-x').addEventListener('click', close_);
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close_(); });
@@ -27681,7 +27681,7 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
     f.src='cmdglas_org.html?ch='+encodeURIComponent(ch)+qs+'&cb='+(new Date().getTime()); o.classList.add('open'); }
   function close_(){ var o=document.getElementById('cg-comms-max'); if(o){ o.classList.remove('open'); var f=o.querySelector('iframe'); if(f) f.src='about:blank'; } }
   function addBtn(){ var head=document.querySelector('#sc-chatdock .cd-head'); if(!head) return false; if(head.querySelector('.cd-expand')) return true;
-    var chev=head.querySelector('.cd-chev'); var btn=document.createElement('button'); btn.type='button'; btn.className='cd-expand'; btn.title='Expand COMMS - WING console + hierarchy';
+    var chev=head.querySelector('.cd-chev'); var btn=document.createElement('button'); btn.type='button'; btn.className='cd-expand'; btn.title='Expand SOCIAL TOOLS - WING console + hierarchy';
     btn.innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
     btn.addEventListener('click', function(e){ e.stopPropagation(); e.preventDefault(); open_(); });
     if(chev) head.insertBefore(btn, chev); else head.appendChild(btn);
@@ -28470,7 +28470,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
     var mem=myParty();
     if(!mem.length) return '<div class="op-id"><div class="nm">NO PARTY</div>'
       +'<div class="me">You are not in a party right now.</div></div>'
-      +'<div class="op-note">Open COMMS &rarr; <b>#party</b> to create one, or type a friend\'s 6-character code to join. '
+      +'<div class="op-note">Open SOCIAL TOOLS &rarr; <b>#party</b> to create one, or type a friend\'s 6-character code to join. '
       +'Parties need no org - anyone signed in can run one.</div>'
       +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="party">OPEN #PARTY</button></div>';
     var ld=mem.filter(function(m){return m.party_role==='leader';})[0];
@@ -28482,7 +28482,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
       +(_myCs?(' · callsign '+esc(_myCs)):'')+'</div></div>'
       +tiles(mem,'IN PARTY');
     if(mine.kia||mine.rescue) h+='<div class="op-task"><div class="hd">YOUR STATUS</div><div class="ln">'
-      +(mine.kia?'<span class="cg-op-kia">KIA — clear it in COMMS when you are back</span>':'')
+      +(mine.kia?'<span class="cg-op-kia">KIA — clear it in SOCIAL TOOLS when you are back</span>':'')
       +(mine.rescue?'<span class="cg-op-res">MEDIVAC CALLED</span>':'')+'</div></div>';
      
      
@@ -28495,7 +28495,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
       +crew.map(function(m){ return crewTile(m,_mpHead); }).join('')+'</div>';
     var _mc=myConsole();
     h+='<div class="op-actions"><button type="button" class="cg-op-btn" data-oproster="party">FULL ROSTER</button>'
-      +(_mc?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the COMMS console that belongs to your rank">'+esc(_mc.lab)+'</button>':'')
+      +(_mc?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the SOCIAL TOOLS console that belongs to your rank">'+esc(_mc.lab)+'</button>':'')
       +'<button type="button" class="cg-op-btn" data-opmsg="party">MSG PARTY</button></div>';
     return h;
   }
@@ -28504,9 +28504,9 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
     if(!tok()) return '<div class="op-note">Sign in from the account pill to see your org.</div>';
     if(!orgId) return '<div class="op-id"><div class="nm">NO ORG</div>'
       +'<div class="me">You are flying in the General Gamer Pool.</div></div>'
-      +'<div class="op-note">Open COMMS &rarr; <b>ORG</b> tab to apply to an org, or found your own. '
+      +'<div class="op-note">Open SOCIAL TOOLS &rarr; <b>ORG</b> tab to apply to an org, or found your own. '
       +'#general and #party stay open to you either way.</div>'
-      +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="org">OPEN COMMS</button></div>';
+      +'<div class="op-actions"><button type="button" class="cg-op-btn" data-opmsg="org">OPEN SOCIAL TOOLS</button></div>';
     var ap=orgRows.filter(function(m){return m.status==='approved';});
     var me2=orgRows.filter(function(m){return m.user_id===uid;})[0]||null;
     var mySq=me2&&me2.squadron?sqns.filter(function(q){return q.id===me2.squadron;})[0]:null;
@@ -28546,7 +28546,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
     }
     var _mc2=myConsole();
     h+='<div class="op-actions"><button type="button" class="cg-op-btn" data-oproster="org">FULL ROSTER</button>'
-      +(_mc2?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the COMMS console that belongs to your rank">'+esc(_mc2.lab)+'</button>':'')
+      +(_mc2?'<button type="button" class="cg-op-btn" data-opconsole="1" title="Opens the SOCIAL TOOLS console that belongs to your rank">'+esc(_mc2.lab)+'</button>':'')
       +'<button type="button" class="cg-op-btn" data-opmsg="org">MSG ORG</button></div>';
     return h;
   }
@@ -36996,7 +36996,7 @@ html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-b708{
         return '<div class="b708-m">'+avatarFor(m)
           +'<span class="b708-mn">'+esc(m.callsign||'CMDR')+(uid&&m.user_id===uid?' (you)':'')+'</span></div>';
       }).join('')
-      : '<div class="b708-note">No party yet &mdash; open COMMS &rarr; <b>#party</b> on the tablet '
+      : '<div class="b708-note">No party yet &mdash; open SOCIAL TOOLS &rarr; <b>#party</b> on the tablet '
         +'to create one or join by code.</div>';
     var hdr=(myRow&&myRow.party_id)?('PARTY '+esc(myRow.party_id)+' &middot; '+members.length):'PILOTS';
     el.innerHTML=
@@ -44477,7 +44477,7 @@ function cg767JumpBuild(pill){
    
   try{
     if(/org|party/i.test(cg767TruePage()||''))
-      mk('COMMS', cg767CommsInView);
+      mk('SOCIAL TOOLS', cg767CommsInView);
   }catch(_op){}
 }
 function menuBits(pill){
@@ -51264,9 +51264,9 @@ console.log('[b767] curved HUD skin armed');
     [/^LAUNCH PLAYER$/i,'Open the always-on-top video player window.'],
     [/^WATCH$/i,'Play this channel in the panel.'],
     [/^TWITCH$/i,'Open this channel on twitch.tv - drops only count there.'],
-    [/^ENTER SOCIAL TOOLS$/i,'Open the full comms deck.'],
+    [/^ENTER SOCIAL TOOLS$/i,'Open the full Social Tools deck.'],
     [/^PARTY UP$/i,'Add friends, pick org jobs, set a meeting point.'],
-    [/^GUIDED SETUP$/i,'Step-by-step comms setup.'],
+    [/^GUIDED SETUP$/i,'Step-by-step Social Tools setup.'],
     [/^USER MANUAL$/i,'How to use this tablet, page by page.'],
     [/^ORG SHOWCASE$/i,'Every panel with a picture and where to find it.'],
     [/^SHIP LOADOUTS$/i,'Build and compare ship loadouts.'],
@@ -55293,7 +55293,7 @@ console.log('[b767] curved HUD skin armed');
       });
       pane.querySelectorAll('button,[role=button]').forEach(function(e){
         var t=(e.textContent||'').replace(/\s+/g,' ').trim();
-        if(/^OPEN\s+COMMS$/i.test(t)){
+        if(/^OPEN\s+SOCIAL TOOLS$/i.test(t)){
           if(e.getAttribute('data-cg767orgtrim')!=='btn') e.setAttribute('data-cg767orgtrim','btn');
           btns++;
         }
