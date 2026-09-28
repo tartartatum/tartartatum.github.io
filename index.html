@@ -6917,7 +6917,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 791;
+window.CMDGLAS_BUILD = 792;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -9175,7 +9175,25 @@ function bpOpsLink(r){ if(typeof bpEsc!=='function') return ''; var k=((r.set_or
 document.addEventListener('click',function(e){ var b=(e.target&&e.target.closest)?e.target.closest('.bp-ops'):null; if(b){ e.preventDefault(); if(typeof opsPushBP==='function') opsPushBP(b.getAttribute('data-k'), b.getAttribute('data-n')); } });
  
 function bpCard(r){var cat=r.category||"Other";var m=BP_CATMETA[cat]||BP_CATMETA._default;var k=((r.set_or_item||"")+" | "+(r.variant||"")+" | "+(r.parts_included||""));var kAttr=bpEsc(k).replace(/"/g,"&quot;");var craft=bpCCKeys().has(k);var sel=(typeof BP_SEL!=="undefined"&&BP_SEL.has(k));var sent=(typeof BP_SENT!=="undefined"&&BP_SENT[k]);return "<div class=\"bp-card"+(craft?" bp-craft":"")+(sel?" bp-sel":"")+(sent?" bp-sent":"")+"\" data-k=\""+kAttr+"\" data-n=\""+bpEsc(r.set_or_item||"").replace(/"/g,"&quot;")+"\"><div class=\"bp-cover\" style=\"background:linear-gradient(135deg,"+m.a+","+m.b+")\">"+bpImgTag(k)+(m.svg?"<span class=\"bp-ico\" style=\"-webkit-mask-image:url('"+m.svg+"');mask-image:url('"+m.svg+"')\"></span>":(m.i||""))+"<span class=\"bp-type\">"+bpEsc(r.type_label||cat)+"</span></div><div class=\"bp-body bp-body-compact\"><div class=\"bp-name\">"+bpEsc(r.set_or_item||"")+"</div><div class=\"bp-cmini\">"+(craft?"<span class=\"bp-dot craft\" title=\"Craftable (recipe on file)\"></span>":"")+(sent?"<span class=\"bp-dot sent\" title=\"In Craft Calc / OPS\"></span>":"")+"</div><button type=\"button\" class=\"bp-view-btn\" data-view=\""+kAttr+"\">VIEW</button></div></div>";}
-function bpRender(){var host=document.getElementById("bp-cards");if(!host)return;var BSY=(typeof BP_SYS!=='undefined'&&BP_SYS)?BP_SYS:'All';var q=(document.getElementById("bp-q").value||"").toLowerCase().trim();var rows=BP_DATA.filter(function(r){if(BP_CAT!=="All" && r.category!==BP_CAT)return false;if(BSY!=="All"&&BSY!=="__group__"&&String(r.systems||"").toLowerCase().indexOf(String(BSY).toLowerCase())<0)return false;var _bpPatchPick=(typeof BP_PATCH!=="undefined"&&BP_PATCH!=="All");if(_bpPatchPick&&BP_PATCH!=="__group__"&&bpFirstSeen(r)!==BP_PATCH)return false; if(!_bpPatchPick && window.BP_CRAFT_ONLY && !bpCCKeys().has(bpKeyOf(r)))return false;if(!q)return true;return ((r.set_or_item||"")+" "+(r.variant||"")+" "+(r.parts_included||"")+" "+(r.factions||"")+" "+(r.missions||"")+" "+(r.systems||"")+" "+(r.category||"")+" "+(r.type_label||"")).toLowerCase().indexOf(q)>=0;});var byPatch=(typeof BP_PATCH!=="undefined"&&BP_PATCH==="__group__");var gk=byPatch?null:((BSY==="__group__")?"systems":"category");var groups={},order=[];rows.forEach(function(r){var g=byPatch?("FIRST SEEN "+bpFirstSeen(r)):((((r[gk]||"Other")).trim())||"Other");if(!groups[g]){groups[g]=[];order.push(g);}groups[g].push(r);}); order.sort(function(a,b){return byPatch?(a<b?1:a>b?-1:0):(a.toLowerCase()<b.toLowerCase()?-1:1);});order.forEach(function(g){groups[g].sort(function(a,b){var av=(a.set_or_item||"").toLowerCase(),bv=(b.set_or_item||"").toLowerCase();return av<bv?-1:av>bv?1:0;});});var html=order.map(function(g){return "<div class=\"bp-sec\">"+bpEsc(g)+" <span style=\"color:var(--text-dim);font-weight:400\">("+groups[g].length+")</span></div><div class=\"bp-deck-row\">"+groups[g].map(bpCard).join("")+"</div>";}).join("");host.innerHTML=html||"<div style=\"grid-column:1/-1;padding:24px;color:var(--text-dim)\">No blueprints match.</div>";var c=document.getElementById("bp-count");if(c){var _co=(window.BP_CRAFT_ONLY&&(typeof BP_PATCH==="undefined"||BP_PATCH==="All"));c.textContent=rows.length+" / "+BP_DATA.length+" bp/sets"+(_co?"  \u2022 CRAFTABLE-ONLY filter is ON, it is hiding "+(BP_DATA.length-rows.length)+" rows":"");}var v=document.getElementById("bp-version");if(v)v.textContent=" \u2022 "+bpVersionLine();if(window.bpCraftOnlyPaint)bpCraftOnlyPaint();}
+
+/* Shared catalogue model: one ordered data set, no hidden duplicate card tree. */
+var BP_RENDER_ROWS=null;
+function bpTableMeta(row){
+ var cat=row.category||"Other",m=BP_CATMETA[cat]||BP_CATMETA._default;
+ return ((m.svg?'':m.i||'')+(row.type_label||cat)+(row.set_or_item||'')+'VIEW').replace(/\s+/g,' ').trim();
+}
+function cgCatalogueActive(id){var p=document.getElementById(id);return !!p&&p.classList.contains('active');}
+function cgCatalogueWake(){
+ for(var pair of [['tab-blueprints','bpRender','__bpNeedsRender'],['tab-craftcalc','ccRender','__ccNeedsRender']]){
+  (function(id,fn,dirty){var p=document.getElementById(id);if(!p)return;
+   var wake=function(){if(p.classList.contains('active')&&window[dirty])window[fn]();};
+   new MutationObserver(wake).observe(p,{attributes:true,attributeFilter:['class']});wake();
+  })(pair[0],pair[1],pair[2]);
+ }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cgCatalogueWake);else cgCatalogueWake();
+
+function bpRender(){if(!cgCatalogueActive('tab-blueprints')){window.__bpNeedsRender=true;return;}window.__bpNeedsRender=false;var host=document.getElementById("bp-cards");if(!host)return;var BSY=(typeof BP_SYS!=='undefined'&&BP_SYS)?BP_SYS:'All';var q=(document.getElementById("bp-q").value||"").toLowerCase().trim();var rows=BP_DATA.filter(function(r){if(BP_CAT!=="All" && r.category!==BP_CAT)return false;if(BSY!=="All"&&BSY!=="__group__"&&String(r.systems||"").toLowerCase().indexOf(String(BSY).toLowerCase())<0)return false;var _bpPatchPick=(typeof BP_PATCH!=="undefined"&&BP_PATCH!=="All");if(_bpPatchPick&&BP_PATCH!=="__group__"&&bpFirstSeen(r)!==BP_PATCH)return false; if(!_bpPatchPick && window.BP_CRAFT_ONLY && !bpCCKeys().has(bpKeyOf(r)))return false;if(!q)return true;return ((r.set_or_item||"")+" "+(r.variant||"")+" "+(r.parts_included||"")+" "+(r.factions||"")+" "+(r.missions||"")+" "+(r.systems||"")+" "+(r.category||"")+" "+(r.type_label||"")).toLowerCase().indexOf(q)>=0;});var byPatch=(typeof BP_PATCH!=="undefined"&&BP_PATCH==="__group__");var gk=byPatch?null:((BSY==="__group__")?"systems":"category");var groups={},order=[];rows.forEach(function(r){var g=byPatch?("FIRST SEEN "+bpFirstSeen(r)):((((r[gk]||"Other")).trim())||"Other");if(!groups[g]){groups[g]=[];order.push(g);}groups[g].push(r);}); order.sort(function(a,b){return byPatch?(a<b?1:a>b?-1:0):(a.toLowerCase()<b.toLowerCase()?-1:1);});order.forEach(function(g){groups[g].sort(function(a,b){var av=(a.set_or_item||"").toLowerCase(),bv=(b.set_or_item||"").toLowerCase();return av<bv?-1:av>bv?1:0;});});BP_RENDER_ROWS=[];order.forEach(function(g){Array.prototype.push.apply(BP_RENDER_ROWS,groups[g]);});if(window.__cgTablesOnly537){if(host.childElementCount)host.replaceChildren();bpBuildTable();}else{var html=order.map(function(g){return "<div class=\"bp-sec\">"+bpEsc(g)+" <span style=\"color:var(--text-dim);font-weight:400\">("+groups[g].length+")</span></div><div class=\"bp-deck-row\">"+groups[g].map(bpCard).join("")+"</div>";}).join("");host.innerHTML=html||"<div style=\"grid-column:1/-1;padding:24px;color:var(--text-dim)\">No blueprints match.</div>";}var c=document.getElementById("bp-count");if(c){var _co=(window.BP_CRAFT_ONLY&&(typeof BP_PATCH==="undefined"||BP_PATCH==="All"));c.textContent=rows.length+" / "+BP_DATA.length+" bp/sets"+(_co?"  \u2022 CRAFTABLE-ONLY filter is ON, it is hiding "+(BP_DATA.length-rows.length)+" rows":"");}var v=document.getElementById("bp-version");if(v)v.textContent=" \u2022 "+bpVersionLine();if(window.bpCraftOnlyPaint)bpCraftOnlyPaint();}
 function bpRefresh(){var el=document.getElementById("bp-version");el.textContent=" \u2022 fetching scmdb\u2026";fetch("https://scmdb.net/data/versions.json",{cache:"no-store"}).then(function(r){return r.json();}).then(function(v){if(!v||!v.length){throw new Error("empty versions");}BP_VERSION=(v[0].version||"?")+" \u2022 scmdb fetched "+new Date().toISOString().slice(0,16).replace("T"," ");el.textContent=" \u2022 "+BP_VERSION;}).catch(function(e){el.textContent=" \u2022 scmdb refresh failed: "+(e.message||e);});}
 document.querySelectorAll("#bp-table th[data-bpk]").forEach(function(th){th.addEventListener("click",function(){bpSort(th.getAttribute("data-bpk"));});});
  
@@ -9211,16 +9229,7 @@ function bpSelStat(msg){
   if(window.bpSelDeckRender)bpSelDeckRender();
 }
  
-function bpSelLabel(k){
-   
-  var card=document.querySelector('#bp-cards .bp-card[data-k="'+(window.CSS&&CSS.escape?CSS.escape(k):k)+'"]');
-  if(card){
-    var t=card.querySelector('.bp-t,.bp-title,.syc-t,b');
-    var s=(t&&t.textContent||'').trim();
-    if(s) return s;
-  }
-  return String(k).replace(/\|/g,' · ');    
-}
+function bpSelLabel(k){return String(k).replace(/\|/g,' · ');}
 function bpSelSync(){
   var n=document.getElementById("bp-sel-n");
   if(n) n.textContent=BP_SEL.size;
@@ -9250,34 +9259,22 @@ function bpSelListToggle(ev){
 }
  
 function bpBuildTable(){
-  var host=document.getElementById('bp-cards'); if(!host) return;
-  var wrap=document.getElementById('bp-table-wrap');
-  if(!wrap){
-    wrap=document.createElement('div'); wrap.id='bp-table-wrap';
-    host.parentNode.insertBefore(wrap,host.nextSibling);
-  }
-  var cards=host.querySelectorAll('.bp-card');
-  if(!cards.length){ wrap.innerHTML='<div style="font-size:11px;color:var(--text-dim);padding:10px">Nothing to show.</div>'; return; }
-  var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
-  var rows='';
-  Array.prototype.forEach.call(cards,function(c){
-    var k=c.getAttribute('data-k')||'';
-    var parts=k.split('|');
-    var craft=c.classList.contains('bp-craft');
-    var sel=c.classList.contains('bp-sel');
-     
-    var meta=(c.textContent||'').replace(/\s+/g,' ').trim();
-    rows+='<tr class="bp-card'+(craft?' bp-craft':'')+(sel?' bp-sel':'')+'" data-k="'+esc(k)+'">'
-      +'<td><b>'+esc(parts[0]||k)+'</b></td>'
-      +'<td>'+esc(parts[1]||'')+'</td>'
-      +'<td>'+esc(parts[2]||'')+'</td>'
-      +'<td>'+(craft?'<span style="color:var(--green2)">CRAFTABLE</span>':'<span style="color:var(--text-dim)">—</span>')+'</td>'
-      +'<td style="color:var(--text-dim);font-size:10px">'+esc(meta.slice(0,120))+'</td>'
-      +'</tr>';
-  });
-  wrap.innerHTML='<table class="sc-table" id="bp-table" style="width:100%;font-size:11px">'
-    +'<thead><tr><th>Set / Item</th><th>Variant</th><th>Parts</th><th>Craft</th><th>Detail</th></tr></thead>'
-    +'<tbody>'+rows+'</tbody></table>';
+ if(!cgCatalogueActive('tab-blueprints')){window.__bpNeedsRender=true;return;}
+ var host=document.getElementById('bp-cards');if(!host)return;
+ if(!BP_RENDER_ROWS){bpRender();return;}
+ var wrap=document.getElementById('bp-table-wrap');
+ if(!wrap){wrap=document.createElement('div');wrap.id='bp-table-wrap';host.after(wrap);}
+ var signature=JSON.stringify([BP_RENDER_ROWS.map(function(r){return[bpKeyOf(r),bpCCKeys().has(bpKeyOf(r)),bpTableMeta(r)];}),[...BP_SEL],Object.keys(BP_SENT)]);
+ if(wrap.__bpTableSignature===signature&&wrap.firstElementChild)return;
+ var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+ var rows=BP_RENDER_ROWS.map(function(r){var k=bpKeyOf(r),parts=k.split('|'),craft=bpCCKeys().has(k),sel=BP_SEL.has(k);
+  return '<tr class="bp-card'+(craft?' bp-craft':'')+(sel?' bp-sel':'')+'" data-k="'+esc(k)+'">'
+   +'<td><b>'+esc(parts[0]||k)+'</b></td><td>'+esc(parts[1]||'')+'</td><td>'+esc(parts[2]||'')+'</td>'
+   +'<td>'+(craft?'<span style="color:var(--green2)">CRAFTABLE</span>':'<span style="color:var(--text-dim)">—</span>')+'</td>'
+   +'<td style="color:var(--text-dim);font-size:10px">'+esc(bpTableMeta(r).slice(0,120))+'</td></tr>';
+ }).join('');
+ wrap.innerHTML=rows?'<table class="sc-table" id="bp-table" style="width:100%;font-size:11px"><thead><tr><th>Set / Item</th><th>Variant</th><th>Parts</th><th>Craft</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table>':'<div style="font-size:11px;color:var(--text-dim);padding:10px">Nothing to show.</div>';
+ wrap.__bpTableSignature=signature;
 }
 function bpSetView(v){
   var decks=(v!=='tables');
@@ -11129,6 +11126,7 @@ window._buildOverlayBody = function(opts){
   window.ccRender=function(){
     try{localStorage.setItem("sccmd_overlay_craft",JSON.stringify(CC_SEL));}catch(e){}
     var host=document.getElementById("cc-bp-list"); if(!host) return _origRender();
+    if(!cgCatalogueActive('tab-craftcalc')){window.__ccNeedsRender=true;ccAggregate();if(!window.__craftEcho){window.__craftEcho=1;try{if(window.__ovRender)window.__ovRender();}finally{window.__craftEcho=0;}}return;}window.__ccNeedsRender=false;
     var ub=ccUniqueBPs();
     var q=(document.getElementById("cc-q").value||"").toLowerCase().trim();
     var rows=ub.filter(function(b){if(CC_CAT!=="All"&&(b.c||"Uncategorized")!==CC_CAT)return false;if(!q)return true;return ((b.n||"")+" "+(b.v||"")+" "+(b.p||"")+" "+(b.c||"")).toLowerCase().indexOf(q)>=0;});
@@ -22415,7 +22413,7 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
     }
     return document.getElementById('cc-sel-list');
   }
-  function redistribute(){
+  function redistribute(){if(window.__ccNeedsRender)return;
     var src=document.getElementById('cc-bp-list'); var sel=ensurePanel(); if(!src||!sel) return;
     var heads=src.querySelectorAll('.cc-loc-h'); var moved=[];
     if(heads.length>=2){
@@ -33729,6 +33727,7 @@ html.cg-clocks-off #cg-clocks{ display:none !important; }
   if(window.__cgFixE) return; window.__cgFixE=1;
   function labels(){ return document.querySelectorAll('#tab-home .hm-cell .hm-lab-out, #tab-home .hm-cell .hm-lab'); }
   function worst(){
+    if(document.querySelector('#cg-sheet.open')||document.documentElement.classList.contains('cg-hudonly'))return 0;
     var L=labels(), w=0;
     for(var i=0;i<L.length;i++){
       var c=L[i].closest && L[i].closest('.hm-cell'); if(!c) continue;
