@@ -2120,14 +2120,13 @@ function cgInitialDiscordCallsign(u,pool){
       else toast('No channel yet. Press JOIN PARTY VOICE first.');
       return; }
     if(t.closest('[data-dvlink]')){
-      toast('Discord linking is temporarily paused while email access is removed.'); return;
 
       if(!sb || !sb.auth || typeof sb.auth.linkIdentity!=='function'){ toast('This comms library cannot link Discord.'); return; }
       /* Manual identity linking has to be enabled on the Supabase project. If
          it is not, say exactly what Supabase said rather than quietly creating
          a second account for the same pilot. */
       try{
-        var p=sb.auth.linkIdentity({provider:'custom:cmdglas-discord'});
+        var p=sb.auth.linkIdentity({provider:'discord'});
         if(p&&p.then) p.then(function(r){ if(r&&r.error) toast('Discord link refused: '+r.error.message); })
                        .catch(function(er){ toast('Discord link failed: '+String(er&&er.message||er)); });
       }catch(er2){ toast('Discord link failed: '+String(er2&&er2.message||er2)); }

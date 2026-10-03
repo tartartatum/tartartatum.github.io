@@ -6917,7 +6917,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 793;
+window.CMDGLAS_BUILD = 794;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -15112,16 +15112,9 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
 <div class="sca-menu" id="sca-usermenu"><button onclick="scAuthSignout()">Sign out</button></div>
 
 <script id="sc-anon-4604779">
-/* Discord identity-only migration: built-in Supabase Discord requests email.
-   Fail closed until the replacement provider and existing-user mapping are verified. */
-window.CG_DISCORD_PRIVACY_READY=false;
-window.CG_DISCORD_PROVIDER='custom:cmdglas-discord';
-window.cgDiscordPrivacyCheck=function(){
-  if(window.CG_DISCORD_PRIVACY_READY===true) return true;
-  var e=document.getElementById('sca-si-err');
-  if(e) e.textContent='Discord sign-in is temporarily paused while email access is removed.';
-  return false;
-};
+/* Discord-only entry. Existing account emails and saved sessions are retained. */
+window.CG_DISCORD_PROVIDER='discord';
+window.cgDiscordPrivacyCheck=function(){return true;};
 
 (function(){
    
