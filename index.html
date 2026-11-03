@@ -1221,6 +1221,30 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 </script>
 
 
+<style id="cg-referral799-style">
+.cg-referral{box-sizing:border-box;max-width:32rem;width:100%;min-width:0;padding:1em;border:1px solid var(--amber-dim);border-radius:12px;background:var(--panel,#141e2c);color:var(--text);font-family:inherit;text-align:left;line-height:1.5;flex:1 1 100%;grid-column:1/-1;white-space:normal}
+.cg-referral h3{font:inherit;font-weight:700;color:var(--amber2);margin:0 0 .4em}
+.cg-referral p{font:inherit;font-size:.9em;margin:.4em 0}
+.cg-referral code{font:inherit;font-weight:700;letter-spacing:.08em;user-select:text}
+.cg-referral-actions{display:flex;flex-wrap:wrap;gap:.6em;margin-top:.7em}
+.cg-referral-actions a,.cg-referral-actions button{font:inherit;line-height:1.4;padding:.6em .8em;border:1px solid var(--amber-dim);border-radius:7px;background:transparent;color:var(--amber2);cursor:pointer;text-decoration:none;text-transform:none;letter-spacing:normal;white-space:normal}
+.cg-referral-actions :focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.cg-referral .cg-referral-status{min-height:1.5em;margin-bottom:0}
+#sc-appbar .sc-acc-group > .scr-flyout > .cg-referral{display:block !important;white-space:normal !important;flex:0 0 auto}
+#cover-screen{overflow-y:auto;justify-content:safe center}
+#cover-screen .cover-inner,#cover-screen .cover-foot{flex-shrink:0}
+</style>
+<script id="cg-referral799-script">
+window.cgReferralCard=function(){return "<section class=\"cg-referral\" aria-label=\"Star Citizen referral\"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class=\"cg-referral-disclosure\">Eligible purchases also earn Raz a recruitment point.</p><div class=\"cg-referral-actions\"><a href=\"https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2\" target=\"_blank\" rel=\"noopener noreferrer\">Join Star Citizen</a><button type=\"button\" data-referral-copy>Copy code</button></div><p class=\"cg-referral-status\" role=\"status\" aria-live=\"polite\"></p></section>";};
+document.addEventListener('click',async function(e){
+ if(!e.target.closest('.cg-referral'))return;e.stopPropagation();
+ var b=e.target.closest('[data-referral-copy]');if(!b)return;
+ var s=b.closest('.cg-referral').querySelector('.cg-referral-status');b.disabled=true;s.textContent='Copying…';
+ try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw Error('Clipboard unavailable');await navigator.clipboard.writeText('STAR-3RSF-JCT2');s.textContent='Copied: STAR-3RSF-JCT2';}
+ catch(_){s.textContent='Copy unavailable. Select and copy STAR-3RSF-JCT2 above.';}
+ finally{b.disabled=false;}
+},true);
+</script>
 <div id="cover-screen" role="dialog" aria-label="CmdGlas, start screen">
   <svg id="cover-ring" viewBox="0 0 100 100" aria-hidden="true">
     <circle class="r1" cx="50" cy="50" r="46"/>
@@ -1262,6 +1286,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
     <button type="button" id="cover-cap" onclick="try{document.getElementById('cover-screen').classList.add('hide');}catch(e){};if(typeof setActiveTabById==='function')setActiveTabById('cap');" title="Everything this tablet can do">&#9670; TABLET CAPABILITIES</button>
     
     <button type="button" id="cover-enter">Enter Tablet</button>
+    <section class="cg-referral" aria-label="Star Citizen referral"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class="cg-referral-disclosure">Eligible purchases also earn Raz a recruitment point.</p><div class="cg-referral-actions"><a href="https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2" target="_blank" rel="noopener noreferrer">Join Star Citizen</a><button type="button" data-referral-copy>Copy code</button></div><p class="cg-referral-status" role="status" aria-live="polite"></p></section>
     <button type="button" id="cover-srv-btn" class="panel-btn" style="display:none;margin-top:12px" onclick="event.stopPropagation();fetch('/api/restart',{method:'POST'}).then(function(){document.getElementById('cover-srv-txt').textContent='restarting server... reconnecting';setTimeout(function(){location.reload();},6500);}).catch(function(){});">RESTART SERVER</button>
 </div>
   
@@ -1279,6 +1304,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
   c.addEventListener('click',function(e){if(e.target===c)go();});
    
   document.addEventListener('keydown',function(e){
+    if(e.target.closest('.cg-referral'))return;
     if(c.style.display!=='none' && !c.classList.contains('hide')) go();
   });
 })();
@@ -6920,7 +6946,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 798;
+window.CMDGLAS_BUILD = 799;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -7153,6 +7179,7 @@ function scBuildZoomBar(){
       + B('scr-nav-ship','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'loadout\')" title="Ship loadouts"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 2 4 5 4 9l-4 3-4-3c0-4 1.5-7 4-9z"/><path d="M8 13l-2 4 3-1M16 13l2 4-3-1"/></svg>','SHIP LOADOUTS')
     +'</div></div>'
     +'<div class="scr-group"><div class="scr-cat">LEARN</div><div class="scr-sec scr-flyout">'
+      + window.cgReferralCard()
       + B('scr-nav-p410','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'patch410\')" title="Star Citizen patch notes"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h4"/></svg>','PATCH NOTES')
       + B('scr-nav-sm','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'spacemanuals\')" title="SC Manuals hub"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2z"/><path d="M9 4v14"/></svg>','SC MANUALS')
       + B('scr-nav-con','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'console\')" title="Console commands"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>','CONSOLE')
