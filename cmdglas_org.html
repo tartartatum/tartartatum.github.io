@@ -1030,6 +1030,7 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
 </div></div>
 <div id="oc-toast" class="oc-toast"></div>
 
+<script src="org-governance.js?v=20261102-1"></script>
 <script>
 (function(){
   "use strict";
@@ -1097,7 +1098,15 @@ function cgInitialDiscordCallsign(u,pool){
   function fmtTime(iso){ try{return new Date(iso).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){return '';} }
   function ago(iso){ try{var s=Math.floor((Date.now()-new Date(iso).getTime())/1000); if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago';}catch(e){return '';} }
   function rankName(r){ for(var i=0;i<RANKS.length;i++) if(RANKS[i].id===r) return RANKS[i].n; return (r||'member'); }
-  function isCmd(){ return RANK_CMD.indexOf(myRole)>=0 && myStatus==='approved'; }
+  var governance=window.CGOrgGovernance.create({
+    context:function(){return {sb:sb,userId:me&&me.id,orgId:ORG_ID,members:roster};},
+    onChange:function(){updateCmdTabs();renderOrg(true);renderOcmd(true);renderPcmd(true);},
+    openCommand:function(mode){setMode(mode);loadSupport(function(){renderPcmd(true);});}
+  });
+  function isPersonnelCmd(){return RANK_CMD.indexOf(myRole)>=0&&myStatus==='approved';}
+  function isCmd(){return isPersonnelCmd()||!!(governance&&governance.isCaptain()&&myStatus==='approved');}
+  function isBattleLead(){return isWC()||!!(governance&&governance.isCaptain());}
+  function battlePartyRow(){var p=governance&&governance.selectedParty();return p?Object.assign({},myPoolRow()||{user_id:me&&me.id},{party_id:p}):myPoolRow();}
   function sqnName(id){ if(!id) return 'Unassigned'; for(var i=0;i<squadrons.length;i++) if(squadrons[i].id===id) return squadrons[i].name; return id; }
   function setConn(on,l){ $('oc-conn').classList.toggle('on',!!on); $('oc-conn-lbl').textContent=l||(on?'live':'offline'); }
   function showErr(m){ $('oc-err').textContent=m||''; }
@@ -1216,7 +1225,7 @@ function cgInitialDiscordCallsign(u,pool){
   function autoGrow(){ var ta=$('oc-input'); ta.style.height='auto'; ta.style.height=Math.min(120,ta.scrollHeight)+'px'; }
 
   // ---- membership gate ----
-  function onSession(user){ me=user||null;
+  function onSession(user){ me=user||null; if(governance&&!me)governance.refresh();
     if(!me){ $('oc-who').textContent='—'; $('oc-input').disabled=true; $('oc-send').disabled=true; setConn(false,'offline'); hideGate(); $('oc-signin').classList.remove('hidden'); return; }
     $('oc-signin').classList.add('hidden'); $('oc-who').textContent=callsign(me); checkMembership();
   }
@@ -2136,7 +2145,7 @@ function cgInitialDiscordCallsign(u,pool){
   /* shared callsign-menu click handling. scope 'party' = pool party; scope 'org:<squadron-id>'
      = that squadron in the current org. The scope travels on the buttons themselves. */
   function scopeList(scope){
-    if(scope==='party') return partyRows((myPoolRow()||{}).party_id);
+    if(scope==='party') return partyRows((battlePartyRow()||{}).party_id);
     if(scope.indexOf('org:')===0){ var sq=scope.slice(4);
       return roster.filter(function(m){return m.status==='approved' && (m.squadron||'')===sq && m.role!=='wing-commander';}); }
     return [];
@@ -2603,8 +2612,8 @@ function cgInitialDiscordCallsign(u,pool){
     try{ return Math.max(0,Math.floor((Date.now()-new Date(m.last_seen).getTime())/60000)); }catch(e){ return null; } }
   window.__ocPcmdSig='';
   function renderPcmd(force){ var box=$('pcmd-board'); if(!box||curMode!=='pcmd') return;
-    var mine=myPoolRow();
-    var iLead=!!(mine&&mine.party_id&&mine.party_role==='leader');
+    var mine=battlePartyRow();
+    var iLead=!!(mine&&mine.party_id&&(mine.party_role==='leader'||governance.canParty(mine.party_id)));
     if(!mine||!mine.party_id){ if(window.__ocPcmdSig!=='none'){ window.__ocPcmdSig='none';
       box.innerHTML='<div class="wing-you">No party. Open CHAT &rarr; #party to create one or join by code.</div>'; } return; }
     var mem=partyRows(mine.party_id);
@@ -2630,7 +2639,7 @@ function cgInitialDiscordCallsign(u,pool){
   window.__ocOcmdSig='';
   function renderOcmd(force){ var box=$('ocmd-board'); if(!box||curMode!=='ocmd') return;
     if(!isCmd()||!ORG_ID){ if(window.__ocOcmdSig!=='none'){ window.__ocOcmdSig='none';
-      box.innerHTML='<div class="wing-you">ORG COMMAND is for Wing Commanders and Squadron Leaders.</div>'; } return; }
+      box.innerHTML='<div class="wing-you">ORG COMMAND is for Wing Commanders, Squadron Leaders and the assigned Battle Captain.</div>'; } return; }
     var approved=roster.filter(function(m){return m.status==='approved';});
     var _po=approvedOrgs.filter(function(x){return x.id===ORG_ID;})[0]||{};
     var sig=JSON.stringify(['o',ORG_ID,dnVal(),supErr,_po.recruiting,_po.tags,_po.manifesto,_po.delete_requested,_po.pirate,planArm,
@@ -3049,7 +3058,7 @@ function cgInitialDiscordCallsign(u,pool){
     var inp=document.getElementById('oc-nc-in-'+scope); var txt=(inp&&inp.value||'').trim();
     if(!txt){ toast('Type the netcall first.'); return; }
     var oid,ch,body;
-    if(scope==='party'){ var mine=myPoolRow(); if(!mine||!mine.party_id) return;
+    if(scope==='party'){ var mine=battlePartyRow(); if(!mine||!mine.party_id) return;
       oid=GAMERPOOL; ch='party'; body=NETCALL_PFX+' ['+mine.party_id+']: '+txt; }
     else { if(!ORG_ID) return; oid=ORG_ID; ch='org'; body=NETCALL_PFX+': '+txt; }
     sb.from('org_messages').insert({org_id:oid,channel:ch,user_id:me.id,callsign:callsign(me),body:body}).then(function(res){
@@ -3065,7 +3074,7 @@ function cgInitialDiscordCallsign(u,pool){
         poolUpd(m.user_id,{party_id:null,party_role:null,tac_callsign:null,kia:false,rescue:false});
         toast(String(m.callsign||'A pilot')+' unlinked from the party — offline over 30 minutes.'); } }); }
   /* ---- command tabs appear only for the seats that own them ---- */
-  function updateCmdTabs(){ var mine=myPoolRow();
+  function updateCmdTabs(){ var mine=battlePartyRow();
     var pl=!!(mine&&mine.party_id), oc=isCmd();
     var bp=$('mode-pcmd'), bo=$('mode-ocmd');
     if(bp) bp.classList.toggle('hidden',!pl);
@@ -3248,7 +3257,7 @@ function cgInitialDiscordCallsign(u,pool){
     rtOrgs=sb.channel('cg-orgs').on('postgres_changes',{event:'*',schema:'public',table:'orgs'},function(){
       if(_ol)clearTimeout(_ol); _ol=setTimeout(checkMembership,400); }).subscribe();
   }
-  function startComms(){ $('oc-input').disabled=false; $('oc-send').disabled=false;
+  function startComms(){ $('oc-input').disabled=false; $('oc-send').disabled=false; governance.refresh();
     buildChannels(); loadMessages(); subChat(); heartbeat(); subPresence();
     /* DEEP DIVE 28 JUL: loadSupport reads myPoolRow() for the party scope, so it has to run
        AFTER the pool lands or a party-only pilot's board boots empty. */
@@ -3333,7 +3342,8 @@ function heartbeat(){ if(!sb||!me)return;
     window.__ocOrgSig=sig;
     keepFields(function(){ renderOrgInner(box); }, box); }
 
-  function renderOrgInner(box){
+  function renderOrgInner(box){renderOrgInnerLegacy(box);if(governance&&(ORG_ID||isAdmin))box.insertAdjacentHTML('afterbegin',governance.summaryHTML());}
+  function renderOrgInnerLegacy(box){
     if(!ORG_ID){
       if(isAdmin){ box.className='oc-console'; box.innerHTML=adminHTML(); $('oc-roster-count').textContent=pendingOrgs.length+' org application'+(pendingOrgs.length===1?'':'s')+' · '+approvedOrgs.length+' active org'+(approvedOrgs.length===1?'':'s'); }
       else { renderJoin(box); $('oc-roster-count').textContent=approvedOrgs.length?approvedOrgs.length+' org'+(approvedOrgs.length===1?'':'s')+' recruiting':'no orgs recruiting yet'; }
@@ -3416,7 +3426,7 @@ function heartbeat(){ if(!sb||!me)return;
     if(approved.length<5)
       h+='<div class="oc-applicants" style="border-color:rgba(255,176,0,.45)"><h3 style="color:#ffd479">ORG CHANNELS LOCKED — '+approved.length+' / 5 MEMBERS</h3>'
         +'<div style="font-size:12.5px;color:#c9d7e4;line-height:1.5">An org needs <b>5 approved members</b> before its channels open. Recruit from the directory and the pool below — until then your people fly in <b>#party</b> and <b>#general</b> like everyone else.</div></div>';
-    if(pending.length){ h+='<div class="oc-applicants"><h3>APPLICANTS — '+pending.length+'</h3>';
+    if(isPersonnelCmd()&&pending.length){ h+='<div class="oc-applicants"><h3>APPLICANTS — '+pending.length+'</h3>';
       pending.forEach(function(m){ h+='<div class="oc-appl"><span class="nm">'+esc(m.callsign||'CMDR')+(m.handle?'<span class="oc-aph">RSI @'+esc(m.handle)+'</span>':'')+'</span>'
         +(m.note?'<div class="oc-apnote">&ldquo;'+esc(m.note)+'&rdquo;</div>':'')
         +'<select class="oc-ctl" data-rank="'+esc(m.user_id)+'">'+rankOpts('wingman')+'</select>'
@@ -3453,7 +3463,7 @@ function heartbeat(){ if(!sb||!me)return;
           +'<span class="snm'+staleCls(m)+'">'+tacChip(m)+kiaName(m)+'<small class="oc-rk">'+esc(rankName(m.role))+'</small>'
           +(m.rescue?' <span class="oc-resq">MEDIVAC</span>':'')+'</span>'
           +'<span class="oc-slot-ctl">'
-          +'<select class="oc-ctl" data-setrank="'+esc(m.user_id)+'" title="Rank">'+rankOpts(m.role)+'</select>'
+          +(isPersonnelCmd()?'<select class="oc-ctl" data-setrank="'+esc(m.user_id)+'" title="Rank">'+rankOpts(m.role)+'</select>':'')
           +'<select class="oc-ctl" data-move="'+esc(m.user_id)+'" title="Squadron">'+sqnOpts(m.squadron||'')+'</select>';
         /* ORG_BUILD 8 (T): pair pilots into elements - pick which element lead they fly under */
         if(!sq._un && m.role!=='element-lead' && m.role!=='squadron-leader'){
@@ -3461,7 +3471,7 @@ function heartbeat(){ if(!sb||!me)return;
           if(sqEls.length){ h+='<select class="oc-ctl" data-elem="'+esc(m.user_id)+'" title="Assign to an element lead"><option value="">— element —</option>'
             +sqEls.map(function(e2){return '<option value="'+esc(e2.user_id)+'"'+(m.element_lead===e2.user_id?' selected':'')+'>'+esc(e2.callsign)+'</option>';}).join('')+'</select>'; }
         }
-        if(!sq._un){ h+='<button class="oc-ap" data-leader="'+esc(m.user_id)+'" data-lsqn="'+esc(sq.id)+'"'+(leader&&leader.user_id===m.user_id?' style="opacity:.5" disabled':'')+' title="Make squadron leader">LEAD</button>'; }
+        if(!sq._un&&isPersonnelCmd()){ h+='<button class="oc-ap" data-leader="'+esc(m.user_id)+'" data-lsqn="'+esc(sq.id)+'"'+(leader&&leader.user_id===m.user_id?' style="opacity:.5" disabled':'')+' title="Make squadron leader">LEAD</button>'; }
         h+='</span></div>'; });
       var csList=mem.filter(function(m){return m.role!=='wing-commander';});
       if(csList.length){ h+=csMenuHTML('org:'+sq.id, csList); }
@@ -4118,7 +4128,7 @@ setInterval(cgGhostBadge,4000);
         +esc(x.name)+(x.active_phase>0?' · RUNNING':'')+'</option>'; }).join('')
       +'</select>'
       +'<button class="oc-ap" data-plannew="1">NEW PLAN</button>'
-      +(isWC()&&p&&(p.active_phase>0||p.fallback_on)?'<button class="oc-dn" data-planend="1" style="margin-left:auto">END OP</button>':'')
+      +(isBattleLead()&&p&&(p.active_phase>0||p.fallback_on)?'<button class="oc-dn" data-planend="1" style="margin-left:auto">END OP</button>':'')
       +'</div><div class="oc-plan-b">';
     if(!p){ h+='<div class="oc-sup-empty">Name a plan after the op — NIGHT HAMMER, KAREAH SMASH — and its phases are waiting for you the next time you run it.</div></div></div>'; return h; }
     if(p.active_phase>0||p.fallback_on) h+=phaseLiveHTML()+'<div style="height:11px"></div>';
@@ -4129,7 +4139,7 @@ setInterval(cgGhostBadge,4000);
     /* ROUND 5: cg_plan_touch silently reverts content writes on a RUNNING plan for anyone but
        the Wing Commander. The old comment claimed this page never offers a control the database
        will refuse - it did, and the refusal was silent. Lock those controls on screen instead. */
-    var _lock=(p.active_phase>0||p.fallback_on)&&!isWC();
+    var _lock=(p.active_phase>0||p.fallback_on)&&!isBattleLead();
     var _dis=_lock?' disabled title="A RUNNING plan belongs to the Wing Commander until the op ends"':'';
     /* phases */
     planPhases(p).forEach(function(ph){
@@ -4141,7 +4151,7 @@ setInterval(cgGhostBadge,4000);
         /* AUTHORITY, 28 JUL: a squadron leader may write and edit every phase of every PLAN AT
            REST. Only the wing commander may set one running, and a running plan's content is
            the wing commander's alone (cg_plan_touch). The controls above disable to match. */
-        +(isWC()
+        +(isBattleLead()
           ? ('<button class="oc-fire'+(armed(key)?' armed':'')+'" data-phlaunch="'+ph.n+'">'
              +(armed(key)?'CONFIRM — LAUNCH '+esc(ph.name||('PHASE '+ph.n)).toUpperCase():'LAUNCH PHASE '+ph.n)+'</button>')
           : '<span class="oc-sup-note">Wing Commander launches</span>')
@@ -4168,7 +4178,7 @@ setInterval(cgGhostBadge,4000);
       h+='<div class="oc-fb"><span class="fbid">'+esc(f.id)+'</span>'
         +'<input class="oc-cs-in"'+_pid+' data-fbname="'+esc(f.id)+'" maxlength="30" value="'+esc(f.name||'')+'" placeholder="name it — e.g. RALLY NORTH" style="width:180px"'+_dis+'>'
         +'<input class="oc-cs-in"'+_pid+' data-fbwhere="'+esc(f.id)+'" maxlength="60" value="'+esc(f.where||'')+'" placeholder="where — e.g. Everus Harbor, 20km high" style="flex:1;min-width:180px"'+_dis+'>'
-        +(isWC()
+        +(isBattleLead()
           ? ('<button class="oc-fire red'+(armed(key)?' armed':'')+'" data-fbgo="'+esc(f.id)+'">'
              +(armed(key)?'CONFIRM — FALL BACK TO '+esc(f.id):'RETREAT TO '+esc(f.id))+'</button>')
           : '<span class="oc-sup-note">Wing Commander calls the retreat</span>')+'</div>'; });
@@ -4244,7 +4254,7 @@ setInterval(cgGhostBadge,4000);
   function jointPhases(j){ try{ return Array.isArray(j&&j.phases)?j.phases:[]; }catch(e){ return []; } }
   function jointLines(j){ try{ var f=Array.isArray(j&&j.phase_lines)?j.phase_lines:[];
       return ['A','B','C'].map(function(id){ return f.filter(function(x){return x.id===id;})[0]||{id:id,name:'',where:''}; }); }catch(e){ return []; } }
-  function iAmLeadWC(j){ return !!(j&&isWC()&&j.lead_org===ORG_ID); }
+  function iAmLeadWC(j){ return !!(j&&isBattleLead()&&j.lead_org===ORG_ID); }
   /* what every pilot reads while a joint op runs: the op, the phase, MY org's order, the lines */
   function jointLiveHTML(){
     var j=jointLive(); if(!j) return '';
@@ -4282,7 +4292,7 @@ setInterval(cgGhostBadge,4000);
       if(!fields){ done(); return; }
       _jointWrite(j,fields,then,done);
     }); }); }
-  function jointNew(){ if(!sb||!me||!ORG_ID||!isWC()) return;
+  function jointNew(){ if(!sb||!me||!ORG_ID||!isBattleLead()) return;
     var nm=prompt('Name the joint operation. Every participating org sees this name.\n\ne.g. HAMMERFALL');
     if(!nm) return; nm=String(nm).trim().slice(0,60); if(!nm) return;
     var row={ name:nm, lead_org:ORG_ID,
@@ -4325,7 +4335,7 @@ setInterval(cgGhostBadge,4000);
       function(){ toast('Joint op ended. The plan is saved.'); jointSay('&#9632; OP ENDED — thank you all. Plan is saved for next time.'); }); }
   /* CONFIRM (each org's own WC): my org's joint order becomes ALL my squadrons' orders,
      my wing gets the netcall, and my confirm stamp shows on every participating console */
-  function jointConfirm(){ var j=curJoint(); if(!j||!isWC()||!ORG_ID) return;
+  function jointConfirm(){ var j=curJoint(); if(!j||!isBattleLead()||!ORG_ID) return;
     var ph=jointPhases(j).filter(function(x){return x.n===j.active_phase;})[0]; if(!ph) return;
     var mine=(ph.orders||{})[ORG_ID]||{};
     if(!mine.task){ toast('The op gives your org no order in this phase — nothing to push.'); return; }
@@ -4369,7 +4379,7 @@ setInterval(cgGhostBadge,4000);
       +(joints.length?'':'<option value="">— none yet —</option>')
       +joints.map(function(x){ return '<option value="'+esc(x.id)+'"'+(x.id===jointSel?' selected':'')+'>'
         +esc(x.name)+(x.status==='running'?' · RUNNING':(x.status==='ended'?' · ended':''))+'</option>'; }).join('')+'</select>'
-      +(isWC()?'<button class="oc-ap" data-jnew="1">NEW JOINT OP</button>':'')
+      +(isBattleLead()?'<button class="oc-ap" data-jnew="1">NEW JOINT OP</button>':'')
       +(j&&iAmLeadWC(j)&&j.status==='running'?'<button class="oc-dn" data-jend="1" style="margin-left:auto">END OP</button>':'')
       +'</div>';
     /* invites to MY org, always on top - a WC must never miss one */
@@ -4377,11 +4387,11 @@ setInterval(cgGhostBadge,4000);
       h+='<div class="oc-jrow" style="border:1px solid rgba(255,207,107,.4);border-radius:9px;padding:7px 9px;background:rgba(255,207,107,.06)">'
         +'<span class="jn" style="color:#ffd479">&#9993; INVITE</span>'
         +'<span style="font-size:12px;color:#e9f3fa">'+esc(jj?jj.name:'a joint op')+' — led by '+esc(orgName(jj?jj.lead_org:''))+'</span>'
-        +(isWC()?('<button class="oc-ap" data-jaccept="'+esc(iv.joint_id)+'">ACCEPT</button>'
+        +(isBattleLead()?('<button class="oc-ap" data-jaccept="'+esc(iv.joint_id)+'">ACCEPT</button>'
                  +'<button class="oc-dn" data-jdecline="'+esc(iv.joint_id)+'">DECLINE</button>')
                 :'<span class="oc-sup-note">your Wing Commander answers this</span>')
         +'</div>'; });
-    if(!j){ h+='<div class="oc-sup-empty">'+(isWC()
+    if(!j){ h+='<div class="oc-sup-empty">'+(isBattleLead()
         ?'Name a joint op and invite the other commanders — one shared plan, phase lines, and a commanders’ channel.'
         :'No joint op yet. Wing Commanders create these.')+'</div></div>'; return h; }
     var ms=jmsOf(j.id), lead=iAmLeadWC(j);
@@ -4427,7 +4437,7 @@ setInterval(cgGhostBadge,4000);
           +JORD.map(function(od){ return '<option value="'+esc(od[0])+'"'+((o.task||'')===od[0]?' selected':'')+'>'+esc(od[1])+'</option>'; }).join('')
           +'</select>'
           +'<input class="oc-cs-in"'+_jid+' data-jtgt="'+ph.n+'" data-jorg="'+esc(m.org_id)+'" maxlength="60" value="'+esc(o.target||'')+'" placeholder="target" style="flex:1;min-width:90px"'+_jlock+'>'
-          +(live&&myRow&&isWC()
+          +(live&&myRow&&isBattleLead()
             ?('<button class="oc-fire'+(armed('jcf')?' armed':'')+'" data-jconfirm="1">'
               +(armed('jcf')?'CONFIRM — TASK MY WHOLE WING':'CONFIRM INTO MY WING')+'</button>')
             :'')
@@ -4624,7 +4634,7 @@ setInterval(cgGhostBadge,4000);
      missing. If phase 5 has not been run - or the client is a stub that never heard of
      cg_support - this degrades to an empty board and says so, and boot carries on. */
   function loadSupport(then){ if(!sb||!me){ if(then)then(); return; }
-    var mine=myPoolRow(); var scopes=[];
+    var mine=battlePartyRow(); var scopes=[];
     if(ORG_ID&&myStatus==='approved') scopes.push('org_id.eq.'+ORG_ID);
     if(mine&&mine.party_id) scopes.push('party_id.eq.'+mine.party_id);
     /* PHASE 7 (T): PUBLIC calls - org_id AND party_id both null - are visible to every
@@ -4930,7 +4940,7 @@ setInterval(cgGhostBadge,4000);
   /* ORG_BUILD 8 boot: every repaint below is sig-guarded (render gate rule) - the only
      once-a-second write is the clock TEXT NODE, which is the allowed exception. */
   setInterval(function(){ if(!me) return;
-    renderPartyOps(); renderOrdersStrip(); renderSelfStatus(); renderSupSelf(); updateCmdTabs(); renderPcmd(); renderOcmd(); renderLfg(); renderSheet(); sweepIgnored(); }, 4000);
+    governance.refresh(); renderPartyOps(); renderOrdersStrip(); renderSelfStatus(); renderSupSelf(); updateCmdTabs(); renderPcmd(); renderOcmd(); renderLfg(); renderSheet(); sweepIgnored(); }, 4000);
   setInterval(function(){ if(!sb||!me) return;
     loadPool(); if(ORG_ID) loadSquadrons(function(){loadRoster(); loadObjectives(); loadPlans(); loadJoints();}); sweepStale(); }, 35000);
   /* SUPPORT NET polls faster than the roster on purpose: a call for fuel that shows up 35 s

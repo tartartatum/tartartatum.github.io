@@ -6920,7 +6920,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 797;
+window.CMDGLAS_BUILD = 798;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -24706,10 +24706,12 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
       if(h && dock && !dock.classList.contains('open')) h.click();
     }catch(e){} }
    
+  var _cgBattleCaptain=false;
   function myConsole(){
     var mine=pool.filter(function(r){return r.user_id===uid;})[0]||null;
     var o=orgRows.filter(function(m){return m.user_id===uid;})[0]||null;
     var role=o?String(o.role||''):'';
+    if(_cgBattleCaptain&&o&&o.status==='approved') return {cmd:'ocmd',lab:'BATTLE CAPTAIN'};
     if(role==='wing-commander'||role==='squadron-leader') return {cmd:'ocmd',lab:'ORG COMMAND'};
     if(role==='flight-lead'||role==='element-lead')       return {cmd:'ocmd',lab:'MY FLIGHT SHEET'};
     if(mine&&mine.party_role==='leader')                  return {cmd:'pcmd',lab:'PARTY COMMAND'};
@@ -24719,10 +24721,11 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
   function openConsole(){ var c=myConsole(); if(!c) return;
     try{ window.open('cmdglas_org.html?cmd='+encodeURIComponent(c.cmd),'cgcomms'); }catch(e){} }
   function fetchAll(){
-    uid=uidOf(); if(!uid){ paint(); return; }
+    uid=uidOf(); _cgBattleCaptain=false; if(!uid){ paint(); return; }
     rest('org_members?select=*&user_id=eq.'+uid,function(mine){
       if(mine){ var ap=null; (mine||[]).forEach(function(r){ if(r.org_id!=='gamerpool'&&r.status==='approved'&&!ap) ap=r; });
         orgId=ap?ap.org_id:null; }
+      function loadConsoleRoster(){
       rest('org_members?select=*&org_id=eq.gamerpool&limit=1000',function(p){ if(p) pool=p;
         if(!orgId){ orgRows=[]; sqns=[]; paint(); return; }
         rest('orgs?select=id,name&id=eq.'+encodeURIComponent(orgId),function(o){ if(o&&o[0]) orgNm=o[0].name||orgId;
@@ -24730,6 +24733,8 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
             rest('org_squadrons?select=*&org_id=eq.'+encodeURIComponent(orgId)+'&order=sort',function(q){ if(q) sqns=q;
                
               rest('org_objectives?select=*&org_id=eq.'+encodeURIComponent(orgId),function(o2){ objs=(o2&&o2.length)?o2:[]; paint(); }); }); }); }); });
+      }
+      if(orgId)rest('rpc/cg_is_battle_captain?p_org='+encodeURIComponent(orgId),function(v){_cgBattleCaptain=v===true;loadConsoleRoster();});else loadConsoleRoster();
     });
   }
   function myParty(){ var mine=pool.filter(function(r){return r.user_id===uid;})[0];
