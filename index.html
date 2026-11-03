@@ -1196,6 +1196,12 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 <style id="sc-b561-traylabel">#tab-home .hm-cols .hm-col .hm-cell .hm-lab{font-size:7.5px !important;letter-spacing:0 !important;text-indent:0 !important;padding-left:0 !important;white-space:normal !important;line-height:1.2 !important;max-width:100% !important;width:100% !important;overflow:visible !important;text-align:center !important;overflow-wrap:normal !important;word-break:keep-all !important}
 </style>
 
+<link rel="stylesheet" href="social-tutorial/return.css"><script defer src="social-tutorial/return.js"></script>
+<style id="cg-guide-entry800">.cg-guide-entry{margin:.8em 0;max-width:100%;text-align:center}.cg-guide-entry a{display:inline-block;padding:.75em 1em;border:1px solid var(--amber2,#ffb000);border-radius:8px;color:var(--amber2,#ffb000);font:inherit;font-weight:700;line-height:1.5;text-decoration:none;white-space:normal}.cg-guide-entry a:focus-visible{outline:2px solid currentColor;outline-offset:3px}</style>
+<script id="cg-guide-entry800-events">document.addEventListener("click",function(e){if(e.target.closest(".cg-guide-entry"))e.stopPropagation();},true);document.addEventListener("keydown",function(e){if(e.target.closest(".cg-guide-entry"))e.stopPropagation();},true);</script>
+<script id="cg-startup-guidance800-script">window.cgStartupGuidance800=function(root){var key='cg-hide-start-guidance-v1',box=root.querySelector('#cg-start-dismiss800'),panel=root.querySelector('details'),status=root.querySelector('#cg-start-save800');try{box.checked=localStorage.getItem(key)==='1';panel.open=!box.checked;}catch(_){status.textContent='This browser cannot save your startup preference.';}box.addEventListener('change',function(){try{if(box.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key);if((localStorage.getItem(key)==='1')!==box.checked)throw Error('not saved');status.textContent=box.checked?'Saved. This guide will stay collapsed when you return. Open START HERE to show it again.':'Saved. This guide will open when you return.';}catch(_){box.checked=false;status.textContent='Preference was not saved. The guide will still open when you return.';}});};</script>
+<style id="cg-account-start800-style">#cg-acct738 #cg-account-start800{box-sizing:border-box;flex:0 0 auto;width:min(60em,100%);padding:.7em;margin:0 auto .7em;border:1px solid var(--amber-dim);border-radius:9px;text-align:center;background:var(--panel,#141e2c);font:inherit;font-size:24px}#cg-acct738 #cg-account-start800 h2{margin:0;font:inherit;font-weight:700;color:var(--amber2)}#cg-acct738 #cg-account-start800 p{margin:.4em 0;font:inherit;line-height:1.4}#cg-acct738 #cg-account-start800 button,#cg-acct738 #cg-account-start800 a{display:inline-block;max-width:100%;margin:.3em;padding:.65em .8em;border:1px solid var(--amber2);border-radius:6px;color:var(--amber2);background:transparent;font:inherit;font-weight:700;line-height:1.4;white-space:normal;text-decoration:none;cursor:pointer}#cg-acct738 #cg-account-start800 :focus-visible{outline:2px solid currentColor;outline-offset:2px}</style>
+<style>#cg-account-start800 summary{cursor:pointer;font-weight:700;color:var(--amber2);padding:.3em}#cg-account-start800 .cg-start-choice{display:flex;justify-content:center;align-items:center;gap:.5em;margin:.5em;cursor:pointer}#cg-account-start800 input[type=checkbox]{appearance:auto;width:1.1em;height:1.1em;accent-color:var(--amber2)}#cg-account-rsi800{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3em .65em;border-top:1px solid var(--amber-dim);margin-top:.4em;padding-top:.4em}#cg-account-rsi800 code{font:inherit;user-select:text;white-space:nowrap}#cg-start-save800:empty{display:none}</style>
 <link rel="manifest" href="/cmdglas.webmanifest">
 </head>
 <body>
@@ -1286,6 +1292,7 @@ document.addEventListener('click',async function(e){
     <button type="button" id="cover-cap" onclick="try{document.getElementById('cover-screen').classList.add('hide');}catch(e){};if(typeof setActiveTabById==='function')setActiveTabById('cap');" title="Everything this tablet can do">&#9670; TABLET CAPABILITIES</button>
     
     <button type="button" id="cover-enter">Enter Tablet</button>
+    <p class="cg-guide-entry"><a href="social-tutorial/index.html" target="_blank" rel="noopener noreferrer">START HERE — TABLET &amp; SOCIAL GUIDE</a></p>
     <section class="cg-referral" aria-label="Star Citizen referral"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class="cg-referral-disclosure">Eligible purchases also earn Raz a recruitment point.</p><div class="cg-referral-actions"><a href="https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2" target="_blank" rel="noopener noreferrer">Join Star Citizen</a><button type="button" data-referral-copy>Copy code</button></div><p class="cg-referral-status" role="status" aria-live="polite"></p></section>
     <button type="button" id="cover-srv-btn" class="panel-btn" style="display:none;margin-top:12px" onclick="event.stopPropagation();fetch('/api/restart',{method:'POST'}).then(function(){document.getElementById('cover-srv-txt').textContent='restarting server... reconnecting';setTimeout(function(){location.reload();},6500);}).catch(function(){});">RESTART SERVER</button>
 </div>
@@ -6946,7 +6953,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 799;
+window.CMDGLAS_BUILD = 800;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -7180,6 +7187,7 @@ function scBuildZoomBar(){
     +'</div></div>'
     +'<div class="scr-group"><div class="scr-cat">LEARN</div><div class="scr-sec scr-flyout">'
       + window.cgReferralCard()
+      + B('scr-social-guide','onclick="window.open(\'social-tutorial/index.html\',\'_blank\',\'noopener,noreferrer\')" title="Step-by-step roles, party and Discord guide"',window.SCRI.help,'SOCIAL GUIDE')
       + B('scr-nav-p410','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'patch410\')" title="Star Citizen patch notes"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h4"/></svg>','PATCH NOTES')
       + B('scr-nav-sm','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'spacemanuals\')" title="SC Manuals hub"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2z"/><path d="M9 4v14"/></svg>','SC MANUALS')
       + B('scr-nav-con','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'console\')" title="Console commands"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>','CONSOLE')
@@ -35309,7 +35317,10 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
     if(!document.getElementById('cg-haul738')){
       var hp=document.createElement('div'); hp.id='cg-haul738'; body.appendChild(hp); }
     if(!document.getElementById('cg-acct738')){
-      var ap=document.createElement('div'); ap.id='cg-acct738'; body.appendChild(ap); }
+      var ap=document.createElement('div'); ap.id='cg-acct738'; body.appendChild(ap);
+      ap.insertAdjacentHTML('afterbegin',"<section id=\"cg-account-start800\"><details id=\"cg-start-guidance800\" open><summary>START HERE &mdash; setup guide</summary><p>Sign in below, then set up your party, organization and chat.</p><button type=\"button\" id=\"cg-account-comms800\">SET UP COMMS</button><a href=\"social-tutorial/index.html\" target=\"_blank\" rel=\"noopener noreferrer\">TABLET &amp; SOCIAL GUIDE</a><label class=\"cg-start-choice\"><input type=\"checkbox\" id=\"cg-start-dismiss800\"> Do not show again</label><p id=\"cg-start-save800\" role=\"status\" aria-live=\"polite\"></p></details><div id=\"cg-account-rsi800\"><span>New RSI account:</span> <a href=\"https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2\" target=\"_blank\" rel=\"noopener noreferrer\">RSI SIGN-UP</a><span>Raz referral code: <code>STAR-3RSF-JCT2</code></span></div></section>");
+      document.getElementById('cg-account-comms800').addEventListener('click',function(){ if(window.cgCommsMaxOpen) window.cgCommsMaxOpen('&start=1'); });
+      window.cgStartupGuidance800(document.getElementById('cg-account-start800')); }
 
     if(!document.getElementById('cg-haul-tab')){
       var ht=document.createElement('button'); ht.type='button';
@@ -35340,6 +35351,12 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
     groupTabs(strip);
     haulRender();
     dotSync();
+    if(!window.__cgAccountFirst800 && document.querySelector('#cg-acct738 .wg.login-pill')){
+      window.__cgAccountFirst800=true;
+      if(typeof setActiveTabById==='function') setActiveTabById('home');
+      enter('cg-acct738',document.getElementById('cg-acct-tab'));
+      var opening=document.getElementById('cover-screen');if(opening){opening.classList.add('hide');opening.style.display='none';}
+    }
     if(tries<6){ tries++; setTimeout(install,1500); }    
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,false);
@@ -47864,7 +47881,7 @@ console.log('[b767] curved HUD skin armed');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i];
         var tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
          
         if(e.classList && (e.classList.contains('hm-lab')||e.classList.contains('hm-lab-out'))) continue;
          
@@ -48115,7 +48132,7 @@ console.log('[b767] curved HUD skin armed');
       var nodes=pg.querySelectorAll('*');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i], tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
         if(e.children.length>2) continue;
         var t=e.textContent;
         if(!t || !t.trim()) continue;
@@ -49791,7 +49808,7 @@ console.log('[b767] curved HUD skin armed');
       var nodes=pg.querySelectorAll('*');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i], tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
         if(e.children.length>2) continue;
         var t=e.textContent;
         if(!t || !t.trim()) continue;
@@ -50326,7 +50343,7 @@ console.log('[b767] curved HUD skin armed');
       var nodes=pg.querySelectorAll('*');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i], tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
         if(e.children.length>2) continue;
         var t=e.textContent;
         if(!t || !t.trim()) continue;
