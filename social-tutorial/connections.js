@@ -1,17 +1,17 @@
 window.CONNECTION_GUIDE = {
-  "version": "Connections review 2026-11-03",
+  "version": "Connections source review 2026-11-04",
   "steps": [
     {
       "id": "contacts",
       "title": "Star Citizen: add the person you met",
       "where": "Star Citizen main menu, Friends bar on the right.",
       "steps": [
-        "Agree on the correct RSI handles. In the Star Citizen main menu, use the Friends bar on the right to add the other player. RSI states this bar is available after you have entered the Persistent Universe at least once.",
-        "Have the other player check and accept the contact invitation. Confirm the correct person appears in your friends list. A tablet callsign can differ from their RSI handle.",
-        "If already in the game together, use the Personal Inner Thought interaction with the player or mobiGlas Server player list to add them. This changes game contacts, not tablet membership."
+        "Ask the other player for their exact RSI handle. A tablet callsign can be different. RSI identifies the Friends panel on the right of the game main menu, available after first entering the Persistent Universe.",
+        "CURRENT GAME CONTROL NOT VERIFIED: the final add-contact field/button and the recipient’s acceptance control have not been verified in the current LIVE build. The official article’s illustration labels ADD FRIENDS +, but that image is from Alpha 4.9. Do not treat that old picture as a current step.",
+        "Stop this optional game-contact procedure at that point if the controls are unclear. Continue with tablet or Discord setup independently. Game friendship is confirmed only when the correct handle appears in each player’s contacts."
       ],
       "result": "You can find each other in your contacts.",
-      "help": "A wrong handle or an unaccepted contact invitation prevents this step. Confirm both with the other player before proceeding. This guide does not press game controls for you.",
+      "help": "Remaining evidence needed: the current LIVE contact-add field/button and contact-request acceptance screen. No guessed action is supplied. Tablet membership and Discord voice do not depend on completing this optional game step.",
       "source": "https://support.robertsspaceindustries.com/hc/en-us/articles/360008166874-Playing-with-Friends"
     },
     {
@@ -19,12 +19,12 @@ window.CONNECTION_GUIDE = {
       "title": "Star Citizen: form your party",
       "where": "Star Citizen, mobiGlas > Commlink.",
       "steps": [
-        "At the Star Citizen main menu, select your online friend in the right-side Friends list and use the offered join option for their game session. If unavailable, confirm their online status and whether their session can accept another player.",
-        "Once in game, open Commlink with your assigned control, select the friend from contacts and send the game-party invitation. The invited player accepts it.",
+        "CURRENT GAME CONTROL NOT VERIFIED: after both players are contacts, the exact current main-menu join-session action is not established here. Do not infer a button from this guide. Joining one server and joining a party are separate results.",
+        "Once in game, RSI documents F11 as the default shortcut to Commlink in mobiGlas. Read Find your own game binding in this guide if your controls differ. Select the intended friend in Commlink. The current invitation button label and acceptance control still need in-game verification; this guide does not claim that step is complete.",
         "Check the in-game party roster for both players. Joining the same session and accepting a game-party invitation are separate checks."
       ],
       "result": "The game shows both players in the party. A tablet party is a separate group.",
-      "help": "Confirm the invitation came from the correct player. If it did not arrive, check the game party and contact lists before trying again.",
+      "help": "Remaining evidence needed: the current LIVE join-session menu, Commlink party-invite action, and recipient acceptance control. Until those are verified, game-party setup remains incomplete. Continue the independent tablet or Discord procedure if that is your task.",
       "source": "https://support.robertsspaceindustries.com/hc/en-us/articles/360008166874-Playing-with-Friends"
     },
     {
@@ -50,14 +50,14 @@ window.CONNECTION_GUIDE = {
         "Take turns speaking and confirm both people hear each other. Check Discord’s mute/deafen indicators if needed. Do not change unrelated recording or Windows audio routing."
       ],
       "result": "Both players are in the channel and have confirmed two-way voice.",
-      "help": "A locked channel requires permission from the server’s administrators. If you cannot hear each other, check Discord mute/deafen indicators and the selected voice devices; do not change unrelated audio routing.",
+      "help": "For mute, deafen and device inspection, use the Discord audio check section in this guide. A locked channel requires permission from that server’s administrator.",
       "source": "https://support.discord.com/hc/en-us/articles/19583625604887-Voice-Channels-FAQs"
     }
   ],
   "tablet": [
     [
       "Open the tablet’s party setup",
-      "Open Social Tools, select CHAT in the top bar, then party under CHANNELS on the left. Complete the CODE → JOIN procedure below if needed. In PARTY OPS select GUIDED SETUP beside the voice controls."
+      "Open Social Tools, select CHAT in the top bar, then party under CHANNELS on the left. Use Join a tablet party — complete procedure in this guide if needed. In PARTY OPS select GUIDED SETUP beside the voice controls."
     ],
     [
       "Check your tablet identity",
@@ -144,7 +144,7 @@ window.CONNECTION_GUIDE = {
     ],
     [
       "You joined but cannot hear each other",
-      "Check the actual Discord channel, mute/deafen state and selected input/output devices. Confirm speech in both directions; a linked badge alone proves neither."
+      "Open Discord audio check using the button here for the exact microphone, headphones and User Settings route. A linked badge alone does not confirm speech in either direction."
     ]
   ],
   "sources": [
@@ -159,6 +159,39 @@ window.CONNECTION_GUIDE = {
     {
       "title": "Discord: How do I join a Server?",
       "url": "https://support.discord.com/hc/en-us/articles/360034842871-How-do-I-join-a-Server"
+    },
+    {
+      "title": "Discord: Sign-Up and Registration Guide",
+      "url": "https://support.discord.com/hc/en-us/articles/31676852332439-Discord-Sign-Up-and-Registration-Guide"
+    },
+    {
+      "title": "Discord: Voice and Video Troubleshooting Guide",
+      "url": "https://support.discord.com/hc/en-us/articles/360045138471-Discord-Voice-and-Video-Troubleshooting-Guide"
+    },
+    {
+      "title": "Discord: Voice, Video and Streaming Guide",
+      "url": "https://support.discord.com/hc/en-us/articles/33030151293079-Discord-Voice-Video-Streaming-Guide"
+    },
+    {
+      "title": "RSI: Options and Advanced Controls Customization",
+      "url": "https://support.robertsspaceindustries.com/hc/en-us/articles/360000183328-Create-export-and-import-custom-profiles"
     }
+  ],
+  "account": [
+    "On your PC, open https://discord.com/login in Chrome. Already have an account? Sign in there. For a new account, select Register below the Log In button. The browser version does not require installing the Discord app; the optional desktop download is at https://discord.com/download.",
+    "In Create an account, enter your email, username, password and date of birth in the labeled fields. Review the terms, then select Continue below the fields when you choose to create the account. Complete any verification Discord presents yourself.",
+    "Check that Discord opens to your account and shows your profile in the lower-left area. Complete any email-verification prompt. If Email is already registered appears, return to Log In and recover the existing account instead of creating another.",
+    "Return to this guide and continue with stage 1, Discord: join the same server. Use this same Discord account when signing into the tablet. Creating the Discord account alone does not join your group’s server."
+  ],
+  "audio": [
+    "In Discord on PC, look beside your profile at the bottom left. The microphone icon controls Mute; the headphones icon controls Deafen. A crossed-out microphone prevents your speech; a crossed-out headphones icon prevents hearing others. Only switch these off when you are ready to be heard.",
+    "Select the User Settings cogwheel beside those controls at the bottom left. Select Voice & Video in the left sidebar, then its Voice tab. Read Input Device and Output Device: they should name the microphone and headphones you intend Discord to use.",
+    "In that Voice tab, inspect Input Mode. If Push to Talk is selected, read its displayed shortcut and hold that control when speaking. Preserve a deliberate push-to-talk choice; do not reset settings to troubleshoot.",
+    "Return to the agreed voice channel and take turns speaking. Confirm that each person hears the other. If your microphone or headphones are absent from the device list, or their names are unclear, stop changing settings and ask the person who configured that equipment. If only this channel is blocked or you are server-muted/deafened, ask its server owner to check Connect and Speak permissions and remove the restriction. Keep two-way voice unconfirmed until it works; do not reset Windows, recording, mixer or headset settings."
+  ],
+  "bindings": [
+    "In Star Citizen, use OPTIONS at the bottom left of the main menu, then KEYBINDINGS along the top. In the lower-right peripheral selector, choose Keyboard / Mouse to inspect keyboard controls.",
+    "Select ADVANCED CONTROLS CUSTOMIZATION at the bottom left to inspect the action list and assigned keys for your selected device. Do not double-click an assignment, reset controls or import another profile merely to inspect it.",
+    "RSI documents F11 as the default Commlink shortcut; it is in the keyboard’s top function-key row. A custom profile may differ. BLOCKED AT ACTION LOOKUP: the current category/action label for that shortcut has not been verified. If your profile changes it and you cannot identify it, stop here. A current KEYBINDINGS action-list view is needed before this guide can name the exact customized-binding lookup."
   ]
 };
