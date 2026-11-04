@@ -179,7 +179,7 @@ window.CONNECTION_GUIDE = {
   ],
   "account": [
     "On your PC, open https://discord.com/login in Chrome. Already have an account? Sign in there. For a new account, select Register below the Log In button. The browser version does not require installing the Discord app; the optional desktop download is at https://discord.com/download.",
-    "In Create an account, enter your email, username, password and date of birth in the labeled fields. Review the terms, then select Continue below the fields when you choose to create the account. Complete any verification Discord presents yourself.",
+    "In Create an account, enter your Email, Display Name if requested, Username, Password and Date of Birth (Month, Day, Year) in the labeled fields. Review the displayed terms. When you choose to create the account, select Create Account below the fields. Complete any verification Discord presents yourself.",
     "Check that Discord opens to your account and shows your profile in the lower-left area. Complete any email-verification prompt. If Email is already registered appears, return to Log In and recover the existing account instead of creating another.",
     "Return to this guide and continue with stage 1, Discord: join the same server. Use this same Discord account when signing into the tablet. Creating the Discord account alone does not join your group’s server."
   ],
