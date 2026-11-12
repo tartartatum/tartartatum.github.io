@@ -1196,6 +1196,12 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 <style id="sc-b561-traylabel">#tab-home .hm-cols .hm-col .hm-cell .hm-lab{font-size:7.5px !important;letter-spacing:0 !important;text-indent:0 !important;padding-left:0 !important;white-space:normal !important;line-height:1.2 !important;max-width:100% !important;width:100% !important;overflow:visible !important;text-align:center !important;overflow-wrap:normal !important;word-break:keep-all !important}
 </style>
 
+<link rel="stylesheet" href="social-tutorial/return.css"><script defer src="social-tutorial/return.js"></script>
+<style id="cg-guide-entry800">.cg-guide-entry{margin:.8em 0;max-width:100%;text-align:center}.cg-guide-entry a{display:inline-block;padding:.75em 1em;border:1px solid var(--amber2,#ffb000);border-radius:8px;color:var(--amber2,#ffb000);font:inherit;font-weight:700;line-height:1.5;text-decoration:none;white-space:normal}.cg-guide-entry a:focus-visible{outline:2px solid currentColor;outline-offset:3px}</style>
+<script id="cg-guide-entry800-events">document.addEventListener("click",function(e){if(e.target.closest(".cg-guide-entry"))e.stopPropagation();},true);document.addEventListener("keydown",function(e){if(e.target.closest(".cg-guide-entry"))e.stopPropagation();},true);</script>
+<script id="cg-startup-guidance800-script">window.cgStartupGuidance800=function(root){var key='cg-hide-start-guidance-v1',box=root.querySelector('#cg-start-dismiss800'),panel=root.querySelector('details'),status=root.querySelector('#cg-start-save800');try{box.checked=localStorage.getItem(key)==='1';panel.open=!box.checked;}catch(_){status.textContent='This browser cannot save your startup preference.';}box.addEventListener('change',function(){try{if(box.checked)localStorage.setItem(key,'1');else localStorage.removeItem(key);if((localStorage.getItem(key)==='1')!==box.checked)throw Error('not saved');status.textContent=box.checked?'Saved. This guide will stay collapsed when you return. Open START HERE to show it again.':'Saved. This guide will open when you return.';}catch(_){box.checked=false;status.textContent='Preference was not saved. The guide will still open when you return.';}});};</script>
+<style id="cg-account-start800-style">#cg-acct738 #cg-account-start800{box-sizing:border-box;flex:0 0 auto;width:min(60em,100%);padding:.7em;margin:0 auto .7em;border:1px solid var(--amber-dim);border-radius:9px;text-align:center;background:var(--panel,#141e2c);font:inherit;font-size:24px}#cg-acct738 #cg-account-start800 h2{margin:0;font:inherit;font-weight:700;color:var(--amber2)}#cg-acct738 #cg-account-start800 p{margin:.4em 0;font:inherit;line-height:1.4}#cg-acct738 #cg-account-start800 button,#cg-acct738 #cg-account-start800 a{display:inline-block;max-width:100%;margin:.3em;padding:.65em .8em;border:1px solid var(--amber2);border-radius:6px;color:var(--amber2);background:transparent;font:inherit;font-weight:700;line-height:1.4;white-space:normal;text-decoration:none;cursor:pointer}#cg-acct738 #cg-account-start800 :focus-visible{outline:2px solid currentColor;outline-offset:2px}</style>
+<style>#cg-account-start800 summary{cursor:pointer;font-weight:700;color:var(--amber2);padding:.3em}#cg-account-start800 .cg-start-choice{display:flex;justify-content:center;align-items:center;gap:.5em;margin:.5em;cursor:pointer}#cg-account-start800 input[type=checkbox]{appearance:auto;width:1.1em;height:1.1em;accent-color:var(--amber2)}#cg-account-rsi800{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3em .65em;border-top:1px solid var(--amber-dim);margin-top:.4em;padding-top:.4em}#cg-account-rsi800 code{font:inherit;user-select:text;white-space:nowrap}#cg-start-save800:empty{display:none}</style>
 <link rel="manifest" href="/cmdglas.webmanifest">
 </head>
 <body>
@@ -1221,6 +1227,30 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 </script>
 
 
+<style id="cg-referral799-style">
+.cg-referral{box-sizing:border-box;max-width:32rem;width:100%;min-width:0;padding:1em;border:1px solid var(--amber-dim);border-radius:12px;background:var(--panel,#141e2c);color:var(--text);font-family:inherit;text-align:left;line-height:1.5;flex:1 1 100%;grid-column:1/-1;white-space:normal}
+.cg-referral h3{font:inherit;font-weight:700;color:var(--amber2);margin:0 0 .4em}
+.cg-referral p{font:inherit;font-size:.9em;margin:.4em 0}
+.cg-referral code{font:inherit;font-weight:700;letter-spacing:.08em;user-select:text}
+.cg-referral-actions{display:flex;flex-wrap:wrap;gap:.6em;margin-top:.7em}
+.cg-referral-actions a,.cg-referral-actions button{font:inherit;line-height:1.4;padding:.6em .8em;border:1px solid var(--amber-dim);border-radius:7px;background:transparent;color:var(--amber2);cursor:pointer;text-decoration:none;text-transform:none;letter-spacing:normal;white-space:normal}
+.cg-referral-actions :focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.cg-referral .cg-referral-status{min-height:1.5em;margin-bottom:0}
+#sc-appbar .sc-acc-group > .scr-flyout > .cg-referral{display:block !important;white-space:normal !important;flex:0 0 auto}
+#cover-screen{overflow-y:auto;justify-content:safe center}
+#cover-screen .cover-inner,#cover-screen .cover-foot{flex-shrink:0}
+</style>
+<script id="cg-referral799-script">
+window.cgReferralCard=function(){return "<section class=\"cg-referral\" aria-label=\"Star Citizen referral\"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class=\"cg-referral-disclosure\">Eligible purchases also earn Raz a recruitment point.</p><div class=\"cg-referral-actions\"><a href=\"https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2\" target=\"_blank\" rel=\"noopener noreferrer\">Join Star Citizen</a><button type=\"button\" data-referral-copy>Copy code</button></div><p class=\"cg-referral-status\" role=\"status\" aria-live=\"polite\"></p></section>";};
+document.addEventListener('click',async function(e){
+ if(!e.target.closest('.cg-referral'))return;e.stopPropagation();
+ var b=e.target.closest('[data-referral-copy]');if(!b)return;
+ var s=b.closest('.cg-referral').querySelector('.cg-referral-status');b.disabled=true;s.textContent='Copying…';
+ try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw Error('Clipboard unavailable');await navigator.clipboard.writeText('STAR-3RSF-JCT2');s.textContent='Copied: STAR-3RSF-JCT2';}
+ catch(_){s.textContent='Copy unavailable. Select and copy STAR-3RSF-JCT2 above.';}
+ finally{b.disabled=false;}
+},true);
+</script>
 <div id="cover-screen" role="dialog" aria-label="CmdGlas, start screen">
   <svg id="cover-ring" viewBox="0 0 100 100" aria-hidden="true">
     <circle class="r1" cx="50" cy="50" r="46"/>
@@ -1262,6 +1292,8 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
     <button type="button" id="cover-cap" onclick="try{document.getElementById('cover-screen').classList.add('hide');}catch(e){};if(typeof setActiveTabById==='function')setActiveTabById('cap');" title="Everything this tablet can do">&#9670; TABLET CAPABILITIES</button>
     
     <button type="button" id="cover-enter">Enter Tablet</button>
+    <p class="cg-guide-entry"><a href="social-tutorial/index.html" target="_blank" rel="noopener noreferrer">START HERE — TABLET &amp; SOCIAL GUIDE</a></p>
+    <section class="cg-referral" aria-label="Star Citizen referral"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class="cg-referral-disclosure">Eligible purchases also earn Raz a recruitment point.</p><div class="cg-referral-actions"><a href="https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2" target="_blank" rel="noopener noreferrer">Join Star Citizen</a><button type="button" data-referral-copy>Copy code</button></div><p class="cg-referral-status" role="status" aria-live="polite"></p></section>
     <button type="button" id="cover-srv-btn" class="panel-btn" style="display:none;margin-top:12px" onclick="event.stopPropagation();fetch('/api/restart',{method:'POST'}).then(function(){document.getElementById('cover-srv-txt').textContent='restarting server... reconnecting';setTimeout(function(){location.reload();},6500);}).catch(function(){});">RESTART SERVER</button>
 </div>
   
@@ -1279,6 +1311,7 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
   c.addEventListener('click',function(e){if(e.target===c)go();});
    
   document.addEventListener('keydown',function(e){
+    if(e.target.closest('.cg-referral'))return;
     if(c.style.display!=='none' && !c.classList.contains('hide')) go();
   });
 })();
@@ -6920,7 +6953,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 797;
+window.CMDGLAS_BUILD = 801;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -7153,6 +7186,8 @@ function scBuildZoomBar(){
       + B('scr-nav-ship','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'loadout\')" title="Ship loadouts"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 2 4 5 4 9l-4 3-4-3c0-4 1.5-7 4-9z"/><path d="M8 13l-2 4 3-1M16 13l2 4-3-1"/></svg>','SHIP LOADOUTS')
     +'</div></div>'
     +'<div class="scr-group"><div class="scr-cat">LEARN</div><div class="scr-sec scr-flyout">'
+      + window.cgReferralCard()
+      + B('scr-social-guide','onclick="window.open(\'social-tutorial/index.html\',\'_blank\',\'noopener,noreferrer\')" title="Step-by-step roles, party and Discord guide"',window.SCRI.help,'SOCIAL GUIDE')
       + B('scr-nav-p410','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'patch410\')" title="Star Citizen patch notes"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h4"/></svg>','PATCH NOTES')
       + B('scr-nav-sm','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'spacemanuals\')" title="SC Manuals hub"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 0-2 2z"/><path d="M9 4v14"/></svg>','SC MANUALS')
       + B('scr-nav-con','onclick="if(typeof setActiveTabById===\'function\')setActiveTabById(\'console\')" title="Console commands"','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>','CONSOLE')
@@ -22065,10 +22100,10 @@ body.cg-mp-on #sc-nowplaying{display:none !important}
     var p=baseProg + (playing?(Date.now()-baseAt):0);
     if(dur>0) p=Math.min(p,dur);
     var pct=dur>0?Math.max(0,Math.min(100,p/dur*100)):0;
-    el.querySelector('.cgmp-fill').style.width=pct+'%';
-    el.querySelector('.cgmp-knob').style.left=pct+'%';
-    el.querySelector('.cgmp-cur').textContent=fmt(p);
-    el.querySelector('.cgmp-dur').textContent=fmt(dur);
+    var cgmpF=el.querySelector('.cgmp-fill');if(cgmpF.style.width!==pct+'%')cgmpF.style.width=pct+'%'; /* release 185: write only when changed */
+    var cgmpK=el.querySelector('.cgmp-knob');if(cgmpK.style.left!==pct+'%')cgmpK.style.left=pct+'%';
+    var cgmpC=el.querySelector('.cgmp-cur'),cgmpCt=fmt(p);if(cgmpC.textContent!==cgmpCt)cgmpC.textContent=cgmpCt;
+    var cgmpD=el.querySelector('.cgmp-dur'),cgmpDt=fmt(dur);if(cgmpD.textContent!==cgmpDt)cgmpD.textContent=cgmpDt;
   }
   function poll(){
     try{ fetch('/api/spotify_now',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
@@ -22258,10 +22293,10 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
     var p=document.querySelector('#sc-home-widgets .cgmp-pill'); if(!p) return;
     var pr=baseProg+(playing?(Date.now()-baseAt):0); if(dur>0) pr=Math.min(pr,dur);
     var pct=dur>0?Math.max(0,Math.min(100,pr/dur*100)):0;
-    p.querySelector('.cgp-fill').style.width=pct+'%';
-    p.querySelector('.cgp-knob').style.left=pct+'%';
-    p.querySelector('.cur').textContent=fmt(pr);
-    p.querySelector('.dur').textContent=fmt(dur);
+    var cgpF=p.querySelector('.cgp-fill');if(cgpF.style.width!==pct+'%')cgpF.style.width=pct+'%'; /* release 185: write only when changed */
+    var cgpK=p.querySelector('.cgp-knob');if(cgpK.style.left!==pct+'%')cgpK.style.left=pct+'%';
+    var cgpC=p.querySelector('.cur'),cgpCt=fmt(pr);if(cgpC.textContent!==cgpCt)cgpC.textContent=cgpCt;
+    var cgpD=p.querySelector('.dur'),cgpDt=fmt(dur);if(cgpD.textContent!==cgpDt)cgpD.textContent=cgpDt;
   }
   function poll(){
     try{ fetch('/api/spotify_now',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
@@ -24455,7 +24490,8 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     var row=document.getElementById('cg-theme-row536');
     if(!row){ row=document.createElement('div'); row.id='cg-theme-row536'; }
      
-    if(row.previousElementSibling!==bar || row.parentNode!==bar.parentNode){ bar.parentNode.insertBefore(row, bar.nextSibling); }
+    var prev536=row.previousElementSibling,afterNotice536=!!(prev536&&prev536.id==='cg-cig-notice'&&prev536.previousElementSibling===bar); /* release 186: the CIG notice (build 729) also seats itself directly after the onebar; accept the place after it instead of swapping with it every poll */
+    if((prev536!==bar && !afterNotice536) || row.parentNode!==bar.parentNode){ bar.parentNode.insertBefore(row, bar.nextSibling); }
     if(tp.parentElement!==row){ row.appendChild(tp); }  
   }
   setInterval(setup, 700); setup();
@@ -24706,10 +24742,12 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
       if(h && dock && !dock.classList.contains('open')) h.click();
     }catch(e){} }
    
+  var _cgBattleCaptain=false;
   function myConsole(){
     var mine=pool.filter(function(r){return r.user_id===uid;})[0]||null;
     var o=orgRows.filter(function(m){return m.user_id===uid;})[0]||null;
     var role=o?String(o.role||''):'';
+    if(_cgBattleCaptain&&o&&o.status==='approved') return {cmd:'ocmd',lab:'BATTLE CAPTAIN'};
     if(role==='wing-commander'||role==='squadron-leader') return {cmd:'ocmd',lab:'ORG COMMAND'};
     if(role==='flight-lead'||role==='element-lead')       return {cmd:'ocmd',lab:'MY FLIGHT SHEET'};
     if(mine&&mine.party_role==='leader')                  return {cmd:'pcmd',lab:'PARTY COMMAND'};
@@ -24719,10 +24757,11 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
   function openConsole(){ var c=myConsole(); if(!c) return;
     try{ window.open('cmdglas_org.html?cmd='+encodeURIComponent(c.cmd),'cgcomms'); }catch(e){} }
   function fetchAll(){
-    uid=uidOf(); if(!uid){ paint(); return; }
+    uid=uidOf(); _cgBattleCaptain=false; if(!uid){ paint(); return; }
     rest('org_members?select=*&user_id=eq.'+uid,function(mine){
       if(mine){ var ap=null; (mine||[]).forEach(function(r){ if(r.org_id!=='gamerpool'&&r.status==='approved'&&!ap) ap=r; });
         orgId=ap?ap.org_id:null; }
+      function loadConsoleRoster(){
       rest('org_members?select=*&org_id=eq.gamerpool&limit=1000',function(p){ if(p) pool=p;
         if(!orgId){ orgRows=[]; sqns=[]; paint(); return; }
         rest('orgs?select=id,name&id=eq.'+encodeURIComponent(orgId),function(o){ if(o&&o[0]) orgNm=o[0].name||orgId;
@@ -24730,6 +24769,8 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
             rest('org_squadrons?select=*&org_id=eq.'+encodeURIComponent(orgId)+'&order=sort',function(q){ if(q) sqns=q;
                
               rest('org_objectives?select=*&org_id=eq.'+encodeURIComponent(orgId),function(o2){ objs=(o2&&o2.length)?o2:[]; paint(); }); }); }); }); });
+      }
+      if(orgId)rest('rpc/cg_is_battle_captain?p_org='+encodeURIComponent(orgId),function(v){_cgBattleCaptain=v===true;loadConsoleRoster();});else loadConsoleRoster();
     });
   }
   function myParty(){ var mine=pool.filter(function(r){return r.user_id===uid;})[0];
@@ -27965,7 +28006,8 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     var page=document.getElementById(id); if(!page) return;
     var bar=page.querySelector('.cg-pk-bar'); if(!bar) return;
     var list=load(id), wrap=bar.querySelector('.cg-pk-chips');
-    wrap.innerHTML='';
+    var pkSig=JSON.stringify(list.map(function(it){return it.n;})), pkSame=(wrap.__cgPkSig===pkSig && wrap.childNodes.length>0); wrap.__cgPkSig=pkSig; /* release 187: rebuild the chips only when the picked list changed */
+    if(!pkSame){ wrap.innerHTML='';
     if(!list.length){
       wrap.innerHTML='<span class="cg-pk-empty">nothing picked - click a row in any table below</span>';
     } else {
@@ -27975,7 +28017,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
         wrap.appendChild(c);
       });
     }
-    var n=bar.querySelector('.cg-pk-n'); if(n) n.textContent=list.length?('('+list.length+')'):'';
+    } var n=bar.querySelector('.cg-pk-n'), pkN=list.length?('('+list.length+')'):''; if(n && n.textContent!==pkN) n.textContent=pkN;
      
     var names={}; list.forEach(function(it){ names[it.n]=1; });
     page.querySelectorAll('table tbody tr').forEach(function(tr){
@@ -35277,7 +35319,10 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
     if(!document.getElementById('cg-haul738')){
       var hp=document.createElement('div'); hp.id='cg-haul738'; body.appendChild(hp); }
     if(!document.getElementById('cg-acct738')){
-      var ap=document.createElement('div'); ap.id='cg-acct738'; body.appendChild(ap); }
+      var ap=document.createElement('div'); ap.id='cg-acct738'; body.appendChild(ap);
+      ap.insertAdjacentHTML('afterbegin',"<section id=\"cg-account-start800\"><details id=\"cg-start-guidance800\" open><summary>START HERE &mdash; setup guide</summary><p>Sign in below, then set up your party, organization and chat.</p><button type=\"button\" id=\"cg-account-comms800\">SET UP COMMS</button><a href=\"social-tutorial/index.html\" target=\"_blank\" rel=\"noopener noreferrer\">TABLET &amp; SOCIAL GUIDE</a><label class=\"cg-start-choice\"><input type=\"checkbox\" id=\"cg-start-dismiss800\"> Do not show again</label><p id=\"cg-start-save800\" role=\"status\" aria-live=\"polite\"></p></details><div id=\"cg-account-rsi800\"><span>New RSI account:</span> <a href=\"https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2\" target=\"_blank\" rel=\"noopener noreferrer\">RSI SIGN-UP</a><span>Raz referral code: <code>STAR-3RSF-JCT2</code></span></div></section>");
+      document.getElementById('cg-account-comms800').addEventListener('click',function(){ if(window.cgCommsMaxOpen) window.cgCommsMaxOpen('&start=1'); });
+      window.cgStartupGuidance800(document.getElementById('cg-account-start800')); }
 
     if(!document.getElementById('cg-haul-tab')){
       var ht=document.createElement('button'); ht.type='button';
@@ -35308,6 +35353,12 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
     groupTabs(strip);
     haulRender();
     dotSync();
+    if(!window.__cgAccountFirst800 && document.querySelector('#cg-acct738 .wg.login-pill')){
+      window.__cgAccountFirst800=true;
+      if(typeof setActiveTabById==='function') setActiveTabById('home');
+      enter('cg-acct738',document.getElementById('cg-acct-tab'));
+      var opening=document.getElementById('cover-screen');if(opening){opening.classList.add('hide');opening.style.display='none';}
+    }
     if(tries<6){ tries++; setTimeout(install,1500); }    
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,false);
@@ -47832,7 +47883,7 @@ console.log('[b767] curved HUD skin armed');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i];
         var tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
          
         if(e.classList && (e.classList.contains('hm-lab')||e.classList.contains('hm-lab-out'))) continue;
          
@@ -48083,7 +48134,7 @@ console.log('[b767] curved HUD skin armed');
       var nodes=pg.querySelectorAll('*');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i], tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
         if(e.children.length>2) continue;
         var t=e.textContent;
         if(!t || !t.trim()) continue;
@@ -49759,7 +49810,7 @@ console.log('[b767] curved HUD skin armed');
       var nodes=pg.querySelectorAll('*');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i], tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
         if(e.children.length>2) continue;
         var t=e.textContent;
         if(!t || !t.trim()) continue;
@@ -50294,7 +50345,7 @@ console.log('[b767] curved HUD skin armed');
       var nodes=pg.querySelectorAll('*');
       for(var i=0;i<nodes.length;i++){
         var e=nodes[i], tag=e.tagName;
-        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH') continue;
+        if(tag==='SCRIPT'||tag==='STYLE'||tag==='SVG'||tag==='PATH'||e.closest('#cg-account-start800')) continue;
         if(e.children.length>2) continue;
         var t=e.textContent;
         if(!t || !t.trim()) continue;

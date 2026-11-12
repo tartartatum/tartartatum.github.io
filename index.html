@@ -6953,7 +6953,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 800;
+window.CMDGLAS_BUILD = 801;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -22100,10 +22100,10 @@ body.cg-mp-on #sc-nowplaying{display:none !important}
     var p=baseProg + (playing?(Date.now()-baseAt):0);
     if(dur>0) p=Math.min(p,dur);
     var pct=dur>0?Math.max(0,Math.min(100,p/dur*100)):0;
-    el.querySelector('.cgmp-fill').style.width=pct+'%';
-    el.querySelector('.cgmp-knob').style.left=pct+'%';
-    el.querySelector('.cgmp-cur').textContent=fmt(p);
-    el.querySelector('.cgmp-dur').textContent=fmt(dur);
+    var cgmpF=el.querySelector('.cgmp-fill');if(cgmpF.style.width!==pct+'%')cgmpF.style.width=pct+'%'; /* release 185: write only when changed */
+    var cgmpK=el.querySelector('.cgmp-knob');if(cgmpK.style.left!==pct+'%')cgmpK.style.left=pct+'%';
+    var cgmpC=el.querySelector('.cgmp-cur'),cgmpCt=fmt(p);if(cgmpC.textContent!==cgmpCt)cgmpC.textContent=cgmpCt;
+    var cgmpD=el.querySelector('.cgmp-dur'),cgmpDt=fmt(dur);if(cgmpD.textContent!==cgmpDt)cgmpD.textContent=cgmpDt;
   }
   function poll(){
     try{ fetch('/api/spotify_now',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
@@ -22293,10 +22293,10 @@ body.sc-home-mode #cg-theme-pick .tp-lbl,
     var p=document.querySelector('#sc-home-widgets .cgmp-pill'); if(!p) return;
     var pr=baseProg+(playing?(Date.now()-baseAt):0); if(dur>0) pr=Math.min(pr,dur);
     var pct=dur>0?Math.max(0,Math.min(100,pr/dur*100)):0;
-    p.querySelector('.cgp-fill').style.width=pct+'%';
-    p.querySelector('.cgp-knob').style.left=pct+'%';
-    p.querySelector('.cur').textContent=fmt(pr);
-    p.querySelector('.dur').textContent=fmt(dur);
+    var cgpF=p.querySelector('.cgp-fill');if(cgpF.style.width!==pct+'%')cgpF.style.width=pct+'%'; /* release 185: write only when changed */
+    var cgpK=p.querySelector('.cgp-knob');if(cgpK.style.left!==pct+'%')cgpK.style.left=pct+'%';
+    var cgpC=p.querySelector('.cur'),cgpCt=fmt(pr);if(cgpC.textContent!==cgpCt)cgpC.textContent=cgpCt;
+    var cgpD=p.querySelector('.dur'),cgpDt=fmt(dur);if(cgpD.textContent!==cgpDt)cgpD.textContent=cgpDt;
   }
   function poll(){
     try{ fetch('/api/spotify_now',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
@@ -24490,7 +24490,8 @@ body.sc-home-mode #cg-theme-row536 #cg-theme-pick,body.sc-home-mode #cg-theme-ro
     var row=document.getElementById('cg-theme-row536');
     if(!row){ row=document.createElement('div'); row.id='cg-theme-row536'; }
      
-    if(row.previousElementSibling!==bar || row.parentNode!==bar.parentNode){ bar.parentNode.insertBefore(row, bar.nextSibling); }
+    var prev536=row.previousElementSibling,afterNotice536=!!(prev536&&prev536.id==='cg-cig-notice'&&prev536.previousElementSibling===bar); /* release 186: the CIG notice (build 729) also seats itself directly after the onebar; accept the place after it instead of swapping with it every poll */
+    if((prev536!==bar && !afterNotice536) || row.parentNode!==bar.parentNode){ bar.parentNode.insertBefore(row, bar.nextSibling); }
     if(tp.parentElement!==row){ row.appendChild(tp); }  
   }
   setInterval(setup, 700); setup();
@@ -28005,7 +28006,8 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     var page=document.getElementById(id); if(!page) return;
     var bar=page.querySelector('.cg-pk-bar'); if(!bar) return;
     var list=load(id), wrap=bar.querySelector('.cg-pk-chips');
-    wrap.innerHTML='';
+    var pkSig=JSON.stringify(list.map(function(it){return it.n;})), pkSame=(wrap.__cgPkSig===pkSig && wrap.childNodes.length>0); wrap.__cgPkSig=pkSig; /* release 187: rebuild the chips only when the picked list changed */
+    if(!pkSame){ wrap.innerHTML='';
     if(!list.length){
       wrap.innerHTML='<span class="cg-pk-empty">nothing picked - click a row in any table below</span>';
     } else {
@@ -28015,7 +28017,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
         wrap.appendChild(c);
       });
     }
-    var n=bar.querySelector('.cg-pk-n'); if(n) n.textContent=list.length?('('+list.length+')'):'';
+    } var n=bar.querySelector('.cg-pk-n'), pkN=list.length?('('+list.length+')'):''; if(n && n.textContent!==pkN) n.textContent=pkN;
      
     var names={}; list.forEach(function(it){ names[it.n]=1; });
     page.querySelectorAll('table tbody tr').forEach(function(tr){
