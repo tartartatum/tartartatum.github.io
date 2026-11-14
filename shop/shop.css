@@ -189,3 +189,8 @@ footer::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1p
 .kb-pages a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
 .kb-shots .kb-builder{width:50%;justify-self:center;border-radius:11px;border:1px solid var(--line)}
 @media (max-width:600px){.kb-shots .kb-builder{width:100%}}
+
+/* No-AI notice near the top of the shop (2026-11-14) */
+.intro .no-ai{margin-top:18px;padding:16px 20px;border:2px solid var(--edge);border-radius:12px;background:#05090f;box-shadow:0 0 18px rgba(80,190,255,.22)}
+.intro .no-ai p{margin-top:6px;max-width:none;color:var(--fg);font-size:clamp(17px,2.2vw,20px);line-height:1.45}
+.intro .no-ai p.no-ai-head{margin-top:0;font-size:clamp(22px,3vw,28px);text-transform:uppercase;letter-spacing:3px;color:var(--blue)}
