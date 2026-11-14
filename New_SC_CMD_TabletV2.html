@@ -6980,7 +6980,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 804;
+window.CMDGLAS_BUILD = 805;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -9337,9 +9337,9 @@ function bpBuildTable(){
   return '<tr class="bp-card'+(craft?' bp-craft':'')+(sel?' bp-sel':'')+'" data-k="'+esc(k)+'">'
    +'<td><b>'+esc(parts[0]||k)+'</b></td><td>'+esc(parts[1]||'')+'</td><td>'+esc(parts[2]||'')+'</td>'
    +'<td>'+(craft?'<span style="color:var(--green2)">CRAFTABLE</span>':'<span style="color:var(--text-dim)">—</span>')+'</td>'
-   +'<td style="color:var(--text-dim);font-size:10px">'+esc(bpTableMeta(r).slice(0,120))+'</td></tr>';
+   +'<td style="color:var(--text-dim);font-size:10px">'+esc(r.type_label||r.category||'')+(r.missions?' &middot; <span style="color:var(--text-mid)">'+esc(String(r.missions).slice(0,160))+'</span>':'')+(r.systems?' &middot; '+esc(r.systems):'')+' <button type="button" class="bp-view-btn" data-view="'+esc(k)+'" style="font-size:9px;padding:1px 8px;margin-left:4px">VIEW</button></td></tr>';
  }).join('');
- wrap.innerHTML=rows?'<table class="sc-table" id="bp-table" style="width:100%;font-size:11px"><thead><tr><th>Set / Item</th><th>Variant</th><th>Parts</th><th>Craft</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table>':'<div style="font-size:11px;color:var(--text-dim);padding:10px">Nothing to show.</div>';
+ wrap.innerHTML=rows?'<table class="sc-table" id="bp-table" style="width:100%;font-size:11px"><thead><tr><th>Set / Item</th><th>Variant</th><th>Parts</th><th>Craft</th><th>Mission / Detail</th></tr></thead><tbody>'+rows+'</tbody></table>':'<div style="font-size:11px;color:var(--text-dim);padding:10px">Nothing to show.</div>';
  wrap.__bpTableSignature=signature;
 }
 function bpSetView(v){
