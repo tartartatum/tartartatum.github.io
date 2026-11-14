@@ -1,0 +1,155 @@
+@font-face{font-family:Oxanium;src:url('Oxanium.ttf') format('truetype');font-display:swap}
+:root{color-scheme:dark;--bg:#07111e;--panel:#101f30;--line:#2b495d;--fg:#edf4fa;--muted:#a9bdcc;--blue:#6cd6ff;--amber:#e3c18b}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 Oxanium,system-ui,sans-serif}
+a{color:var(--blue)}
+a:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:4px}
+h1,h2,h3,p{margin:0}
+img{display:block;max-width:100%;height:auto}
+
+.top{max-width:1200px;margin:auto;padding:22px 24px 16px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;border-bottom:1px solid var(--line)}
+.brand{text-decoration:none;letter-spacing:2px;font-size:17px;color:var(--fg)}
+.brand span{color:var(--blue);margin-left:12px}
+.top nav{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:15px}
+.top nav a{text-decoration:none;color:var(--muted)}
+.top nav a:hover{color:var(--blue)}
+
+main{max-width:1200px;margin:0 auto;padding:28px 24px 40px}
+.intro{margin-bottom:28px}
+.intro h1{font-size:clamp(28px,4vw,40px);font-weight:600;line-height:1.2}
+.intro p{color:var(--muted);margin-top:10px;max-width:46em}
+
+.product{display:grid;gap:22px;padding:24px;margin-bottom:24px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.product figure{margin:0}
+.product .wide img{width:100%}
+.product .pair{display:grid;grid-template-columns:2fr 1fr;gap:14px;align-items:start}
+.product .pair img{border-radius:8px;border:1px solid var(--line)}
+.info{display:grid;gap:10px;max-width:52em}
+.info h2{font-size:26px;font-weight:600}
+.price{font-size:24px;color:var(--amber);font-weight:600}
+.lede{font-size:18px}
+.info ul,.info ol{margin:4px 0;padding-left:1.4em;color:var(--muted)}
+.info ol li b,.info p b{color:var(--fg);font-weight:600}
+.choices{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0}
+.choices button{min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:8px;background:#0b1a28;color:var(--fg);font:inherit;cursor:pointer}
+.choices button:hover{border-color:var(--blue)}
+.choices button[aria-checked="true"]{border-color:var(--blue);background:#0f3a52;font-weight:600}
+.choices button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.support .info details{border-top:1px solid var(--line);padding:10px 0}
+.support .info summary{cursor:pointer;font-weight:600}
+.support .info details p{color:var(--muted);margin-top:6px}
+.info li{margin:3px 0}
+.info em{font-style:normal;color:var(--fg)}
+.note{font-size:14px;color:var(--muted)}
+
+.compare{margin:6px 0 2px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:#0b1a28}
+.compare summary{cursor:pointer;font-weight:600;color:var(--fg)}
+.compare p{color:var(--muted);margin:8px 0}
+.compare table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+.compare th,.compare td{padding:8px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.compare thead th{color:var(--blue);border-top:0}
+.compare tbody th{color:var(--fg);font-weight:600;width:28%}
+.compare td{color:var(--muted)}
+.compare td:first-of-type{color:var(--fg)}
+@media (max-width:600px){.compare table,.compare thead,.compare tbody,.compare tr,.compare th,.compare td{display:block}.compare thead{display:none}.compare tbody th{width:auto;padding-top:12px}.compare td{border-top:0;padding:2px 10px}.compare td::before{color:var(--blue);font-weight:600}.compare td:nth-of-type(1)::before{content:"Command Deck: "}.compare td:nth-of-type(2)::before{content:"Stream Deck: "}.compare td:nth-of-type(3)::before{content:"GameGlass: "}}
+.buy{justify-self:start;display:inline-flex;align-items:center;min-height:46px;padding:0 22px;margin-top:6px;border:1px solid var(--blue);border-radius:8px;background:#0f3a52;color:var(--fg);font-weight:600;text-decoration:none}
+.buy:hover{background:#13506f}
+.buy.soon{border-color:var(--line);background:transparent;color:var(--muted);cursor:default}
+
+.bundles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:8px 0 28px}
+.bundles>h2{grid-column:1/-1;font-size:26px;font-weight:600}
+.bundle{display:grid;gap:8px;padding:22px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.bundle h3{font-size:20px;font-weight:600}
+.bundle p:not(.price){color:var(--muted)}
+.bundle.best{border-color:var(--blue)}
+
+.faq h2{font-size:22px;font-weight:600;margin-bottom:10px}
+.faq details{border-top:1px solid var(--line);padding:12px 0}
+.faq summary{cursor:pointer;font-weight:600}
+.faq details p{color:var(--muted);margin-top:8px}
+
+footer a.coffee{color:var(--muted);text-decoration:none}
+footer a.coffee:hover,footer a.coffee:focus-visible{color:var(--amber);text-decoration:underline}
+footer{max-width:1200px;margin:0 auto;padding:18px 24px 40px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);display:grid;gap:6px}
+
+@media (min-width:900px){
+  .product{grid-template-columns:1fr}
+  #kneeboard{grid-template-columns:1.1fr 1fr;align-items:center}
+}
+@media (max-width:600px){
+  .top,main,footer{padding-left:16px;padding-right:16px}
+  .product{padding:16px}
+  .product .pair{grid-template-columns:1fr}
+}
+
+/* Command Deck picture roll: swipe, drag the scrollbar, arrow buttons, arrow keys or dots */
+.roll{position:relative;display:grid;gap:8px}
+.roll-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;border-radius:10px;background:#000;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.roll-track:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.roll-slide{flex:0 0 100%;margin:0;scroll-snap-align:center;position:relative}
+.roll-slide img{display:block;width:100%;height:auto}
+.roll-slide figcaption{position:absolute;left:12px;bottom:10px;padding:3px 10px;border-radius:6px;background:rgba(7,17,30,.82);border:1px solid var(--line);font-size:14px;color:var(--fg)}
+.roll-btn{position:absolute;top:calc(50% - 32px);width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(7,17,30,.85);color:var(--fg);font-size:30px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.roll-btn:hover{border-color:var(--blue);color:var(--blue)}
+.roll-btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.roll-btn:disabled{opacity:.35;cursor:default}
+.roll-prev{left:8px}.roll-next{right:8px}
+.roll-count{margin:0;text-align:center;color:var(--muted);font-size:14px}
+.roll-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.roll-dots button{width:28px;height:28px;border:0;background:none;cursor:pointer;display:grid;place-items:center;padding:0}
+.roll-dots button::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--line)}
+.roll-dots button[aria-current="true"]::before{background:var(--blue)}
+.roll-dots button:focus-visible{outline:2px solid var(--blue);border-radius:6px}
+@media (prefers-reduced-motion: reduce){.roll-track{scroll-behavior:auto}}
+@media (max-width:600px){.roll-btn{width:36px;height:36px;font-size:24px;top:calc(50% - 30px)}.roll-slide figcaption{font-size:12px}}
+
+.ideas{padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:8px;background:#0b1a28}
+.ideas a{color:var(--blue)}
+
+/* ---- Tablet look (2026-11-14). Values read from the public tablet build 802 (computed styles): ----
+   black page, frames = 22px corner, bright edge rgba(130,215,255,.75) + inner line rgba(80,190,255,.35) at 5px,
+   both fading out in the middle of each side; buttons = steel-blue gradient, light top edge, gloss, drop shadow. */
+:root{--bg:#000;--panel:#000;--fg:#dceeff;--muted:#a9c4d6;--blue:#9fd8ff;--title:#c3e2ef;--edge:rgba(130,215,255,.75);--edge2:rgba(80,190,255,.35);--line:#1d4d70}
+body{background:#000;color:var(--fg)}
+.top{border-bottom:0;position:relative}
+.top::after{content:"";position:absolute;left:24px;right:24px;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--edge) 20%,rgba(223,252,255,.9) 50%,var(--edge) 80%,transparent)}
+.brand{color:var(--title);letter-spacing:3px}
+.brand span{color:var(--blue)}
+.top nav a{display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border:1px solid rgba(205,242,255,.6);border-radius:11px;color:#e8f4ff;font-size:13px;letter-spacing:1.2px;text-transform:uppercase;
+  background:linear-gradient(#31485f 0%,#1e3547 40%,#0f2133 76%,#0a1725 100%);box-shadow:0 4px 0 -1px #0a1624,0 2px 4px rgba(0,0,0,.45),inset 0 3px 2px rgba(212,242,255,.42)}
+.top nav a:hover{color:#fff;border-color:rgba(205,242,255,.95)}
+.intro h1{text-transform:uppercase;letter-spacing:3px;color:var(--title);font-weight:400}
+
+.product,.bundle,.compare{position:relative;background:#000;border:0;border-radius:22px;
+  box-shadow:0 14px 30px rgba(0,0,0,.55),0 0 18px rgba(80,190,255,.1),inset 0 1px 0 rgba(190,230,255,.07),inset 0 -12px 26px rgba(0,0,0,.5)}
+.compare{background:#05090f}
+.product::before,.product::after,.bundle::before,.bundle::after,.compare::before,.compare::after{content:"";position:absolute;pointer-events:none;
+  -webkit-mask-image:linear-gradient(#000 0%,#000 20%,transparent 46%,transparent 54%,#000 80%,#000 100%);mask-image:linear-gradient(#000 0%,#000 20%,transparent 46%,transparent 54%,#000 80%,#000 100%)}
+.product::before,.bundle::before,.compare::before{inset:0;border:1px solid var(--edge);border-radius:22px}
+.product::after,.bundle::after,.compare::after{inset:5px;border:1px solid var(--edge2);border-radius:17px}
+.compare::before{border-radius:14px}.compare::after{border-radius:10px}
+.bundle.best::before{border-color:rgba(205,242,255,.95);box-shadow:0 0 10px rgba(120,210,255,.35)}
+.info h2,.bundles>h2,.faq h2,.bundle h3{text-transform:uppercase;letter-spacing:3px;color:var(--title);font-weight:400}
+.compare thead th{color:var(--blue)}
+.compare summary{color:var(--title)}
+.product .pair img{border-color:var(--line);border-radius:11px}
+
+.buy{position:relative;overflow:hidden;min-height:46px;padding:0 24px;border:1px solid rgba(205,242,255,.92);border-radius:11px;color:#e8f4ff;letter-spacing:.8px;text-transform:uppercase;
+  background:linear-gradient(#31485f 0%,#1e3547 40%,#0f2133 76%,#0a1725 100%);
+  box-shadow:0 7px 0 -1px #0a1624,0 10px 18px rgba(0,0,0,.62),inset 0 3px 2px rgba(212,242,255,.42),inset 0 -10px 16px rgba(0,0,0,.5)}
+.buy::before{content:"";position:absolute;inset:3px 5px 45%;border-radius:9px;pointer-events:none;background:linear-gradient(rgba(222,246,255,.3),rgba(222,246,255,.03) 70%,transparent)}
+.buy:hover{background:linear-gradient(#3a5672 0%,#244159 40%,#122842 76%,#0c1c2e 100%);border-color:#fff}
+.buy.soon{border-color:rgba(205,242,255,.3);color:var(--muted);background:linear-gradient(#1b2836,#0a121b);box-shadow:0 4px 0 -1px #0a1624,inset 0 2px 2px rgba(212,242,255,.12)}
+.buy.soon::before{opacity:.3}
+
+.roll-track{border-radius:14px}
+.roll-btn{border-color:rgba(205,242,255,.7);background:linear-gradient(#31485f,#0a1725);box-shadow:0 4px 0 -1px #0a1624,inset 0 3px 2px rgba(212,242,255,.42);color:#e8f4ff}
+.roll-btn:hover{border-color:#fff;color:#fff}
+.roll-slide figcaption{background:rgba(0,0,0,.82);border-color:var(--edge2);text-transform:uppercase;letter-spacing:1.6px;color:var(--title)}
+.roll-dots button::before{background:#1d4d70}
+.roll-dots button[aria-current="true"]::before{background:var(--blue);box-shadow:0 0 6px rgba(120,210,255,.7)}
+.ideas{background:#05090f;border-color:var(--line);border-left-color:var(--edge)}
+.faq details{border-top-color:var(--line)}
+footer{border-top:0;position:relative}
+footer::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--edge2) 20%,var(--edge) 50%,var(--edge2) 80%,transparent)}
