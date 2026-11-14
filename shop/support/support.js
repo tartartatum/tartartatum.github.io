@@ -1,6 +1,6 @@
 // Support contacts. Fill these in when ready; empty ones show "coming soon".
 const CONTACT = {
-  email: '',     // e.g. support@yourdomain.com
+  email: 'razvyn@cmdglas.com',
   discord: '',   // e.g. https://discord.gg/xxxxxxx  (invite to the #product-support channel)
 };
 
