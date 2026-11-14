@@ -4,6 +4,14 @@ const CONTACT = {
   discord: 'https://discord.gg/dkBvyyYNHj',
 };
 
+// Each product's help forum on the CMDGLAS Discord (invites never expire).
+const DISCORD = {
+  deck: { url: 'https://discord.gg/ZVmtnA2wcG', channel: 'command-deck-help' },
+  kneeboard: { url: 'https://discord.gg/dBbec4vpXr', channel: 'kneeboard-help' },
+  cursors: { url: 'https://discord.gg/DfAm9vAHYr', channel: 'cursor-pack-help' },
+  license: { url: 'https://discord.gg/vFhsPFdAXW', channel: 'license-and-payment' },
+};
+
 const PRODUCTS = {
   deck: 'Command Deck',
   kneeboard: 'Kneeboard + Builder',
@@ -26,8 +34,12 @@ function emailLink() {
 function renderContacts() {
   document.querySelectorAll('[data-contact]').forEach(el => {
     if (el.dataset.contact === 'email') { const a = emailLink(); if (a) el.replaceChildren(a); }
-    else if (el.dataset.contact === 'discord' && /^https:\/\/(discord\.gg|discord\.com\/invite)\//i.test(CONTACT.discord || '')) {
-      const a = document.createElement('a'); a.href = CONTACT.discord; a.textContent = 'Join the CMDGLAS Discord'; a.rel = 'noopener'; a.target = '_blank'; el.replaceChildren(a);
+    else if (el.dataset.contact === 'discord') {
+      const d = chosen && DISCORD[chosen], url = d ? d.url : CONTACT.discord;
+      if (!/^https:\/\/(discord\.gg|discord\.com\/invite)\//i.test(url || '')) return;
+      const a = document.createElement('a'); a.href = url; a.rel = 'noopener'; a.target = '_blank';
+      a.textContent = d ? `Open #${d.channel} on the CMDGLAS Discord` : 'Join the CMDGLAS Discord';
+      el.replaceChildren(a);
     }
   });
 }
@@ -37,7 +49,7 @@ function pick(id, scroll) {
   document.querySelectorAll('[data-pick]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.pick === chosen)));
   document.querySelectorAll('[data-product]').forEach(d => { d.hidden = !!chosen && d.dataset.product !== chosen; });
   document.getElementById('contact-product').textContent = chosen ? PRODUCTS[chosen] : 'not chosen yet - pick one at the top of this page';
-  document.getElementById('contact-tag').textContent = chosen ? PRODUCTS[chosen] : 'product';
+  document.getElementById('contact-channel').textContent = chosen && DISCORD[chosen] ? '#' + DISCORD[chosen].channel : 'the help forum for your product';
   document.getElementById('pick-note').textContent = chosen ? `Showing answers for ${PRODUCTS[chosen]}. Still stuck? Use Contact at the bottom.` : 'Pick one to see its answers and a pre-filled email.';
   renderContacts();
   if (chosen) history.replaceState(null, '', '#' + chosen);
