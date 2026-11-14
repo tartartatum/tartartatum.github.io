@@ -7,7 +7,7 @@
 <title>CMDGLAS Shop</title>
 <meta name="description" content="Command Deck, Kneeboard + Builder and the Spectre Cursor Pack for Windows. Bundles available.">
 <link rel="icon" href="../favicon.ico">
-<link rel="stylesheet" href="shop.css?v=f537a906">
+<link rel="stylesheet" href="shop.css?v=4745bb73">
 <script defer src="shop.js"></script>
 </head>
 <body>
@@ -69,6 +69,11 @@
         <p>Your own keybind file is never changed. The deck backs it up, writes a separate profile, and you load that profile once in the game's Control Profiles.</p>
         <p class="note">Tested on one player's own keybinds: 82 deck buttons had no key, and all 82 got one (64 new free combinations, 18 the game's own default keys).</p>
       </div>
+      <div class="feature">
+        <h3>Game backup</h3>
+        <p>One press copies your game's USER folder (keybinds, saved control profiles, characters) to a folder you choose, with every file checked. Restore keybinds, characters or everything; the deck asks first, refuses while the game runs, and keeps an undo copy.</p>
+        <p class="note">Pick any folder: another drive, OneDrive or a USB stick. The newest 10 backups are kept, and the deck asks before deleting older ones. A backup only reads your game files.</p>
+      </div>
       <p class="uses"><b>Uses:</b> 87 MB download, 272 MB installed, about 575 MB memory while running, under 1% CPU at idle.</p>
       <p class="ideas"><b>Got an idea?</b> Every idea is read and considered: new layouts, pages, buttons, skins or features. <a href="https://discord.gg/Rbff72pKxS" target="_blank" rel="noopener">Post it in the suggestions forum</a> on Discord. Serious suggestions only.</p>
       <p class="note">Desktop: Windows 10 or 11, 64-bit. Use the game in borderless windowed mode. XENEON EDGE version: coming soon. It needs the free <a href="link/">Command Deck EDGE Link</a> program, ready to download now.</p>
@@ -89,14 +94,21 @@
   </article>
 
   <article class="product" id="kneeboard">
-    <figure class="kb-shots">
-      <div class="kb-pages">
-        <a href="img/kneeboard/keys-flight-840w.webp" target="_blank" rel="noopener" title="Open full size"><img src="img/kneeboard/keys-flight-420w.webp" srcset="img/kneeboard/keys-flight-420w.webp 420w, img/kneeboard/keys-flight-630w.webp 630w, img/kneeboard/keys-flight-840w.webp 840w" sizes="(min-width: 900px) 182px, 30vw" width="840" height="1140" alt="Included keybind page Keys - Flight: Throttle Up W, Strafe Left A, Boost L Shift, Decoupled Mode C, Cruise Mode L Alt + C and more, on a see-through kneeboard."></a>
-        <a href="img/kneeboard/keys-mining-840w.webp" target="_blank" rel="noopener" title="Open full size"><img src="img/kneeboard/keys-mining-420w.webp" srcset="img/kneeboard/keys-mining-420w.webp 420w, img/kneeboard/keys-mining-630w.webp 630w, img/kneeboard/keys-mining-840w.webp 840w" sizes="(min-width: 900px) 182px, 30vw" width="840" height="1140" alt="Included keybind page Keys - Mining: Mining Mode M, Fire Mining Laser LMB, Modules 1 to 3 with L Alt, Jettison Cargo L Alt + J and more."></a>
-        <img class="kb-night" src="img/kneeboard-night.png" width="520" height="698" alt="The kneeboard in Night mode showing a checklist page, white paper turned dark.">
+    <section class="roll kb-roll" aria-roledescription="carousel" aria-label="Kneeboard pictures">
+      <div class="roll-track" tabindex="0" aria-label="Kneeboard pictures; use the arrow keys or swipe">
+        <figure class="roll-slide"><img src="img/kneeboard-roll/over-game-1102w.jpg" srcset="img/kneeboard-roll/over-game-1102w.jpg 1102w, img/kneeboard-roll/over-game-1653w.jpg 1653w, img/kneeboard-roll/over-game-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" alt="Three included keybind pages, Flight, Ship Combat and Salvage, shown see-through over the game."><figcaption>Over the game</figcaption></figure>
+        <figure class="roll-slide"><img src="img/kneeboard-roll/pages-mining-fps-1102w.jpg" srcset="img/kneeboard-roll/pages-mining-fps-1102w.jpg 1102w, img/kneeboard-roll/pages-mining-fps-1653w.jpg 1653w, img/kneeboard-roll/pages-mining-fps-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" loading="lazy" alt="Included keybind pages Mining, FPS Combat and Landing and Quantum over the game."><figcaption>Mining, FPS, landing</figcaption></figure>
+        <figure class="roll-slide"><img src="img/kneeboard-roll/pages-systems-1102w.jpg" srcset="img/kneeboard-roll/pages-systems-1102w.jpg 1102w, img/kneeboard-roll/pages-systems-1653w.jpg 1653w, img/kneeboard-roll/pages-systems-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" loading="lazy" alt="Included keybind pages Ship Systems, Targeting and EVA over the game."><figcaption>Systems, targeting, EVA</figcaption></figure>
+        <figure class="roll-slide"><img src="img/kneeboard-roll/key-colours-1102w.jpg" srcset="img/kneeboard-roll/key-colours-1102w.jpg 1102w, img/kneeboard-roll/key-colours-1653w.jpg 1653w, img/kneeboard-roll/key-colours-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" loading="lazy" alt="The same keybind page in the six key colors: graphite, slate, olive, teal, plum and black."><figcaption>Six key colors</figcaption></figure>
+        <figure class="roll-slide"><img src="img/kneeboard-roll/key-size-1102w.jpg" srcset="img/kneeboard-roll/key-size-1102w.jpg 1102w, img/kneeboard-roll/key-size-1653w.jpg 1653w, img/kneeboard-roll/key-size-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" loading="lazy" alt="Keys filling the kneeboard (Fit) and the same page at 50 percent after pressing minus twice."><figcaption>Key size: Fit or smaller</figcaption></figure>
+        <figure class="roll-slide"><img src="img/kneeboard-roll/builder-1102w.jpg" srcset="img/kneeboard-roll/builder-1102w.jpg 1102w, img/kneeboard-roll/builder-1653w.jpg 1653w, img/kneeboard-roll/builder-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" loading="lazy" alt="The Kneeboard Builder: Add Pages, key color, key size, and the included keybind pages and crew card."><figcaption>Kneeboard Builder</figcaption></figure>
+        <figure class="roll-slide"><img src="img/kneeboard-roll/crew-card-1102w.jpg" srcset="img/kneeboard-roll/crew-card-1102w.jpg 1102w, img/kneeboard-roll/crew-card-1653w.jpg 1653w, img/kneeboard-roll/crew-card-2204w.jpg 2204w" sizes="(min-width: 1200px) 1102px, (min-width: 601px) calc(100vw - 98px), calc(100vw - 66px)" width="1102" height="500" loading="lazy" alt="Page 1 of the included Space Crew Coordination Card: clock and high or low callouts around the ship."><figcaption>Included crew card</figcaption></figure>
       </div>
-      <img class="kb-builder" src="img/kneeboard-builder.png" width="1100" height="699" alt="The Kneeboard Builder with an Add Pages button and one imported checklist page.">
-    </figure>
+      <button class="roll-btn roll-prev" type="button" aria-label="Previous picture">&#8249;</button>
+      <button class="roll-btn roll-next" type="button" aria-label="Next picture">&#8250;</button>
+      <p class="roll-count" aria-live="polite"></p>
+      <div class="roll-dots" role="group" aria-label="Choose a picture"></div>
+    </section>
     <div class="info">
       <h2>Kneeboard + Builder</h2>
       <p class="price" data-price="kneeboard">$9.99</p>

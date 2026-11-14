@@ -181,16 +181,24 @@ footer::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1p
 .top nav a.tablet-back{border-color:rgba(205,242,255,.95);color:#fff;box-shadow:0 4px 0 -1px #0a1624,0 0 8px rgba(120,210,255,.35),inset 0 3px 2px rgba(212,242,255,.42)}
 
 /* Kneeboard pictures (2026-11-14): two included keybind pages + Night page in a row, the Builder smaller underneath */
-.product .kb-shots{display:grid;gap:14px;margin:0}
-.kb-pages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
-.kb-pages img{width:100%;height:auto}
-.kb-pages .kb-night{border-radius:8px;border:1px solid var(--line)}
-.kb-pages a{display:block}
-.kb-pages a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-.kb-shots .kb-builder{width:50%;justify-self:center;border-radius:11px;border:1px solid var(--line)}
-@media (max-width:600px){.kb-shots .kb-builder{width:100%}}
 
 /* No-AI notice near the top of the shop (2026-11-14) */
 .intro .no-ai{margin-top:18px;padding:16px 20px;border:2px solid var(--edge);border-radius:12px;background:#05090f;box-shadow:0 0 18px rgba(80,190,255,.22)}
 .intro .no-ai p{margin-top:6px;max-width:none;color:var(--fg);font-size:clamp(17px,2.2vw,20px);line-height:1.45}
 .intro .no-ai p.no-ai-head{margin-top:0;font-size:clamp(22px,3vw,28px);text-transform:uppercase;letter-spacing:3px;color:var(--blue)}
+
+/* Picture roll arrows centred on the deck picture, slim glass tabs with a glowing chevron; No-AI box text centred (2026-11-14) */
+.roll-btn{top:0;margin-top:calc(14.11% - 29px);width:28px;height:58px;padding:0;border-radius:14px;font-size:0;border:1px solid rgba(130,215,255,.55);background:linear-gradient(180deg,rgba(20,44,66,.9),rgba(2,9,16,.92));box-shadow:0 0 10px rgba(80,190,255,.22),inset 0 1px 0 rgba(205,242,255,.3);color:#9fd8ff;transition:border-color .15s,box-shadow .15s,color .15s}
+.roll-btn::before{content:"";width:9px;height:9px;border:solid currentColor;border-width:2px 0 0 2px;filter:drop-shadow(0 0 3px rgba(120,210,255,.95))}
+.roll-prev::before{transform:translateX(2px) rotate(-45deg)}
+.roll-next::before{transform:translateX(-2px) rotate(135deg)}
+.roll-btn:hover{border-color:#cdf2ff;color:#fff;box-shadow:0 0 16px rgba(110,210,255,.55),inset 0 1px 0 rgba(205,242,255,.4)}
+.roll-btn:disabled{opacity:.3;box-shadow:none}
+.roll-prev{left:6px}.roll-next{right:6px}
+@media (max-width:600px){.roll-btn{width:22px;height:44px;margin-top:calc(14.11% - 22px);border-radius:11px}.roll-btn::before{width:7px;height:7px}.roll-prev{left:4px}.roll-next{right:4px}}
+.intro .no-ai{text-align:center}
+
+/* Kneeboard picture roll, full width like the Command Deck (2026-11-14). Slides are 1102x500: half height = 22.69% of the width */
+#kneeboard{grid-template-columns:1fr}
+.kb-roll .roll-btn{margin-top:calc(22.69% - 29px)}
+@media (max-width:600px){.kb-roll .roll-btn{margin-top:calc(22.69% - 22px)}}
