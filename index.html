@@ -1254,19 +1254,16 @@ document.addEventListener('click',async function(e){
 <div id="cover-screen" role="dialog" aria-label="CmdGlas, start screen">
   <svg id="cover-ring" viewBox="0 0 100 100" aria-hidden="true">
     <circle class="r1" cx="50" cy="50" r="46"/>
-    <circle class="r2" cx="50" cy="50" r="34"/>
+    <circle class="r2" cx="50" cy="50" r="42"/>
     <g class="dot"><circle cx="50" cy="4" r="1.4"/></g>
     
-    <g class="dot2"><circle cx="50" cy="16" r="1.4"/></g>
+    <g class="dot2"><circle cx="50" cy="8" r="1.4"/></g>
   </svg>
   <div class="cover-inner">
-    <div id="cover-server" style="font-family:var(--ui-font);font-size:13px;letter-spacing:1px;margin-bottom:14px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap">
+    <div id="cover-server" style="font-family:var(--ui-font);font-size:13px;letter-spacing:1px;margin-bottom:14px;display:none;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap">
       <span id="cover-srv-dot" style="width:12px;height:12px;border-radius:50%;background:#ff6b6b;box-shadow:0 0 8px #ff6b6b;display:inline-block"></span>
       <span id="cover-srv-txt" style="color:var(--text-mid)">checking control server...</span>
-      <button type="button" id="cover-srv-get" style="display:none;font:800 11px/1 'Rajdhani',sans-serif;letter-spacing:1.2px;color:#04141d;background:linear-gradient(180deg,#a6f2ff,#33b5e6);border:0;border-radius:7px;padding:8px 14px;cursor:pointer;text-transform:uppercase" onclick="event.stopPropagation();var h=document.getElementById('cover-srv-help');h.style.display=h.style.display==='block'?'none':'block';">Get control server online</button>
   </div>
-    <div id="cover-srv-note" style="display:none;max-width:60ch;margin:-4px auto 10px;font-size:12.5px;line-height:1.75;color:var(--text-mid);text-align:center"><b style="color:#8fe9ff">Basic features work right now, no download needed.</b> To unlock the <b style="color:var(--amber2)">full tablet</b>, live server status, your real keybinds, the iPad second screen, and the Twitch &amp; music players, run the <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">control server</a> on your PC.</div>
-    <div id="cover-srv-help" style="display:none;max-width:54ch;margin:-2px auto 14px;font-size:12.5px;line-height:1.8;color:var(--text-mid);text-align:center"><b>How to turn the server on:</b><br>1. Open your tablet folder on your PC.<br>2. Find the file named <b style="color:var(--amber2)">Restart SC Control Server.bat</b> and double-click it.<br>3. Wait about 5 seconds, then reload this tablet.<br><br>Don't have the server yet? <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">Download it from GitHub</a>.</div>
     <script id="sc-anon-1615472">
     (function(){
       fetch('/api/server_info',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){
@@ -1275,7 +1272,10 @@ document.addEventListener('click',async function(e){
         if(st.indexOf('degrad')>-1||(j&&j.degraded)){ d.style.background='#ffb000';d.style.boxShadow='0 0 8px #ffb000'; t.textContent='CONTROL SERVER DEGRADED - '+((j&&(j.reason||j.detail))||'reduced service'); }
         else{ d.style.background='#39d353';d.style.boxShadow='0 0 8px #39d353'; t.textContent='CONTROL SERVER ONLINE'; }
         b.style.display='inline-block';
+        var row=document.getElementById('cover-server'); if(row) row.style.display='flex';
       }).catch(function(){
+        /* 2026-11-14 Thomas "1 Remove it": no server light, unlock line, server button or .bat steps when no control server answers (cmdglas.com) */
+        return;
         document.getElementById('cover-srv-txt').innerHTML='<a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline;text-underline-offset:2px">CONTROL SERVER</a> OFFLINE'; 
         var g=document.getElementById('cover-srv-get'); if(g) g.style.display='inline-block';
         var n=document.getElementById('cover-srv-note'); if(n) n.style.display='block'; 
@@ -1300,6 +1300,35 @@ document.addEventListener('click',async function(e){
   <div class="cover-foot"><span id="ver-coverfoot">&nbsp;</span> · tap Enter or press any key to continue</div>
   <div style="text-align:center;font-size:9px;letter-spacing:4px;color:#4a5c72;margin-top:6px">START PAGE</div>
 </div>
+<script id="cg-cover-ring-fit">
+/* 2026-11-14: rings sized and centred on the start-page text so both rings go all the way around it */
+(function(){
+  var c=document.getElementById('cover-screen'),ring=document.getElementById('cover-ring');
+  if(!c||!ring)return;
+  function fit(){
+    try{
+      if(c.style.display==='none')return;
+      var inner=c.querySelector('.cover-inner');if(!inner)return;
+      var els=[inner],lab=inner.nextElementSibling&&inner.nextElementSibling.nextElementSibling;
+      if(lab&&!lab.id&&!lab.className)els.push(lab);
+      var L=1e9,T=1e9,R=-1e9,B=-1e9;
+      els.forEach(function(e){var b=e.getBoundingClientRect();if(!b.width)return;L=Math.min(L,b.left);T=Math.min(T,b.top);R=Math.max(R,b.right);B=Math.max(B,b.bottom);});
+      if(R<=L)return;
+      var cssW=parseFloat(getComputedStyle(ring).width)||1,k=ring.getBoundingClientRect().width/cssW||1;
+      var cr=c.getBoundingClientRect(),w=(R-L)/k,h=(B-T)/k;
+      var size=(Math.sqrt(w*w+h*h)/2+14)/0.42;
+      ring.style.width=ring.style.height=Math.round(size)+'px';
+      ring.style.left=Math.round(((L+R)/2-cr.left)/k+c.scrollLeft)+'px';
+      ring.style.top=Math.round(((T+B)/2-cr.top)/k+c.scrollTop)+'px';
+    }catch(e){}
+  }
+  window.cgCoverRingFit=fit;
+  if(window.ResizeObserver){try{new ResizeObserver(fit).observe(c.querySelector('.cover-inner'));}catch(e){}}
+  window.addEventListener('resize',fit);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fit);else fit();
+  window.addEventListener('load',fit);setTimeout(fit,800);setTimeout(fit,2500);
+})();
+</script>
 <script id="sc-anon-1622146">
 (function(){
   var c=document.getElementById('cover-screen');
@@ -1450,7 +1479,8 @@ document.addEventListener('click',async function(e){
   <div class="panel-page active" id="tab-home">
     <div class="scrollbox p-body" id="home-scroll" style="padding:0"></div>
 </div>
-  <div class="panel-page" id="tab-system"><iframe id="sc-sysframe" src="SC System Status.html?v=8" onload="try{cgSysCheck()}catch(e){}" onerror="try{cgSysFallback(true)}catch(e){}" style="width:100%;height:calc(100vh - 96px);min-height:640px;border:0;background:#0a0f16" title="SC System Status"></iframe><div id="sc-sysfallback" style="display:none;padding:48px 24px;text-align:center;min-height:640px"><div style="font-size:20px;font-weight:700;color:var(--amber2,#ffb000);letter-spacing:.5px">SYSTEM STATUS NEEDS THE CONTROL SERVER</div><div style="margin:14px auto 22px;max-width:560px;color:#9fb2c4;line-height:1.6">Live shard health and server status read from the CmdGlas control server running on your PC. The rest of the tablet works without it, this one page needs the server.</div><div style="margin-bottom:18px;color:#7f93a6;font-size:13px">Start it: double-click <b>Restart SC Control Server.bat</b>, then reopen this page.</div><a href="https://cmdglas.com/" target="_blank" rel="noopener" style="display:inline-block;padding:11px 22px;background:var(--green2,#39d353);color:#04210f;font-weight:700;text-decoration:none;border-radius:6px;letter-spacing:.5px">GET CONTROL SERVER</a></div></div>
+  <div class="panel-page" id="tab-system"><iframe id="sc-sysframe" data-src="SC System Status.html?v=8" onload="try{cgSysCheck()}catch(e){}" onerror="try{cgSysFallback(true)}catch(e){}" style="width:100%;height:calc(100vh - 96px);min-height:640px;border:0;background:#0a0f16" title="SC System Status"></iframe><div id="sc-sysfallback" style="display:none;padding:48px 24px;text-align:center;min-height:640px"><div style="font-size:20px;font-weight:700;color:var(--amber2,#ffb000);letter-spacing:.5px">SYSTEM STATUS IS PC ONLY</div><div style="margin:14px auto 22px;max-width:560px;color:#9fb2c4;line-height:1.6">Live shard health and server status come from the PC control server. It is not part of the website. The rest of the tablet works without it.</div><div style="margin-bottom:18px;color:#7f93a6;font-size:13px">For Star Citizen server status, open <b>MORE &rarr; SERVER STATUS</b>.</div></div></div>
+<script id="cg-sys-local-only">(function(){var f=document.getElementById('sc-sysframe');if(!f)return;var local=location.protocol==='file:'||/^(localhost|127\.|192\.168\.|10\.|\[::1\])/.test(location.hostname);if(local){f.src=f.getAttribute('data-src');}})();</script>
   <div class="panel-page" id="tab-allkb"><iframe src="All Ingame Keybinds LIVE.html?v=8" style="width:100%;height:calc(100vh - 96px);min-height:640px;border:0;background:#0a0a0a" title="All In-Game Keybinds (live from MASTER_KEYBINDS.json)"></iframe></div>
   <div class="panel-page" id="tab-kbref"><iframe src="Keybind Reference.html?v=8" style="width:100%;height:calc(100vh - 96px);min-height:640px;border:0;background:#0a0a0a" title="Keybind Reference"></iframe></div>
   
@@ -1648,7 +1678,7 @@ document.addEventListener('click',async function(e){
           <div class="vc-stat"><b>KEYBIND SOURCE</b>Tools\MASTER_KEYBINDS.json</div>
       </div>
         
-        <div class="vc-notes">Voice keybinds and HCS crew run together. MASTER_KEYBINDS.json is the single source of truth for every tool, regenerated by SC Sync All.bat from the newest in-game export<span id="va-export-src"></span>.</div>
+        <div class="vc-notes">Voice keybinds and HCS crew run together. Keybinds come from the newest in-game export (PC ONLY)<span id="va-export-src"></span>.</div>
         <script id="sc-anon-1672446">(function(){
           var el=document.getElementById('va-export-src'); if(!el) return;
           fetch('/MASTER_KEYBINDS.json',{cache:'no-store'})
@@ -3174,12 +3204,12 @@ document.addEventListener('click',async function(e){
     <div class="scrollbox p-body" style="padding:0">
       <div style="max-width:1560px;margin:0 auto;padding:22px 18px 30px">
         <div class="cap-title">Tablet Capabilities</div>
-        <div class="cap-sub">Everything CmdGlas can do, and how. It runs on your own PC, reads your own files, and never writes to the game.</div>
+        <div class="cap-sub">Everything CmdGlas can do, and how. It runs in your browser and never writes to the game. Items marked PC ONLY need the PC control server and do not work on the website.</div>
         <div class="cap-grid">
           <div class="cap-card">
             <div class="cap-h">It Plans Your Runs</div>
-            <div class="cap-i"><b>Buy route planner</b><span class="cap-why">One tap on the BUY tab builds the fewest-stops shopping run for everything on your buy list - every stop with per-item listed aUEC prices and a run total (community shop data via your control server).</span></div>
-            <div class="cap-i"><b>Gather route planner</b><span class="cap-why">One tap on the GATHER tab sorts your mining/harvest list into a location-by-location run using verified yield rates, with SHIP/FPS method tags per material.</span></div>
+            <div class="cap-i"><b>Buy route planner</b><span class="cap-why">PC ONLY. The BUY list on the UTILITY tab becomes the fewest-stops shopping run - every stop with per-item listed aUEC prices and a run total, from community shop data.</span></div>
+            <div class="cap-i"><b>Gather route planner</b><span class="cap-why">The MINING and HARVESTING lists on the UTILITY tab become a location-by-location run using verified yield rates, with SHIP/FPS method tags per material.</span></div>
             <div class="cap-i"><b>Pin any stop</b><span class="cap-why">Tap an item in a planned route to see its other shops or mining spots and pin one - the rest of the route re-optimizes around your pin; AUTO hands it back.</span></div>
             <div class="cap-i"><b>Price honesty</b><span class="cap-why">Items listed cheaper elsewhere are flagged on the route, items with no data land under CHECK MANUALLY - nothing is guessed.</span></div>
             <div class="cap-i"><b>Carts everywhere in the ship builder</b><span class="cap-why">Every slot and component box has a cart: tap to add the part to the buy list (with its Smart Citizen CIV/MIL - size - grade chip), tap again to recall it.</span></div>
@@ -3189,10 +3219,10 @@ document.addEventListener('click',async function(e){
             <div class="cap-i"><b>Your notes, lists and picks persist</b><span class="cap-why">Notepad, gather list, buy list, blueprint selections and inventory are still there next session - and next patch.</span></div>
             <div class="cap-i"><b>Everything is cross-page</b><span class="cap-why">Send blueprints from Blueprints and they appear in the Craft Calculator and the HUD's Gather list. One store, many views - nothing is typed twice.</span></div>
             <div class="cap-i"><b>PC and iPad builds</b><span class="cap-why">The same tablet, sized for each: the iPad keeps 44px tap targets and its own notch handling.</span></div>
-            <div class="cap-i"><b>Cross-device sync</b><span class="cap-why">Notes, gather and buy lists, craft picks, blueprints, reputation and inventory move between PC and iPad through the control server on your own machine. Zoom and theme stay per-device on purpose, the iPad wants its own. Verified end-to-end 2026-07-16.</span></div>
+            <div class="cap-i"><b>Cross-device sync</b><span class="cap-why">PC ONLY. Notes, gather and buy lists, craft picks, blueprints, reputation and inventory move between PC and iPad through the PC control server. Zoom and theme stay per-device on purpose.</span></div>
         </div>
           <div class="cap-card">
-            <div class="cap-h">It Reads Your Actual Setup</div>
+            <div class="cap-h">It Reads Your Actual Setup (PC ONLY)</div>
             <div class="cap-i"><b>Your real keybinds</b><span class="cap-why">Read from the profile Star Citizen itself exports, not a list someone typed. Whatever you bound is what it shows.</span></div>
             <div class="cap-i"><b>Your joystick binds too</b><span class="cap-why">HOTAS bindings are read alongside keyboard. Your rudder, throttle and stick are not invisible here.</span></div>
             <div class="cap-i"><b>Your devices, discovered</b><span class="cap-why">VKB, VIRPIL, Logitech, Thrustmaster, anything, the game names them in its own export, so there is no vendor list to fall out of date.</span></div>
@@ -3206,9 +3236,9 @@ document.addEventListener('click',async function(e){
         </div>
           <div class="cap-card">
             <div class="cap-h">It Stays Out Of The Way</div>
-            <div class="cap-i"><b>Pop-out pills</b><span class="cap-why">Undock the STATUS, ACCOUNT, SEARCH or SOCIAL TOOLS pill into its own always-on-top window on a second monitor; RTB snaps it back.</span></div>
+            <div class="cap-i"><b>Pop-out pills</b><span class="cap-why">UNDOCK on the Account tab floats the top panel into its own window, so it can sit on a second monitor.</span></div>
             <div class="cap-i"><b>Basic or Expert</b><span class="cap-why">Read the space manual, or the full tables. Your choice, per page.</span></div>
-            <div class="cap-i"><b>Yours to arrange</b><span class="cap-why">Ten colourways, per-page zoom, draggable pop-out pills. It should look how you want at 2am.</span></div>
+            <div class="cap-i"><b>Yours to arrange</b><span class="cap-why">Four colour themes and four dim levels in MORE &rarr; THEME &amp; DIM. It should look how you want at 2am.</span></div>
         </div>
           <div class="cap-card">
             <div class="cap-h">It Doesn't Touch Your Game</div>
@@ -3224,23 +3254,22 @@ document.addEventListener('click',async function(e){
         </div>
           <div class="cap-card">
             <div class="cap-h">It Helps You Fly Together</div>
-            <div class="cap-i"><b>SOCIAL TOOLS page - party up</b><span class="cap-why">Add friends the reliable way (through RSI Spectrum, since the in-game list is flaky past "F"), then follow the in-game steps to invite them to your party.</span></div>
-            <div class="cap-i"><b>Org chat &amp; roles</b><span class="cap-why">Jump to your org's Spectrum, and pick the job you want, or leave it "Undecided" for your commander to assign.</span></div>
-            <div class="cap-i"><b>Meeting point</b><span class="cap-why">A searchable rally-point picker, the four cities, each planet's main station, Grim HEX and every Lagrange rest stop, so the whole party or org flies to the same spot. Copy it straight to chat.</span></div>
+            <div class="cap-i"><b>Party up</b><span class="cap-why">In SOCIAL TOOLS, CREATE PARTY gives you a code; friends use JOIN PARTY with that code. Then invite them in game.</span></div>
+            <div class="cap-i"><b>Org chat &amp; groups</b><span class="cap-why">Join an org, chat on its channels (ORGCHAN 1-6), find groups on GROUPS, or start your own wing with BECOME WING COMMANDER.</span></div>
         </div>
           <div class="cap-card">
             <div class="cap-h">It Lives On Your Desk With You</div>
             <div class="cap-i"><b>Day or night, anywhere</b><span class="cap-why">Type any of 498 Stanton outposts and see whether it is day or night there right now, with the next sunrise / sunset in your local 24-hour time.</span></div>
-            <div class="cap-i"><b>Watch or just listen</b><span class="cap-why">An embedded Twitch player and your own Spotify now-playing, both inside the tablet, keep an eye on a stream or your music while you fly.</span></div>
-            <div class="cap-i"><b>Your account at a glance</b><span class="cap-why">CrimeStat badge and handle in the account pill, so you can see your standing without leaving the tablet.</span></div>
-            <div class="cap-i"><b>A setup guide that follows you</b><span class="cap-why">A floating Welcome / Set-Up page you can pin open and follow along while you set the tablet up, and it opens with the fact that you need no download at all just to try it.</span></div>
-            <div class="cap-i"><b>Find the project</b><span class="cap-why">X and Discord links sit at the bottom centre, by the CmdGlas wordmark.</span></div>
+            <div class="cap-i"><b>Watch or just listen</b><span class="cap-why">The MEDIA tab keeps your Spotify, YouTube, YT Music, Twitch and Kindle links one tap away. The Twitch player inside the tablet is PC ONLY; on the website TWITCH opens twitch.tv.</span></div>
+            <div class="cap-i"><b>Your account at a glance</b><span class="cap-why">Your handle on the Account tab, so you can see your standing without leaving the tablet.</span></div>
+            <div class="cap-i"><b>A setup guide that follows you</b><span class="cap-why">MORE &rarr; SETUP opens a Welcome / Set-Up page you can keep open while you set the tablet up. You need no download at all to use the website.</span></div>
+            <div class="cap-i"><b>Find the project</b><span class="cap-why">X and Discord links are in MORE &rarr; COMMUNITY.</span></div>
         </div>
       </div>
         <div class="cap-note">
           <b>The honest part.</b> Almost everything above is built on the outside: files the game writes on your PC, a community wiki API, and prices other players typed in. There is no official Star Citizen API to ask, so nothing here is fed by the game directly, which is exactly why every figure carries a source tag instead of a confident face.<br><br>
           That is not a complaint. It is the reason this tablet is careful, and the reason it will always tell you when it is guessing. The full picture, and what would make it better - is on the <b style="color:#4fd2ff">Starmap</b> page.<br><br>
-          <b style="color:var(--amber2)">On an iPad or Android tablet.</b> CmdGlas can show on a tablet, but the PC serves it first: run the control-server <code>.bat</code> once and open the address it prints from your tablet's browser. Step-by-step instructions are in the <b style="color:#4fd2ff;cursor:pointer" onclick="if(window.scOpenGuide)scOpenGuide('ipad')">USER GUIDE</b> (top bar, between the zoom slider and the clock).
+          <b style="color:var(--amber2)">On an iPad or Android tablet.</b> Open cmdglas.com in the tablet's browser.
       </div>
     </div>
   </div>
@@ -3302,11 +3331,9 @@ document.addEventListener('click',async function(e){
   var TS_TIPS={
     system:[
       {t:'Game client frozen, endless loading, or a 30k? The ALT+F4 trick',s:'c',p:'4.9',b:'Hold ALT and tap F4 to kill the Star Citizen client instantly - faster and cleaner than Task Manager. Relaunch and log back in: the recovery flow (Character Repair if prompted) usually brings your character and ship state back. Use it when the client hard-freezes, a loading screen never ends, or right after a server crash - waiting out a frozen client rarely fixes it. (COMMUNITY practice, not CIG-documented - if your version of the trick differs, submit the correction below.)'},
-      {t:'Changed a setting or added a feature and nothing happened? The control server did not restart',s:'v',p:'v0.9.0',b:'REFRESH on the tablet reloads the PAGE. The control server is a separate Python process and keeps running untouched - so anything that needs new server code (folder paths, a new button that talks to /api/) will look broken. CHECK FIRST: open /api/server_info and compare "started" to when the change was made. If the boot time is older, the old process is still running. Fix: close the SC Control Server window completely with the X, then run Restart SC Control Server.bat. (Measured 2026-07-16: an identical process id across a restart that was believed to have happened - the .bat frees port 8420 first, and if that kill does not land the new server cannot bind the port, dies, and the old one keeps serving.)'},
-      {t:'BROWSE opens the folder picker on the PC - never on the iPad',s:'v',p:'v0.9.0',b:'The picker is a native Windows dialog opened by the control server, so it appears on the machine running the server. On any other device the button is disabled and says so, and the server refuses the request. This is not a limitation we chose: a browser will not give a web page the absolute path of a folder. <input type="file" webkitdirectory> hands over only a path RELATIVE to the folder you picked, and showDirectoryPicker() returns a handle carrying just a name (MDN, re-verified 2026-07-16). The server reads these folders off disk, so only the server can usefully pick one. If the dialog seems missing, check BEHIND the browser window.'}
     ],
     blueprints:[
-      {t:'Blueprints look empty, stale, or missing a set? Press CHECK FOR NEW BLUEPRINTS',s:'v',p:'v1.1',b:'The blueprint deck is a cached dataset, not a live query - it does not re-pull on its own. CHECK FOR NEW BLUEPRINTS asks api.star-citizen.wiki what exists and names anything missing. It reads only. (The old REFRESH SCMDB button was removed in build 593: scmdb.net sends no CORS header, so it could never have worked from a browser.) NOTE the blueprint DB only ever contains CRAFTABLE items, so armor you can loot or buy but not craft (Titan, Devastator, Paladin) is legitimately absent and no refresh will conjure it - that is the dataset being correct, not broken. (Measured 2026-07-16 while building the inventory armor list.)'}
+      {t:'Blueprints look empty, stale, or missing a set? Press CHECK FOR NEW BLUEPRINTS',s:'v',p:'v1.1',b:'The blueprint deck is a cached dataset, not a live query - it does not re-pull on its own. CHECK FOR NEW BLUEPRINTS asks api.star-citizen.wiki what exists and names anything missing. It reads only. NOTE the blueprint DB only ever contains CRAFTABLE items, so armor you can loot or buy but not craft (Titan, Devastator, Paladin) is legitimately absent and no refresh will conjure it - that is the dataset being correct, not broken.'}
     ],
     craftcalc:[
       {t:'Numbers look out of date? The wiki API can serve you data up to 12 hours old',s:'v',p:'v0.9.0',b:'api.star-citizen.wiki answers with "cache-control: private, max-age=43200" - 43200 seconds is 12 hours. Any ordinary fetch can therefore be served from the browser cache rather than the network, and it will look perfectly normal. The tablet asks for fresh data explicitly where it matters, but if a figure looks wrong straight after a patch, this is the first thing to suspect. A hard reload (Ctrl+Shift+R) bypasses it. (Measured directly off the response headers, 2026-07-16.)'}
@@ -4231,7 +4258,7 @@ document.addEventListener('click',async function(e){
         if(d&&d.port) rows+="<div style='display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:var(--text-dim)'><span>Port</span><span>"+d.port+"</span></div>";
         rows+="<div style='display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:var(--text-dim)'><span>Live data / snip</span><span style='color:var(--green2)'>available</span></div>";
         el.innerHTML=rows;
-      }).catch(function(){el.innerHTML="<span style='color:var(--red2);font-weight:700'>OFFLINE</span><div style='font-size:11px;color:var(--text-dim);margin-top:4px'>Start the control server (Serve Tablet to iPad.bat), live data and snip need it.</div>";});
+      }).catch(function(){el.innerHTML="<span style='color:var(--red2);font-weight:700'>OFFLINE</span><div style='font-size:11px;color:var(--text-dim);margin-top:4px'>Live data and snip need the PC control server. It is not part of the website.</div>";});
     }
     function loadShard(){
       var el=document.getElementById("ops-shard-body"); if(!el)return;
@@ -6287,7 +6314,7 @@ function buildChannel(){
   var lb=document.getElementById('ch-live'), pb=document.getElementById('ch-ptu');
   if(lb) lb.style.color=(CH_VIEW==='live')?'var(--amber2)':'';
   if(pb) pb.style.color=(CH_VIEW==='ptu')?'var(--amber2)':'';
-  var srv=(gv===null)?'<div style="color:var(--red2);font-size:9px;margin-top:5px;line-height:1.6">Control server not reachable, showing the static fallback. Start it via "Serve Tablet to iPad.bat" for live version data.</div>':'';
+  var srv=(gv===null)?'<div style="color:var(--red2);font-size:9px;margin-top:5px;line-height:1.6">Showing the saved version data. Live version data needs the PC control server.</div>':'';
   var h='';
   if(CH_VIEW==='ptu'){
     var ptuv=ov.ptu_version||'4.9.0-PTU';
@@ -8832,7 +8859,7 @@ async function loadTradingLive(manual){
     out.innerHTML=''
       +'<table class="sc-table"><thead><tr><th>Commodity</th><th>Legality</th><th>Buy/SCU</th><th>Sell/SCU</th><th>Profit/SCU</th><th>ROI %</th></tr></thead><tbody>'
       +rows.map(function(r){var isP=topProfit.indexOf(r.name)>=0,isR=topPct.indexOf(r.name)>=0,ill=(r.legal==='ILLEGAL');var bg=isP?'background:rgba(0,230,118,.16)':isR?'background:rgba(255,193,7,.14)':ill?'background:rgba(255,82,82,.09)':'';var tag=(isP?'<span style="color:var(--green2);font-weight:700">&#9650;PROFIT</span> ':'')+(isR?'<span style="color:var(--amber2);font-weight:700">&#9650;ROI</span> ':'');return '<tr style="'+bg+'"><td>'+tag+esc(r.name)+'</td><td style="color:'+(ill?'var(--red2)':'var(--text-mid)')+';font-weight:'+(ill?'700':'400')+'">'+r.legal+'</td><td class="num">'+fmt(r.buy)+'</td><td class="num">'+fmt(r.sell)+'</td><td class="num accent">+'+fmt(r.margin)+'</td><td class="num">'+r.pct.toFixed(1)+'%</td></tr>';}).join('')
-      +'</tbody></table><div style="font-size:8px;color:var(--text-dim);letter-spacing:1px;margin-top:6px">Profit/SCU = best sell &minus; cheapest buy (UEX global min/max across terminals, not one route). For a specific terminal-pair route use AI ASSIST &gt; TRADE.</div>';
+      +'</tbody></table><div style="font-size:8px;color:var(--text-dim);letter-spacing:1px;margin-top:6px">Profit/SCU = best sell &minus; cheapest buy (UEX global min/max across terminals, not one route).</div>';
     st.innerHTML='<span style="color:var(--green2)">●</span> Last refreshed: '+new Date().toLocaleString([],{hourCycle:'h23'})+' ('+rows.length+' rows)';
   }catch(e){
     out.innerHTML='<span style="font-size:9px;color:var(--red2)">// Live fetch failed: '+(e&&e.message||e)+' - showing static fallback below.</span>';
@@ -16271,9 +16298,9 @@ ensure(); setInterval(ensure, 1500);
     +'<div class="ug-caution">NOTE: the PC and the tablet must be on the same Wi-Fi, and the PC must stay on with the .bat window open. Close it and the tablet loses the connection.</div>'
     +'</div></details>';
   var TOPICS=[
-    {id:'ipad',t:'DISPLAY ON iPAD / ANDROID',d:'CmdGlas runs on your PC and serves itself over your network. Run the .bat once, then open the address it shows from your tablet browser.'+IPAD},
-    {id:'start',t:'GETTING STARTED',d:'CmdGlas is a second-screen companion for Star Citizen. It reads files the game writes on your PC plus community data, it never writes to the game. Start the control server for live data and snips.',go:go('home'),goL:'HOME SCREEN'},
-    {id:'ops',t:'GATHER &amp; BUY LISTS',d:'Your workspace lives in the HUD. The <b>gather list</b> and <b>buy list</b> collect what you need as you use the tools - and each tab has a one-tap ROUTE PLANNER: <b>PLAN ROUTE</b> builds the fewest-stops shopping run with listed aUEC prices, <b>PLAN MINING RUN</b> sorts materials by best verified location. Tap any planned item to <b>PIN</b> where you buy or mine it.'},
+    {id:'ipad',t:'DISPLAY ON iPAD / ANDROID',d:'Open cmdglas.com in the tablet browser (Safari or Chrome). Optional: use Add to Home Screen so it opens full-screen like an app.'},
+    {id:'start',t:'GETTING STARTED',d:'CmdGlas is a second-screen companion for Star Citizen. It uses community data and never writes to the game.',go:go('home'),goL:'HOME SCREEN'},
+    {id:'ops',t:'GATHER &amp; BUY LISTS',d:'Your workspace lives on the UTILITY tab of the top panel. The <b>gather list</b> and <b>buy list</b> collect what you need as you use the tools - and each has a ROUTE PLANNER: <b>PLAN ROUTE</b> (PC ONLY) builds the fewest-stops shopping run with listed aUEC prices, <b>PLAN MINING RUN</b> sorts materials by best verified location. Tap any planned item to <b>PIN</b> where you buy or mine it.'},
     {id:'medical',t:'MEDICAL SPACE MANUAL',d:'Full 4.9 medical reference: MedPens and drug pens, the ParaMed MedGun and LifeGuard multitool attachment, MedBed tiers and respawn range, blood drug level and how to lower it, refills (incl. the new lootable MedGel), prices and where to buy. Every figure is sourced; unconfirmed items are flagged.'},
     {id:'mining',t:'MINING',d:'<b>BASIC</b> = pick a material, get where and how. <b>EXPERT</b> = the full rig builder and reference tables. The <b>Yield Estimator</b> values a rock before you crack it. <b>PUSH</b> adds your picks to the gather list.',go:go('mining'),goL:'GO TO MINING'},
     {id:'craft',t:'CRAFT CALCULATOR',d:'Tick the blueprints you want to build; it sums every material they need and drops the totals into the gather list, grouped by where to find them.',go:go('craftcalc'),goL:'GO TO CRAFT CALC'},
@@ -16282,10 +16309,10 @@ ensure(); setInterval(ensure, 1500);
     {id:'harvest',t:'HARVEST / SALVAGE / HAULING',d:'Field manuals with top locations, methods and reference tables for each activity, tagged VERIFIED / COMMUNITY / UNCONFIRMED.',go:go('harvest'),goL:'GO TO HARVEST'},
      
      
-    {id:'night',t:'THEMES',d:'The colour swatch in the top bar picks a theme that matches your Stream Deck skin.'},
+    {id:'night',t:'THEMES',d:'MORE &rarr; THEME &amp; DIM picks a colour theme and a dim level.'},
     {id:'trouble',t:'TROUBLESHOOTING',d:'Community-verified fixes by activity. One vote per user, and a standing reminder: never submit or promote glitches, cheats or exploits.',go:go('trouble'),goL:'GO TO TROUBLESHOOT'},
     {id:'keybinds',t:'KEYBINDS / PERIPHERALS',d:'Your keybind catalog, Stream Deck layout and VoiceAttack status. Export your keybinds from the game and the tablet reads the newest file.',go:go('allkb'),goL:'GO TO KEYBINDS'},
-    {id:'backup',t:'SAVING + BACKUP',d:'Your notes, lists and picks save automatically in this browser and survive reloads and patches. The .bat can also back the whole tablet up.'}
+    {id:'backup',t:'SAVING + BACKUP',d:'Your notes, lists and picks save automatically in this browser and survive reloads and patches.'}
   ];
   function esc(x){return String(x==null?'':x);}
   function build(){
@@ -20025,62 +20052,38 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   if(window.__cgUserManual366) return; window.__cgUserManual366=true;
   var H=[
 '<div class="um-cover"><h1>TABLET USER MANUAL</h1><div class="um-sub">CMD &middot; GLS Command Tablet</div><div class="um-tm">TM-CMDGLAS-10 &middot; Operator Card for the Tablet Interface &middot; Unofficial Star Citizen companion</div></div>',
-'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET: how to move around the interface. For in-game subjects (flight, mining, hauling, combat) use LEARN &rarr; SC MANUALS, or SEARCH &rarr; BY TOPIC.</div>',
-'<div class="um-sec"><h2>Start Here - Open the Tablet the Right Way (read first)</h2><div class="um-purpose">There are two ways to open the tablet. Which one you use depends only on <b>who you are</b> and <b>where you are</b>. Do the exact steps for your case - nothing else.</div>',
-      '<div class="um-proc">CASE A - You, the owner, on your own PC</div>',
-      '<ol class="um-steps"><li>Go to your <b>Desktop</b>.</li><li>Double-click <b>Launch Tablet (No Chrome UI)</b>.</li><li>Wait for it to open. The <b>Server light is GREEN</b>. Every feature works (Twitch, live readouts, the iPad second screen).</li></ol>',
-      '<div class="um-note"><b>NOTE.</b> On your PC, do <b>NOT</b> type cmdglas.com, and do <b>NOT</b> double-click the .html file. Use <b>only</b> Launch Tablet (No Chrome UI). Anything else makes the Server light red.</div>',
-      '<div class="um-proc">CASE B - Everyone else (org members, your phone, an iPad)</div>',
-      '<ol class="um-steps"><li>Open a web browser (Safari or Chrome).</li><li>Type <b>cmdglas.com</b> and go.</li><li>Sign in - top-right.</li><li>Use it. The <b>Server light is RED</b> here. That is normal and correct off your PC. Chat and the wing console still work.</li></ol>',
-      '<div class="um-note"><b>NOTE.</b> The red Server light on cmdglas.com is not a fault. That light only turns green on the one PC running the control server (you, via Launch Tablet). Everyone else sees red - expected.</div>',
-      '<div class="um-proc">Why the two are different</div>',
-      '<div class="um-note"><b>Launch Tablet (No Chrome UI)</b> opens the tablet from the small server running on your PC (address localhost:8420). Live and PC-only features. Twitch, live server &amp; mission readouts, the iPad second screen, only work <b>through that server</b>, which is why the Server light is green and everything is on. <b>cmdglas.com</b> is the public copy on the internet with <b>no server behind it</b>, so those PC features are off and the Server light is red, but sign-in, chat and the wing console still work because those run in the cloud.</div>',
-      '<div class="um-proc">Do NOT do these (they cause the red-light / wrong-tablet problems)</div>',
-      '<ol class="um-steps"><li>Do <b>NOT</b> double-click <b>New_SC_CMD_TabletV2.html</b> to open the tablet, opening the raw file gives a red Server light and breaks the Twitch player.</li><li>Do <b>NOT</b> type <b>cmdglas.com</b> on your own PC - red light, no local features.</li><li>Do <b>NOT</b> use the old <b>Stream Deck "Open SC CMD Tablet"</b> button - it opens an outdated copy.</li><li>On your PC, the <b>only</b> thing you double-click to open the tablet is <b>Launch Tablet (No Chrome UI)</b>.</li></ol></div>',
-      '<div class="um-sec"><h2>Section 1 - Home Screen Layout</h2><div class="um-purpose">Orient to the home screen. Home is the base of operations; every page opens from here and returns here.</div>',
+'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET: how to move around the interface. For in-game subjects (flight, mining, hauling, combat) use LEARN &rarr; SC MANUALS, or LEARN &rarr; By topic.</div>',
+'<div class="um-sec"><h2>Start Here - Open the Tablet</h2><div class="um-purpose">Open the tablet in any web browser. Nothing to install.</div>',
+'<ol class="um-steps"><li>Open a web browser (Chrome, Edge or Safari).</li><li>Type <b>cmdglas.com</b> and go.</li><li>The START PAGE opens first. Tap <b>ENTER TABLET</b>.</li><li>To sign in, open the <b>Account</b> tab and tap <b>SIGN IN</b>.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> A few features need the PC control server and do not work on the website. They are listed in Section 13.</div></div>',
+'<div class="um-sec"><h2>Section 1 - Home Screen Layout</h2><div class="um-purpose">Orient to the home screen. Home is the base of operations; every page opens from here and returns here.</div>',
 '<div class="um-proc">1-1. Home zones</div>',
-'<div class="um-zone"><b>Top-left</b><span>SELECTABLE window - lands on CLOCK (local time, live patch, server/rig lamps) and can be switched to any of 16 modules.</span>',
-'<b>Top-center</b><span>OPS panel - shows the CMD &middot; GLS mark; opens the OPS board.</span>',
-'<b>Top-right</b><span>ACCOUNT - sign in for cross-device sync.</span>',
-'<b>Left</b><span>SEARCH window - search everything, or browse By Topic.</span>',
-'<b>Center</b><span>INGAME TOOLS - the ten tool tiles.</span>',
-'<b>Right</b><span>SOCIAL TOOLS window - org channel monitor.</span>',
-'<b>Lower</b><span>CONTROL BAR - five grouped-shortcut buttons.</span>',
-'<b>Bottom</b><span>MORE INFO, then USER MANUAL (this document).</span></div>',
-'<div class="um-note"><b>NOTE.</b> On a phone the zones stack top-to-bottom. Positions below are for the tablet / desktop layout.</div></div>',
-'<div class="um-sec"><h2>Section 2 - Left Window (selectable)</h2><div class="um-purpose">A single window you point at whatever you want on screen. Lands on CLOCK - local time, live patch, and the server/rig lamps. Does not navigate away from Home.</div>',
-'<div class="um-proc">2-1. Change what the window shows</div>',
-'<ol class="um-steps"><li>Locate the drop-down selector at the top-right corner of the LEFT window (top-left of Home). It reads whatever module is loaded - on a fresh tablet that is <b>CLOCK</b>.</li>',
-'<li>Tap the selector.</li>',
-'<li>Choose any of the 16 modules: Blueprints, Clock, Contracts, Hauling, Inventory, Keybinds, Media Player, Mining, Nav / Starmap, Notepad, Pinned, Reputation, Salvage, Shard Health, Ship Loadouts, Wikelo.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> There is no STATUS module here any more - the server and rig lamps moved onto the CLOCK module, and the live operational readout is the STREAM tab of the HUD (Section 3).</div></div>',
-'<div class="um-sec"><h2>Section 3 - HUD</h2><div class="um-purpose">The HUD (top-centre of Home) is the HUD. Six tabs, left to right: <b>GATHER &amp; BUY</b> (the lists every tool pushes into, both on one tab), <b>NOTES</b>, <b>CONTRACTS</b> (the contracts you have tracked), <b>ORG/PARTY</b> (your roster, live status and assigned objective), THREAT, and STREAM (the Twitch player - this tab was called STATUS on older builds).</div>',
+'<div class="um-zone"><b>Top</b><span>TOP PANEL - tabs UTILITY, NOTES, CONTRACTS, ORG/PARTY, THREAT, ROUTE, ACCOUNT, MEDIA (Section 3).</span>',
+'<b>Bottom-left</b><span>INGAME TOOLS - the tool tiles and the SHIP LOADOUTS bar (Section 6).</span>',
+'<b>Bottom-right</b><span>SOCIAL TOOLS - channel monitor and party and org tools (Section 7).</span>',
+'<b>Bottom bar</b><span>CONTROL BAR - seven grouped-shortcut buttons (Section 8).</span></div>',
+'<div class="um-note"><b>NOTE.</b> On a phone the zones stack top-to-bottom. Positions above are for the tablet / desktop layout.</div></div>',
+'<div class="um-sec"><h2>Section 2 - Pick a Theme</h2><div class="um-purpose">Change the colour and brightness of the whole tablet.</div>',
+'<ol class="um-steps"><li>Tap <b>MORE</b> on the control bar.</li>',
+'<li>Under <b>THEME &amp; DIM</b>, tap BLUE, GREEN, AMBER or RED, or a DIM level.</li></ol></div>',
+'<div class="um-sec"><h2>Section 3 - Top Panel</h2><div class="um-purpose">The top panel holds the lists and readouts you use while you fly. Tabs, left to right: <b>UTILITY</b> (the BUY, HARVESTING, HAUL, MINING and SALVAGE lists every tool pushes into), <b>NOTES</b>, <b>CONTRACTS</b>, <b>ORG/PARTY</b>, <b>THREAT</b>, <b>ROUTE</b>, <b>ACCOUNT</b> and <b>MEDIA</b>.</div>',
 '<div class="um-proc">3-1. Switch tabs</div>',
-'<ol class="um-steps"><li>Locate the HUD (top-centre of Home).</li>',
-'<li>Tap <b>GATHER &amp; BUY</b>, <b>NOTES</b>, <b>CONTRACTS</b>, <b>ORG/PARTY</b>, <b>THREAT</b>, or <b>STREAM</b> across the top of the pill.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> GATHER and BUY used to be two tabs. They opened the same page, so they are one tab now and both lists show together, each under its own heading.</div>',
-'<div class="um-proc">3-2. Open the full page behind a tab</div>',
-'<ol class="um-steps"><li>Open GATHER &amp; BUY, CONTRACTS, or ORG/PARTY in the pill.</li>',
-'<li>Locate <b>SOURCE</b> at the bottom of the pill, beside UNDOCK.</li>',
-'<li>Tap it - the full page opens.</li>',
-'<li>Tap <b>&#8592; RETURN TO HUD</b> at the top of that page to come back to the same tab you left from.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> Blueprints, Craft Calculator, Mining, Harvestables and Ship Loadouts push your picks into the HUD\'s GATHER and BUY lists.</div></div>',
+'<ol class="um-steps"><li>Locate the top panel at the top of Home.</li>',
+'<li>Tap a tab name across the top of the panel.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> Blueprints, Craft Calculator, Mining, Harvest and Ship Loadouts push your picks into the lists on the UTILITY tab.</div></div>',
 '<div class="um-sec"><h2>Section 4 - Account</h2><div class="um-purpose">Sign in to sync gear, loadouts, and org comms across devices.</div>',
 '<div class="um-proc">4-1. Sign in</div>',
-'<ol class="um-steps"><li>Locate the ACCOUNT window, top-right of Home.</li>',
-'<li>Tap "SIGN IN" (button, bottom of the window).</li></ol>',
-'<div class="um-note"><b>NOTE.</b> Signed out, the tablet still works fully on this device. Sign-in only adds cross-device sync and org SOCIAL TOOLS.</div></div>',
-'<div class="um-sec"><h2>Section 5 - Search</h2><div class="um-purpose">Find anything on the tablet, or browse by subject. Two modes on one toggle.</div>',
+'<ol class="um-steps"><li>Open the <b>Account</b> tab in the top panel.</li>',
+'<li>Tap <b>SIGN IN</b> under the photo.</li></ol>',
+'<div class="um-note"><b>NOTE.</b> Signed out, the tablet still works on this device. Sign-in adds cross-device sync and org SOCIAL TOOLS.</div></div>',
+'<div class="um-sec"><h2>Section 5 - Search</h2><div class="um-purpose">Find anything on the tablet, or browse by subject.</div>',
 '<div class="um-proc">5-1. Search everything</div>',
-'<ol class="um-steps"><li>Confirm the toggle reads "SEARCH" (cyan, left half of the toggle).</li>',
-'<li>Tap the search field.</li>',
-'<li>Type any page, tool, or tip name.</li>',
+'<ol class="um-steps"><li>Tap <b>LEARN</b> on the control bar.</li>',
+'<li>Use <b>Search</b> at the bottom of the LEARN menu and type any page, tool, or tip name.</li>',
 '<li>Tap a result to open it.</li></ol>',
 '<div class="um-proc">5-2. Browse by subject</div>',
-'<ol class="um-steps"><li>Tap "BY TOPIC" (amber, right half of the toggle).</li>',
-'<li>Scroll the subject list.</li>',
-'<li>Tap a subject to open its manual.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> SEARCH is cyan; BY TOPIC is amber. The color of the lit half tells you which mode is active.</div></div>',
+'<ol class="um-steps"><li>In the LEARN menu, tap <b>By topic</b>.</li>',
+'<li>Tap a subject to open its manual.</li></ol></div>',
 '<div class="um-sec"><h2>Section 6 - Ingame Tools</h2><div class="um-purpose">The ten primary tools. This is the main working area.</div>',
 '<div class="um-groups"><div><b>Top row:</b> Blueprints &middot; Contracts &middot; Craft Calculator &middot; Harvestables &middot; Hauling</div><div><b>Bottom row:</b> Inventory &middot; Mining &middot; Salvage &middot; Starmap &middot; System</div></div>',
 '<div class="um-proc">6-1. Preview a tool</div>',
@@ -20089,40 +20092,41 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<ol class="um-steps"><li>Click the tile (mouse), or tap the preview card (touch).</li>',
 '<li>The tool opens as a reading sheet on top of Home (see Section 9).</li></ol>',
 '<div class="um-note"><b>NOTE.</b> The preview card names the tool and shows whether it pushes items to the HUD\'s Gather / Buy lists.</div></div>',
-'<div class="um-sec"><h2>Section 7 - Social Tools</h2><div class="um-purpose">Org chat and channel monitor.</div>',
+'<div class="um-sec"><h2>Section 7 - Social Tools</h2><div class="um-purpose">Org chat, channel monitor, parties and org tools.</div>',
 '<div class="um-proc">7-1. Read and transmit</div>',
-'<ol class="um-steps"><li>Locate the SOCIAL TOOLS window, top-right of Home (below ACCOUNT).</li>',
-'<li>Read the current channel name in the face window (for example, GENERAL), or pick one from the channel selector in the header bar.</li>',
-'<li>Tap "TX" (top-right of the window) to transmit.</li></ol>',
+'<ol class="um-steps"><li>Locate the SOCIAL TOOLS window, bottom-right of Home.</li>',
+'<li>Pick a channel from the channel selector (General, Party, Org, ORGCHAN 1-6).</li>',
+'<li>Tap <b>TX</b> to transmit.</li></ol>',
+'<div class="um-proc">7-2. Open the full console</div>',
+'<ol class="um-steps"><li>Tap <b>ENTER SOCIAL TOOLS</b>. The console has CHAT, ORG, WING and GROUPS.</li>',
+'<li>To fly with friends: CREATE PARTY, then give them the code to JOIN PARTY.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> Sign in first (Section 4) - SOCIAL TOOLS needs your account before it can transmit.</div></div>',
-'<div class="um-sec"><h2>Section 8 - Control Bar</h2><div class="um-purpose">Five grouped-shortcut buttons below the tools. Each expands a tray upward.</div>',
+'<div class="um-sec"><h2>Section 8 - Control Bar</h2><div class="um-purpose">Seven grouped-shortcut buttons along the bottom. Each opens a menu.</div>',
 '<div class="um-proc">8-1. Use a control group</div>',
-'<ol class="um-steps"><li>Locate the row of five buttons below the tools: NAV, MY RIG, LEARN, MISSION CONTROLS, TABLET CONTROLS.</li>',
-'<li>Tap a button (or hover) - its tray opens ABOVE it.</li>',
-'<li>Tap an item in the tray to open it.</li></ol>',
+'<ol class="um-steps"><li>Locate the row of seven buttons: ASSIST, NAV, MY RIG, MORE, LEARN, MISSION CONTROLS, TABLET CONTROLS.</li>',
+'<li>Tap a button - its menu opens.</li>',
+'<li>Tap an item in the menu to open it.</li></ol>',
 '<div class="um-proc">8-2. Groups and items</div>',
-'<div class="um-groups"><div><b>NAV</b> - Notepad, Start Page.</div>',
-'<div><b>MY RIG</b> - Devices, My PC, Ship Loadouts.</div>',
-'<div><b>LEARN</b> - SC Manuals, SC Dictionary, Console, Help, Troubleshoot.</div>',
+'<div class="um-groups"><div><b>ASSIST</b> - Everything, Keybinds, Deck, Voice, Pages, Materials.</div>',
+'<div><b>NAV</b> - Notepad, Start Page.</div>',
+'<div><b>MY RIG</b> - Devices, My PC, Ship Loadouts, Display.</div>',
+'<div><b>MORE</b> - Report Issue, User Manual, New Player Assist, Setup; Download SC, Server Status; Theme &amp; Dim; RSI Hub, X, Discord.</div>',
+'<div><b>LEARN</b> - Social Guide, Crew Calls, Patch Notes, SC Manuals, Console, Help, Troubleshoot, SC Dictionary.</div>',
 '<div><b>MISSION CONTROLS</b> - Social Tools, Radio, Share.</div>',
-'<div><b>TABLET CONTROLS</b> - Fit 100%, Fullscreen, No URL Bar, Refresh, Reset, Q&amp;A Log.</div></div>',
+'<div><b>TABLET CONTROLS</b> - Fit 100%, Fullscreen, No URL Bar, Q&amp;A Log, Refresh, Reset.</div></div>',
 '<div class="um-caution"><b>CAUTION.</b> TABLET CONTROLS &rarr; REFRESH reloads the whole tablet. Any unsaved entry on the current page is lost. Save before you refresh.</div></div>',
 '<div class="um-sec"><h2>Section 9 - Reading Sheets &amp; Getting Back</h2><div class="um-purpose">Every page opens as a sheet on top of Home. Home stays underneath, you never lose your place.</div>',
-'<div class="um-proc">9-1. The four ways back</div>',
-'<div class="um-zone"><b>Top-left</b><span>"&#8249; BACK" button.</span><b>Top-right</b><span>"&#10005;" button.</span><b>Bottom-left</b><span>"&#8249; BACK" button.</span><b>Bottom-right</b><span>"BACK &#8250;" button.</span></div>',
-'<div class="um-proc">9-2. Return to Home</div>',
-'<ol class="um-steps"><li>Tap any BACK control, or the &#10005;, or tap the dimmed area outside the sheet.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> The page title is centered at the top of every sheet. All four back controls do the same thing, return to Home. Use whichever is nearest your thumb.</div></div>',
-'<div class="um-sec"><h2>Section 10 - More Info</h2><div class="um-purpose">Version, disclaimer, and the community Discord.</div>',
-'<ol class="um-steps"><li>Locate "&#9432; MORE INFO", bottom-center of Home.</li>',
-'<li>Tap it to expand.</li>',
-'<li>Read the version and disclaimer; tap "JOIN THE DISCORD" to open the server.</li></ol></div>',
+'<div class="um-proc">9-1. Return to Home</div>',
+'<ol class="um-steps"><li>Tap <b>BACK &#8250;</b> at the top right of the sheet.</li></ol></div>',
+'<div class="um-sec"><h2>Section 10 - Community</h2><div class="um-purpose">The community Discord and X.</div>',
+'<ol class="um-steps"><li>Tap <b>MORE</b> on the control bar.</li>',
+'<li>Under <b>COMMUNITY</b>, tap DISCORD, X or RSI HUB.</li></ol></div>',
 '<div class="um-sec"><h2>Section 11 - Reopen This Manual</h2><div class="um-purpose">This manual is always one tap away.</div>',
-'<ol class="um-steps"><li>Locate the "USER MANUAL" button at the very bottom of Home, under &#9432; MORE INFO.</li>',
-'<li>Tap it - this manual opens as a sheet.</li>',
-'<li>Return via any BACK control (Section 9).</li></ol>',
-'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET. For in-game subjects, use LEARN &rarr; SC MANUALS or SEARCH &rarr; BY TOPIC.</div></div>',
- 
+'<ol class="um-steps"><li>Tap <b>MORE</b> on the control bar.</li>',
+'<li>Tap <b>USER MANUAL</b> - this manual opens as a sheet.</li>',
+'<li>Return with BACK &#8250; (Section 9).</li></ol>',
+'<div class="um-note"><b>NOTE.</b> This manual covers the TABLET. For in-game subjects, use LEARN &rarr; SC MANUALS or LEARN &rarr; By topic.</div></div>',
+
 '<div class="um-sec"><h2>Section 12 - Install the Tablet as an App (no address bar)</h2><div class="um-purpose">The tablet installs like a real app - its own window and icon, no address bar, no tabs. Works on PC, iPad and Android. On iPhone and iPad, only <b>Safari</b> can open the tablet as a clean, no-address-bar window. Apple does not let Chrome or any other iOS browser do it, so in <b>Chrome on an iPad you will always see the address bar</b>. On an <b>Android</b> tablet, Chrome can hide it.</div>',
 '<div class="um-proc">12-0. PC - Chrome</div>',
 '<ol class="um-steps"><li>Open the tablet.</li>',
@@ -20144,30 +20148,21 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Confirm, then open the new icon - it launches without the address bar.</li></ol>',
 '<div class="um-proc">12-3. Go true fullscreen (edge to edge)</div>',
 '<ol class="um-steps"><li>Open the tablet.</li>',
-'<li>Tap the FULLSCREEN button - top bar, right-side button cluster.</li></ol>',
+'<li>Tap <b>TABLET CONTROLS</b> on the control bar, then <b>FULLSCREEN</b>.</li></ol>',
 '<div class="um-note"><b>NOTE.</b> "No address bar" is not the same as edge-to-edge fullscreen. The Home Screen icon (Safari) gives a clean no-bar launch; the FULLSCREEN button gives true fullscreen.</div></div>',
    
-'<div class="um-sec"><h2>Section 13 - Run the Control Server &amp; Make a Desktop Shortcut (PC)</h2><div class="um-purpose">The tablet works in any browser with nothing installed. The optional control server (a small program on your PC) unlocks the live extras: Twitch, live server &amp; mission readouts, and the local second screen. You need the tablet folder (the .py server + the .bat launchers).</div>',
-'<div class="um-proc">13-1. Make the desktop shortcuts (once)</div>',
-'<ol class="um-steps"><li>Open the tablet folder on your PC.</li>',
-'<li>Double-click <b>Create Desktop Shortcuts.bat</b>.</li>',
-'<li>Check your Desktop - you now have <b>SC Control Server</b> and <b>SC Tablet</b> shortcuts.</li></ol>',
-'<div class="um-proc">13-2. Start the server, open the tablet</div>',
-'<ol class="um-steps"><li>Double-click <b>SC Control Server</b>. A small black window opens, leave it open; it is serving the tablet.</li>',
-'<li>Double-click <b>SC Tablet</b>. The tablet opens in a clean full-screen window (no browser bars).</li>',
-'<li>The Twitch player, live readouts and second screen now work.</li></ol>',
-'<div class="um-proc">13-3. Close it down</div>',
-'<ol class="um-steps"><li>On the tablet window, press <b>Alt+F4</b> (or <b>Esc</b>).</li>',
-'<li>Close the black server window when you are done for the session.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> No control server needed for everyday use, everything except the live/PC-only features works by just opening the tablet in any browser at cmdglas.com.</div>',
-'<div class="um-note"><b>NO DANGER.</b> The control server runs only on your own PC and serves the tablet to your browser. It does not touch the game and is unrelated to anti-cheat.</div>',
-'<div class="um-sec"><h2>Section 14 - Gather &amp; Buy Page</h2><div class="um-purpose">The full version of the pill&#39;s GATHER &amp; BUY tab. Everything you push from the tools lands here.</div>',
+'<div class="um-sec"><h2>Section 13 - PC-Only Features</h2><div class="um-purpose">The tablet works in any browser with nothing installed. These features need the PC control server and do not work on the website.</div>',
+'<div class="um-groups"><div>The Twitch player inside the tablet (on the website, TWITCH opens twitch.tv).</div>',
+'<div>Live server and mission readouts.</div>',
+'<div>The buy and gather route planners.</div>',
+'<div>Reading your own keybinds, devices and peripheral profiles.</div>',
+'<div>The iPad second screen and cross-device sync through the PC.</div></div></div>',
+'<div class="um-sec"><h2>Section 14 - Gather &amp; Buy Page</h2><div class="um-purpose">The full page behind the UTILITY lists. Everything you push from the tools lands here.</div>',
 '<div class="um-proc">14-1. Open it</div>',
-'<ol class="um-steps"><li>Open the <b>GATHER &amp; BUY</b> tab in the HUD.</li>',
-'<li>Tap <b>SOURCE</b> at the bottom of the pill.</li></ol>',
+'<ol class="um-steps"><li>Open <b>cmdglas.com/?tab=gather</b> (see Section 16).</li></ol>',
 '<div class="um-proc">14-2. Jump to the tool that fills a list</div>',
 '<ol class="um-steps"><li>Locate the <b>BUILT FROM</b> row near the top of the page.</li>',
-'<li>Tap <b>Blueprints</b>, <b>Craft Calculator</b>, <b>Mining</b>, <b>Harvestables</b> or <b>Ship Loadouts</b>.</li>',
+'<li>Tap <b>Blueprints</b>, <b>Craft Calculator</b>, <b>Mining</b>, <b>Harvest</b> or <b>Ship Loadouts</b>.</li>',
 '<li>The tag on each button says which list it feeds.</li></ol>',
 '<div class="um-proc">14-3. How things get onto the lists</div>',
 '<div class="um-zone"><b>Blueprints</b><span>Tap a card&#39;s &rarr; PUSH TO GATHER.</span><b>Craft Calculator</b><span>Anything you select lands on the gather list automatically.</span><b>Mining</b><span>Pick materials in BASIC mode.</span><b>Ship Loadouts</b><span>Tap the &#128722; cart on any slot or component; tap again to recall it.</span></div>',
@@ -20182,18 +20177,13 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>Press <b>Ctrl + Alt + 1</b>. The pill becomes a small floating window - drag it where you want it.</li>',
 '<li>Press <b>Ctrl + Alt + 1</b> again to put it back.</li></ol>',
 '<div class="um-caution"><b>CAUTION.</b> Set Star Citizen to <b>BORDERLESS WINDOWED</b> (Settings &rarr; Graphics &rarr; Display Mode). Exclusive fullscreen hides every other window, including this one. That is a Windows rule, not a tablet setting.</div>',
-'<div class="um-proc">15-2. Pop it out by voice or Stream Deck</div>',
-'<ol class="um-steps"><li>Ctrl + Alt + 1 only reaches the tablet when the tablet is the active window - while flying, the game is.</li>',
-'<li>Run <b>2 - HUD BRIDGE.bat</b> and leave that window open.</li>',
-'<li>Open the tablet from your PC, not from cmdglas.com.</li>',
-'<li>Point a Stream Deck <b>System &rarr; Website</b> key (tick <b>Access in background</b>) or a VoiceAttack command at <b>http://127.0.0.1:8423/toggle</b>.</li></ol>',
-'<div class="um-note"><b>NOTE.</b> PC only. A secure website is not allowed to talk to your own machine, so the bridge does not work from cmdglas.com.</div></div>',
+'</div>',
 '<div class="um-sec"><h2>Section 16 - Open a Page Directly by Link</h2><div class="um-purpose">Any page can be opened straight from a link, bookmark or Stream Deck key.</div>',
 '<div class="um-proc">16-1. Build the link</div>',
 '<ol class="um-steps"><li>Take the tablet address and add <b>?tab=</b> plus the page name.</li>',
 '<li>Example: <b>cmdglas.com/?tab=mining</b></li></ol>',
 '<div class="um-proc">16-2. Page names</div>',
-'<div class="um-zone"><b>mining</b><span>Mining</span><b>blueprints</b><span>Blueprints</span><b>contracts</b><span>Contracts</span><b>craftcalc</b><span>Craft Calculator</span><b>harvest</b><span>Harvestables</span><b>loadout</b><span>Ship Loadouts</span><b>hauling</b><span>Hauling</span><b>gather</b><span>Gather &amp; Buy</span><b>party</b><span>Org / Party</span></div>',
+'<div class="um-zone"><b>mining</b><span>Mining</span><b>blueprints</b><span>Blueprints</span><b>contracts</b><span>Contracts</span><b>craftcalc</b><span>Craft Calculator</span><b>harvest</b><span>Harvest</span><b>loadout</b><span>Ship Loadouts</span><b>hauling</b><span>Hauling</span><b>gather</b><span>Gather &amp; Buy</span><b>party</b><span>Org / Party</span></div>',
 '<div class="um-note"><b>NOTE.</b> Spelling is forgiving - missions, shiploadouts, trading and craft all work too.</div></div>',
  
 '<div class="um-end">END OF MANUAL &middot; TM-CMDGLAS-10</div>'
@@ -23068,7 +23058,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   function fbHTML(){  
     return '<div class="cg-tw-filenote" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:9px">'
       +'<div style="font:800 11px Rajdhani,sans-serif;letter-spacing:2px;color:#8fb0c8;text-transform:uppercase">Stream player offline</div>'
-      +'<div style="font:600 12px Rajdhani,sans-serif;color:#9fb6cc;line-height:1.6">The live Twitch player runs only when the tablet is opened through the control server.<br>Check the <b style="color:#a6f2ff">Server</b> light at the bottom - click it to get online.</div></div>'; }
+      +'<div style="font:600 12px Rajdhani,sans-serif;color:#9fb6cc;line-height:1.6">The live Twitch player does not run when the tablet is opened as a file.</div></div>'; }
   var shownCh=null;
   function render(frame){ frame.innerHTML=fbHTML(); shownCh=ch(); }
   function fix(){ var frame=document.querySelector('#cg-twitch .cg-tw-frame'); if(!frame) return;
@@ -23649,25 +23639,16 @@ window.CG_CS={ img:['data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
   function save(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   var STEPS=''
     +'<p class="cg-w-lead"><b>You do NOT need to download anything to use this tablet.</b> Just open it and go.</p>'
-    +'<div class="cg-w-note">Only download the pack (the <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline">control server</a>) if you want the tablet on your <b>iPad</b>, or want the live extras: your real keybinds, live server status, the Twitch player, and music.</div>'
     +'<h4>Just try it - no download</h4>'
     +'<ol class="cg-w-steps"><li>Open <b>cmdglas.com</b> in your browser.</li><li>That is it. Start using it.</li></ol>'
-    +'<h4>Step 1 - get the pack (download)</h4>'
-    +'<ol class="cg-w-steps"><li>On your PC, open the <a href="https://github.com/tartartatum/tartartatum.github.io/releases/latest" target="_blank" rel="noopener" style="color:#8fe9ff;text-decoration:underline"><b>GitHub releases page</b></a> and click the newest <b>.zip</b> under <b>Assets</b>.</li><li>Save the file. It goes to your <b>Downloads</b> folder.</li><li>The file is a <b>ZIP</b> (a squished folder). Find it in Downloads, <b>right-click it</b>, choose <b>"Extract All..."</b>, then <b>"Extract."</b> That makes a normal folder.</li><li><b>Open</b> that new folder.</li><li><b>Double-click the launcher</b>, the file that starts the tablet (it also turns on the small helper program). If Windows shows a blue <b>"Windows protected your PC"</b> box, click <b>"More info" → "Run anyway."</b> It is safe; it just is not signed yet.</li><li>The tablet opens in your browser. <b>Leave the small helper window open</b> while you play.</li></ol>'
-    +'<h4>Step 2 - put it on your iPad</h4>'
-    +'<ol class="cg-w-steps"><li>In that same folder, <b>double-click "Serve Tablet to iPad."</b> It shows an address like <b>YOUR-PC-ADDRESS:8420</b>.</li><li>On your iPad, open <b>Safari</b> and type that address into the bar.</li><li>Tap <b>Share → Add to Home Screen</b> for a full-screen app.</li></ol>'
-    +'<div class="cg-w-sub">Your PC and iPad must be on the same Wi-Fi.</div>'
-    +'<h4 class="cg-w-pcrun">Running it on your PC - which window is which</h4>'
-    +'<ol class="cg-w-steps">'+'<li><b>2 - HUD BRIDGE.bat</b> - start this FIRST if you want the Stream Deck or voice to pop the HUD out. Leave its black window open while you play.</li>'+'<li><b>1 - OPEN TABLET.bat</b> - opens the tablet as its own app window with no address bar. <b>This is the window to use.</b></li>'+'<li>If the control server was not already running, that same launcher starts it. The server used to also open a SECOND tablet in your default browser, so you got two. That auto-open is now switched off. If you still see two, the extra one is an ordinary browser tab - close it and keep the app window.</li>'+'<li>Only the app window from <b>1 - OPEN TABLET.bat</b> can float the HUD over your game. It runs on <b>localhost:8420</b>, which is what Chrome requires before it will hand out a floating Picture-in-Picture window.</li>'+'<li><b>6 - CMDGLAS APP</b> opens the public site instead. The HUD bridge is switched off there by design, so the deck and voice buttons will not move the HUD from that window.</li>'+'<li>UNDOCK works on the <b>HUD / OPS</b> pill only. The other pills have it switched off on purpose - a browser can float exactly one window, and the HUD gets it.</li>'+'</ol>'
-    +'<div class="cg-w-sub">On the iPad use <b>http://YOUR-PC-IP:8420/New_SC_CMD_TabletV2.html</b>. To get the exact address, open <b>localhost:8420/api/server_info</b> on the PC and read <b>ipad_url</b>.</div>'
     +'<h4>Your keybinds</h4>'
-    +'<ol class="cg-w-steps"><li>In the game, <b>export your controls</b> from the keybindings menu.</li><li>Put that file in the tablet folder, named <b>MASTER_KEYBINDS.json</b>.</li><li>Open <b>KEYBINDS → LIVE LIST</b>.</li></ol>'
+    +'<ol class="cg-w-steps"><li>Open <b>MY RIG → DEVICES → KEYBINDS → LIVE LIST</b>.</li></ol>'
     +'<h4>Music</h4>'
-    +'<ol class="cg-w-steps"><li>Set the <b>top-left pill</b> to <b>Media Player</b>.</li><li>Press <b>CONNECT MUSIC</b> and sign in to Spotify.</li></ol>'
+    +'<ol class="cg-w-steps"><li>Open the <b>MEDIA</b> tab in the top panel.</li><li>Pick <b>SPOTIFY</b>, <b>YOUTUBE</b>, <b>YT MUSIC</b>, <b>TWITCH</b> or <b>KINDLE</b>.</li></ol>'
     +'<h4>Twitch</h4>'
-    +'<ol class="cg-w-steps"><li>Open the <b>HUD</b> and pick the <b>STREAM</b> tab.</li><li>Type a channel, press <b>WATCH</b>. Press <b>CHAT</b> to show or hide chat.</li></ol>'
+    +'<ol class="cg-w-steps"><li>Open the <b>MEDIA</b> tab in the top panel.</li><li>Type a channel and press <b>WATCH</b>.</li></ol>'
     +'<h4>Notepad</h4>'
-    +'<ol class="cg-w-steps"><li>Set the <b>top-left pill</b> to <b>Notepad</b>.</li><li>What you type also shows in <b>OPS → NOTES</b> and on the <b>NAV</b> button.</li><li>Use the box at the top to send a line to <b>Inventory, Gather, or Notes</b>.</li></ol>'
+    +'<ol class="cg-w-steps"><li>Tap <b>NAV → NOTEPAD</b>, or open the <b>NOTES</b> tab in the top panel.</li><li>What you type shows in both places.</li><li>Use the box at the top to send a line to <b>Inventory, Gather, or Notes</b>.</li></ol>'
     +'<div class="cg-w-foot">Free &amp; unofficial. Not made by CIG.<br><a href="https://cmdglas.com" target="_blank" rel="noopener">cmdglas.com</a> &middot; <a href="https://discord.gg/dkBvyyYNHj" target="_blank" rel="noopener">discord.gg/dkBvyyYNHj</a></div>';
   function zoom(){ var z=parseFloat(document.documentElement.style.zoom); return (z&&z>0)?z:1; }
   var panel;
@@ -25876,7 +25857,7 @@ body.sc-home-mode #cg-onebar{margin-bottom:12px !important}
   function ping(){ fetch('/api/server_info',{cache:'no-store'}).then(function(r){ SRV=!!r.ok; }).catch(function(){ SRV=false; }); }
   ping(); setInterval(ping,60000);
   function srvBanner(){
-    return '<div style="border:1px solid rgba(255,176,0,.55);background:rgba(255,176,0,.12);border-radius:6px;padding:6px 9px;margin:7px 0 5px;font-size:9px;letter-spacing:1px;color:#ffcf6b;font-weight:800;line-height:1.5">SAMPLE PREVIEW &middot; THIS IS WHAT THE PLANNER BUILDS FOR YOU &mdash; TO RUN IT LIVE YOU NEED THE FREE CMDGLAS CONTROL SERVER ON YOUR PC. TAP THE SERVER LIGHT ON THE BOTTOM BAR TO GET IT.</div>';
+    return '<div style="border:1px solid rgba(255,176,0,.55);background:rgba(255,176,0,.12);border-radius:6px;padding:6px 9px;margin:7px 0 5px;font-size:9px;letter-spacing:1px;color:#ffcf6b;font-weight:800;line-height:1.5">SAMPLE PREVIEW &middot; THIS IS WHAT THE PLANNER BUILDS FOR YOU &mdash; THE LIVE BUY ROUTE NEEDS THE PC CONTROL SERVER AND DOES NOT RUN ON THE WEBSITE.</div>';
   }
   function gatherBanner(){
     return '<div style="border:1px solid rgba(108,180,214,.5);background:rgba(108,180,214,.10);border-radius:6px;padding:6px 9px;margin:7px 0 5px;font-size:9px;letter-spacing:1px;color:#8fdcff;font-weight:800;line-height:1.5">SAMPLE PREVIEW &middot; THIS IS WHAT PLAN MINING RUN BUILDS &mdash; IT GOES LIVE THE MOMENT YOU PUSH MATERIALS FROM MINING, BLUEPRINTS OR THE CRAFT CALCULATOR. NO SERVER NEEDED FOR THIS ONE.</div>';
@@ -42258,8 +42239,8 @@ function cg767GBHS(){
              On a local origin the server exists but is not answering: START
              SERVER shows the exact steps, because a web page cannot launch a
              program. */
-          nt.textContent=(c.k==='mining')?'Needs the control server. '
-                                         :'UNSORTED \u2013 control server offline. ';
+          nt.textContent=(c.k==='mining')?'Needs the PC control server. '
+                                         :'UNSORTED \u2013 needs the PC control server. ';
           (function(nt){
             try{
               var local=/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname);
@@ -42270,9 +42251,7 @@ function cg767GBHS(){
                 bb.addEventListener('click',function(e){ e.stopPropagation();
                   nt.textContent='On the PC: Desktop \u2192 Public Tablet \u2192 Start Tablet \u2192 "1 - START SERVER.bat", then reload this page.'; });
               } else {
-                bb.textContent='GET SERVER';
-                bb.addEventListener('click',function(e){ e.stopPropagation();
-                  try{ window.open('https://github.com/tartartatum/tartartatum.github.io/releases/latest','_blank','noopener'); }catch(_o){} });
+                return;
               }
               nt.appendChild(bb);
             }catch(_mb){}
@@ -52223,7 +52202,7 @@ html body #tab-home .hm-cols .hm-col .hm-tray:not(.hm-tray-gen) .hm-cell .hm-lab
     var box=document.getElementById('cg-mediaall-list');
     if(!box){ box=document.createElement('div'); box.id='cg-mediaall-list'; p.appendChild(box); }
     var L=saved(), h='<div class="mal-h">YOUR SERVICES</div>';
-    if(!L.length){ h+='<div class="mal-none">No services saved yet. Paste a share link in CONNECT MUSIC to add one.</div>'; }
+    if(!L.length){ h+='<div class="mal-none">No services saved yet.</div>'; }
     /* CG_MEDIAALL FIELDFIX. 755 read it.provider and it.title. MEASURED against
        renderSetup(): the real item is {id, name, embed:{provider}} - it reads
        BRAND[p.embed && p.embed.provider] and p.name. On T's real data 755 would

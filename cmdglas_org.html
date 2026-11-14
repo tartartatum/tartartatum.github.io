@@ -1019,7 +1019,7 @@ body.oc-noflash .oc-fire.armed{animation:none;filter:brightness(1.15)}
 </div>
 <div id="oc-nobackend" class="oc-overlay hidden">
   <div class="oc-card"><h2>COMMS BACKEND NOT SET UP</h2>
-    <p>The comms backend isn't current. Run <code>cmdglas_org_phase0.sql</code>, <code>phase1</code> and <code>phase2</code> once each, in order, in the Supabase SQL Editor, then reload.</p>
+    <p>Social Tools is unavailable right now. Try again later, or use MORE &rarr; REPORT ISSUE on the tablet.</p>
     <p id="oc-nobackend-detail" style="font-size:12px;color:var(--txt-dim)"></p>
     <button class="oc-btn ghost" onclick="location.reload()">RELOAD</button>
   </div>
@@ -4994,25 +4994,26 @@ setInterval(cgGhostBadge,4000);
   <div class="oc-man">
     <p>Social Tools is your wing's command net: live text channels, a member roster, a live who's-online map, and &mdash; for command &mdash; a squadron board to run the wing.</p>
 
-    <h3>1 &middot; THE THREE TABS</h3>
+    <h3>1 &middot; THE TABS</h3>
     <ul>
       <li><b>CHAT</b> &mdash; live text channels. Pick a channel on the left, type, press Enter (Shift+Enter = new line).</li>
       <li><b>ORG</b> &mdash; the member roster grouped by rank, showing who's online. For command it becomes the Squadron Board (&sect;6).</li>
       <li><b>WING</b> &mdash; the full hierarchy on one screen: Wing Command at the top, every squadron and its leader below, and <b>your own position highlighted</b>.</li>
+      <li><b>GROUPS</b> &mdash; the group finder: who is online right now and what they are up for (&sect;6d).</li>
     </ul>
 
     <h3>2 &middot; CHANNELS</h3>
     <ul>
       <li><b>General &middot; Party</b> &mdash; the General Gamer Pool. Open to every signed-in pilot, no approval needed.</li>
-      <li><b>Org &middot; CHAN 1&ndash;6</b> &mdash; your org's private channels; they unlock once an org's command approves you.</li>
+      <li><b>Org &middot; ORGCHAN 1&ndash;6</b> &mdash; your org's private channels; they unlock once an org's command approves you.</li>
       <li>The channel you pick in the tablet's SOCIAL TOOLS header opens straight to that channel here.</li>
     </ul>
 
     <h3>3 &middot; GETTING IN</h3>
     <ul>
-      <li>Sign in on the tablet (top-right account pill) &mdash; Social Tools shares that login. You land in the <b>General Gamer Pool</b> immediately; #general and #party are open.</li>
+      <li>Sign in on the tablet (ACCOUNT tab &rarr; SIGN IN) &mdash; Social Tools shares that login. You land in the <b>General Gamer Pool</b> immediately; #general and #party are open.</li>
       <li>To join an org: <b>ORG tab &rarr; JOIN AN ORG</b>. That org's own command reviews you &mdash; the system admin is not involved.</li>
-      <li>No org fits? <b>FOUND AN ORG</b> on the same tab. The system admin approves the org itself, and from that moment you are its Wing Commander and vet your own pilots.</li>
+      <li>No org fits? Use <b>BECOME WING COMMANDER</b> on the same tab. The system admin approves the org itself, and from that moment you are its Wing Commander and vet your own pilots.</li>
       <li>The moment you are approved &mdash; or your rank or squadron changes &mdash; a banner tells you instantly. No reload needed.</li>
     </ul>
 
@@ -5081,13 +5082,13 @@ setInterval(cgGhostBadge,4000);
 
     <h3>8 &middot; OPENING IT LARGE</h3>
     <ul>
-      <li>Press the <b>expand</b> icon in the SOCIAL TOOLS pill to open this whole console full-screen. Esc or CLOSE returns you.</li>
+      <li>Press <b>ENTER SOCIAL TOOLS</b> in the SOCIAL TOOLS pill to open this whole console full-screen. Esc or CLOSE returns you.</li>
     </ul>
 
     <h3>9 &middot; CONNECTION &amp; TROUBLE</h3>
     <ul>
       <li>The dot up top: <b>green</b> = live, <b>amber</b> = reconnecting (messages may lag), <b>red</b> = offline.</li>
-      <li><b>&ldquo;BACKEND NOT SET UP&rdquo;</b> &mdash; the org owner has not run the setup SQL yet.</li>
+      <li><b>&ldquo;BACKEND NOT SET UP&rdquo;</b> &mdash; Social Tools is unavailable right now. Try again later, or use MORE &rarr; REPORT ISSUE on the tablet.</li>
       <li><b>&ldquo;Permission denied&rdquo;</b> &mdash; you are not an approved member; ask a Wing Commander.</li>
       <li><b>&ldquo;Sign-in expired&rdquo;</b> &mdash; reload the tablet and sign in again.</li>
       <li>Still stuck? Use <b>Report an Issue</b> on the tablet &mdash; the Chat/SOCIAL TOOLS section asks the exact questions to diagnose it.</li>
@@ -5095,7 +5096,7 @@ setInterval(cgGhostBadge,4000);
 
     <h3>10 &middot; PERSONAL vs ORG</h3>
     <ul>
-      <li>These live channels and the roster are the <b>org</b> side. For a <b>personal</b> group (just friends), party up through Spectrum + in-game &mdash; set that up in the tablet's <b>SOCIAL TOOLS &rarr; Set Up &rarr; Personal</b>.</li>
+      <li>The roster and the Org channels are the <b>org</b> side. For a <b>personal</b> group (just friends), no org is needed: open <b>#party</b> in CHAT, press CREATE PARTY and share the code (&sect;6a).</li>
     </ul>
   </div>
   <button class="oc-btn" id="oc-howto-x" style="margin-top:12px">GOT IT</button>
