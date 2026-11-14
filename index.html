@@ -52467,5 +52467,96 @@ html:not(.cg-hudonly) body .cgmp-pill .cgp-art{
   if(!install()){ var n=0, iv=setInterval(function(){ if(install()||++n>40) clearInterval(iv); },250); }
 })();
 </script>
+<script id="cg-public-notes-cards">
+/* Notepad page: one card per note (notes are separated by a blank line). Click a card to type, drag the grip
+   to move a note. The hidden text box below stays the saved notepad, so autosave, ADD TO INVENTORY,
+   UPDATE SHIP and EXPORT TXT read the same text as before. */
+/* Kneeboard notes editor (14 NOV 2026). One card per note; notes are separated by a blank line in the
+   saved text. Click a card to type (Enter = new line in the same note). Drag the grip to move a note.
+   The saved text stays one plain string, so every existing reader of it keeps working. */
+(function(g){'use strict';
+ if(g.KneeboardNotes)return;
+ const split=text=>String(text||'').replace(/\r\n?/g,'\n').split(/\n[ \t]*\n+/).map(s=>s.replace(/^\n+|\s+$/g,'')).filter(s=>s.trim());
+ const join=notes=>notes.map(s=>s.replace(/\s+$/,'')).filter(s=>s.trim()).join('\n\n');
+ const CSS='.kn-notes{display:flex;flex-direction:column;gap:.45em;width:100%;height:100%;min-height:0;font:inherit;color:inherit}'
+  +'.kn-list{list-style:none;margin:0;padding:0;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;display:flex;flex-direction:column;gap:.4em}'
+  +'.kn-note{display:grid;grid-template-columns:1.4em minmax(0,1fr) 1.4em;align-items:start;gap:.25em;padding:.35em .3em;background:rgba(16,30,43,.85);border:1px solid rgba(120,190,225,.35);border-radius:.6em}'
+  +'.kn-note.kn-drag{opacity:.4;border-color:#5acdff}'
+  +'.kn-grip{cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;text-align:center;opacity:.6;line-height:1.35}'
+  +'.kn-text{outline:none;min-height:1.35em;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;padding:0 .2em;border-radius:.25em;cursor:text;user-select:text;-webkit-user-select:text}'
+  +'.kn-text:focus{background:rgba(90,205,255,.1)}.kn-text:empty::before{content:attr(data-ph);opacity:.5}'
+  +'.kn-del{position:static;width:auto;height:auto;border:0;padding:0;margin:0;background:transparent;color:inherit;font:inherit;opacity:.5;cursor:pointer;line-height:1.35}.kn-del:hover{opacity:1;color:#ff8a8a}'
+  +'.kn-foot{display:flex;align-items:center;justify-content:center;gap:.8em;flex:none}'
+  +'.kn-add{position:static;width:auto;height:auto;margin:0;border:1px solid rgba(120,190,225,.45);border-radius:.5em;background:rgba(16,30,43,.9);color:inherit;font:inherit;font-weight:600;padding:.25em .9em;cursor:pointer}.kn-add:hover{border-color:#5acdff}'
+  +'.kn-state{font-size:.75em;opacity:.7}.kn-state.kn-bad{color:#ff8a8a;opacity:1}';
+ function create({write,placeholder='Type a note…',className=''}){
+  if(typeof write!=='function')throw Error('Notes editor needs a save function');
+  if(!document.getElementById('kn-notes-css')){const s=document.createElement('style');s.id='kn-notes-css';s.textContent=CSS;(document.head||document.documentElement).append(s);}
+  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
+  const root=el('section','kn-notes '+className);root.setAttribute('aria-label','Notes');
+  const list=el('ol','kn-list'),foot=el('div','kn-foot'),add=el('button','kn-add','+ ADD NOTE'),state=el('output','kn-state','');
+  add.type='button';foot.append(add,state);root.append(list,foot);
+  let saved=null,timer=0,dragging=null,saving=Promise.resolve(),destroyed=false;
+  const say=(t,bad)=>{state.textContent=t;state.classList.toggle('kn-bad',!!bad);};
+  const current=()=>join([...list.children].map(li=>li.querySelector('.kn-text').innerText));
+  function save(now){
+   clearTimeout(timer);
+   const run=()=>{const text=current();if(text===saved)return saving;say('Saving…');
+    saving=saving.then(()=>write(text)).then(()=>{saved=text;if(current()===text)say('Saved');},e=>say('Not saved: '+(e&&e.message||e),true));return saving;};
+   if(now)return run();timer=setTimeout(run,600);return saving;
+  }
+  function card(text){
+   const li=el('li','kn-note'),grip=el('span','kn-grip','⋮⋮'),body=el('div','kn-text'),del=el('button','kn-del','✕');
+   grip.title='Drag to move';del.type='button';del.title='Delete note';
+   body.contentEditable='plaintext-only';if(body.contentEditable!=='plaintext-only')body.contentEditable='true';
+   body.spellcheck=false;body.dataset.ph=placeholder;body.textContent=text;
+   body.addEventListener('input',()=>save(false));
+   body.addEventListener('blur',()=>save(true));
+   body.addEventListener('paste',e=>{const t=e.clipboardData?.getData('text/plain');if(t==null)return;e.preventDefault();document.execCommand('insertText',false,t);});
+   del.onclick=()=>{li.remove();if(!list.children.length)list.append(card(''));save(true);};
+   grip.addEventListener('pointerdown',e=>{if(e.button!==0)return;e.preventDefault();dragging=li;li.classList.add('kn-drag');grip.setPointerCapture(e.pointerId);});
+   grip.addEventListener('pointermove',e=>{
+    if(dragging!==li)return;const over=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.kn-note');
+    if(over&&over!==li&&over.parentNode===list){const r=over.getBoundingClientRect();list.insertBefore(li,e.clientY<r.top+r.height/2?over:over.nextSibling);}
+    const lr=list.getBoundingClientRect();if(e.clientY<lr.top+8)list.scrollTop-=8;else if(e.clientY>lr.bottom-8)list.scrollTop+=8;
+   });
+   const end=()=>{if(dragging!==li)return;dragging=null;li.classList.remove('kn-drag');save(true);};
+   grip.addEventListener('pointerup',end);grip.addEventListener('pointercancel',end);grip.addEventListener('lostpointercapture',end);
+   li.append(grip,body,del);return li;
+  }
+  add.onclick=()=>{const c=card('');list.append(c);c.scrollIntoView({block:'nearest'});c.querySelector('.kn-text').focus();};
+  const busy=()=>!!dragging||root.contains(document.activeElement)&&document.activeElement!==add||current()!==saved&&saved!==null;
+  return {
+   element:root,
+   /* Shows saved text. Skipped while the user is typing or dragging, so a refresh never eats a keystroke. */
+   set(text,{force=false}={}){if(destroyed)return false;const t=join(split(text));if(!force&&busy())return false;if(t===saved&&list.children.length)return true;
+    saved=t;const notes=split(t);list.replaceChildren(...(notes.length?notes:['']).map(card));say(notes.length?'Saved':'No notes yet');return true;},
+   flush:()=>save(true),
+   inspect:()=>({notes:split(current()),saved,state:state.textContent}),
+   destroy(){destroyed=true;clearTimeout(timer);}
+  };
+ }
+ g.KneeboardNotes={create,split,join};
+ if(typeof module==='object'&&module.exports)module.exports=g.KneeboardNotes;
+})(globalThis);
+(function(){
+ var editor=null,last=null,tries=0;
+ function mount(){
+  var ta=document.getElementById('np-textarea');if(!ta||!window.KneeboardNotes)return false;if(editor)return true;
+  editor=KneeboardNotes.create({className:'np-cards',write:function(text){
+   ta.value=text;last=text;ta.dispatchEvent(new Event('input',{bubbles:true}));
+   if(typeof npSaveNow==='function')npSaveNow();
+   var back=null;try{back=localStorage.getItem('sc_notepad');}catch(e){}
+   if(back!==text)return Promise.reject(new Error('Notepad save could not be verified'));return Promise.resolve();}});
+  var el=editor.element;el.style.height='auto';el.style.fontSize='14px';
+  var st=document.createElement('style');st.textContent='.np-cards .kn-list{flex:none;overflow:visible}.np-cards .kn-foot{justify-content:flex-start}';document.head.appendChild(st);
+  ta.style.display='none';ta.parentNode.insertBefore(el,ta.nextSibling);
+  last=ta.value;editor.set(ta.value,{force:true});
+  setInterval(function(){if(ta.value!==last&&editor.set(ta.value))last=ta.value;},800);
+  return true;
+ }
+ var iv=setInterval(function(){if(mount()||++tries>60)clearInterval(iv);},300);
+})();
+</script>
 </body>
 </html>
