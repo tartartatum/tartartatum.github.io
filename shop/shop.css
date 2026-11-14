@@ -121,7 +121,7 @@ body{background:#000;color:var(--fg)}
 .top nav a:hover{color:#fff;border-color:rgba(205,242,255,.95)}
 .intro h1{text-transform:uppercase;letter-spacing:3px;color:var(--title);font-weight:400}
 
-.product,.bundle,.compare{position:relative;background:#000;border:0;border-radius:22px;
+.product,.bundle,.compare{position:relative;background:#000;border:1px solid transparent;border-radius:22px;
   box-shadow:0 14px 30px rgba(0,0,0,.55),0 0 18px rgba(80,190,255,.1),inset 0 1px 0 rgba(190,230,255,.07),inset 0 -12px 26px rgba(0,0,0,.5)}
 .compare{background:#05090f}
 .product::before,.product::after,.bundle::before,.bundle::after,.compare::before,.compare::after{content:"";position:absolute;pointer-events:none;
