@@ -1,10 +1,10 @@
 // Checkout links. An empty link shows "Coming soon".
 const CHECKOUT = {
   deck: 'https://buy.stripe.com/9B63cvaED7c3cbLchtgQE00',
-  kneeboard: '',
+  kneeboard: 'https://buy.stripe.com/6oUfZh9Az2VN0t35T5gQE01',
   cursors: 'https://buy.stripe.com/00w6oHh312VN1x72GTgQE02',
-  bundle: '',
-  all: '',
+  bundle: 'https://buy.stripe.com/4gM6oH3cbeEvejTchtgQE03',
+  all: 'https://buy.stripe.com/5kQ00j3cbeEva3D3KXgQE04',
 };
 
 document.querySelectorAll('[data-buy]').forEach(a => {
