@@ -52558,5 +52558,32 @@ html:not(.cg-hudonly) body .cgmp-pill .cgp-art{
  var iv=setInterval(function(){if(mount()||++tries>60)clearInterval(iv);},300);
 })();
 </script>
+<style id="cg-shop-footer-fix">
+/* 2026-11-14 Thomas: "i don't see the shop button" / "build number on bottom sits on top of other information".
+   1) SHOP = 8th button on the bottom bar, opens cmdglas.com/shop in a new tab.
+   2) The bezel wordmark (C M D G L A S) sat under the BUILD / clock strip; hide it while the strip is shown. */
+#sc-appbar .cg-shop-group>.scr-cat{text-decoration:none}
+#sc-appbar .cg-shop-group>.scr-cat::after{content:none !important}
+body.cg-footer-strip #sc-bezel .etch{display:none !important}
+</style>
+<script id="cg-shop-footer-js">
+(function(){
+  var SHOP='https://cmdglas.com/shop/';
+  function shop(){
+    var bar=document.getElementById('sc-appbar'); if(!bar) return;
+    if(bar.querySelector('.cg-shop-group')) return;
+    var g=document.createElement('div'); g.className='scr-group sc-acc-group cg-shop-group';
+    var a=document.createElement('a'); a.className='scr-cat'; a.href=SHOP; a.target='_blank'; a.rel='noopener';
+    a.title='CMDGLAS Shop - Command Deck, Kneeboard and cursor pack'; a.textContent='SHOP';
+    var ref=[].slice.call(bar.querySelectorAll('.scr-group>.scr-cat')).pop();
+    if(ref && ref.getAttribute('style')) a.setAttribute('style', ref.getAttribute('style'));
+    g.appendChild(a); bar.appendChild(g);
+  }
+  function strip(){ document.body.classList.toggle('cg-footer-strip', !!document.getElementById('cg-b743-corner')); }
+  function tick(){ try{ shop(); strip(); }catch(e){} }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tick); else tick();
+  setInterval(tick,2000);
+})();
+</script>
 </body>
 </html>
