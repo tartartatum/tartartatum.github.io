@@ -35358,7 +35358,7 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
       window.__cgAccountFirst800=true;
       if(typeof setActiveTabById==='function') setActiveTabById('home');
       enter('cg-acct738',document.getElementById('cg-acct-tab'));
-      var opening=document.getElementById('cover-screen');if(opening){opening.classList.add('hide');opening.style.display='none';}
+      /* start page stays up on open; account pane waits behind it (fix 2026-11-14) */
     }
     if(tries<6){ tries++; setTimeout(install,1500); }    
   }
