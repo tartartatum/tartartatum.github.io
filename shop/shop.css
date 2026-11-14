@@ -169,3 +169,16 @@ footer::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1p
 .req ul{margin:0;padding-left:1.2em;color:var(--muted)}
 .req li{margin:3px 0}
 @media (max-width:600px){.reqs{padding:16px}}
+
+/* Back to tablet (2026-11-14): first button in the top bar of every shop page; brighter edge so it reads as the way out */
+.top nav a.tablet-back{border-color:rgba(205,242,255,.95);color:#fff;box-shadow:0 4px 0 -1px #0a1624,0 0 8px rgba(120,210,255,.35),inset 0 3px 2px rgba(212,242,255,.42)}
+
+/* Kneeboard pictures (2026-11-14): two included keybind pages + Night page in a row, the Builder smaller underneath */
+.product .kb-shots{display:grid;gap:14px;margin:0}
+.kb-pages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+.kb-pages img{width:100%;height:auto}
+.kb-pages .kb-night{border-radius:8px;border:1px solid var(--line)}
+.kb-pages a{display:block}
+.kb-pages a:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.kb-shots .kb-builder{width:50%;justify-self:center;border-radius:11px;border:1px solid var(--line)}
+@media (max-width:600px){.kb-shots .kb-builder{width:100%}}
