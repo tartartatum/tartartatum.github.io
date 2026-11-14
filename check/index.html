@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CmdGlas - Tablet check</title>
+<meta name="description" content="Checks why the CmdGlas tablet does not load, save or update in this browser.">
+<link rel="icon" href="/favicon.ico">
+<style>
+@font-face{font-family:Oxanium;src:url(/social-tutorial/Oxanium.ttf)}
+:root{--ink:#c4e7ef;--dim:#7fa3ad;--plate:#101e2b;--line:#2a4a60;--accent:#5ce7eb;--pass:#1db954;--fail:#e5383b;--info:#9db3bc;--bg:#071115}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{margin:0;color:var(--ink);font:15px/1.45 Oxanium,"Segoe UI",system-ui,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:22px 16px 40px}
+h1{margin:0 0 4px;font-size:22px;letter-spacing:.14em;color:var(--accent);font-weight:600}
+p{margin:0 0 12px;color:var(--dim)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
+button,a.btn{min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:8px;background:#0b1a26;color:var(--ink);font:inherit;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
+button.primary{border-color:var(--accent);background:#0f3a46;font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+#state{color:var(--accent);flex-basis:100%}
+table{width:100%;border-collapse:collapse;margin:6px 0 18px}
+th{text-align:left;font-weight:400;font-size:12px;letter-spacing:.1em;color:var(--dim);border-bottom:1px solid var(--line);padding:6px 8px}
+td{vertical-align:top;padding:8px;border-bottom:1px solid #16293a;overflow-wrap:anywhere}
+td:first-child{width:60px;font-weight:600}
+.r-pass{color:var(--pass)}.r-fail{color:var(--fail)}.r-info{color:var(--info)}
+.note{font-size:13px}
+@media (max-width:700px){
+  thead{display:none}
+  table,tbody,tr,td{display:block;width:100%}
+  tr{border-bottom:1px solid var(--line);padding:6px 0}
+  td{border:0;padding:2px 4px}
+  td:first-child{width:auto}
+  td:nth-child(2){font-weight:600}
+  td:nth-child(4):not(:empty):before{content:"WHAT TO DO: ";color:var(--dim)}
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>TABLET CHECK</h1>
+  <p>Checks why the CmdGlas tablet does not load, save, sign in or update in this browser. It reads only; your saved tablet data is not changed.</p>
+  <div class="row">
+    <button id="run" class="primary" type="button">RUN CHECKS</button>
+    <button id="copy" type="button" disabled>COPY REPORT</button>
+    <a class="btn" href="/">BACK TO THE TABLET</a>
+    <span id="state" role="status" aria-live="polite"></span>
+  </div>
+  <table><thead><tr><th>RESULT</th><th>PART</th><th>WHAT WAS FOUND</th><th>WHAT TO DO</th></tr></thead><tbody id="list"></tbody></table>
+  <p class="note">Send the copied report with any message to CmdGlas support. It holds no password, no sign-in token and none of your saved tablet data.</p>
+</main>
+<script src="check.js"></script>
+</body>
+</html>
