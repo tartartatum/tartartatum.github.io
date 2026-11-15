@@ -5,6 +5,7 @@ const CHECKOUT = {
   cursors: 'https://buy.stripe.com/00w6oHh312VN1x72GTgQE02',
   bundle: 'https://buy.stripe.com/4gM6oH3cbeEvejTchtgQE03',
   all: 'https://buy.stripe.com/5kQ00j3cbeEva3D3KXgQE04',
+  petals: 'https://buy.stripe.com/3cIdR99Az7c3b7H6X9gQE05',   // Speech Petal $2.99, not in any bundle
 };
 
 document.querySelectorAll('[data-buy]').forEach(a => {
