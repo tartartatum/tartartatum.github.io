@@ -3219,7 +3219,7 @@ document.addEventListener('click',async function(e){
           <div class="cap-card">
             <div class="cap-h">It Remembers</div>
             <div class="cap-i"><b>Your notes, lists and picks persist</b><span class="cap-why">Notepad, gather list, buy list, blueprint selections and inventory are still there next session - and next patch.</span></div>
-            <div class="cap-i"><b>Everything is cross-page</b><span class="cap-why">Send blueprints from Blueprints and they appear in the Craft Calculator and the HUD's Gather list. One store, many views - nothing is typed twice.</span></div>
+            <div class="cap-i"><b>Everything is cross-page</b><span class="cap-why">Send blueprints from Blueprints and they appear in the Craft Calculator and the Halo's Gather list. One store, many views - nothing is typed twice.</span></div>
             <div class="cap-i"><b>PC and iPad builds</b><span class="cap-why">The same tablet, sized for each: the iPad keeps 44px tap targets and its own notch handling.</span></div>
             <div class="cap-i"><b>Cross-device sync</b><span class="cap-why">PC ONLY. Notes, gather and buy lists, craft picks, blueprints, reputation and inventory move between PC and iPad through the PC control server. Zoom and theme stay per-device on purpose.</span></div>
         </div>
@@ -12783,7 +12783,7 @@ window._buildOverlayBody = function(opts){
   'tab-harvest':'Harvestable & mineable atlas. Card decks with a live type-search up top; DECKS/TABLES toggle switches to the full source tables. Jump dropdowns skip straight to an item, section or location.',
   'tab-inventory':'Add gear with the CATEGORY / ITEM / QTY / QUALITY / LOCATION row, or type lines on the Notepad page (name x qty q quality @ location). Views: item list, by location, associations.',
   'tab-meta':'The best craftable pick per weapon/armor slot, with materials, mining locations and a confidence pill. Tap a row or [ MORE INFO ] for the full reasoning and source. 4.9 WATCH note at top flags incoming changes.',
-  'tab-missions':'Every live contract, cleaned of placeholder rows. Filter and sort by type, giver, system and LEGAL/ILLEGAL, or search - the search also looks at the CARGO and HARVESTABLES a contract asks for, so typing a material name finds the job that wants it. Cards tagged UNCONFIRMED are ones CIG has not flagged live yet. Press [ TRACK ] on any card and it appears in the CONTRACTS tab of the HUD.',
+  'tab-missions':'Every live contract, cleaned of placeholder rows. Filter and sort by type, giver, system and LEGAL/ILLEGAL, or search - the search also looks at the CARGO and HARVESTABLES a contract asks for, so typing a material name finds the job that wants it. Cards tagged UNCONFIRMED are ones CIG has not flagged live yet. Press [ TRACK ] on any card and it appears in the CONTRACTS tab of the Halo.',
   'tab-mining':'Top: rig builder - pick ship, pick a laser head per slot (only compatible sizes shown), SAVE LOADOUT. Below: pin reference and laser/module data.',
   'tab-salvage':'Salvage rig builder. Heads (Baler / Salvation, S2) go on the arms; Abrade / Cinch / Trawler / ReadyGrip are S1 MODULES that slot INTO each head. Pick ship → heads → modules → SAVE LOADOUT.',
   'tab-notepad':'Free-form notes. Lines under ## INVENTORY parse automatically into the Inventory tracker.',
@@ -12826,7 +12826,7 @@ window._buildOverlayBody = function(opts){
     {t:"Press [ CLOSE ] to apply your hangar.", s:"#hangar-close"},
     {t:"Tap a hull in the ship list to open it.", s:"#ship-list"},
     {t:"Its component loadout shows on the right; your edits persist.", s:"#loadout-detail"},
-    {t:"Every slot has a \ud83d\uded2 cart - tap to send that part to the BUY list, tap again to recall it. Green glow = already on the list. Then PLAN ROUTE (HUD, BUY tab) builds the shopping run.", s:"#loadout-detail"}
+    {t:"Every slot has a \ud83d\uded2 cart - tap to send that part to the BUY list, tap again to recall it. Green glow = already on the list. Then PLAN ROUTE (HALO, BUY tab) builds the shopping run.", s:"#loadout-detail"}
   ],
   'tab-notepad':[
     {t:"Type free-form notes in the text area.", s:"#np-textarea"},
@@ -14720,7 +14720,7 @@ h1,h2,h3,h4,b,strong,#content details>summary,.ld-section-title,.hm-sec,.hm-sub,
       +"<div class='be-mn-send'><button type='button' id='be-mn-ops' class='panel-btn' style='background:var(--green2,#39d353);color:#04120a;border:1px solid var(--green2,#39d353);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;box-shadow:0 0 5px rgba(57,211,83,.35)' title='Adds the selected materials to your GATHER list, grouped by verified mining location'>&#8594; PUSH TO GATHER LIST</button>"
       +"<button type='button' id='be-mn-recall' class='panel-btn' style='border:1px solid var(--red2,#ff6b6b);color:var(--red2,#ff6b6b);font-weight:700;letter-spacing:.4px;font-size:9.5px;padding:3px 10px;margin-left:6px' title='build 541: removes the selected materials from the GATHER list (only the Basic Mining tag - a material a blueprint also needs stays)'>&#8592; RECALL</button>"
       +"<span id='be-mn-sendmsg' class='be-mn-sendmsg'></span></div>"
-      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO GATHER does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>gather list</b> (HUD, GATHER tab); <b>&#8592; RECALL</b> takes the same picks back off it. No quantity is invented; it just lists what you are after, grouped by verified location. Once your list is set, <b>PLAN MINING RUN</b> on the GATHER tab sorts everything into a location-by-location run with verified yield rates - tap a material there to PIN a spot. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
+      +"<div style='margin:2px 0 4px'><span class='info-wrap'><span class='info-i' onclick='scInfoToggle(this,event)' title='What PUSH TO GATHER does'>i</span><div class='info-body' style='white-space:normal'>Picking a material here does <b>not</b> move it anywhere on its own, it only drives WHERE TO FIND IT below. Use the button to add your picks to the <b>gather list</b> (HALO, GATHER tab); <b>&#8592; RECALL</b> takes the same picks back off it. No quantity is invented; it just lists what you are after, grouped by verified location. Once your list is set, <b>PLAN MINING RUN</b> on the GATHER tab sorts everything into a location-by-location run with verified yield rates - tap a material there to PIN a spot. There is no &rarr; Craft Calculator button on purpose: the CC takes <b>blueprints</b> and works out the materials for you, raw ore is what mining produces, not something you craft.</div></span> <span style='font-size:10px;color:var(--text-dim);letter-spacing:.5px'>what this does</span></div></div>"
       +"<div id='be-mn-out'></div>";
     row.parentNode.insertBefore(bp,row.nextSibling);
      
@@ -16399,8 +16399,8 @@ ensure(); setInterval(ensure, 1500);
 <script id="sc-anon-4761682"> 
 (function(){
   var HOWTO={
-    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE row to select it. Pick as many as you like, then hit PUSH TO GATHER LIST to send their materials to your Gather list. RECALL removes those materials from the Gather list. CLEAR SELECTION clears your current picks. When the list is ready, PLAN MINING RUN (HUD, GATHER tab) sorts every material into a location-by-location run with verified yield rates.'},
-    harvest:{t:'HARVESTABLES',b:'One compact table per category (the card decks were retired in build 537). Type in the search box to filter live by name, method, location, sell price or confidence. Each entry gives the top locations, how to harvest it, and a VERIFIED / COMMUNITY / UNCONFIRMED tag on the data. Push materials to the GATHER list, then PLAN MINING RUN (HUD, GATHER tab) sorts the whole list into a location-by-location run - tap a material there to PIN a spot.'}
+    bp:{t:'BLUEPRINTS',b:'Tap any CRAFTABLE row to select it. Pick as many as you like, then hit PUSH TO GATHER LIST to send their materials to your Gather list. RECALL removes those materials from the Gather list. CLEAR SELECTION clears your current picks. When the list is ready, PLAN MINING RUN (HALO, GATHER tab) sorts every material into a location-by-location run with verified yield rates.'},
+    harvest:{t:'HARVESTABLES',b:'One compact table per category (the card decks were retired in build 537). Type in the search box to filter live by name, method, location, sell price or confidence. Each entry gives the top locations, how to harvest it, and a VERIFIED / COMMUNITY / UNCONFIRMED tag on the data. Push materials to the GATHER list, then PLAN MINING RUN (HALO, GATHER tab) sorts the whole list into a location-by-location run - tap a material there to PIN a spot.'}
   };
   var bub=null;
   function make(){bub=document.createElement("div");bub.id="sc-howto-bubble";
@@ -20093,7 +20093,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<div class="um-proc">6-2. Open a tool</div>',
 '<ol class="um-steps"><li>Click the tile (mouse), or tap the preview card (touch).</li>',
 '<li>The tool opens as a reading sheet on top of Home (see Section 9).</li></ol>',
-'<div class="um-note"><b>NOTE.</b> The preview card names the tool and shows whether it pushes items to the HUD\'s Gather / Buy lists.</div></div>',
+'<div class="um-note"><b>NOTE.</b> The preview card names the tool and shows whether it pushes items to the Halo\'s Gather / Buy lists.</div></div>',
 '<div class="um-sec"><h2>Section 7 - Social Tools</h2><div class="um-purpose">Org chat, channel monitor, parties and org tools.</div>',
 '<div class="um-proc">7-1. Read and transmit</div>',
 '<ol class="um-steps"><li>Locate the SOCIAL TOOLS window, bottom-right of Home.</li>',
@@ -20173,7 +20173,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
 '<li>A confirmation window opens.</li>',
 '<li>Tap <b>CLEAR</b> in that window <b>twice</b> - the first tap arms it, the second carries it out.</li></ol>',
 '<div class="um-caution"><b>CAUTION.</b> Clearing cannot be undone. The gather list also wipes your Craft Calculator and mining picks, because all three feed the same list. CANCEL, Escape, or a tap outside backs out safely.</div></div>',
-'<div class="um-sec"><h2>Section 15 - Put the HUD Over Your Game (PC)</h2><div class="um-purpose">The HUD can leave the page and float on top of Star Citizen while you fly.</div>',
+'<div class="um-sec"><h2>Section 15 - Put the Halo Over Your Game (PC)</h2><div class="um-purpose">The Halo can leave the page and float on top of Star Citizen while you fly.</div>',
 '<div class="um-proc">15-1. Pop it out</div>',
 '<ol class="um-steps"><li>Open the tablet on your PC and click it once so it is the active window.</li>',
 '<li>Press <b>Ctrl + Alt + 1</b>. The pill becomes a small floating window - drag it where you want it.</li>',
@@ -20995,7 +20995,7 @@ body.sc-home-mode #cg-moreinfo-btn:hover, body.sc-home-mode #cg-moreinfo-btn.ope
   var GOALS=[
    {id:'first', gi:'🧭', label:'I am brand new', blurb:'Never played. Start here — from waking up to your first payday.', steps:[
      {t:'Get your bearings on the tablet.', w:'Tablet: Home screen. Read the zones, then open USER MANUAL (bottom of Home).',
-      h:'Home is your base. Top-left is a SELECTABLE window that lands on CLOCK (time, patch, server lamps), top-centre is the HUD (Gather, Buy, Notes, Org/Party, Threat, Stream), left is SEARCH, the centre tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
+      h:'Home is your base. Top-left is a SELECTABLE window that lands on CLOCK (time, patch, server lamps), top-centre is the Halo (Gather, Buy, Notes, Org/Party, Threat, Stream), left is SEARCH, the centre tiles are your TOOLS, and the row of five buttons is the CONTROL BAR. The full tour is the USER MANUAL button at the very bottom of Home.'},
      {go:'spacemanuals', t:'Read the New Player Orientation.', w:'Tablet: CONTROL BAR > LEARN > SC MANUALS > SR-4 NEW PLAYER ORIENTATION (or SEARCH > BY TOPIC).',
       h:'SR-4 walks you from the bed you wake up in to your first payday: where you are, how to leave the station, and what to do first. Start in <b>Stanton</b> (monitored, service-rich), not Pyro (lawless).'},
      {go:'inventory', t:'Check your suit and grab MedPens.', w:'In game: your habitation room / personal inventory. Tablet: INVENTORY tool.',
@@ -21424,7 +21424,7 @@ body.sc-home-mode #home-scroll > .hm-wrap{ margin-top:auto !important; margin-bo
   function renderNotes(){
      
      
-    return '<div class="ops4-head">NOTES &middot; SAVED AS YOU TYPE &middot; UPDATES YOUR HUD NOTES</div>'
+    return '<div class="ops4-head">NOTES &middot; SAVED AS YOU TYPE &middot; UPDATES YOUR HALO NOTES</div>'
       +'<div class="ops4-notes-wrap">'
       +'<textarea id="ops4-note-edit" '
       +'style="width:100%;min-height:130px;box-sizing:border-box;background:#0a1622;color:#cfe9f4;border:1px solid rgba(140,215,255,.35);border-radius:6px;font:600 10px \'Rajdhani\',\'Segoe UI\',sans-serif;letter-spacing:.5px;padding:7px;resize:vertical"></textarea>'
@@ -22800,7 +22800,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   if(window.__cgPopout430) return; window.__cgPopout430=true;
   var PILLS={ 
     leftpill:{sel:'#sc-home-widgets > .wg:not(.ops-pill):not(.login-pill)', label:'STATUS'},
-    ops:{sel:'#sc-home-widgets .ops-pill', label:'HUD'},
+    ops:{sel:'#sc-home-widgets .ops-pill', label:'HALO'},
     account:{sel:'#sc-home-widgets .login-pill', label:'ACCOUNT'},
     search:{sel:'#sc-tools-row #sc-navsearch', label:'SEARCH'},
     comms:{sel:'#sc-chatdock', label:'SOCIAL TOOLS'}
@@ -22960,8 +22960,8 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
         if(scope && scope.querySelectorAll){
           [].forEach.call(scope.querySelectorAll('.cg-mirror.u'), function(m){
             if(m.textContent!==_lbl) m.textContent=_lbl;
-            m.title = floating ? 'Put the HUD back on the tablet'
-                               : 'Pop the HUD out into its own window';
+            m.title = floating ? 'Put the Halo back on the tablet'
+                               : 'Pop the Halo out into its own window';
           });
         }
       }catch(_ml){}
@@ -22978,7 +22978,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
       var b=document.createElement('button'); b.type='button'; b.className='cg-undock-btn'; b.setAttribute('data-pop',key); b.textContent='UNDOCK';
        
       b.title=(key==='ops'
-        ? 'Detach the HUD into a floating always-on-top window. Ctrl+Alt+1. Set the game to BORDERLESS windowed for it to show over the game - exclusive fullscreen hides all other windows.'
+        ? 'Detach the Halo into a floating always-on-top window. Ctrl+Alt+1. Set the game to BORDERLESS windowed for it to show over the game - exclusive fullscreen hides all other windows.'
         : 'Ctrl+Alt+'+({ops:1,account:2,leftpill:3,search:4,comms:5}[key]||''));
       b.addEventListener('click',function(e){ e.stopPropagation(); undock(key); });
        
@@ -24369,7 +24369,7 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
   var NOTES_VER='2026-08-04a';        
    
    
-  var NOTES='TRANSPARENT HUD IS LIVE NOW &mdash; USE IT AND SEND FEEDBACK. &middot; Download it at cmdglas.com/CmdGlas-Overlay.zip &middot; Unzip it, run 0 - FIRST TIME SETUP.bat once, then 1 - RUN OVERLAY.bat &mdash; full installation and hotkeys are in the README inside the zip. &middot; Set Star Citizen to BORDERLESS WINDOWED or no overlay can show over it.';
+  var NOTES='TRANSPARENT HALO IS LIVE NOW &mdash; USE IT AND SEND FEEDBACK. &middot; Download it at cmdglas.com/CmdGlas-Overlay.zip &middot; Unzip it, run 0 - FIRST TIME SETUP.bat once, then 1 - RUN OVERLAY.bat &mdash; full installation and hotkeys are in the README inside the zip. &middot; Set Star Citizen to BORDERLESS WINDOWED or no overlay can show over it.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -26690,7 +26690,7 @@ window.bpImgTag=bpImgTag;
     var c=e.target.closest&&e.target.closest('#cg-contracts .ct-clear');
     if(c){ e.stopPropagation();
       if(window.cgConfirm2) window.cgConfirm2({title:'ARE YOU SURE?',
-        message:'This drops every tracked contract from the HUD. The contracts themselves are not affected.',
+        message:'This drops every tracked contract from the Halo. The contracts themselves are not affected.',
         label:'CLEAR'},function(){ save([]); paint(); });
       else { save([]); paint(); }
       return; }
@@ -26838,7 +26838,7 @@ window.bpImgTag=bpImgTag;
   var PAGES={'tab-myops':'GATHER & BUY','tab-missions':'CONTRACTS','tab-orgpage':'ORG / PARTY'};
   function bar(label){
     var d=document.createElement('div'); d.className='cg-rtb-bar';
-    d.innerHTML='<span class="cg-rtb-l">'+label+'</span><button type="button">&#8592; RETURN TO HUD</button>';
+    d.innerHTML='<span class="cg-rtb-l">'+label+'</span><button type="button">&#8592; RETURN TO HALO</button>';
     d.querySelector('button').addEventListener('click',function(e){ e.stopPropagation(); window.cgReturnToHud(); });
     return d;
   }
@@ -27905,8 +27905,8 @@ body.sc-home-mode #tab-home,
       try{ window.dispatchEvent(new StorageEvent('storage',{key:'sc_ops_gather'})); }catch(e){}
     }catch(e){}
     try{ (window.cgPillView||function(x){try{localStorage.setItem('sc_ops_pill_view',x)}catch(e){}})('gather','push-to-hud'); }catch(e){}
-    toast(added ? ('PUSHED TO HUD · GATHER HAUL BUY  (' + added + ')')
-                : 'ALREADY ON THE HUD · GATHER HAUL BUY');
+    toast(added ? ('PUSHED TO HALO · GATHER HAUL BUY  (' + added + ')')
+                : 'ALREADY ON THE HALO · GATHER HAUL BUY');
      
     setTimeout(function(){
       try{ if(typeof window.cgSheetClose==='function'){ window.cgSheetClose(); return; } }catch(e){}
@@ -27927,8 +27927,8 @@ body.sc-home-mode #tab-home,
     if(page.querySelector('.cg-ph-bar')) return true;
     var d=document.createElement('div'); d.className='cg-ph-bar';
     d.innerHTML='<span class="cg-ph-l">'+label+'</span>'
-      +'<button type="button" class="cg-ph-btn">PUSH TO HUD →</button>'
-      +'<span class="cg-ph-tip">sends your picked rows to HUD &middot; GATHER HAUL BUY</span>';
+      +'<button type="button" class="cg-ph-btn">PUSH TO HALO →</button>'
+      +'<span class="cg-ph-tip">sends your picked rows to Halo &middot; GATHER HAUL BUY</span>';
     d.querySelector('.cg-ph-btn').addEventListener('click',function(e){
       e.preventDefault(); e.stopPropagation(); push(page,label);
     });
@@ -28610,7 +28610,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     var bar=document.createElement('div');
     bar.className='cg-rtb-bar';
     bar.innerHTML='<span class="cg-rtb-l">'+label+'</span>'
-      +'<button type="button">RETURN TO HUD</button>';
+      +'<button type="button">RETURN TO HALO</button>';
     bar.querySelector('button').addEventListener('click', function(ev){
       ev.stopPropagation();
       try{ if(typeof window.cgReturnToHud==='function') window.cgReturnToHud(); }catch(e){}
@@ -28756,10 +28756,10 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
 
     try{ (window.cgPillView||function(x){try{localStorage.setItem('sc_ops_pill_view',x)}catch(e){}})('gather','push-to-hud'); }catch(e){}
     toast(added || pinned
-      ? ('PUSHED TO HUD · ' + added + ' material' + (added===1?'':'s') +
+      ? ('PUSHED TO HALO · ' + added + ' material' + (added===1?'':'s') +
          (pinned? (' · ' + pinned + ' blueprint' + (pinned===1?'':'s')) : '') +
          ' · from ' + src)
-      : 'ALREADY ON THE HUD · GATHER HAUL BUY');
+      : 'ALREADY ON THE HALO · GATHER HAUL BUY');
 
      
     setTimeout(function(){
@@ -28774,7 +28774,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     if(own(page,'.cg-ph-bar')) return;
     var d=document.createElement('div'); d.className='cg-ph-bar';
     d.innerHTML='<span class="cg-ph-l">'+LABEL+'</span>'
-      +'<button type="button" class="cg-ph-btn">PUSH TO HUD →</button>'
+      +'<button type="button" class="cg-ph-btn">PUSH TO HALO →</button>'
       +'<span class="cg-ph-tip">sends the computed MATERIALS list, and pins your selected '
       +'blueprints as chips</span>';
     d.querySelector('.cg-ph-btn').addEventListener('click',function(e){
@@ -28788,7 +28788,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
     if(own(page,'.cg-rtb-bar')) return;
     var bar=document.createElement('div'); bar.className='cg-rtb-bar';
     bar.innerHTML='<span class="cg-rtb-l">CRAFT CALCULATOR</span>'
-      +'<button type="button">RETURN TO HUD</button>';
+      +'<button type="button">RETURN TO HALO</button>';
     bar.querySelector('button').addEventListener('click',function(ev){
       ev.stopPropagation();
       try{ if(typeof window.cgReturnToHud==='function') window.cgReturnToHud(); }catch(e){}
@@ -28818,7 +28818,7 @@ tr.cg-pk-on{outline:2px solid rgba(255,176,0,.75);outline-offset:-2px;background
  
 (function(){
   if(window.__cgHudTitle656) return; window.__cgHudTitle656=true;
-  var TEXT='HUD';            
+  var TEXT='HALO';            
 
   function put(){
     var body=document.querySelector('#sc-home-widgets .ops-pill.b385 .pill-body');
@@ -29638,7 +29638,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
   var SPECS={
     gather:{ title:'CLEAR GATHER', list:GK,
       pick:function(){ var l=get(GK); return {hit:l, keep:[], stamped:l, inferred:[]}; },
-      why:'Every row in the HUD gather list.' },
+      why:'Every row in the Halo gather list.' },
     harvest:{ title:'CLEAR HARVEST', list:GK,
       pick:function(){ var s=harvestSplit();
         return {hit:s.stamped.concat(s.inferred), keep:s.keep, stamped:s.stamped, inferred:s.inferred}; },
@@ -29659,10 +29659,10 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
       why:'Only the materials the MINING column is showing. Harvested gems and bought goods stay.' },
     buy:{ title:'CLEAR BUY', list:BK,
       pick:function(){ var l=get(BK); return {hit:l, keep:[], stamped:l, inferred:[]}; },
-      why:'Every row in the HUD buy list.' },
+      why:'Every row in the Halo buy list.' },
     all:{ title:'CLEAR ALL', list:GK, both:true,
       pick:function(){ var l=get(GK).concat(get(BK)); return {hit:l, keep:[], stamped:l, inferred:[]}; },
-      why:'Every row in BOTH HUD lists - gather and buy.' }
+      why:'Every row in BOTH HALO lists - gather and buy.' }
   };
 
   function close(){ var m=document.getElementById('cg-clr-modal'); if(m) m.remove(); }
@@ -29706,7 +29706,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
       if(v && v!=='{}' && v!=='[]' && v!=='null') _toolN++; }); }catch(_tk){}
     if(!r.hit.length){
       rowsHtml= _toolN
-        ? '<div style="color:#e0a000">The HUD list is empty. These rows come from your Craft Calculator picks - use <b>Clear tool picks</b> below to remove them.</div>'
+        ? '<div style="color:#e0a000">The Halo list is empty. These rows come from your Craft Calculator picks - use <b>Clear tool picks</b> below to remove them.</div>'
         : '<div style="color:#8fa6ba">Nothing to clear - this list is already empty.</div>';
     } else {
       rowsHtml=r.stamped.map(function(x){ return '<div>'+esc(x.material||'?')+'</div>'; }).join('')
@@ -29727,15 +29727,15 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
        screen. The tool-clear is now offered whenever a tool store holds
        something, which is the case that was unreachable. */
     if(r.hit.length){
-      body+='<button type="button" class="opt" data-do="soft"><b>Clear HUD only</b>'
-           +'<i>Empties these from the HUD. Leaves every page selection exactly as it is.</i></button>'
-           +'<button type="button" class="opt hard" data-do="hard"><b>Clear HUD + tool</b>'
+      body+='<button type="button" class="opt" data-do="soft"><b>Clear Halo only</b>'
+           +'<i>Empties these from the Halo. Leaves every page selection exactly as it is.</i></button>'
+           +'<button type="button" class="opt hard" data-do="hard"><b>Clear Halo + tool</b>'
            +'<i>Also clears the Craft Calculator picks and the pinned blueprint names, so the list '
            +'does not refill on the next push. Row ticks on a page are not stored anywhere and clear '
            +'when you reload that page either way.</i></button>';
     } else if(_toolN){
       body+='<button type="button" class="opt hard" data-do="hard"><b>Clear tool picks</b>'
-           +'<i>The HUD list is already empty. This clears the Craft Calculator picks and the '
+           +'<i>The Halo list is already empty. This clears the Craft Calculator picks and the '
            +'pinned blueprint names, which is what is filling this column.</i></button>';
     }
     body+='<button type="button" class="cancel" data-do="cancel">Cancel</button>'
@@ -29796,7 +29796,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
     var w=document.createElement('span');
     w.className='cg-clr-wrap';
     w.innerHTML='<button type="button" class="cg-clr-btn cg-clr-go" data-refresh="1" '
-      +'title="Re-press every page\'s own PUSH TO HUD bar and pull what is selected there into the HUD">REFRESH</button>'
+      +'title="Re-press every page\'s own PUSH TO HALO bar and pull what is selected there into the Halo">REFRESH</button>'
       + ['gather','harvest','mining','buy','all'].map(function(k){
           return '<button type="button" class="cg-clr-btn" data-clr="'+k+'" title="Two steps - this opens a panel, it does not clear anything yet">CLEAR '+k.toUpperCase()+'</button>';
         }).join('');
@@ -30050,7 +30050,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
         +' page yet.<br><br>Open it, tap a row, and it appears here.</div>';
     html+='</div><div class="cg-lsel-foot">'
       +'<button type="button" data-lsel="open">Open full page</button>'
-      + (list.length ? '<button type="button" data-lsel="push">Push to HUD</button>'
+      + (list.length ? '<button type="button" data-lsel="push">Push to Halo</button>'
                       +'<button type="button" data-lsel="clear">Clear</button>' : '')
       +'</div></div>';
     if(host.__lselHtml===html) return true;       
@@ -30327,7 +30327,7 @@ html.cg-tabletdev #sc-home-widgets .ops-pill > #cg-hudsrc.on{ transform:translat
   if(window.__cgScDict675) return; window.__cgScDict675=true;
 
   var CATS=[["T","HOW TO READ THIS TABLET"],["M","MONEY, TRADE &amp; THE STORE"],["F","FLIGHT &amp; SHIP SYSTEMS"],["C","COMBAT"],["K","CAREERS &amp; MATERIALS"],["P","PLACES, STATIONS &amp; LOCATION CODES"],["O","ORGS, COMPANIES &amp; MANUFACTURERS"],["B","BUILDS, SERVERS &amp; TESTING"],["H","HARDWARE &amp; CONTROLS"],["S","SPECIES &amp; FACTIONS"],["G","COMMUNITY SLANG"]];
-  var D=[["eff %","effective spawn share","This tablet's own number. grp % multiplied by that item's share inside its rarity group. Plain meaning: roughly how many rocks out of a hundred at that location are this material.","T","T"],["grp %","rarity-group spawn chance","This tablet's own number. The chance that the whole rarity group (common, uncommon, rare, epic, legendary) spawns at that body at all.","T","T"],["hi_q / lo_q","high quality / low quality","Price per unit in the tablet's harvest data. hi_q is the best refined sale price seen, lo_q the worst.","T","T"],["HUD","heads-up display","In this tablet: the HUD on Home that carries your gather, harvest and buy list. In game: the flight information overlaid on your canopy.","T","V"],["GATHER LIST","-","Everything the tablet has told you to collect, from blueprints, mining picks and the Craft Calculator combined. All three feed one list.","T","T"],["TOOL","-","One of the centre tiles on Home: Mining, Hauling, Trading, Blueprints, Harvestables, Craft Calculator and the rest.","T","T"],["DECKS / TABLES","-","The two ways the Harvestables page can display data. Decks are cards, Tables are the reference grid.","T","T"],["MORE LOCATIONS","-","Button on a harvest item. The HUD row already prints the best location; this shows every other one.","T","T"],["SOURCE","-","Button on the HUD. Opens where the number in front of you came from.","T","T"],["UNDOCK","-","Button on the HUD. Pops the HUD out into its own floating window on PC.","T","T"],["STALE DATA bar","-","The orange strip that appears when the tablet's location dataset is older than the live game patch. It is a warning, not an error.","T","T"],["CLEAR GATHER / HARVEST / BUY","-","Empties one list. Each asks first whether to clear only the HUD, or the HUD and the underlying page selections too.","T","T"],["CLEAR ALL","-","Empties gather, harvest and buy in one action, after the same two-step confirmation.","T","T"],["REFRESH","-","Re-reads the underlying pages and rebuilds the HUD from what is currently selected.","T","T"],["TM","Technical Manual (CmdGlas numbering)","Operator's manual. Every technical procedure a ship or vehicle performs. Example: TM-CMDGLAS-10 is the tablet's own operator card.","T","T"],["SM","Supplemental Manual (CmdGlas numbering)","Tactics and technique, one manual per game loop. SM-1 Flight Operations, SM-9 Salvage, SM-10 Mining, and so on.","T","T"],["SR","Space Regulations (CmdGlas numbering)","Conduct, etiquette and safety. SR-4 is the New Player Orientation.","T","T"],["OM (CmdGlas)","Operations Manual","In THIS tablet, OM means a one-page field guide. CAUTION: in the game, OM means Orbital Marker - a completely different thing. See the FLIGHT section.","T","T"],["band700","-","A field in the tablet's harvest data holding the location list with its spawn percentages.","T","T"],["VERIFIED / PARTIAL / PENDING","-","Badges on tablet data. VERIFIED means checked against a source. PARTIAL means some of it was. PENDING means it is still being written.","T","T"],["CmdGlas","-","This tablet and its server. An unofficial Star Citizen companion, not made by Cloud Imperium Games.","T","T"],["aUEC","alpha United Earth Credit","The spendable in-game currency during Alpha. Wiped on some patches. Not real money.","M","V"],["UEC","United Earth Credit","The currency of the setting. Also the name of the small store currency used for rentals and some items.","M","V"],["SCU","Standard Cargo Unit","The cargo box measurement. Ship capacity, hauling contracts and commodity prices are all quoted in SCU.","M","V"],["REC","Rental Equipment Credits","Earned in Arena Commander and spent renting ships and components for test flights. Cannot buy real ships.","M","V"],["CCU","Cross Chassis Upgrade","A store upgrade that converts one pledged ship into a more expensive one for the price difference.","M","V"],["LTI","Lifetime Insurance","A pledge perk. The ship's hull is insured for the life of the account. Cargo is never insured.","M","V"],["SHI","Standard Hull Insurance","Ordinary time-limited hull insurance, as opposed to LTI.","M","V"],["TDD","Trade &amp; Development Division","The commodity trading floor found in the big landing zones. Where you sell cargo at the best posted prices.","M","V"],["UEX","-","A community-run trade and price database many tools pull from, including this tablet. Not an official CIG source.","M","U"],["IAE","Intergalactic Aerospace Expo","The yearly in-fiction ship show. Nearly every ship goes on free flight and on sale.","M","V"],["ILW","Invictus Launch Week","The yearly military expo event. Free flight of military ships.","M","U"],["FW","Fleet Week","Community event week, often paired with military ship showcases.","M","V"],["melt","-","Community slang for reclaiming a pledge back to store credit. NOT an in-game action, and it is not reversible on demand.","M","C"],["buyback","-","The store list of pledges you have melted, which can sometimes be re-bought.","M","C"],["warbond","-","A store variant of a pledge bought with real money only, usually cheaper, sometimes with extra insurance.","M","C"],["SCM","Space Combat Maneuvering","The slower flight mode. Weapons, shields and manoeuvring work properly. This is combat mode.","F","V"],["NAV","navigation mode","The faster travel mode. Higher speed, worse handling, and it is the mode quantum travel spools from.","F","U"],["QT","Quantum Travel","Fast travel between markers inside a system. Needs a spooled drive, quantum fuel and a clear line to the target.","F","V"],["QF","Quantum Fuel","The separate fuel that quantum travel burns. Running out strands you at normal speed.","F","V"],["QED","Quantum Enforcement Device","A device that blocks quantum travel in an area and snaps ships out of it. Used by pirates and by law enforcement.","F","V"],["OM","Orbital Marker","Navigation points in orbit around a body, OM-1 through OM-6. You quantum to an OM, then fly down.","F","V"],["IFCS","Intelligent Flight Control System","The flight computer between your stick and the thrusters. It is what limits your speed and holds your attitude.","F","V"],["ESP","Enhanced Stick Precision","An aim assist that softens your stick input when the reticle is near a target. Can be turned off.","F","V"],["ITTS","Improved Target Tracking System","The system that draws the lead pip showing where to shoot ahead of a moving target.","F","V"],["VTOL","Vertical Take-Off and Landing","Thrusters that rotate so the ship can lift straight up. Not every ship has it.","F","V"],["MFD","multi-function display","The small in-cockpit screens you cycle for power, shields, cargo and radar. Confirm layout against your own cockpit - it varies by ship.","F","U"],["VDU","Video Display Unit","CIG's own name for those cockpit screens.","F","V"],["TVI","Total Velocity Indicator","The marker showing the direction your ship is actually travelling, which is not always where the nose points.","F","V"],["EVA","Extravehicular Activity","Being outside a ship in space in your suit. Thruster pack movement, no gravity.","F","V"],["EMU","Extravehicular Mobility Unit","The suit itself - the thing keeping you alive during EVA.","F","V"],["INS","Inertial Navigation System","Onboard navigation that tracks position by motion rather than by external signal.","F","V"],["AU","Astronomical Unit","Distance measure. One AU is roughly the Earth-to-Sun distance. Used for system-scale travel.","F","V"],["GM","Gigameter / Geodesic Marker","Distance unit (one billion metres); also used for a navigation marker. Read it from context.","F","V"],["MM","Megameter","One million metres. The unit most in-system quantum distances are shown in.","F","V"],["Flight Ready","-","Powering the ship up. Bound to R by default. One press spools engines, a second press powers down.","F","U"],["ATC","Air Traffic Control","The station or port service that grants you a landing pad or hangar. You request, they assign.","F","V"],["LZ","Landing Zone","A major planetside city you can land at and walk around in.","F","V"],["ASOP","Automated Ship Organization Program","The terminal you use to retrieve or store a ship at a station or port.","F","V"],["DPS","Damage Per Second","How fast a weapon removes health. The headline number for comparing guns.","C","V"],["ROF","Rate of Fire","Shots per minute.","C","V"],["AP","Armor-Piercing","Ammunition or damage type that ignores part of the target's armour.","C","V"],["HE","High Explosive","Ammunition or damage type that trades penetration for blast damage.","C","V"],["EMP","electromagnetic pulse","A burst that disables ship systems in a radius rather than damaging hull.","C","V"],["EM","electromagnetic","One of the signatures enemies track you by. Running hot power raises it and makes you easier to find.","C","V"],["IR","infrared","Your heat signature. The other main way you get detected.","C","V"],["CIWS","Close-In Weapon System","Short-range defensive turret designed to shoot down incoming missiles and small craft.","C","V"],["ADS","Aim Down Sight","Bringing the weapon sight up to your eye on foot.","C","V"],["TTK","time to kill","How long it takes to destroy a target. Lower is deadlier. Community shorthand, not an in-game readout.","C","C"],["LOS","Line-of-Sight","Whether you can actually see the target, with nothing solid in between.","C","V"],["CS","CrimeStat","Your criminal rating. Raise it and security forces and turrets engage you on sight.","C","V"],["PvP","Player vs Player","Fighting other real players.","C","V"],["PvE","Player vs Environment","Fighting the game's own NPCs.","C","V"],["PvA","Player vs All","Everything is hostile - other players and NPCs.","C","V"],["NPC","non-player character","Anyone in the world run by the game rather than by a person.","C","V"],["VLRT","Very Low-Risk Target","The easiest bounty tier.","C","V"],["LRT","Low-Risk Target","Bounty tier. The usual starting point.","C","V"],["MRT","Medium-Risk Target","Bounty tier above LRT.","C","V"],["HRT","High-Risk Target","Bounty tier. Expect a real fight and escorts.","C","V"],["VHRT","Very High-Risk Target","Bounty tier above HRT.","C","V"],["ERT","Extreme-Risk Target","The hardest bounty tier. Usually a group job.","C","V"],["XT","XenoThreat","A recurring hostile faction and the event built around it.","C","V"],["RMC","Recycled Material Composite","What hull scraping produces. You peel the outer surface off a wreck with the salvage beam and it fills your canisters.","K","V"],["CM","Construction Materials","What structural salvage produces. You fracture the hull into chunks and disintegrate them. CAUTION: CM also gets used for countermeasures in combat talk - read it from context.","K","V"],["hull scraping","-","Salvage mode that removes the outer surface of a wreck. Produces RMC.","K","V"],["structural salvage","-","Salvage mode that breaks the hull itself apart. Fracture, then Disintegrate. Produces Construction Materials.","K","V"],["ROC","Remote Ore Collector","The single-seat Greycat ground mining vehicle. Used for gem deposits you drive to.","K","V"],["ROC-DS","Remote Ore Collector - Dual Seat","The two-seat version of the ROC.","K","V"],["MOLE","Multi-Operator Laser Extractor","The ARGO multi-turret mining ship. Three mining heads, crewed.","K","V"],["SRV","Standard Recovery Vehicle","The Argo tractor-beam ship, used for towing and pulling.","K","V"],["ATLS","-","The Argo cargo exosuit - a powered loader you wear to move SCU boxes by hand. Expansion of the name not confirmed.","K","U"],["MPUV","Multi-Purpose Utility Vehicle","The small Argo utility craft, in cargo and personnel versions.","K","V"],["PTV","Personal Transport Vehicle","The little open buggy. Fast, no protection.","K","V"],["STV","Sport Terrain Vehicle","The Greycat open sport buggy.","K","V"],["scan / fracture / extract","-","The three steps of ship mining. Find the rock, crack it with a heat window, then vacuum the ore.","K","U"],["FPS mining","first-person mining","Hand mining with a multitool on foot. Small deposits, no ship needed.","K","T"],["QED / interdiction","-","Being pulled out of quantum by a QED. The standard pirate opening move on a loaded hauler.","K","V"],["L1 - L5","Lagrange points","Gravitationally stable points around a planet. Stations sit at them. Named by planet then number.","P","U"],["ARC-L1 ... ARC-L5","Arccorp Lagrange 1-5","The Lagrange stations around ArcCorp in the Stanton system.","P","U"],["CRU-L1 ... CRU-L5","Crusader Lagrange 1-5","The Lagrange stations around Crusader.","P","U"],["HUR-L1 ... HUR-L5","Hurston Lagrange 1-5","The Lagrange stations around Hurston.","P","U"],["MIC-L1 ... MIC-L5","microTech Lagrange 1-5","The Lagrange stations around microTech.","P","U"],["A18","Area18","The ArcCorp landing zone city.","P","V"],["NB","New Babbage","The microTech landing zone city.","P","V"],["GH","Grim HEX","The lawless station at Yela. No security, no questions.","P","V"],["PO","Port Olisar","Legacy Crusader station.","P","V"],["PT","Port Tressler","The microTech orbital station.","P","V"],["EH","Everus Harbor","The Hurston orbital station.","P","V"],["BP","Baijini Point","The ArcCorp orbital station.","P","V"],["SPK","Security Post Kareah","Contested security station. A regular fight location.","P","V"],["JT","Jumptown","The recurring drug-lab event location.","P","V"],["POI","Point of Interest","Any named place worth flying to.","P","V"],["UGF","Underground Facility","Buried bunker complexes with on-foot missions inside.","P","V"],["INB","Imperial Naval Base","A UEE navy installation.","P","V"],["HDMS-","Hurston Dynamics Mining Station","Prefix on Hurston's mining outposts, for example HDMS-Edmond.","P","V"],["HDSF-","Hurston Dynamics Storage Facility","Prefix on Hurston's storage outposts, for example HDSF-Sherman.","P","V"],["PU","Persistent Universe","The main shared game world, as opposed to Arena Commander.","P","V"],["Stanton","-","The developed, policed, service-rich system. Where new players should start.","P","U"],["Pyro","-","The lawless system next door. No security response, hostile stations.","P","U"],["Nyx","-","A system carrying ores found nowhere else, including Savrilium at Glaciem Ring and Keeger Belt.","P","U"],["CIG","Cloud Imperium Games","The company that actually makes Star Citizen.","O","V"],["RSI","Roberts Space Industries","Two things at once: the real-world website and store, and an in-fiction ship manufacturer. Read it from context.","O","V"],["CR","Chris Roberts","The game's director and the founder of CIG.","O","V"],["UEE","United Empire of Earth","The human government in the setting.","O","V"],["UEEN","United Empire of Earth Navy","The UEE's military arm.","O","V"],["UNE","United Nations of Earth","The earlier human government in the setting's history.","O","V"],["UPE","United Planets of Earth","The government between the UNE and the UEE.","O","V"],["MISC","Musashi Industrial and Starflight Concern","Ship manufacturer. Freelancer, Prospector, Hull series.","O","V"],["CNOU / CO","Consolidated Outland","Ship manufacturer. Mustang, Nomad, Pioneer.","O","V"],["MSR","Mercury Star Runner","The Crusader data-runner and cargo ship.","O","V"],["RAFT","Reinforced Advanced Freight Transport","The Argo cargo hauler.","O","V"],["R&amp;R","Rest &amp; Relax","The truck-stop station chain. Refuel, repair, restock.","O","V"],["Org","organization","A player group. Yours is set up in the tablet's Org / Party tool.","O","C"],["LIVE","-","The public build everyone plays. When this tablet says a dataset is behind, it means behind LIVE.","B","U"],["PTU","Public Test Universe","The test build patches go to before LIVE. Bugs expected.","B","V"],["EPTU","Experimental Public Test Universe","An earlier, rougher test build than PTU.","B","V"],["AC","Arena Commander","The separate arcade module. Ship and FPS matches, no persistence.","B","V"],["OCS","Object Container Streaming","The engine tech that loads only nearby objects. A performance system.","B","V"],["PES","Persistent Entity Streaming","The tech that makes dropped items and changes persist in the world.","B","V"],["RL","Replication Layer","The server layer that holds world state, so a crashed server does not lose it.","B","V"],["RMQ","Replication Message Queue","Part of the same server plumbing as the Replication Layer.","B","V"],["DGS","dedicated game server","One server instance. The thing that crashes when everyone says the server died.","B","V"],["Alpha 4.9 / 4.10","-","Patch numbers. 4.9 is the LIVE branch as of this writing; 4.10 was in PTU. CAUTION: verify the current build in game before trusting any patch-specific number.","B","U"],["HOTAS","Hands On Throttle and Stick","A throttle in one hand, a flight stick in the other.","H","V"],["HOSAS","Hands On Stick and Stick","Two flight sticks, one per hand. Popular for six-degree flight.","H","V"],["VKB / VIRPIL","-","Two flight-stick manufacturers commonly used for HOTAS and HOSAS setups.","H","U"],["FPS","frames per second / first-person shooter","Both. Frames per second is your performance; first-person shooter is on-foot gameplay. Read it from context.","H","V"],["GPU / CPU / RAM / VRAM / SSD","-","Your PC's graphics card, processor, memory, graphics memory and drive. Star Citizen is heavy on all five.","H","T"],["LMB / RMB","left / right mouse button","Standard mouse button shorthand.","H","T"],["PTT","Push-to-Talk","Hold a key to transmit voice instead of transmitting all the time.","H","V"],["FOIP","Face Over Internet Protocol","Webcam face tracking that maps your expression onto your character.","H","V"],["PMA / VMA","Personal Manager App / Vehicle Manager App","The mobiGlas apps for your character loadout and your ship loadout.","H","V"],["mobiGlas","-","The wrist computer. Contracts, map, loadouts, landing. Opened with F1 by default.","H","U"],["Human","-","The only playable species. Governed by the UEE.","S","V"],["Banu","-","Major spacefaring species. Commerce and trade focused. Home: the Banu Protectorate.","S","V"],["Xi'an","-","Major spacefaring species. Long-lived, cautious and calculating. Home: the Xi'an Empire. Formerly in conflict with the Kr'Thak.","S","V"],["Vanduul","-","Major spacefaring species. Aggressive warrior culture organised in nomadic raiding clans. The UEE's main military enemy.","S","V"],["Tevarin","-","Major spacefaring species. Militaristic, honoured war and combat. Defeated and absorbed into the UEE.","S","V"],["Kr'Thak","-","Major spacefaring species. Homeworld not established. Historically in conflict with the Xi'an.","S","V"],["Hadesian","-","Extinct species from the Hades system. Tall multi-limbed humanoids, known only from ruins.","S","V"],["Kins II Civilization","-","Extinct minor civilization on Kins II. Left ruins found before Banu settlement.","S","V"],["Quasi Civilization","-","Extinct minor civilization near Quasi on Terra.","S","V"],["30k","-","A server crash that dumps everyone with error code 30000. Used as a verb: the server 30k'd.","G","C"],["the 'verse","-","The game world. Short for universe.","G","C"],["daddy ship / big ship","-","A large multi-crew ship someone else brought.","G","C"],["soft death","-","A ship disabled but not exploded. Still salvageable, still boardable.","G","C"],["hard death","-","The ship is gone. Claim it.","G","C"],["claim","-","Filing an insurance claim to get a lost or stuck ship back. CAUTION: claiming a stuck ship destroys the cargo inside it.","G","U"],["daymar / dune buggy runs","-","Community racing events on Daymar.","G","C"],["bed log","-","Logging out in a ship bed so your character and ship state persist properly.","G","C"],["quantum boosting / QT spam","-","Community terms for chaining short quantum jumps. Behaviour changes patch to patch - do not trust old guides.","G","C"]];
+  var D=[["eff %","effective spawn share","This tablet's own number. grp % multiplied by that item's share inside its rarity group. Plain meaning: roughly how many rocks out of a hundred at that location are this material.","T","T"],["grp %","rarity-group spawn chance","This tablet's own number. The chance that the whole rarity group (common, uncommon, rare, epic, legendary) spawns at that body at all.","T","T"],["hi_q / lo_q","high quality / low quality","Price per unit in the tablet's harvest data. hi_q is the best refined sale price seen, lo_q the worst.","T","T"],["HALO","-","The panel on Home that carries your gather, harvest and buy list. UNDOCK floats it over your game on PC.","T","T"],["HUD","heads-up display","In game: the flight information overlaid on your canopy.","T","V"],["GATHER LIST","-","Everything the tablet has told you to collect, from blueprints, mining picks and the Craft Calculator combined. All three feed one list.","T","T"],["TOOL","-","One of the centre tiles on Home: Mining, Hauling, Trading, Blueprints, Harvestables, Craft Calculator and the rest.","T","T"],["DECKS / TABLES","-","The two ways the Harvestables page can display data. Decks are cards, Tables are the reference grid.","T","T"],["MORE LOCATIONS","-","Button on a harvest item. The Halo row already prints the best location; this shows every other one.","T","T"],["SOURCE","-","Button on the Halo. Opens where the number in front of you came from.","T","T"],["UNDOCK","-","Button on the Halo. Pops the Halo out into its own floating window on PC.","T","T"],["STALE DATA bar","-","The orange strip that appears when the tablet's location dataset is older than the live game patch. It is a warning, not an error.","T","T"],["CLEAR GATHER / HARVEST / BUY","-","Empties one list. Each asks first whether to clear only the Halo, or the Halo and the underlying page selections too.","T","T"],["CLEAR ALL","-","Empties gather, harvest and buy in one action, after the same two-step confirmation.","T","T"],["REFRESH","-","Re-reads the underlying pages and rebuilds the Halo from what is currently selected.","T","T"],["TM","Technical Manual (CmdGlas numbering)","Operator's manual. Every technical procedure a ship or vehicle performs. Example: TM-CMDGLAS-10 is the tablet's own operator card.","T","T"],["SM","Supplemental Manual (CmdGlas numbering)","Tactics and technique, one manual per game loop. SM-1 Flight Operations, SM-9 Salvage, SM-10 Mining, and so on.","T","T"],["SR","Space Regulations (CmdGlas numbering)","Conduct, etiquette and safety. SR-4 is the New Player Orientation.","T","T"],["OM (CmdGlas)","Operations Manual","In THIS tablet, OM means a one-page field guide. CAUTION: in the game, OM means Orbital Marker - a completely different thing. See the FLIGHT section.","T","T"],["band700","-","A field in the tablet's harvest data holding the location list with its spawn percentages.","T","T"],["VERIFIED / PARTIAL / PENDING","-","Badges on tablet data. VERIFIED means checked against a source. PARTIAL means some of it was. PENDING means it is still being written.","T","T"],["CmdGlas","-","This tablet and its server. An unofficial Star Citizen companion, not made by Cloud Imperium Games.","T","T"],["aUEC","alpha United Earth Credit","The spendable in-game currency during Alpha. Wiped on some patches. Not real money.","M","V"],["UEC","United Earth Credit","The currency of the setting. Also the name of the small store currency used for rentals and some items.","M","V"],["SCU","Standard Cargo Unit","The cargo box measurement. Ship capacity, hauling contracts and commodity prices are all quoted in SCU.","M","V"],["REC","Rental Equipment Credits","Earned in Arena Commander and spent renting ships and components for test flights. Cannot buy real ships.","M","V"],["CCU","Cross Chassis Upgrade","A store upgrade that converts one pledged ship into a more expensive one for the price difference.","M","V"],["LTI","Lifetime Insurance","A pledge perk. The ship's hull is insured for the life of the account. Cargo is never insured.","M","V"],["SHI","Standard Hull Insurance","Ordinary time-limited hull insurance, as opposed to LTI.","M","V"],["TDD","Trade &amp; Development Division","The commodity trading floor found in the big landing zones. Where you sell cargo at the best posted prices.","M","V"],["UEX","-","A community-run trade and price database many tools pull from, including this tablet. Not an official CIG source.","M","U"],["IAE","Intergalactic Aerospace Expo","The yearly in-fiction ship show. Nearly every ship goes on free flight and on sale.","M","V"],["ILW","Invictus Launch Week","The yearly military expo event. Free flight of military ships.","M","U"],["FW","Fleet Week","Community event week, often paired with military ship showcases.","M","V"],["melt","-","Community slang for reclaiming a pledge back to store credit. NOT an in-game action, and it is not reversible on demand.","M","C"],["buyback","-","The store list of pledges you have melted, which can sometimes be re-bought.","M","C"],["warbond","-","A store variant of a pledge bought with real money only, usually cheaper, sometimes with extra insurance.","M","C"],["SCM","Space Combat Maneuvering","The slower flight mode. Weapons, shields and manoeuvring work properly. This is combat mode.","F","V"],["NAV","navigation mode","The faster travel mode. Higher speed, worse handling, and it is the mode quantum travel spools from.","F","U"],["QT","Quantum Travel","Fast travel between markers inside a system. Needs a spooled drive, quantum fuel and a clear line to the target.","F","V"],["QF","Quantum Fuel","The separate fuel that quantum travel burns. Running out strands you at normal speed.","F","V"],["QED","Quantum Enforcement Device","A device that blocks quantum travel in an area and snaps ships out of it. Used by pirates and by law enforcement.","F","V"],["OM","Orbital Marker","Navigation points in orbit around a body, OM-1 through OM-6. You quantum to an OM, then fly down.","F","V"],["IFCS","Intelligent Flight Control System","The flight computer between your stick and the thrusters. It is what limits your speed and holds your attitude.","F","V"],["ESP","Enhanced Stick Precision","An aim assist that softens your stick input when the reticle is near a target. Can be turned off.","F","V"],["ITTS","Improved Target Tracking System","The system that draws the lead pip showing where to shoot ahead of a moving target.","F","V"],["VTOL","Vertical Take-Off and Landing","Thrusters that rotate so the ship can lift straight up. Not every ship has it.","F","V"],["MFD","multi-function display","The small in-cockpit screens you cycle for power, shields, cargo and radar. Confirm layout against your own cockpit - it varies by ship.","F","U"],["VDU","Video Display Unit","CIG's own name for those cockpit screens.","F","V"],["TVI","Total Velocity Indicator","The marker showing the direction your ship is actually travelling, which is not always where the nose points.","F","V"],["EVA","Extravehicular Activity","Being outside a ship in space in your suit. Thruster pack movement, no gravity.","F","V"],["EMU","Extravehicular Mobility Unit","The suit itself - the thing keeping you alive during EVA.","F","V"],["INS","Inertial Navigation System","Onboard navigation that tracks position by motion rather than by external signal.","F","V"],["AU","Astronomical Unit","Distance measure. One AU is roughly the Earth-to-Sun distance. Used for system-scale travel.","F","V"],["GM","Gigameter / Geodesic Marker","Distance unit (one billion metres); also used for a navigation marker. Read it from context.","F","V"],["MM","Megameter","One million metres. The unit most in-system quantum distances are shown in.","F","V"],["Flight Ready","-","Powering the ship up. Bound to R by default. One press spools engines, a second press powers down.","F","U"],["ATC","Air Traffic Control","The station or port service that grants you a landing pad or hangar. You request, they assign.","F","V"],["LZ","Landing Zone","A major planetside city you can land at and walk around in.","F","V"],["ASOP","Automated Ship Organization Program","The terminal you use to retrieve or store a ship at a station or port.","F","V"],["DPS","Damage Per Second","How fast a weapon removes health. The headline number for comparing guns.","C","V"],["ROF","Rate of Fire","Shots per minute.","C","V"],["AP","Armor-Piercing","Ammunition or damage type that ignores part of the target's armour.","C","V"],["HE","High Explosive","Ammunition or damage type that trades penetration for blast damage.","C","V"],["EMP","electromagnetic pulse","A burst that disables ship systems in a radius rather than damaging hull.","C","V"],["EM","electromagnetic","One of the signatures enemies track you by. Running hot power raises it and makes you easier to find.","C","V"],["IR","infrared","Your heat signature. The other main way you get detected.","C","V"],["CIWS","Close-In Weapon System","Short-range defensive turret designed to shoot down incoming missiles and small craft.","C","V"],["ADS","Aim Down Sight","Bringing the weapon sight up to your eye on foot.","C","V"],["TTK","time to kill","How long it takes to destroy a target. Lower is deadlier. Community shorthand, not an in-game readout.","C","C"],["LOS","Line-of-Sight","Whether you can actually see the target, with nothing solid in between.","C","V"],["CS","CrimeStat","Your criminal rating. Raise it and security forces and turrets engage you on sight.","C","V"],["PvP","Player vs Player","Fighting other real players.","C","V"],["PvE","Player vs Environment","Fighting the game's own NPCs.","C","V"],["PvA","Player vs All","Everything is hostile - other players and NPCs.","C","V"],["NPC","non-player character","Anyone in the world run by the game rather than by a person.","C","V"],["VLRT","Very Low-Risk Target","The easiest bounty tier.","C","V"],["LRT","Low-Risk Target","Bounty tier. The usual starting point.","C","V"],["MRT","Medium-Risk Target","Bounty tier above LRT.","C","V"],["HRT","High-Risk Target","Bounty tier. Expect a real fight and escorts.","C","V"],["VHRT","Very High-Risk Target","Bounty tier above HRT.","C","V"],["ERT","Extreme-Risk Target","The hardest bounty tier. Usually a group job.","C","V"],["XT","XenoThreat","A recurring hostile faction and the event built around it.","C","V"],["RMC","Recycled Material Composite","What hull scraping produces. You peel the outer surface off a wreck with the salvage beam and it fills your canisters.","K","V"],["CM","Construction Materials","What structural salvage produces. You fracture the hull into chunks and disintegrate them. CAUTION: CM also gets used for countermeasures in combat talk - read it from context.","K","V"],["hull scraping","-","Salvage mode that removes the outer surface of a wreck. Produces RMC.","K","V"],["structural salvage","-","Salvage mode that breaks the hull itself apart. Fracture, then Disintegrate. Produces Construction Materials.","K","V"],["ROC","Remote Ore Collector","The single-seat Greycat ground mining vehicle. Used for gem deposits you drive to.","K","V"],["ROC-DS","Remote Ore Collector - Dual Seat","The two-seat version of the ROC.","K","V"],["MOLE","Multi-Operator Laser Extractor","The ARGO multi-turret mining ship. Three mining heads, crewed.","K","V"],["SRV","Standard Recovery Vehicle","The Argo tractor-beam ship, used for towing and pulling.","K","V"],["ATLS","-","The Argo cargo exosuit - a powered loader you wear to move SCU boxes by hand. Expansion of the name not confirmed.","K","U"],["MPUV","Multi-Purpose Utility Vehicle","The small Argo utility craft, in cargo and personnel versions.","K","V"],["PTV","Personal Transport Vehicle","The little open buggy. Fast, no protection.","K","V"],["STV","Sport Terrain Vehicle","The Greycat open sport buggy.","K","V"],["scan / fracture / extract","-","The three steps of ship mining. Find the rock, crack it with a heat window, then vacuum the ore.","K","U"],["FPS mining","first-person mining","Hand mining with a multitool on foot. Small deposits, no ship needed.","K","T"],["QED / interdiction","-","Being pulled out of quantum by a QED. The standard pirate opening move on a loaded hauler.","K","V"],["L1 - L5","Lagrange points","Gravitationally stable points around a planet. Stations sit at them. Named by planet then number.","P","U"],["ARC-L1 ... ARC-L5","Arccorp Lagrange 1-5","The Lagrange stations around ArcCorp in the Stanton system.","P","U"],["CRU-L1 ... CRU-L5","Crusader Lagrange 1-5","The Lagrange stations around Crusader.","P","U"],["HUR-L1 ... HUR-L5","Hurston Lagrange 1-5","The Lagrange stations around Hurston.","P","U"],["MIC-L1 ... MIC-L5","microTech Lagrange 1-5","The Lagrange stations around microTech.","P","U"],["A18","Area18","The ArcCorp landing zone city.","P","V"],["NB","New Babbage","The microTech landing zone city.","P","V"],["GH","Grim HEX","The lawless station at Yela. No security, no questions.","P","V"],["PO","Port Olisar","Legacy Crusader station.","P","V"],["PT","Port Tressler","The microTech orbital station.","P","V"],["EH","Everus Harbor","The Hurston orbital station.","P","V"],["BP","Baijini Point","The ArcCorp orbital station.","P","V"],["SPK","Security Post Kareah","Contested security station. A regular fight location.","P","V"],["JT","Jumptown","The recurring drug-lab event location.","P","V"],["POI","Point of Interest","Any named place worth flying to.","P","V"],["UGF","Underground Facility","Buried bunker complexes with on-foot missions inside.","P","V"],["INB","Imperial Naval Base","A UEE navy installation.","P","V"],["HDMS-","Hurston Dynamics Mining Station","Prefix on Hurston's mining outposts, for example HDMS-Edmond.","P","V"],["HDSF-","Hurston Dynamics Storage Facility","Prefix on Hurston's storage outposts, for example HDSF-Sherman.","P","V"],["PU","Persistent Universe","The main shared game world, as opposed to Arena Commander.","P","V"],["Stanton","-","The developed, policed, service-rich system. Where new players should start.","P","U"],["Pyro","-","The lawless system next door. No security response, hostile stations.","P","U"],["Nyx","-","A system carrying ores found nowhere else, including Savrilium at Glaciem Ring and Keeger Belt.","P","U"],["CIG","Cloud Imperium Games","The company that actually makes Star Citizen.","O","V"],["RSI","Roberts Space Industries","Two things at once: the real-world website and store, and an in-fiction ship manufacturer. Read it from context.","O","V"],["CR","Chris Roberts","The game's director and the founder of CIG.","O","V"],["UEE","United Empire of Earth","The human government in the setting.","O","V"],["UEEN","United Empire of Earth Navy","The UEE's military arm.","O","V"],["UNE","United Nations of Earth","The earlier human government in the setting's history.","O","V"],["UPE","United Planets of Earth","The government between the UNE and the UEE.","O","V"],["MISC","Musashi Industrial and Starflight Concern","Ship manufacturer. Freelancer, Prospector, Hull series.","O","V"],["CNOU / CO","Consolidated Outland","Ship manufacturer. Mustang, Nomad, Pioneer.","O","V"],["MSR","Mercury Star Runner","The Crusader data-runner and cargo ship.","O","V"],["RAFT","Reinforced Advanced Freight Transport","The Argo cargo hauler.","O","V"],["R&amp;R","Rest &amp; Relax","The truck-stop station chain. Refuel, repair, restock.","O","V"],["Org","organization","A player group. Yours is set up in the tablet's Org / Party tool.","O","C"],["LIVE","-","The public build everyone plays. When this tablet says a dataset is behind, it means behind LIVE.","B","U"],["PTU","Public Test Universe","The test build patches go to before LIVE. Bugs expected.","B","V"],["EPTU","Experimental Public Test Universe","An earlier, rougher test build than PTU.","B","V"],["AC","Arena Commander","The separate arcade module. Ship and FPS matches, no persistence.","B","V"],["OCS","Object Container Streaming","The engine tech that loads only nearby objects. A performance system.","B","V"],["PES","Persistent Entity Streaming","The tech that makes dropped items and changes persist in the world.","B","V"],["RL","Replication Layer","The server layer that holds world state, so a crashed server does not lose it.","B","V"],["RMQ","Replication Message Queue","Part of the same server plumbing as the Replication Layer.","B","V"],["DGS","dedicated game server","One server instance. The thing that crashes when everyone says the server died.","B","V"],["Alpha 4.9 / 4.10","-","Patch numbers. 4.9 is the LIVE branch as of this writing; 4.10 was in PTU. CAUTION: verify the current build in game before trusting any patch-specific number.","B","U"],["HOTAS","Hands On Throttle and Stick","A throttle in one hand, a flight stick in the other.","H","V"],["HOSAS","Hands On Stick and Stick","Two flight sticks, one per hand. Popular for six-degree flight.","H","V"],["VKB / VIRPIL","-","Two flight-stick manufacturers commonly used for HOTAS and HOSAS setups.","H","U"],["FPS","frames per second / first-person shooter","Both. Frames per second is your performance; first-person shooter is on-foot gameplay. Read it from context.","H","V"],["GPU / CPU / RAM / VRAM / SSD","-","Your PC's graphics card, processor, memory, graphics memory and drive. Star Citizen is heavy on all five.","H","T"],["LMB / RMB","left / right mouse button","Standard mouse button shorthand.","H","T"],["PTT","Push-to-Talk","Hold a key to transmit voice instead of transmitting all the time.","H","V"],["FOIP","Face Over Internet Protocol","Webcam face tracking that maps your expression onto your character.","H","V"],["PMA / VMA","Personal Manager App / Vehicle Manager App","The mobiGlas apps for your character loadout and your ship loadout.","H","V"],["mobiGlas","-","The wrist computer. Contracts, map, loadouts, landing. Opened with F1 by default.","H","U"],["Human","-","The only playable species. Governed by the UEE.","S","V"],["Banu","-","Major spacefaring species. Commerce and trade focused. Home: the Banu Protectorate.","S","V"],["Xi'an","-","Major spacefaring species. Long-lived, cautious and calculating. Home: the Xi'an Empire. Formerly in conflict with the Kr'Thak.","S","V"],["Vanduul","-","Major spacefaring species. Aggressive warrior culture organised in nomadic raiding clans. The UEE's main military enemy.","S","V"],["Tevarin","-","Major spacefaring species. Militaristic, honoured war and combat. Defeated and absorbed into the UEE.","S","V"],["Kr'Thak","-","Major spacefaring species. Homeworld not established. Historically in conflict with the Xi'an.","S","V"],["Hadesian","-","Extinct species from the Hades system. Tall multi-limbed humanoids, known only from ruins.","S","V"],["Kins II Civilization","-","Extinct minor civilization on Kins II. Left ruins found before Banu settlement.","S","V"],["Quasi Civilization","-","Extinct minor civilization near Quasi on Terra.","S","V"],["30k","-","A server crash that dumps everyone with error code 30000. Used as a verb: the server 30k'd.","G","C"],["the 'verse","-","The game world. Short for universe.","G","C"],["daddy ship / big ship","-","A large multi-crew ship someone else brought.","G","C"],["soft death","-","A ship disabled but not exploded. Still salvageable, still boardable.","G","C"],["hard death","-","The ship is gone. Claim it.","G","C"],["claim","-","Filing an insurance claim to get a lost or stuck ship back. CAUTION: claiming a stuck ship destroys the cargo inside it.","G","U"],["daymar / dune buggy runs","-","Community racing events on Daymar.","G","C"],["bed log","-","Logging out in a ship bed so your character and ship state persist properly.","G","C"],["quantum boosting / QT spam","-","Community terms for chaining short quantum jumps. Behaviour changes patch to patch - do not trust old guides.","G","C"]];
   var BADGE={V:'VERIFIED',T:'TABLET',C:'COMMUNITY',U:'UNCONFIRMED'};
 
   function esc(s){ return String(s==null?'':s)
@@ -32027,7 +32027,7 @@ html:not(.cg-disp-ack) .scr-nav-disp::after{ content:''; position:absolute; top:
   +'It is a note to yourself &mdash; nothing is locked, and you can change any setting afterwards.</div>'
   +'<div class="dsp-ack" id="dsp-ack" role="checkbox" tabindex="0" aria-checked="false">'
   +'<span class="dsp-box"></span>'
-  +'<span class="dsp-acktext">I have set my HUD display settings manually once.'
+  +'<span class="dsp-acktext">I have set my Halo display settings manually once.'
   +'<span class="dsp-ackwhen">Not acknowledged yet.</span></span></div>'
   +'<div class="dsp-note"><b>NOTE.</b> Until this is ticked, the DISPLAY button in '
   +'<b>MY RIG</b> carries a small amber dot. That is the only nag you get.</div></div>'
@@ -32058,7 +32058,7 @@ html:not(.cg-disp-ack) .scr-nav-disp::after{ content:''; position:absolute; top:
 
   +'<div class="dsp-sec"><div class="dsp-h">5 &mdash; Compact</div>'
   +'<div class="dsp-p">Hides everything below the <b>ASSIST / NAV / MY RIG</b> control bar &mdash; '
-  +'the theme row, the social row and the side buttons. The control bar, the tools and the HUD all '
+  +'the theme row, the social row and the side buttons. The control bar, the tools and the Halo all '
   +'stay.</div>'
   + opts('dsp-cmp',[['off','FULL'],['on','COMPACT']])
   +'<div class="dsp-note"><b>NOTE.</b> Nothing is removed, only hidden. Set it back to FULL and '
@@ -32469,19 +32469,19 @@ html.cg-holo.cg-holo-scan .cg-pop-float::after{
     var last=secs[secs.length-1];               
     var d=document.createElement('div');
     d.className='dsp-sec'; d.id='dsp-holo-sec';
-    d.innerHTML='<div class="dsp-h">6 &mdash; Undocked HUD</div>'
-      +'<div class="dsp-p">What the HUD looks like once it leaves the tablet and floats over '
-      +'your game. This does not change the HUD inside the tablet.</div>'
+    d.innerHTML='<div class="dsp-h">6 &mdash; Undocked Halo</div>'
+      +'<div class="dsp-p">What the Halo looks like once it leaves the tablet and floats over '
+      +'your game. This does not change the Halo inside the tablet.</div>'
       +'<div class="dsp-row">'
       +'<button type="button" class="dsp-opt" data-g="dsp-holo" data-v="holo">HOLOGRAM</button>'
       +'<button type="button" class="dsp-opt" data-g="dsp-holo" data-v="scan">HOLOGRAM + SCANLINES</button>'
       +'<button type="button" class="dsp-opt" data-g="dsp-holo" data-v="panel">SOLID PANEL</button>'
       +'</div><div class="dsp-now" id="dsp-holo-now">Now set to <b>HOLOGRAM</b>.</div>'
       +'<div class="dsp-note dsp-holo-note"><b>NOTE.</b> HOLOGRAM removes the panel, the border '
-      +'and the drop shadow entirely &mdash; the game is not dimmed behind the HUD, it is simply '
+      +'and the drop shadow entirely &mdash; the game is not dimmed behind the Halo, it is simply '
       +'there. That is different from the brightness control in section 4, which fades what is '
       +'drawn rather than stopping it being drawn.</div>'
-      +'<div class="dsp-caution"><b>CAUTION.</b> With nothing behind it, the HUD reads well over '
+      +'<div class="dsp-caution"><b>CAUTION.</b> With nothing behind it, the Halo reads well over '
       +'space and a dark cockpit and is harder to read over a bright planet or a lit station '
       +'interior. SOLID PANEL puts the old background back if you want it.</div>';
     last.parentNode.insertBefore(d, last);
@@ -32647,8 +32647,8 @@ html.cg-holo.cg-holo-scan .cg-pop-float::after{
   function close(){ var w=document.querySelector('.cg-hs-wrap'); if(w) w.classList.remove('on'); }
 
   var HTML=
-    '<button type="button" class="cg-hs-chev" title="HUD settings - transparency, brightness, colour">'
-   +'HUD <span class="cv">&#9662;</span></button>'
+    '<button type="button" class="cg-hs-chev" title="Halo settings - transparency, brightness, colour">'
+   +'Halo <span class="cv">&#9662;</span></button>'
    +'<div class="cg-hs-panel">'
    +'<div class="cg-hs-lbl">Transparency <span>&mdash; how much shows through</span></div>'
    +'<div class="cg-hs-row">'
@@ -32663,7 +32663,7 @@ html.cg-holo.cg-holo-scan .cg-pop-float::after{
    + COLORS.map(function(c){ return '<button type="button" class="cg-hs-dot d-'+c+'" data-g="color" data-v="'+c+'" '
        +'title="'+(c==='follow'?'Follow the tablet theme':c.toUpperCase())+'" aria-label="'+c+'"></button>'; }).join('')
    +'</div>'
-   +'<div class="cg-hs-note"><b>NOTE.</b> These are the HUD only. The tablet keeps its own colour '
+   +'<div class="cg-hs-note"><b>NOTE.</b> These are the Halo only. The tablet keeps its own colour '
    +'in MY RIG &rarr; DISPLAY.<br><b>CAUTION.</b> In the desktop overlay the mouse passes through '
    +'to the game while click-through is on, so this panel cannot be clicked in flight &mdash; use '
    +'the overlay hotkeys for that.</div>'
@@ -33366,7 +33366,7 @@ html.cg-hudonly body #sc-home-widgets .wg.ops-pill.b385 #cg-b708{
     if(!t){
        
       var _nh='<div class="b708-note">Sign in from the <b>ACCOUNT</b> pill on the tablet, '
-        +'then come back to the HUD &mdash; #party and your crew appear here.</div>';
+        +'then come back to the Halo &mdash; #party and your crew appear here.</div>';
       if(el.__h!==_nh){ el.__h=_nh; el.innerHTML=_nh; }
       return;
     }
@@ -34393,7 +34393,7 @@ html.cg-clocks-off #cg-clocks{ display:none !important; }
     }).join('');
     box.innerHTML='<div class="fc-sh"><span class="fc-st">Computed route</span>'
       +'<span class="fc-c">'+R.legs.length+' stops · every pickup ahead of its own dropoff</span>'
-      +'<span class="fc-sp"></span><button type="button" class="fc-b go" id="fc-push">PUSH TO HUD →</button></div>'
+      +'<span class="fc-sp"></span><button type="button" class="fc-b go" id="fc-push">PUSH TO HALO →</button></div>'
       +'<div class="fc-route"><div class="fc-rr hd"><span>#</span><span>Type</span><span>Location</span><span>Leg</span><span>Hold</span></div>'
       +'<div class="fc-rr"><span class="fc-n">—</span><span class="fc-tag t-start">START</span><span>'+esc(R.startName)+'</span><span class="fc-mono">—</span><span class="fc-hold">0</span></div>'
       +rows+'</div>'
@@ -34528,7 +34528,7 @@ html.cg-clocks-off #cg-clocks{ display:none !important; }
   function pushHud(){
     var S=FC.S; if(!S.route) return;
     localStorage.setItem('cg_fc_active', JSON.stringify({route:S.route,idx:0,at:Date.now()}));
-    note('Pushed to the HUD. Open the <b>Route</b> tab in the HUD pill.');
+    note('Pushed to the Halo. Open the <b>Route</b> tab in the Halo pill.');
   }
 
    
@@ -34872,7 +34872,7 @@ body.sc-home-mode #cg-onebar .cg-ob-left{justify-content:flex-start !important;}
     var A=read();
     if(!A || !A.route || !A.route.legs || !A.route.legs.length){
       pane.innerHTML='<div class="cgr-empty">No route pushed yet.<br><br>'+
-        'Build it in <b>Flight Computer</b>, press <b>COMPUTE</b>, then <b>PUSH TO HUD</b>.<br>'+
+        'Build it in <b>Flight Computer</b>, press <b>COMPUTE</b>, then <b>PUSH TO HALO</b>.<br>'+
         'It appears here. This tab only displays - it never changes the plan.</div>';
       return;
     }
@@ -35218,7 +35218,7 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
     }
     h+='</div><div class="cg-lsel-foot">'
       +'<button type="button" data-cg738="open">Open full page</button>'
-      +(list.length?'<button type="button" data-cg738="push">Push to HUD</button>'
+      +(list.length?'<button type="button" data-cg738="push">Push to Halo</button>'
                    +'<button type="button" data-cg738="clear">Clear</button>':'')
       +'</div></div>';
     if(hp.__h===h) return; hp.__h=h; hp.innerHTML=h;
@@ -39082,7 +39082,7 @@ function cg767SheetLift(){
       if(sh2 && !document.getElementById('cg767-sheethome')){
         var hb=document.createElement('button');
         hb.id='cg767-sheethome'; hb.type='button'; hb.className='cg767-keep';
-        hb.textContent='\u2302 BACK TO HUD';
+        hb.textContent='\u2302 BACK TO HALO';
         hb.addEventListener('pointerdown',function(ev){
           ev.preventDefault(); ev.stopPropagation();
           cg767SheetBack();
@@ -39895,7 +39895,7 @@ function cg767MenuPages(pill){
   if(lsGet('cg767_rest','1')==='1'){
     var hb9=document.createElement('button');
     hb9.type='button'; hb9.className='cg767-it';
-    hb9.innerHTML='<span>HIDE HUD</span>';
+    hb9.innerHTML='<span>HIDE HALO</span>';
     hb9.addEventListener('click',function(ev){
       ev.preventDefault(); ev.stopPropagation();
       try{ var pn9=document.getElementById('cg767-menu');
@@ -39907,7 +39907,7 @@ function cg767MenuPages(pill){
     host.appendChild(hb9);
     cg767SeeInk(hb9);
   }
-  try{ cg767Hdr(document.getElementById('cg767-menu'),'HUD CONTROLS'); }catch(_h1){}
+  try{ cg767Hdr(document.getElementById('cg767-menu'),'HALO CONTROLS'); }catch(_h1){}
    
   cg767MenuSettings(pill, host);
   try{ cg767MenuOrder(); }catch(_mo1){}
@@ -40105,7 +40105,7 @@ function cg767DragZone(){
     if(!(rp.width>0&&rp.height>0&&r1.height>0)) return;
     var z=document.getElementById('cg767-dragzone');
     if(!z){ z=document.createElement('div'); z.id='cg767-dragzone';
-            z.title='Drag to move the HUD'; p.appendChild(z); }
+            z.title='Drag to move the Halo'; p.appendChild(z); }
     var topPct=((r1.bottom-rp.top)/rp.height)*100;
     _cgimp(z,'position','absolute');
     _cgimp(z,'left','22%'); _cgimp(z,'width','56%');
@@ -40271,7 +40271,7 @@ function cg767PanelProbe(){
 }
 function cg767WordProbe(){
    
-  var WANT=['HUD CONTROLS','GOTO TABLET','HOTKEYS','REFRESH','SOURCE','FIT',
+  var WANT=['HALO CONTROLS','GOTO TABLET','HOTKEYS','REFRESH','SOURCE','FIT',
             'DOCK TABLET','TABLET CONTROLS','GOTO','BACK','SETTINGS','Blueprints'];
   var out={};
   try{
@@ -42950,7 +42950,7 @@ function cg767FCHome(){
       var t=document.getElementById('cg767-fctoggle');
       if(t) t.textContent = open ? 'HIDE PLANNER' : 'PLAN A ROUTE';
       var nt2=document.getElementById('cg767-fcnote');
-      if(nt2) nt2.textContent = has ? 'Route loaded - PUSH TO HUD sends it to the HUD Route page.'
+      if(nt2) nt2.textContent = has ? 'Route loaded - PUSH TO HALO sends it to the Halo Route page.'
                                     : 'No route yet. Add jobs or stops, then COMPUTE.';
     } else {
       var t2=document.getElementById('cg767-fctoggle');
@@ -46928,9 +46928,9 @@ console.log('[b767] curved HUD skin armed');
       +'<p class="why">Every row the BUY column shows - the buy list plus the armour and items that were pushed here from other pages. Craft materials stay under HARVESTING / MINING.</p>'
       +'<div class="rows">'+rowsHtml+'</div>';
     if(n){
-      body+='<button type="button" class="opt" data-do="soft"><b>Clear HUD only</b>'
-           +'<i>Empties these from the HUD. Leaves every page selection exactly as it is.</i></button>'
-           +'<button type="button" class="opt hard" data-do="hard"><b>Clear HUD + tool</b>'
+      body+='<button type="button" class="opt" data-do="soft"><b>Clear Halo only</b>'
+           +'<i>Empties these from the Halo. Leaves every page selection exactly as it is.</i></button>'
+           +'<button type="button" class="opt hard" data-do="hard"><b>Clear Halo + tool</b>'
            +'<i>Also clears the Craft Calculator picks and the pinned blueprint names, so the list '
            +'does not refill on the next push. Row ticks on a page are not stored anywhere and clear '
            +'when you reload that page either way.</i></button>';
@@ -47649,8 +47649,8 @@ console.log('[b767] curved HUD skin armed');
     [/^THREAT$/i,'Threat assessment and combat reference.'],
     [/^HAULING$/i,'Cargo runs and trade routes.'],
     [/^ACCOUNT$/i,'Sign in and account status.'],
-    [/^HUD\b/i,'HUD display options.'],
-    [/^REFRESH$/i,'Re-pull every page\'s selections into the HUD lists.'],
+    [/^(HUD|HALO)\b/i,'Halo display options.'],
+    [/^REFRESH$/i,'Re-pull every page\'s selections into the Halo lists.'],
     [/^UNDOCK$/i,'Send this pill to the in-game HUD glass.'],
     [/^SOURCE$/i,'Jump to the page a list row came from.'],
     [/^LAUNCH PLAYER$/i,'Open the always-on-top video player window.'],
@@ -47667,7 +47667,7 @@ console.log('[b767] curved HUD skin armed');
     [/^HOTKEYS$/i,'View and set the overlay hotkeys.'],
     [/^✕? ?CLOSE$/i,'Close the overlay window.'],
     [/^HUD ONLY$/i,'Collapse to the in-game HUD glass.'],
-    [/^PUSH TO HUD/i,'Send this page\'s ticked rows to the HUD lists.']
+    [/^PUSH TO (HUD|HALO)/i,'Send this page\'s ticked rows to the Halo lists.']
   ];
   function hint(el){
     if(el.title) return;                       
@@ -49842,7 +49842,7 @@ console.log('[b767] curved HUD skin armed');
     if(!c) return false;
     if(/DESIGNED\s+BY\s+HUMAN|BUILT\s+BY\s+AI/i.test(c)) return true;
     if(/^(SHOW|HIDE)\s+NEWS$/i.test(c)) return true;
-    if(/HUD IS LIVE NOW|SEND FEEDBACK|cmdglas\.com|RUN OVERLAY|FIRST TIME SETUP/i.test(c)) return true;
+    if(/(HUD|HALO) IS LIVE NOW|SEND FEEDBACK|cmdglas\.com|RUN OVERLAY|FIRST TIME SETUP/i.test(c)) return true;
     return false;
   }
   function restore(){
