@@ -3,7 +3,7 @@ const CHECKOUT = {
   deck: 'https://buy.stripe.com/9B63cvaED7c3cbLchtgQE00',
   kneeboard: 'https://buy.stripe.com/6oUfZh9Az2VN0t35T5gQE01',
   cursors: 'https://buy.stripe.com/aFa4gzcMLdAr2Bb95hgQE06',   // $1.99 (was $6.99 link 00w6oHh312VN1x72GTgQE02)
-  bundle: 'https://buy.stripe.com/4gM6oH3cbeEvejTchtgQE03',
+  bundle: 'https://buy.stripe.com/fZu14ncMLdArb7H81dgQE08',   // $20.00 (was $24.99 link 4gM6oH3cbeEvejTchtgQE03)
   all: 'https://buy.stripe.com/8x2cN59Az1RJejTgxJgQE07',   // $25.00 (was $29.99 link 5kQ00j3cbeEva3D3KXgQE04)
   petals: 'https://buy.stripe.com/3cIdR99Az7c3b7H6X9gQE05',   // Speech Petal $2.99, not in any bundle
 };
