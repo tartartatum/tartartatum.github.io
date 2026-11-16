@@ -1,11 +1,12 @@
 // Checkout links. An empty link shows "Coming soon".
+// 16 NOV 2026: all switched off - the products are still being set up, nothing is for sale yet.
 const CHECKOUT = {
-  deck: 'https://buy.stripe.com/9B63cvaED7c3cbLchtgQE00',
-  kneeboard: 'https://buy.stripe.com/6oUfZh9Az2VN0t35T5gQE01',
-  cursors: 'https://buy.stripe.com/aFa4gzcMLdAr2Bb95hgQE06',   // $1.99 (was $6.99 link 00w6oHh312VN1x72GTgQE02)
-  bundle: 'https://buy.stripe.com/28EcN5143gMDejT5T5gQE0a',   // $25.00 (was $20.00 link fZu14ncMLdArb7H81dgQE08, $24.99 link 4gM6oH3cbeEvejTchtgQE03)
-  all: 'https://buy.stripe.com/bJe9ATdQPeEvb7H1CPgQE09',   // $30.00 (was $25.00 link 8x2cN59Az1RJejTgxJgQE07, $29.99 link 5kQ00j3cbeEva3D3KXgQE04)
-  petals: 'https://buy.stripe.com/3cIdR99Az7c3b7H6X9gQE05',   // Speech Petal $2.99, not in any bundle
+  deck: '',
+  kneeboard: '',
+  cursors: '',
+  bundle: '',
+  all: '',
+  petals: '',
 };
 
 document.querySelectorAll('[data-buy]').forEach(a => {
