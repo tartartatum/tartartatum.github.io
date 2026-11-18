@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'">
+<title>CMDGLAS How It Works</title>
+<meta name="description" content="How CmdGlas works and why it is built this way: no game hooks, your own saved keybinds, never taking focus, key rules, privacy, backups and honest data.">
+<link rel="icon" href="../../favicon.ico">
+<link rel="stylesheet" href="../../shop/shop.css?v=6aa492a9">
+<script defer src="../../shop/search.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">CMDGLAS <span>HOW IT WORKS</span></a>
+  <nav aria-label="Topics">
+    <a class="tablet-back" href="/">&#9664; Back to tablet</a><a href="../">Quick start</a><a href="../../shop/manual/">Deck manual</a><a href="../../shop/">Shop</a>
+  </nav>
+</header>
+
+<main class="support qs">
+  <section class="intro">
+    <h1>How it works, and why</h1>
+    <p>The reasons behind the choices in CmdGlas. For step-by-step help, use the <a href="../">quick start</a>.</p>
+    <label class="qs-search"><span>Search</span><input id="qs-q" type="search" placeholder="Type a word, like focus, keys, privacy or backup" autocomplete="off"></label>
+    <p class="note" id="qs-none" hidden>Nothing found. Try one simple word.</p>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>It never touches the game</h2>
+      <p>CmdGlas does not read the game's memory, inject anything, hook into the game or play it for you. The tablet is a screen that reads files and web data. The Command Deck sends a normal key press, the same as your keyboard.</p>
+      <p><b>Why:</b> anything that reaches inside a game can trip anti-cheat and put your account at risk. Staying outside the game keeps you safe.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>The deck uses your own saved keys</h2>
+      <p>The Command Deck reads the keybinds you already saved in the game and sends those. You do not type them in or remap anything.</p>
+      <p><b>Why:</b> you already set your keys up the way you like them. The deck follows you, not the other way round. It never changes your game's keybind file: FREE KEYS PICKER makes a backup and writes a separate profile that you load yourself.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>It never takes focus from the game</h2>
+      <p>Tapping the Command Deck, the Kneeboard or the Halo does not pull the game out of the front. Only while you type in a settings box does the program borrow the keyboard, and it hands it back when you are done.</p>
+      <p><b>Why:</b> if a click moved focus, your next key press would go to the wrong window in the middle of a fight. The game must keep the keyboard and mouse.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Why Borderless mode</h2>
+      <p>The game must run in Borderless window mode (Settings &gt; Graphics &gt; Window Mode).</p>
+      <p><b>Why:</b> in full screen, Windows gives the whole screen to the game and hides every other window, so nothing can show on top of it.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Key rules: one or two modifiers</h2>
+      <p>Show / hide keys and free keys use Ctrl, Alt or Shift plus one key, at most two modifiers.</p>
+      <p><b>Why:</b> one or two modifiers are quick to press when it counts. Three held modifiers plus a key is slow, easy to miss, and many keyboards drop one of four keys held at once.</p>
+      <p><b>Not allowed:</b> a single letter on its own (it would fire while you type in chat), Alt + F4 (it closes programs), and number-pad keys with two modifiers. With Num Lock on, Windows turns Shift + a number-pad key into a different key (Shift + Num 4 becomes the Left arrow), so those combinations are not reliable.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>No look-alike keys</h2>
+      <p>The game can still see the keys you press. If a CmdGlas key is the same as, or very close to, a game key, one press can do two things.</p>
+      <p><b>That is why there are two helpers:</b> <b>Key check</b> reads your game keys and shows every clash, and <b>FREE KEYS PICKER</b> only picks combinations that nothing uses, not your saved keys and not the game's standard keys.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Protected buttons</h2>
+      <p>SELF DESTRUCT and EJECT live in the EMERGENCY drawer and must be held for 1.5 seconds. RESPAWN also needs a 1.5 second hold.</p>
+      <p><b>Why:</b> a touch screen is easy to brush by accident. A deliberate hold means a stray finger cannot end your ship.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Your files and backups</h2>
+      <p>CmdGlas never changes your game files unless you press a button and confirm it. A game backup only reads your files and checks every copy. A restore asks first, refuses while the game runs, and keeps an undo copy.</p>
+      <p><b>Why:</b> your keybinds and characters took you hours. Nothing should be able to lose them by surprise.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Privacy</h2>
+      <ul>
+        <li>No AI is downloaded or installed with any CmdGlas product.</li>
+        <li>The EDGE Link only listens on your own PC (127.0.0.1) and sends nothing over the internet.</li>
+        <li>A license key is checked with the store when you activate it, then at least once every 7 days. That is how a key works on 2 PCs and can be moved.</li>
+        <li>A troubleshooting report leaves out your Windows user name.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Honest numbers</h2>
+      <p>When a data source cannot be reached, the tablet says so. It never fills the gap with a guess. Test-version numbers are marked as test numbers.</p>
+      <p><b>Why:</b> a wrong number you trust is worse than no number. The threat check is a quick sanity check, not a promise: pilot skill still decides most fights.</p>
+    </div>
+  </section>
+
+  <section class="product">
+    <div class="info">
+      <h2>Free tablet, paid programs</h2>
+      <p>The tablet is free in your browser. The Windows programs are paid, and every one of them comes with the CmdGlas Tablet + Halo.</p>
+      <p><b>Why:</b> the programs pay for hosting and for the hours behind every update, so the tablet can stay free for everyone.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Fan-made. Not affiliated with or endorsed by the game's publisher.</p>
+</footer>
+</body>
+</html>

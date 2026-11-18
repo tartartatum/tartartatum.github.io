@@ -193,3 +193,14 @@ footer::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1p
 body{background:#000 url(img/space-bg-1920.webp) center top/cover no-repeat fixed}
 @media (min-width:1921px){body{background-image:url(img/space-bg-2560.webp)}}
 @media (max-width:900px){body{background-image:url(img/space-bg-1280.webp);background-attachment:scroll}}
+/* 18 NOV (Thomas): Speech Petal program-window picture at 1/3 of its old shown width (was full column, about 1100 px) */
+.product .wide img.petal-win{width:368px;max-width:100%;margin:0 auto}
+/* 18 NOV: guides and manual - search box and easy reading (large text, roomy steps, rounded, text clear of corners) */
+.qs-search{display:block;margin:18px 0 6px}
+.qs-search span{display:block;font-weight:600;margin-bottom:8px;color:var(--fg)}
+.qs-search input{width:100%;padding:14px 20px;border:1px solid var(--line);border-radius:14px;background:rgba(6,16,26,.9);color:var(--fg);font:inherit;font-size:18px}
+.qs-search input:focus{outline:none;border-color:var(--accent,#6cd6ff)}
+.qs .info ol li,.qs .info p{font-size:18px;line-height:1.6}
+.qs .info ol li{margin-bottom:8px}
+.qs .info h2{font-size:22px}
+section.product[hidden]{display:none}
