@@ -3238,7 +3238,7 @@ document.addEventListener('click',async function(e){
         </div>
           <div class="cap-card">
             <div class="cap-h">It Stays Out Of The Way</div>
-            <div class="cap-i"><b>Pop-out pills</b><span class="cap-why">UNDOCK on the Account tab floats the top panel into its own window, so it can sit on a second monitor.</span></div>
+            <div class="cap-i"><b>Pop-out pills</b><span class="cap-why">In the CmdGlas Halo (comes with every CmdGlas shop program), UNDOCK floats the top panel into its own window.</span></div>
             <div class="cap-i"><b>Basic or Expert</b><span class="cap-why">Read the space manual, or the full tables. Your choice, per page.</span></div>
             <div class="cap-i"><b>Yours to arrange</b><span class="cap-why">Four colour themes and four dim levels in MORE &rarr; THEME &amp; DIM. It should look how you want at 2am.</span></div>
         </div>
@@ -6982,7 +6982,7 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 809;
+window.CMDGLAS_BUILD = 810;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
@@ -22781,6 +22781,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   setInterval(tick, 700); tick();
 })();
 </script>
+<style id="cg-b810-paid-undock-css">html:not(.cg-paid-halo) .cg-undock-btn{display:none !important}</style>
 <style id="sc-b430-popout-css">#sc-navsearch > .cg-undock-btn, #sc-navsearch .cg-undock-btn{left:auto !important;right:10px !important;transform:none !important}
 .cg-undock-btn{position:absolute !important;left:50% !important;bottom:8px !important;top:auto !important;right:auto !important;transform:translateX(-50%) !important;z-index:20;display:inline-flex !important;align-items:center;justify-content:center;white-space:nowrap;width:max-content !important;max-width:max-content !important;min-width:0 !important;height:auto !important;font:800 8.5px/1 'Rajdhani','Segoe UI',sans-serif;letter-spacing:1.4px;color:#cdeaff;background:rgba(90,180,220,.2) !important;border:1px solid rgba(130,205,255,.5);border-radius:7px;padding:6px 15px !important;cursor:pointer;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,.4);}
 .cg-undock-btn:hover{color:#eafaff;background:rgba(90,205,255,.28);border-color:#7fc4de;}
@@ -22808,7 +22809,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
   };
   var state={};
    
-  window.cgPillToggle=function(k){ try{ if(k!=='ops') return; undock(k); }catch(e){} };
+  window.cgPillToggle=function(k){ try{ if(k!=='ops') return; if(!document.documentElement.classList.contains('cg-paid-halo')) return; undock(k); }catch(e){} };  /* 18 NOV: UNDOCK only inside the paid CmdGlas Halo */
   var WRAP={leftpill:'sc-home-widgets',ops:'sc-home-widgets',account:'sc-home-widgets',search:'sc-tools-row',comms:'sc-tools-row'};
   function makeHost(key, doc){
     var id=WRAP[key]||'sc-home-widgets';
@@ -22902,7 +22903,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
     updateBtns();
   }
   function undock(key){
-    if(state[key]){ restore(key); return; }
+    if(state[key]){ restore(key); return; } if(!document.documentElement.classList.contains('cg-paid-halo')) return;  /* 18 NOV: UNDOCK only in the paid CmdGlas Halo */
     var node=q(key); if(!node) return;
     var r=node.getBoundingClientRect();
     var lw=node.offsetWidth||Math.round(r.width), lh=node.offsetHeight||Math.round(r.height);
@@ -22981,7 +22982,7 @@ body.sc-home-mode #cg-onebar #cg-moreinfo-pop.open{position:absolute !important;
       b.title=(key==='ops'
         ? 'Detach the Halo into a floating always-on-top window. Ctrl+Alt+1. Set the game to BORDERLESS windowed for it to show over the game - exclusive fullscreen hides all other windows.'
         : 'Ctrl+Alt+'+({ops:1,account:2,leftpill:3,search:4,comms:5}[key]||''));
-      b.addEventListener('click',function(e){ e.stopPropagation(); undock(key); });
+      b.addEventListener('click',function(e){ e.stopPropagation(); if(!document.documentElement.classList.contains('cg-paid-halo')) return; undock(key); });
        
       var host=(key==='comms'&&node.querySelector('.cg-comms-btns'))||node;
       host.appendChild(b);
@@ -24367,10 +24368,10 @@ body.sc-home-mode #cg-onebar #cg-npa-wrap #cg-npa-btn,body.sc-home-mode #cg-oneb
    
    
    
-  var NOTES_VER='2026-08-04a';        
+  var NOTES_VER='2026-11-18a';        
    
    
-  var NOTES='TRANSPARENT HALO IS LIVE NOW &mdash; USE IT AND SEND FEEDBACK. &middot; Download it at cmdglas.com/CmdGlas-Overlay.zip &middot; Unzip it, run 0 - FIRST TIME SETUP.bat once, then 1 - RUN OVERLAY.bat &mdash; full installation and hotkeys are in the README inside the zip. &middot; Set Star Citizen to BORDERLESS WINDOWED or no overlay can show over it.';
+  var NOTES='THE CMDGLAS HALO NOW COMES WITH EVERY CMDGLAS SHOP PROGRAM &mdash; see cmdglas.com/shop &middot; The tablet stays free, right here in your browser.';
   var SB_URL='https://rvbxbrgvsdjdtsjdusfh.supabase.co';
   var SB_KEY='sb_publishable_cpBcAlBpirODF0a8ZtYVlw_1AqlQWMM';
   function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
