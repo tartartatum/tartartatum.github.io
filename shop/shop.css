@@ -188,3 +188,8 @@ footer::before{content:"";position:absolute;left:24px;right:24px;top:0;height:1p
 #kneeboard{grid-template-columns:1fr}
 .kb-roll .roll-btn{margin-top:calc(22.69% - 19px)}
 @media (max-width:600px){.kb-roll .roll-btn{margin-top:calc(22.69% - 15px)}}
+
+/* 18 NOV (Thomas): the RAZ SOLO 4K space render as the backdrop for every shop page (still frame, not the video). */
+body{background:#000 url(img/space-bg-1920.webp) center top/cover no-repeat fixed}
+@media (min-width:1921px){body{background-image:url(img/space-bg-2560.webp)}}
+@media (max-width:900px){body{background-image:url(img/space-bg-1280.webp);background-attachment:scroll}}
