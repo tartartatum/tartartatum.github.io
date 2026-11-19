@@ -204,3 +204,8 @@ body{background:#000 url(img/space-bg-1920.webp) center top/cover no-repeat fixe
 .qs .info ol li{margin-bottom:8px}
 .qs .info h2{font-size:22px}
 section.product[hidden]{display:none}
+
+/* Command Deck video under the picture roll (2026-11-19) */
+.product .deck-video{margin:0}
+.product .deck-video video{display:block;width:100%;height:auto;border-radius:14px;background:#000}
+.product .deck-video figcaption{margin-top:6px;text-align:center;color:var(--muted);font-size:14px}
