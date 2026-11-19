@@ -7,6 +7,7 @@ const CHECKOUT = {
   bundle: '',
   all: '',
   petals: '',
+  halo: '',
 };
 
 document.querySelectorAll('[data-buy]').forEach(a => {
