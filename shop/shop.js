@@ -42,4 +42,14 @@ document.querySelectorAll('.roll').forEach(roll => {
   track.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); } if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); } });
   let t; track.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(() => show(Math.round(track.scrollLeft / track.clientWidth)), 60); });
   show(0);
+  // 22 NOV (Thomas: "i want the pages to scroll automatically through the deck colors"): every picture roll moves on by itself
+  // every 4.5 s while it is on screen, back to the first picture after the last. It waits while the pointer is over it or it
+  // has keyboard focus, waits 12 s after any click, swipe or key, and never moves for people who ask for reduced motion.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && slides.length > 1) {
+    let visible = false, hover = false, quietUntil = 0;
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: .5 }).observe(track);
+    roll.addEventListener('pointerenter', () => { hover = true; }); roll.addEventListener('pointerleave', () => { hover = false; });
+    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => roll.addEventListener(ev, () => { quietUntil = Date.now() + 12000; }, { passive: true }));
+    setInterval(() => { if (visible && !hover && !roll.contains(document.activeElement) && Date.now() > quietUntil && !document.hidden) go(current === slides.length - 1 ? 0 : current + 1); }, 4500);
+  }
 });

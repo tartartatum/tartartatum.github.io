@@ -176,3 +176,11 @@ footer::before{background:linear-gradient(90deg,transparent,rgba(var(--acc-rgb),
 .buy.soon,.buy.soon:hover{text-shadow:none;border-radius:18px;transform:none;box-shadow:0 0 0 4px #120b0f,0 0 0 5px rgba(255,255,255,.08),inset 0 0 12px rgba(255,255,255,.04),0 10px 20px rgba(0,0,0,.5);
   background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px),rgba(14,12,16,.9);border:1px solid rgba(255,255,255,.18)}
 @media (prefers-reduced-motion:reduce){.buy::before{animation:none}}
+
+/* 22 NOV (Thomas: buttons on the deck faces "say the same thing as the title up top on the deck page. combat for example"):
+   the name tag over each roll picture is hidden from view (screen readers still read it); the counter under the roll keeps the name. */
+.roll-slide figcaption{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* long unbroken text (SHA-256 fingerprints, links) wraps instead of pushing the page wider than a phone */
+.product>*,.info{min-width:0}
+.info p,.info li,.info code{overflow-wrap:anywhere}
