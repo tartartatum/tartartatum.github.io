@@ -184,3 +184,17 @@ footer::before{background:linear-gradient(90deg,transparent,rgba(var(--acc-rgb),
 /* long unbroken text (SHA-256 fingerprints, links) wraps instead of pushing the page wider than a phone */
 .product>*,.info{min-width:0}
 .info p,.info li,.info code{overflow-wrap:anywhere}
+
+/* 22 NOV (Thomas: "center the bundles and titles on each area"): section titles (Bundles, System requirements, Questions)
+   and the bundle cards are centred - title, price, text and Buy button. */
+.bundles>h2,.reqs h2,.faq h2,.reqs-all{text-align:center}
+.reqs h2::after,.bundles>h2::after,.faq h2::after{content:"";display:block;width:90px;height:3px;margin:12px auto 0;border-radius:3px;background:linear-gradient(90deg,transparent,var(--acc),transparent)}
+.bundle{text-align:center;justify-items:center}
+.bundle .price{justify-self:center}
+.bundle .buy{justify-self:stretch}
+.bundle.best h3::after{display:inline-block;margin:0 0 0 12px}
+.bundles{grid-template-columns:repeat(auto-fit,minmax(280px,420px));justify-content:center}
+.bundle{align-content:start;grid-template-rows:auto auto 1fr auto}
+.bundle .price{align-self:start}
+.req h3{text-align:center}
+.reqs-grid{grid-template-columns:repeat(auto-fit,minmax(240px,300px));justify-content:center}
