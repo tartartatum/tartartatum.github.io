@@ -1241,13 +1241,13 @@ body[data-portable="1"] #tab-craftcalc [style*="grid-template-columns"]{ grid-te
 #cover-screen .cover-inner,#cover-screen .cover-foot{flex-shrink:0}
 </style>
 <script id="cg-referral799-script">
-window.cgReferralCard=function(){return "<section class=\"cg-referral\" aria-label=\"Star Citizen referral\"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class=\"cg-referral-disclosure\">Eligible purchases also earn Raz a recruitment point.</p><div class=\"cg-referral-actions\"><a href=\"https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2\" target=\"_blank\" rel=\"noopener noreferrer\">Join Star Citizen</a><button type=\"button\" data-referral-copy>Copy code</button></div><p class=\"cg-referral-status\" role=\"status\" aria-live=\"polite\"></p></section>";};
+window.cgReferralCard=function(){return "";};
 document.addEventListener('click',async function(e){
  if(!e.target.closest('.cg-referral'))return;e.stopPropagation();
  var b=e.target.closest('[data-referral-copy]');if(!b)return;
  var s=b.closest('.cg-referral').querySelector('.cg-referral-status');b.disabled=true;s.textContent='Copying…';
- try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw Error('Clipboard unavailable');await navigator.clipboard.writeText('STAR-3RSF-JCT2');s.textContent='Copied: STAR-3RSF-JCT2';}
- catch(_){s.textContent='Copy unavailable. Select and copy STAR-3RSF-JCT2 above.';}
+ try{if(!navigator.clipboard||!navigator.clipboard.writeText)throw Error('Clipboard unavailable');await navigator.clipboard.writeText('');s.textContent='';}
+ catch(_){s.textContent='';}
  finally{b.disabled=false;}
 },true);
 </script>
@@ -1295,7 +1295,7 @@ document.addEventListener('click',async function(e){
     <style id="cg-cover-shop-css">#cover-shop{display:inline-block;margin-top:10px;padding:9px 30px;border-radius:999px;background:transparent;border:1px solid var(--amber2,#9fd8ff);color:var(--amber2,#9fd8ff);text-decoration:none;font-family:'Bruno Ace',sans-serif !important;font-weight:400 !important;font-size:14px;letter-spacing:3px;text-transform:uppercase;transition:background .15s,transform .12s}#cover-shop:hover{background:rgba(159,216,255,.14);transform:translateY(-1px)}</style>
     <a id="cover-shop" href="https://cmdglas.com/shop/" target="_blank" rel="noopener" title="CMDGLAS Shop - Command Deck, Kneeboard and cursor pack" onclick="event.stopPropagation()">SHOP</a>
     <p class="cg-guide-entry"><a href="social-tutorial/index.html" target="_blank" rel="noopener noreferrer">START HERE — TABLET &amp; SOCIAL GUIDE</a></p>
-    <section class="cg-referral" aria-label="Star Citizen referral"><h3>New to Star Citizen?</h3><p>Use Raz’s referral code when creating your RSI account to receive <strong>50,000 UEC</strong> after buying a game package.</p><code>STAR-3RSF-JCT2</code><p class="cg-referral-disclosure">Eligible purchases also earn Raz a recruitment point.</p><div class="cg-referral-actions"><a href="https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2" target="_blank" rel="noopener noreferrer">Join Star Citizen</a><button type="button" data-referral-copy>Copy code</button></div><p class="cg-referral-status" role="status" aria-live="polite"></p></section>
+    
     <button type="button" id="cover-srv-btn" class="panel-btn" style="display:none;margin-top:12px" onclick="event.stopPropagation();fetch('/api/restart',{method:'POST'}).then(function(){document.getElementById('cover-srv-txt').textContent='restarting server... reconnecting';setTimeout(function(){location.reload();},6500);}).catch(function(){});">RESTART SERVER</button>
 </div>
   
@@ -6982,14 +6982,14 @@ function __syncNav(tid){
 }
  
 window.CMDGLAS_VERSION='2.0';
-window.CMDGLAS_BUILD = 811;
+window.CMDGLAS_BUILD = 812;
 window.CMDGLAS_CHANNEL='LIVE';
 window.CMDGLAS_VERSTR=function(){
   var v=window.CMDGLAS_VERSION||'0.0', b=window.CMDGLAS_BUILD||0,
       c=window.CMDGLAS_CHANNEL||'LIVE';
   return 'cg-alpha-'+v+'.0-'+b+'-'+c;
 };
-window.CMDGLAS_BUILD_DATE='2026-11-14';
+window.CMDGLAS_BUILD_DATE='2026-11-24';
  
 window.scPaintTopbar=function(){
   try{
@@ -35306,7 +35306,7 @@ body.cg-b738-on #sc-home-widgets .wg.ops-pill.b385{min-width:0 !important;}
       var hp=document.createElement('div'); hp.id='cg-haul738'; body.appendChild(hp); }
     if(!document.getElementById('cg-acct738')){
       var ap=document.createElement('div'); ap.id='cg-acct738'; body.appendChild(ap);
-      ap.insertAdjacentHTML('afterbegin',"<section id=\"cg-account-start800\"><details id=\"cg-start-guidance800\" open><summary>START HERE &mdash; setup guide</summary><p>Sign in below, then set up your party, organization and chat.</p><button type=\"button\" id=\"cg-account-comms800\">SET UP COMMS</button><a href=\"social-tutorial/index.html\" target=\"_blank\" rel=\"noopener noreferrer\">TABLET &amp; SOCIAL GUIDE</a><label class=\"cg-start-choice\"><input type=\"checkbox\" id=\"cg-start-dismiss800\"> Do not show again</label><p id=\"cg-start-save800\" role=\"status\" aria-live=\"polite\"></p></details><div id=\"cg-account-rsi800\"><span>New RSI account:</span> <a href=\"https://www.robertsspaceindustries.com/enlist?referral=STAR-3RSF-JCT2\" target=\"_blank\" rel=\"noopener noreferrer\">RSI SIGN-UP</a><span>Raz referral code: <code>STAR-3RSF-JCT2</code></span></div></section>");
+      ap.insertAdjacentHTML('afterbegin',"<section id=\"cg-account-start800\"><details id=\"cg-start-guidance800\" open><summary>START HERE &mdash; setup guide</summary><p>Sign in below, then set up your party, organization and chat.</p><button type=\"button\" id=\"cg-account-comms800\">SET UP COMMS</button><a href=\"social-tutorial/index.html\" target=\"_blank\" rel=\"noopener noreferrer\">TABLET &amp; SOCIAL GUIDE</a><label class=\"cg-start-choice\"><input type=\"checkbox\" id=\"cg-start-dismiss800\"> Do not show again</label><p id=\"cg-start-save800\" role=\"status\" aria-live=\"polite\"></p></details><div id=\"cg-account-rsi800\"><span>New RSI account:</span> <a href=\"https://www.robertsspaceindustries.com/enlist\" target=\"_blank\" rel=\"noopener noreferrer\">RSI SIGN-UP</a></div></section>");
       document.getElementById('cg-account-comms800').addEventListener('click',function(){ if(window.cgCommsMaxOpen) window.cgCommsMaxOpen('&start=1'); });
       window.cgStartupGuidance800(document.getElementById('cg-account-start800')); }
 
