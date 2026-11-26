@@ -16,3 +16,6 @@
 .cmpx .cmpx-foot{margin:12px 2px 0;color:#7f9cb8;font-size:.78em;line-height:1.5}
 .intro .since{margin:.2em 0 .9em;letter-spacing:.14em;font-size:.82em;color:#8fc8ff;text-transform:uppercase}
 .intro .since b{color:#d6ebff}
+main img{cursor:zoom-in}main a img,main button img{cursor:pointer}
+#ttlb .ttlb-x{padding:8px 18px;border:1px solid rgba(61,155,255,.7);border-radius:999px;background:rgba(6,22,40,.9);cursor:pointer;z-index:2}
+.tt-what .tt-wlist{margin:10px 0 12px 0;padding:0 0 0 20px;color:#cfe3f7;line-height:1.55}.tt-what .tt-wlist li{margin:6px 0}.tt-what .tt-wlist b{color:#d6ebff}
