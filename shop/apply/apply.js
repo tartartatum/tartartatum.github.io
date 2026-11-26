@@ -7,7 +7,7 @@
     e.preventDefault();
     var n = +f.members.value;
     if (!f.checkValidity()) { say('Please fill in every field marked, and tick the agreement.', 'bad'); f.reportValidity(); return; }
-    if (n < 15 || n > 60) { say('Test orgs have 15 to 60 members on the RSI org page.', 'bad'); return; }
+    if (n < 40) { say('Test orgs have 40 or more members on the RSI org page.', 'bad'); return; } /* 26 NOV: 40+ members; Europe, Australia / Oceania, United States */
     var data = {}; new FormData(f).forEach(function (v, k) { if (k === 'gear') { (data.gear = data.gear || []).push(v); } else data[k] = v; });
     fetch(f.action, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (r.ok && j.ok) { say('Application received. We check your org and reply on Discord.', 'ok'); f.reset(); } else if (j && j.error) { say(j.error, 'bad'); } else throw 0; }); })
