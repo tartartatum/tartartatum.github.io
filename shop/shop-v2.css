@@ -1,7 +1,7 @@
 /* CmdGlas shop look v2 (22 NOV 2026, PREVIEW). Thomas: "rework the design of the buttons and layout to make it look more
    modern more fluid like the red website" (StreamSpell Dark HUD store page) - "make it look so people want to spend their money".
    Loaded AFTER shop.css; overrides only. Layout: glass side menu (desktop), product = media + buy panel, pill buttons with glow. */
-:root{--acc:#ff3b4e;--acc2:#b3122a;--acc-rgb:255,59,78;--glass:rgba(8,14,24,.72);--glass2:rgba(14,24,38,.82);--hair:rgba(var(--acc-rgb),.16);--hair2:rgba(255,255,255,.06);--txt:#eef6ff;--sub:#9fb3c6;--r:24px}
+:root{--acc:#3baaff;--acc2:#126db3;--acc-rgb:31,150,240;--glass:rgba(8,14,24,.72);--glass2:rgba(14,24,38,.82);--hair:rgba(var(--acc-rgb),.16);--hair2:rgba(255,255,255,.06);--txt:#eef6ff;--sub:#9fb3c6;--r:24px}
 body.accent-blue{--acc:#45c8ff;--acc2:#1f7bff;--acc-rgb:69,200,255}
 /* 22 NOV Thomas: "3 red" - red is the shop accent; the blue set stays available as body.accent-blue */
 html{scroll-padding-top:24px}
@@ -162,7 +162,7 @@ footer::before{background:linear-gradient(90deg,transparent,rgba(var(--acc-rgb),
 /* 22 NOV (Thomas: Buy buttons get the same look, "2 - 1"): Buy = a larger raised holo screen in the accent colour -
    metal bezel ring, glowing glass face, scan lines, light sweep, floating shadow; arrow nudges and the screen lifts on hover. */
 .buy{isolation:isolate;border:1px solid rgba(var(--acc-rgb),.85);border-radius:18px;color:#fff;
-  background:linear-gradient(180deg,rgba(var(--acc-rgb),.55),rgba(var(--acc-rgb),.22) 50%,rgba(40,0,6,.55)),rgba(10,6,10,.92);
+  background:linear-gradient(180deg,rgba(var(--acc-rgb),.55),rgba(var(--acc-rgb),.22) 50%,rgba(0,19,40,.55)),rgba(10,6,10,.92);
   box-shadow:0 0 0 4px #120b0f,0 0 0 5px rgba(255,255,255,.16),inset 0 1px 0 rgba(255,255,255,.45),inset 0 0 22px rgba(var(--acc-rgb),.35),0 14px 28px rgba(0,0,0,.6),0 0 26px rgba(var(--acc-rgb),.25);
   transform:translateY(-1px);text-shadow:0 0 8px rgba(var(--acc-rgb),.8)}
 .buy::before{inset:0;width:auto;left:0;transform:none;border-radius:inherit;z-index:-1;
@@ -170,7 +170,7 @@ footer::before{background:linear-gradient(90deg,transparent,rgba(var(--acc-rgb),
              repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 3px);
   animation:holo-sweep 5s linear infinite;transition:none}
 .buy:hover,.buy:focus-visible{transform:translateY(-4px);filter:none;border-color:#fff;
-  background:linear-gradient(180deg,rgba(var(--acc-rgb),.7),rgba(var(--acc-rgb),.3) 50%,rgba(40,0,6,.5)),rgba(10,6,10,.92);
+  background:linear-gradient(180deg,rgba(var(--acc-rgb),.7),rgba(var(--acc-rgb),.3) 50%,rgba(0,19,40,.5)),rgba(10,6,10,.92);
   box-shadow:0 0 0 4px #120b0f,0 0 0 5px rgba(var(--acc-rgb),.5),inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 26px rgba(var(--acc-rgb),.5),0 20px 36px rgba(0,0,0,.65),0 0 38px rgba(var(--acc-rgb),.45)}
 .buy:hover::before{left:0}
 .buy.soon,.buy.soon:hover{text-shadow:none;border-radius:18px;transform:none;box-shadow:0 0 0 4px #120b0f,0 0 0 5px rgba(255,255,255,.08),inset 0 0 12px rgba(255,255,255,.04),0 10px 20px rgba(0,0,0,.5);
@@ -198,3 +198,27 @@ footer::before{background:linear-gradient(90deg,transparent,rgba(var(--acc-rgb),
 .bundle .price{align-self:start}
 .req h3{text-align:center}
 .reqs-grid{grid-template-columns:repeat(auto-fit,minmax(240px,300px));justify-content:center}
+
+/* PACK LIST under the No-AI box (chat 2, 24 NOV, Thomas 14:39) - PREVIEW */
+.packs{margin-top:16px;padding:14px 20px;border:1px solid rgba(80,190,255,.35);border-radius:16px;background:rgba(16,144,239,.06)}.packs-head{margin:0 0 8px;text-transform:uppercase;letter-spacing:3px;font-size:clamp(18px,2.4vw,22px);color:#7cc0ff}.packs ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}.packs li{display:grid;grid-template-columns:minmax(150px,200px) 70px 1fr;gap:10px;align-items:baseline;padding:8px 12px;border-radius:10px;background:rgba(4,17,26,.55)}.packs a{color:#9fd0ff;text-decoration:none}.packs a:hover{text-decoration:underline}.pk-price{color:#fff;font-weight:700}.pk-what{color:#c4d7e6}.packs-note{margin:10px 0 0;color:#8aa5b8;font-size:15px}@media (max-width:700px){.packs li{grid-template-columns:1fr auto}.pk-what{grid-column:1/-1}}
+
+/* pack list v2: what + why rows */
+.packs li{grid-template-columns:minmax(150px,200px) 70px 1fr!important;row-gap:3px}.packs .pk-what{grid-column:3}.packs .pk-why{grid-column:3;color:#fff}.packs li i{font-style:normal;color:#7cc0ff;font-weight:600}@media (max-width:700px){.packs .pk-what,.packs .pk-why{grid-column:1/-1}}
+
+/* FEATURE SECTIONS (chat 2, 24 NOV) - PREVIEW */
+.fband{margin:22px 0;padding:22px 24px;border:1px solid rgba(80,190,255,.3);border-radius:18px;background:linear-gradient(180deg,rgba(16,144,239,.08),rgba(4,17,26,.6))}.fband h2{margin:2px 0 6px}.fband-tag{margin:0;text-transform:uppercase;letter-spacing:3px;font-size:14px;color:#7cc0ff}.fband-tag.soon{color:#ffd27a}.fband-lede{margin:0 0 14px;color:#c4d7e6;max-width:70ch}.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}.fcard{padding:12px 14px;border:1px solid rgba(80,190,255,.25);border-radius:12px;background:rgba(4,17,26,.7)}.fcard h3{margin:0 0 4px;font-size:17px;color:#fff}.fcard p{margin:0;color:#c4d7e6;font-size:15px;line-height:1.4}.fband-go{display:inline-block;margin-top:14px;padding:10px 18px;border-radius:999px;border:1px solid #4fb0f5;color:#fff;text-decoration:none;background:rgba(16,144,239,.25)}.fband-go:hover{background:rgba(16,144,239,.45)}.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tgrid figure{margin:0}.tgrid img{width:100%;height:auto;border-radius:12px;border:1px solid rgba(80,190,255,.3)}.tgrid figcaption{margin-top:6px;color:#c4d7e6;font-size:15px}.tgrid b{color:#fff;display:block}@media (max-width:800px){.tgrid{grid-template-columns:1fr}}
+
+/* fun line (Thomas 24 NOV ~14:52) */.packs .pk-fun{grid-column:3;color:#ffd27a;font-style:italic}.packs .pk-fun em,.lede.fun em{color:#8aa5b8;font-size:.9em}.lede.fun{color:#ffd27a;font-style:italic}
+
+.fband-note{margin:-6px 0 14px;color:#ffd27a;font-size:15px}
+
+/* learning curve note (24 NOV) */.learn{margin-top:16px;padding:14px 20px;border:1px solid rgba(255,210,122,.4);border-radius:16px;background:rgba(255,210,122,.06)}.learn-head{margin:0 0 6px;text-transform:uppercase;letter-spacing:3px;font-size:clamp(17px,2.2vw,20px);color:#ffd27a}.learn p{margin:0;color:#e3eef6}
+
+.learn .learn-fix{margin-top:8px;color:#c4d7e6}.learn .learn-fix b{color:#7cc0ff}
+.fcard .soon{display:inline-block;margin-left:6px;padding:1px 9px;border:1px solid #1090ef;border-radius:999px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#7cc0ff;vertical-align:middle}
+#orgpacks h2 .soon{display:inline-block;margin-left:10px;padding:2px 12px;border:1px solid #1090ef;border-radius:999px;font-size:13px;letter-spacing:2px;color:#7cc0ff;vertical-align:middle}
+#orgpacks .fband-lede{grid-column:1/-1;margin:0 0 6px}
+/* status colours only (24 NOV): notes and COMING tags are not warnings -> RSI blue */
+.fband-tag.soon{color:#3dabff!important}.fband-note{color:#ffffff!important}.fband-note b{color:#4fb0ff!important}
+
+.shipnote{display:block;margin-top:4px;color:#cfe6ff;font-size:14px}.shipnote a{color:#4fb0ff}

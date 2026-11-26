@@ -1,0 +1,360 @@
+<!doctype html>
+<!-- SHOP DEMO copy (chat 2, 25 NOV): My Own Tablet	elemetry	elemetry-holo.html 2b7cfd54 (LOCK 428 wide layout), sample data only, real Galaxy pictures (RAZ 23:25). -->
+<html lang="en"><head><script>if(new URLSearchParams(location.search).has('ipad')){document.documentElement.classList.add('ipad');window.TD_CALM=true;}</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CmdGlas Telemetry - tablet</title>
+<!-- FULL SCREEN (RAZ 23 NOV: "how do i make it full screen"): opened from the Home Screen icon (Add to Home Screen, Open as Web App) it runs without the Safari bars -->
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Telemetry"><meta name="theme-color" content="#020001">
+<!-- chat 2, 23 NOV. RAZ: "make sure that the tablet can process and display telemetry data as well ... the full versions with no address bar" -> picked
+     "1 a tablet layout": one TELEMETRY page made for the 4:3 tablet. Travel pill across the top, then ship status and server status, you scroll.
+     Landscape: each deck page as one full-width strip. Portrait: each deck page split in two halves stacked, so nothing is tiny or oversized.
+     The same deck pages are reused (same look, same live data), only placed differently. BASE = where the deck pages live (installer sets it).
+     Live data: the pages read the helper; on the iPad that needs chat 3's read-only pass-through (/api/telemetry/stream) - not built yet. -->
+<style>
+@font-face{font-family:Oxanium;src:url(Oxanium.ttf)}
+*{box-sizing:border-box}
+html,body{margin:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%2360b5ff' stroke-opacity='.13' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,#020001;color:#ffd0d6;font-family:Oxanium,Segoe UI,sans-serif;-webkit-tap-highlight-color:transparent}
+/* OWN PAGES (RAZ 23 NOV on the iPad: "each page needs to be on its own ipad page. the ship status page is too compressed, can't read the buttons"):
+   tabs TRAVEL / SHIP STATUS / SERVER STATUS (or swipe left / right); one page at a time; deck pages split in halves (wide) or thirds (narrow) so the keys are readable */
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 10px 8px;background:linear-gradient(180deg,#020001 70%,rgba(2,0,1,0))}
+.top b{font-size:14px;letter-spacing:4px;color:#fff;margin-right:auto}
+.tab{font:700 12px Oxanium,sans-serif;letter-spacing:2px;color:#ddd;background:linear-gradient(180deg,#14060a,#050102);border:1.5px solid #5a1622;border-radius:18px;padding:8px 14px}
+.tab.on{color:#fff;border-color:#ff2a45;box-shadow:0 0 10px rgba(255,31,61,.45)}
+#mode{font-size:10px;letter-spacing:2px;color:#ff8f9b;margin-left:6px}
+.wrap{padding:0 10px 30px}
+.sec{margin:0 0 12px}
+.lbl{font-size:11px;letter-spacing:3px;color:#ff8f9b;margin:0 4px 5px}
+.lbl{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sds{display:flex;gap:8px}.sd{font:700 12px Oxanium,sans-serif;width:30px;height:28px;border-radius:14px;color:#aaa;background:linear-gradient(180deg,#14060a,#050102);border:1.5px solid #5a1622}
+.sd.on{color:#fff;border-color:#ff2a45;box-shadow:0 0 8px rgba(255,31,61,.45)}
+.cut{position:relative;overflow:hidden;border-radius:14px;background:#000}
+.cut iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:auto}
+/* iPad Safari sizes an iframe to its content (the 2560 px deck) and ignores width:100% - this pins it to the frame (23 NOV: "3 is cut off") */
+.cut iframe{width:1px!important;min-width:100%!important;max-width:100%!important;height:100%!important}
+#travel svg{display:block;width:100%;height:auto;max-height:calc(100vh - 70px);margin:0 auto}
+.page[data-p="0"].on{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 70px);gap:8px}#travel{width:100%}
+#front{width:100%;position:relative}#front iframe{display:block;width:100%;border:0;background:transparent}
+.page{display:none}.page.on{display:block}
+/* main page = the pill only (23 NOV: "if it's full screen it shouldn't have ship status server sample data full screen button" - they are inside the pill now) */
+body.p0 .top{display:none}body.p0 .wrap{padding-top:8px}
+/* REFRESH + EXIT FULL SCREEN at the top of the iPad page (23 NOV) */
+#tbar{position:fixed;top:6px;left:50%;transform:translateX(-50%);z-index:40;display:flex;gap:10px}#tbar button{font:700 13px Oxanium,sans-serif;letter-spacing:2px;color:#fff;background:linear-gradient(180deg,#1a0a0e,#070203);border:1.5px solid #ff2a45;border-radius:8px;padding:8px 16px;cursor:pointer}#tbar button[hidden]{display:none}#tbar a{font:700 13px Oxanium,sans-serif;letter-spacing:2px;color:#ffd23a;border:1.5px solid #ffae00;border-radius:8px;padding:8px 14px;text-decoration:none}#tbar a[hidden]{display:none}
+#ktoast{position:fixed;top:48px;left:50%;transform:translateX(-50%);z-index:41;font:700 12px Oxanium,sans-serif;letter-spacing:1.5px;color:#fff;background:#0a0406;border:1.5px solid #ff2a45;border-radius:8px;padding:6px 14px;display:none}#ktoast.ok{border-color:#14ff63;color:#bfffd5}#ktoast.bad{border-color:#ffae00;color:#ffd99a}body.p0 .page[data-p="0"].on{min-height:calc(100vh - 16px)}body.p0 #travel svg{max-height:calc(100vh - 16px)!important}
+/* COLORS panel (23 NOV): every group gets any color + dark / normal / light */
+#colp{position:fixed;inset:0;z-index:50;display:none;background:rgba(0,0,0,.72);align-items:center;justify-content:center}#colp.open{display:flex}
+#colp .bx{width:min(920px,94vw);max-height:92vh;overflow:auto;background:#0a0406;border:1.5px solid #ff2a45;border-radius:16px;padding:16px 18px;font-family:Oxanium,sans-serif}
+#colp h3{margin:0 0 10px;font-size:16px;letter-spacing:4px;color:#fff}#colp .r{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}
+#colp .r>span{width:120px;font-size:12px;letter-spacing:2px;color:#ffd0d6}#colp .sw{display:flex;gap:6px;flex-wrap:wrap}
+#colp .sw i{width:28px;height:28px;border-radius:7px;cursor:pointer;box-shadow:0 0 0 1px #000,0 0 0 2px #333}#colp .sw i.on{box-shadow:0 0 0 2px #000,0 0 0 4px #fff}
+#colp .sh{display:flex;gap:4px}#colp button{font:700 11px Oxanium,sans-serif;letter-spacing:1.5px;color:#ddd;background:#14060a;border:1.5px solid #5a1622;border-radius:12px;padding:6px 10px;cursor:pointer}
+#colp button.on{color:#fff;border-color:#fff}#colp .ft{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+#tbpair,#tbar{display:none!important} /* SHOP DEMO: no PAIR iPAD / REFRESH buttons */#pairwarn{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);z-index:30;font:700 10px Oxanium,sans-serif;letter-spacing:1.5px;color:#ffcf7a;background:rgba(10,6,2,.75);border:1px solid #b07a00;border-radius:10px;padding:3px 10px;white-space:nowrap}html.see #pairwarn,body.holo #pairwarn{display:none}html.ipad body::after{content:"";position:fixed;inset:4px;z-index:60;pointer-events:none;border-radius:26px;border:1.5px solid rgba(61,171,255,.55);box-shadow:0 0 6px rgba(31,158,255,.35),inset 0 0 22px rgba(31,158,255,.16),inset 0 1px 0 rgba(255,255,255,.22);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012) 14%,rgba(255,255,255,0) 30%)}html.ipad #fsb,html.ipad #travel g[data-go="fs"]{display:none!important} /* SHOP DEMO ?ipad=1: his iPad page look (telemetry-tablet c3146c73): glass rim, no FULL SCREEN */html.ipad svg.tdial path[fill^="url(#tdbg"],html.ipad svg.tdial path[fill^="url(#tdhex"],html.ipad svg.tdial path[fill^="url(#tdglow"]{fill-opacity:0!important} /* 25 NOV RAZ: "make the honeycomb small throughout the entire backdrop" = one fine honeycomb (his iPad 8.4 x 14.4), pill backdrop see-through */</style><style>html,body{scrollbar-width:none!important;overflow:hidden!important}::-webkit-scrollbar{display:none!important;width:0!important;height:0!important} /* SHOP: RAZ 25 NOV "absolutely no scrollbar" */</style></head><body>
+<div class="top"><b>TELEMETRY</b><button class="tab on" data-p="0">MAIN</button><button class="tab" data-p="1">SHIP STATUS</button><button class="tab" data-p="2">SERVER</button><span id="mode">SAMPLE DATA</span><button class="tab" id="fsb" style="display:none">FULL SCREEN</button></div>
+<div class="wrap">
+<div class="page on" data-p="0"><div id="travel"></div><div id="front"></div></div>
+<div class="page" data-p="1"></div>
+<div class="page" data-p="2"></div>
+</div>
+<div id="tbar"><a id="tbpair" href="pair.html" hidden>PAIR iPAD</a></div><div id="ktoast"></div><div id="pairwarn">&#9888; iPAD NOT PAIRED &middot; KEYS ARE READ-ONLY UNTIL YOU PAIR</div>
+<div id="colp"><div class="bx"><h3>COLORS</h3><div id="colrows"></div><div class="ft"><button id="colreset">RESET ALL</button><button id="coldone">DONE</button></div></div></div>
+<script>window.TD_EDGE_SYMBOLS=true; window.TD_TABLET=true; window.TD_HOLO=new URLSearchParams(location.search).has('holo');window.TD_WIDE=new URLSearchParams(location.search).has('wide'); /* 25 NOV: Edge wide layout */ /* PC Holo FLIGHT page only (25 NOV) */ if(new URLSearchParams(location.search).get('wingreal')!=='0')window.TD_WINGIMG='ship-rear/rsi-galaxy-2000.webp';window.TD_WINGREAR=["rsi-galaxy"]; /* SHOP DEMO (chat 2, 25 NOV 23:4x): only the Galaxy rear picture ships with the demo */ /* real FleetYards rear photos in ship-rear/ (24 NOV) */ /* 24 NOV: his pick 4 = real Galaxy over a level horizon is the DEFAULT wing angle (?wingreal=0 = old drawn ship) */ window.TD_THEME = +(new URLSearchParams(location.search).get('theme') || 12) /* 24 NOV: RSI BLUE (12) is the default */; window.TD_DIRBLUE = new URLSearchParams(location.search).get('dirs') === 'blue' /* ?dirs=blue = all-blue direction colors (preset 12 only, his choice pending) */; /* color theme 1-10 (23 NOV) */ /* ONE PAGE: the travel pill runs the full tablet height with every key and field inside (23 NOV) */</script>
+<script src="travel-dial-holo.js"></script>
+<script>
+const BASE = new URLSearchParams(location.search).get('base') || './';
+/* the deck pages and their section edges (deck px of the 2560 x 720 page) */
+const PAGES = [null,
+ { name: 'SHIP STATUS', file: 'ship-status-deck.html', halves: [[0, 1409, 'SHIP · WARNING / CAUTION · POWER'], [1409, 2560, 'FUEL · WEAPONS · SHIP · COMPONENTS']], thirds: [[0, 531, 'SHIP · DAMAGE'], [531, 1409, 'WARNING / CAUTION · POWER'], [1409, 2560, 'FUEL · WEAPONS · SHIP · COMPONENTS']] },
+ { name: 'SERVER STATUS', file: 'server-status-deck.html', halves: [[0, 1409, 'SERVER · SESSION · YOUR PC'], [1409, 2560, 'EVENTS · CIG SERVICE STATUS']], thirds: [[0, 531, 'SERVER · ADDRESS'], [531, 1409, 'SESSION · YOUR PC'], [1409, 2560, 'EVENTS · CIG SERVICE STATUS']] }];
+/* ONE SECTION PER SCREEN (23 NOV, iPad Pro landscape): two halves stacked only reached 64% size with empty sides. Each third of a deck page is now its own
+   screen (swipe or tap the 1 2 3 dots), scaled as large as the tablet allows - about twice the old size, and the full height for most sections */
+let cur = 0, sub = 0, layout = '';
+const NSUB = k => k ? PAGES[k].thirds.length : 1;
+function show(n, s) { cur = (n + 3) % 3; sub = s || 0; document.body.classList.toggle('p0', cur === 0); document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', +t.dataset.p === cur)); document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', +p.dataset.p === cur)); layout = ''; build(); scrollTo(0, 0); }
+function step(d) { const s = sub + d; if (s >= 0 && s < NSUB(cur)) { sub = s; layout = ''; build(); return; } const n = (cur + d + 3) % 3; show(n, d < 0 ? NSUB(n) - 1 : 0); }
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => show(+t.dataset.p));
+/* swipe left / right: next / previous section, then the next page */
+let sx = null, sy = 0; addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null; if (Math.abs(dx) > 70 && Math.abs(dx) > 2 * Math.abs(dy)) step(dx < 0 ? 1 : -1); }, { passive: true });
+function build() {
+  /* only the section you look at is loaded (less work for the tablet) */
+  const want = cur + '.' + sub; if (want === layout) { fit(); return; } layout = want;
+  for (const k of [1, 2]) { const host = document.querySelector('.page[data-p="' + k + '"]'); if (k !== cur) { host.innerHTML = ''; continue; }
+    const p = PAGES[k], [x0, x1, cap] = p.thirds[sub];
+    const dots = p.thirds.map((t, i) => `<button class="sd${i === sub ? ' on' : ''}" data-s="${i}">${i + 1}</button>`).join('');
+    host.innerHTML = `<div class="sec"><div class="lbl"><span>${p.name} · ${cap}</span><span class="sds">${dots}</span></div><div class="cut" data-x0="${x0}" data-x1="${x1}"><iframe src="${BASE}${p.file}?s=0&stream=parent&crop=${x0},${x1}" title="${p.name}" scrolling="no"></iframe></div></div>`;
+    host.querySelectorAll('.sd').forEach(b => b.onclick = () => { sub = +b.dataset.s; layout = ''; build(); }); }
+  fit();
+}
+/* each section: the page at 2560 x 720, scaled so its section fills the width, shifted so only that section shows */
+/* FILL THE SCREEN (RAZ 23 NOV: "stretch the pages the entire height of the tablet ... landscape 12.5 apple ipad pro"): the sections of the page you look at
+   are scaled together so they fill the full height of the tablet below the tabs (no scrolling), same shape (no squashing), centred left / right */
+function fit() {
+  const cuts = [...document.querySelectorAll('.page.on .cut')]; if (!cuts.length) return;
+  const top = document.querySelector('.top').offsetHeight, availH = innerHeight - top - 14 - cuts.length * 34, availW = document.querySelector('.wrap').clientWidth;
+  const maxW = Math.max(...cuts.map(c => c.dataset.x1 - c.dataset.x0)), s = Math.min(availW / maxW, availH / (720 * cuts.length));
+  cuts.forEach(c => { const x0 = +c.dataset.x0, x1 = +c.dataset.x1, f = c.firstElementChild, sec = c.parentElement;
+    c.style.width = Math.round((x1 - x0) * s) + 'px'; c.style.height = Math.round(720 * s) + 'px'; c.style.margin = '0 auto'; sec.style.margin = '0 0 4px';
+    const lb = sec.querySelector('.lbl'); lb.style.width = c.style.width; lb.style.margin = '0 auto 6px'; f.style.height = '100%'; f.style.transform = 'none'; }); /* the page scales itself to this frame (sharp on retina) */
+}
+addEventListener('resize', () => { layout = ''; build(); });
+/* travel pill: drawn here directly (vector, sharp at any size). Sample motion until live data comes in. */
+const units = (() => { try { return localStorage.getItem('cmdglas-units') || 'm'; } catch (e) { return 'm'; } })();
+/* LIVE: same mapping as the desktop travel window. STREAM = the helper (PC) or the tablet server's read-only pass-through (iPad / Android). */
+const STREAM = 'data:text/plain,'; /* SHOP DEMO: never reads a stream, sample data only */
+const SHIPART = new URLSearchParams(location.search).get('shipart') || '/api/telemetry/ship-art/'; let SIDE64 = ''; fetch('galaxy-port.b64').then(r => r.ok ? r.text() : '').then(t => { SIDE64 = t.trim(); }).catch(() => {});
+let LIVE = null, LIVEON = false; const gp = (o, p) => p.split('.').reduce((a, k) => a == null ? undefined : a[k], o), VS = 'vehicle.state.flight.settings.';
+try { const es = new EventSource(STREAM); es.onmessage = e => { try { LIVE = JSON.parse(e.data); LIVEON = LIVE.service === 'on';
+  /* ONE stream per tablet: each snapshot goes to the deck pages shown (they use ?stream=parent) */
+  document.querySelectorAll('.page.on iframe').forEach(f => { try { f.contentWindow.postMessage({ type: 'cmdglas-snap', snap: LIVE }, '*'); } catch (x) {} }); } catch (x) {} }; es.onerror = () => { LIVEON = false; }; } catch (e) {}
+/* 360 TRAVEL RING data (RAZ 24 NOV 12:20, his pick: "1 Good, put it on the iPad"). Drawn by ring360() in travel-dial-chat8.js.
+   ?ring=0 hides it; ?ringstate=0..9 pins one of the approved sample states (arrow360-combined.html) for checking.
+   LIVE: speed + up/down speed REAL (derived.speed / vertical_speed / travel_angle_360); forward vs backward = derived.moving_backward (null = GREY, not known yet);
+   turn = derived.turn_rate_deg_s (CALCULATED); drift = snap.marker from Marker Glow (screen read). Missing / not seen / stale (> 2 s) marker -> drift dim, never invented. */
+const RINGQ = new URLSearchParams(location.search), RINGOFF = RINGQ.get('ring') === '0', RINGST = RINGQ.get('ringstate');
+let MK_AS = null, MK_AT = 0;
+function markerDrift() { const m = LIVEON && LIVE ? LIVE.marker : null; if (!m) return { seen: false, why: 'Marker Glow has sent nothing' };
+  if (m.as_of !== MK_AS) { MK_AS = m.as_of; MK_AT = Date.now(); } /* stale = no NEW reading for 2 s, timed on this device (PC and iPad clocks are not compared) */
+  const pcAge = Date.parse(LIVE.at) - Date.parse(m.as_of); /* same PC clock: snapshot time vs marker time */
+  if (Date.now() - MK_AT > 2000 || pcAge > 2000) return { seen: false, why: 'stale, older than 2 s' };
+  if (!m.seen || m.angle_deg == null || m.dist_pct == null) return { seen: false, why: 'marker not on screen' };
+  const a = ((+m.angle_deg % 360) + 360) % 360, d = +m.dist_pct, side = d > 4 && Math.abs(a - 270) <= 45 ? 'L' : d > 4 && Math.abs(a - 90) <= 45 ? 'R' : null;
+  return { seen: true, side, pct: Math.round(d) }; }
+function ringLive() { if (RINGOFF) return null; const d = LIVE && LIVE.derived, V = LIVE && LIVE.vehicle && LIVE.vehicle.state, I = V && V.flight && V.flight.instruments;
+  if (!d || d.speed == null) return { nodata: true, turn: null, g: null, boost: null, drift: markerDrift() };
+  const sp = Math.abs(+d.speed || 0), vs = +d.vertical_speed || 0, b = I && I.boost;
+  const ang = d.travel_angle_360 != null ? +d.travel_angle_360 : sp > .5 ? (Math.atan2(vs, Math.sqrt(Math.max(0, sp * sp - vs * vs))) * 180 / Math.PI + 360) % 360 : null;
+  return { spd: sp, ang, back: d.moving_backward == null ? null : !!d.moving_backward, turn: d.turn_rate_deg_s == null ? null : Math.round(+d.turn_rate_deg_s * 10) / 10,
+    drift: markerDrift(), g: I && I.g_meter && I.g_meter.current != null ? +I.g_meter.current : null, boost: b == null ? null : !!(b === true || b.engaged) }; }
+const RING_STATES = [ /* the approved samples, arrow360-combined.html (24 NOV) */
+ { spd: 150, ang: 0, back: false, drift: { seen: true, side: null }, turn: 0, g: 1.0 }, { spd: 140, ang: 20, back: false, drift: { seen: true, side: null }, turn: 0, g: 1.3 },
+ { spd: 160, ang: 330, back: false, drift: { seen: true, side: null }, turn: 0, g: 0.8 }, { spd: 40, ang: 180, back: true, drift: { seen: true, side: null }, turn: 0, g: 1.0 },
+ { spd: 25, ang: 90, back: false, drift: { seen: true, side: null }, turn: 0, g: 1.1 }, { spd: 30, ang: 270, back: false, drift: { seen: true, side: null }, turn: 0, g: 0.9 },
+ { spd: 35, ang: 0, back: false, sideOnly: true, drift: { seen: true, side: 'L', pct: 18 }, turn: 0, g: 1.0 }, { spd: 120, ang: 0, back: false, drift: { seen: true, side: 'R', pct: 9 }, turn: 8, g: 1.6, boost: true },
+ { spd: 0.2, ang: null, back: null, drift: { seen: false, why: 'sample: no marker' }, turn: null, g: 1.0 }, { spd: 90, ang: 0, back: null, drift: { seen: false, why: 'sample: no marker' }, turn: 2, g: 1.0 }];
+function ringSample(t, fpa, turn, sm) { if (RINGOFF) return null;
+  if (RINGST != null && RING_STATES[+RINGST]) return Object.assign({ boost: false }, RING_STATES[+RINGST]);
+  if (LIVEON) return { nodata: true, turn: null, g: null, boost: null, drift: markerDrift() }; /* bridge on but no flight data: no invented ring */
+  const p = (t % 32) / 32, F = ((fpa % 360) + 360) % 360, ph = p < .4 ? 'fwd' : p < .55 ? 'back' : p < .75 ? 'unk' : 'fwd';
+  const dk = Math.floor(t / 5) % 3, drift = { seen: true, side: dk === 1 ? 'R' : dk === 2 ? 'L' : null, pct: 9 };
+  return { spd: ph === 'back' ? 40 : sm.speed, ang: ph === 'back' ? (540 - F) % 360 : F, back: ph === 'unk' ? null : ph === 'back', turn: Math.round(turn * 10) / 10, drift, g: sm.gm ? sm.gm[0] : null, boost: !!(sm.boost && sm.boost.engaged) }; }
+/* PITCH LOCK (RAZ 25 NOV, Holo FLIGHT page: "show when the pitch lock is engaged with a LOCK in the caution pill"). Chat 8, 25 NOV, from the live 4.10 schema:
+   the game sends NO pitch / yaw / rotation lock field, so live it is always null (caution pill empty). Only ?plock=1 shows the look. */
+/* the page keeps it (a "dumb" toggle): PITCH LOCK switch on the Holo FLIGHT row; tap / long press flip it (see the plock handler) */
+let PLK = false; try { PLK = localStorage.getItem('cg-pitchlock') === '1'; } catch (e) {}
+function pitchLock() { return PLK; }
+let LGT = false; try { LGT = localStorage.getItem('cg-lights') === '1'; } catch (e) {} /* 25 NOV RAZ: LIGHTS on the top row; the game sends no lights state, the page keeps it (same as PITCH LOCK) */
+function lightsTap() { LGT = !LGT; try { localStorage.setItem('cg-lights', LGT ? '1' : '0'); } catch (e) {} lastSvg = ''; drawTravel(); }
+let PLK_T0 = 0; addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('[data-go="plock"]')) PLK_T0 = Date.now(); }, true);
+function plockTap() { const statusOnly = Date.now() - PLK_T0 >= 600; /* long press = only change what is shown; a short tap will also press the game key once key sending exists */
+  PLK = !PLK; try { localStorage.setItem('cg-pitchlock', PLK ? '1' : '0'); } catch (e) {} lastSvg = ''; drawTravel(); return statusOnly; }
+/* LAST ACTION (RAZ 25 NOV: "one of the fields just shows the most recent action like doors open ports unlocked etc. it's blank and only shows the actions
+   taken by the user and ship"). Blank at start; every change of a ship state after the first reading becomes the field's text. */
+let LA_PREV = null, LA_TXT = '';
+function lastAction(A, M) { const ACT = LIVEON && LIVE && Array.isArray(LIVE.actions) ? LIVE.actions : null; /* live: the bridge's own list (chat 8: snap.actions, game-reported state changes only, no key logging) */
+  if (ACT) return ACT.length ? String(ACT[ACT.length - 1].text || '') : '';
+  if (!A) return LA_TXT; const yn = (v, a, b) => v == null ? null : v ? a : b;
+  const cur = { 'GEAR': A.gear === 'MOVING' ? null : A.gear, 'DOORS': A.doors, 'DOORS ': yn(A.locked, 'LOCKED', 'UNLOCKED'), 'LIGHTS': yn(A.lights, 'ON', 'OFF'), 'LAMP': yn(A.lamp, 'ON', 'OFF'),
+    'VTOL': A.vtol == null ? null : String(A.vtol), 'GIMBALS': yn(A.gimb, 'LOCKED', 'FREE'), 'CRUISE': M ? yn(M.cruise, 'ON', 'OFF') : null, 'SPEED LIMITER': M ? yn(M.spdlim, 'ON', 'OFF') : null,
+    'FLIGHT': M ? yn(M.coupled, 'COUPLED', 'DECOUPLED') : null, 'ESP': M ? yn(M.esp, 'ON', 'OFF') : null, 'G-SAFE': M ? yn(M.gsafe, 'ON', 'OFF') : null, 'PITCH': M ? yn(M.plock, 'LOCKED', 'UNLOCKED') : null };
+  if (A.power) for (const k in A.power) cur[k] = yn(A.power[k], 'ON', 'OFF');
+  if (LA_PREV) for (const k in cur) if (cur[k] != null && LA_PREV[k] != null && cur[k] !== LA_PREV[k]) LA_TXT = (k.trim() + ' ' + cur[k]).replace('FLIGHT ', '');
+  LA_PREV = cur; return LA_TXT; }
+function liveVals() { const d = LIVEON && LIVE && LIVE.derived; if (!d || d.speed == null) return null;
+  const V = LIVE.vehicle && LIVE.vehicle.state, A = V && V.annunciators, g = V && V.flight && V.flight.state && String(V.flight.state.gear || ''), I = V && V.flight && V.flight.instruments;
+  return { fpa: +d.flight_path_angle_deg || 0, speed: +d.speed || 0, accel: +d.accel || 0, vs: +d.vertical_speed || 0, turn: +d.turn_rate_deg_s || 0, thr: d.throttle_stick_pct == null ? null : +d.throttle_stick_pct, strafe: (LIVE.input && LIVE.input.strafe) || null, turnStyle: 'trend',
+    gear: ((g || "").match(/(RETRACTED|DEPLOYED|DEPLOYING|RETRACTING)$/) || [])[1] || null, boost: I && I.boost || null, brake: null, warn: A ? { lock: A.radr, hit: A.hit, misl: A.misl, prox: A.prox } : null,
+    modes: V ? { coupled: gp(LIVE, VS + 'ifcs_coupled.enabled') === false ? null : gp(LIVE, VS + 'ifcs_coupled.active'), cruise: gp(LIVE, VS + 'ifcs_cruise_mode.active'), spdlim: gp(LIVE, VS + 'ifcs_speed_limiter.active'),
+      esp: gp(LIVE, VS + 'ifcs_esp.active'), gsafe: gp(LIVE, VS + 'ifcs_g_safe.active'), plock: pitchLock(), lights: LGT } : null,
+    gm: I && I.g_meter ? [+I.g_meter.current || 0, +I.g_meter.max || 0] : null, suit: LIVE.suit || null, ralt: I && I.radar_altitude != null ? +I.radar_altitude : null, stopD: d.stopping_distance, safeV: 10, harmV: 40, lowAlt: (() => { try { const L = JSON.parse(localStorage.getItem('cmdglas-hud-stoplim-ships') || '{}') || {}, V = (LIVE.vehicle && LIVE.vehicle.state) || {}, k = ([V.manufacturer, V.name].filter(Boolean).join(' ') || 'RSI GALAXY').toUpperCase(), r = L[k]; return (r && r.low != null ? +r.low : 10) * 0.3048; } catch (e) { return 3.048; } })() /* 25 NOV: his low-altitude alarm per ship (feet, set on the deck; same store as the deck) */, units, side64: SIDE64, shipUrl: LIVE.ship && LIVE.ship.slug ? SHIPART + 'port/' + LIVE.ship.slug + '.webp' : null, ring: ringLive() }; }
+/* ALL-IN-ONE values for the one-page pill: same game fields as the ship status / server pages. null = the game does not send it (NO DATA). */
+const CT = [['power_plants', 'POWER PLANT', 'POWER PLANTS'], ['coolers', 'COOLER', 'COOLERS'], ['shield_generators', 'SHIELD', 'SHIELD GEN'], ['quantum_drive', 'QUANTUM', ''], ['radar', 'RADAR', 'SENSORS'], ['life_support', 'LIFE SUPPORT', 'LIFE SUPPORT'], ['turrets', 'TURRET', '']];
+const PWF = { 'POWER PLANTS': 'powerplants', 'ENGINES': 'engines', 'WEAPONS': 'weapons', 'COOLERS': 'coolers', 'LIFE SUPPORT': 'life_support', 'GRAVITY': 'gravity_generators', 'SENSORS': 'sensors', 'SHIELD GEN': 'shield_generators', 'SHIELD EMIT': 'shield_emitters' };
+const hms = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 3600) + ':' + String(Math.floor(s / 60) % 60).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+const SWARN = new URLSearchParams(location.search).get('sample') === 'warn' /* ?sample=warn (24 NOV): sample with warnings, low quantum fuel, few decoys, busy GPU, one weapon charging - shows the status colors */, CWT = new URLSearchParams(location.search).get('cw') || (SWARN ? 'warning' : null), SPIN = new URLSearchParams(location.search).has('spin'), LEVEL = new URLSearchParams(location.search).has('level');
+/* component GRADE (A-D) + class from the Star Citizen Wiki item data (game files), file component-grades.json (23 NOV: "also list the grade of each component") */
+let GR = {}, GRN_ = {}; fetch('component-grades.json').then(r => r.ok ? r.json() : null).then(j => { if (!j) return; GR = j.items || {}; for (const v of Object.values(GR)) if (v.name && v.grade) GRN_[v.name.toLowerCase()] = v.grade; lastSvg = ''; }).catch(() => {});
+const grade = (cls, name) => (GR[cls] && GR[cls].grade) || GRN_[String(name || '').toLowerCase()] || null;
+/* SAMPLE MOTION (23 NOV: "animate boost brake and gear up down and the stop in and radar altimeter and g forces everything moving"):
+   one 24 s loop - approach and land: speed / STOP IN / radar alt fall, brake on near the ground, gear goes down, then lift off, gear up, boost out */
+function sampleMotion(t) { const p = (t % 24) / 24, ease = x => .5 - .5 * Math.cos(Math.PI * Math.max(0, Math.min(1, x)));
+  const down = p < .5, k = down ? ease(p / .5) : 1 - ease((p - .5) / .5);
+  const gear = p < .2 ? 'RETRACTED' : p < .36 ? 'DEPLOYING' : p < .6 ? 'DEPLOYED' : p < .76 ? 'RETRACTING' : 'RETRACTED'; /* ~4 s of gear motion each way */
+  const boostOn = p > .74 && p < .9, brakeOn = p > .3 && p < .48;
+  return { speed: Math.round(260 - 245 * k), stopD: Math.round(900 - 880 * k), ralt: Math.round(1400 * (1 - k) + 2), gear, brake: brakeOn,
+    boost: { engaged: boostOn, reserves: boostOn ? .9 - (p - .74) * 3 : Math.min(1, .45 + p * .6) }, thr: boostOn ? 100 : brakeOn ? -40 : Math.round(60 - 50 * k),
+    gm: [+(1 + 3.2 * Math.abs(Math.sin(t * 1.3)) * (boostOn ? 1.6 : 1)).toFixed(1), 6.1], accel: boostOn ? 8 : brakeOn ? -6 : 3.2 * Math.sin(t / 2) };
+}
+/* MASTER CAUTION RESET (RAZ 23 NOV: "it resets all warnings until they are triggered again by a fault ... get rid of old possible bad warnings and simply check again"):
+   tapping the master tile stores every lit warning as acknowledged; an acknowledged warning shows dark until its state changes (new fault / clears and comes back). Tablet display only. */
+let ACK = {};
+function rawAnn() { if (LIVEON && LIVE && LIVE.vehicle && LIVE.vehicle.state) return LIVE.vehicle.state.annunciators || {}; return CWT === 'caution' ? { thr: 'MINOR', cool: 'MINOR', prox: 'MINOR_FLASHING' } : CWT === 'warning' ? { shld: 'MAJOR_FLASHING', hit: 'MAJOR_FLASHING', misl: 'MAJOR_FLASHING', pwr: 'MAJOR', thr: 'MINOR' } : {}; }
+function ackAnn(ann) { if (!ann) return ann; const out = Object.assign({}, ann);
+  for (const k in out) { const v = String(out[k] || ''); if (ACK[k] != null) { if (ACK[k] === v) out[k] = 'NOMINAL'; else delete ACK[k]; } } return out; }
+function masterReset() { const raw = rawAnn(); ACK = {}; for (const k in raw) if (/MINOR|MAJOR/.test(String(raw[k]))) ACK[k] = String(raw[k]); lastSvg = ''; drawTravel(); }
+function allVals() {
+  if (!(LIVEON && LIVE && LIVE.vehicle)) { const now = Date.now() / 1000;
+    const SM = sampleMotion(Date.now() / 1000), sg = SM.gear;
+    return { gear: /DEPLOYED/.test(sg) ? 'DOWN' : /ING$/.test(sg) ? 'MOVING' : 'UP', config: 'RETRACTED', vtol: null, lamp: false, doors: 'CLOSED', locked: true, lights: true, gimb: true, fuel: SWARN ? [62, 14] : [95, 88], cm: SWARN ? { DECOY: 3, NOISE: 12 } : { DECOY: 24, NOISE: 12 }, crit: false, adv: false,
+      power: Object.fromEntries(Object.keys(PWF).map(k => [k, true])), ann: ackAnn(Object.assign({ pwr: 'OK', wpn: 'OK', thr: 'OK', shld: 'OK', cool: 'OK', qdrv: 'OK', radr: 'OK', prox: 'OK', hit: 'OFF', misl: 'OFF' }, CWT === 'caution' ? { thr: 'MINOR', cool: 'MINOR', prox: 'MINOR_FLASHING' } : CWT === 'warning' ? { shld: 'MAJOR_FLASHING', hit: 'MAJOR_FLASHING', misl: 'MAJOR_FLASHING', pwr: 'MAJOR', thr: 'MINOR' } : {})), /* ?cw=caution|warning = test states */
+      wpn: [1, 1, 1, 1].map((x, i) => ({ is_powered: !(SWARN && i === 3), ready_to_fire: !(SWARN && i === 2) })), conn: hms(6138 + now % 1000), changes: 0, sstate: 'sample', pc: SWARN ? { cpu: 42, gpu: 82, ram: 93, fps: 64 } : { cpu: 42, gpu: 45, ram: 48, fps: 64 }, shipName: 'Galaxy',
+      comps: [['POWER PLANT 1', 'NEWDAWN · S3', 'POWER PLANTS'], ['POWER PLANT 2', 'NEWDAWN · S3', 'POWER PLANTS'], ['COOLER 1', 'FROST-STAR XL · S3', 'COOLERS'], ['COOLER 2', 'FROST-STAR XL · S3', 'COOLERS'], ['SHIELD 1', "5CA 'AKURA' · S3", 'SHIELD GEN'], ['SHIELD 2', "5CA 'AKURA' · S3", 'SHIELD GEN'], ['QUANTUM', 'WANDERER · S3', ''], ['RADAR', 'LEPHARI · S3', 'SENSORS'], ['LIFE SUPPORT', 'COMFORTAIR MAX · S3', 'LIFE SUPPORT'], ['TURRET 1', 'REMOTE TURRET · S3', ''], ['TURRET 2', 'REMOTE TURRET · S3', ''], ['TURRET 3', 'REMOTE TURRET · S3', '']].map(([lab, item, grp]) => ({ lab, item, grp, grade: grade(null, item.split(' · ')[0]) })) }; }
+  const S = LIVE, V = S.vehicle.state || {}, W = S.weapons || {}, I = (V.flight && V.flight.instruments) || {}, A = V.annunciators || {}, D = V.doors || {}, P = V.power || null, sv = S.server || {}, pc = S.pc || {}, sp = S.ship || {};
+  const g = String((V.flight && V.flight.state && V.flight.state.gear) || ''), cm = {}; (W.countermeasures || []).forEach(c => { cm[String(c.type).toUpperCase()] = c.amount; });
+  const sl = sp.components && sp.components.slots, comps = sl ? CT.flatMap(([k, lab, grp]) => { const a = (sl[k] || []).filter(c => k !== 'turrets' || !/^(GunTurret|PDCTurret)$/.test(c.sub_type)); return a.map((c, i) => ({ lab: a.length > 1 ? lab + ' ' + (i + 1) : lab, item: c.item ? String(c.item).toUpperCase() + ' · S' + c.size : 'STOCK', grp, grade: grade(c.item_class, c.item) })); }) : [];
+  return { gear: /DEPLOYED$/.test(g) ? 'DOWN' : /(DEPLOYING|RETRACTING)$/.test(g) ? 'MOVING' : /RETRACTED$/.test(g) ? 'UP' : null,
+    config: ((String((V.flight && V.flight.state && V.flight.state.transformation) || '').match(/(RETRACTED|DEPLOYED|DEPLOYING|RETRACTING)$/) || [])[1]) || null,
+    vtol: ((String((V.flight && V.flight.state && V.flight.state.vtol) || '').match(/(RETRACTED|DEPLOYED|DEPLOYING|RETRACTING)$/) || [])[1]) || null,
+    doors: D.open_state ? (/OPEN/.test(D.open_state) ? 'OPEN' : 'CLOSED') : null, locked: D.lock_state ? /^LOCKED/.test(D.lock_state) : null, lights: V.lights_enabled == null ? null : !!V.lights_enabled,
+    gimb: W.settings && W.settings.gimbals_locked != null ? !!W.settings.gimbals_locked : null,
+    lamp: (() => { const v = gp(LIVE, VS + 'flight_light_amplification'); return v == null ? null : !!v; })(), /* light amplification (flight setting) */
+    fuel: [I.hydrogen_fuel, I.quantum_fuel].map(f => f == null ? null : Math.round(f * 100)), cm: Object.keys(cm).length ? cm : null,
+    crit: Object.values(A).some(v => /MAJOR/.test(v)), adv: Object.values(A).some(v => /MINOR/.test(v)), ann: ackAnn(A),
+    power: P ? Object.fromEntries(Object.entries(PWF).filter(([k, f]) => f in P).map(([k, f]) => [k, !!P[f]])) : null, wpn: W.weapons || null,
+    conn: sv.connectedAt ? hms((Date.now() - Date.parse(sv.connectedAt)) / 1000) : null, changes: sv.serverChanges == null ? null : sv.serverChanges, sstate: sv.state || null,
+    pc: { cpu: pc.cpu_pct, gpu: pc.gpu_3d_pct, ram: pc.ram_committed_pct, fps: pc.fps, fpsNote: pc.fps_note ? String(pc.fps_note).toUpperCase() : null }, shipName: sp.name || null, shipRear: LIVE.ship && LIVE.ship.rear ? (SHIPART && LIVE.ship.slug ? SHIPART + 'rear/' + LIVE.ship.slug + '.webp' : LIVE.ship.rear) : null /* bridge's real rear photo (chat 8, 24 NOV); null = none for this ship */, comps }; }
+/* PAGES keys inside the pill open the detail pages */
+/* COLORS: presets (the 10 themes) + every group: any color, dark / normal / light; kept on this tablet */
+const SWATCH = [['RED', 352, 1, '#ff2a45'], ['ORANGE', 26, 1, '#ff7a1a'], ['AMBER', 40, 1, '#ffae00'], ['GOLD', 50, .95, '#ffd23a'], ['LIME', 95, .9, '#9be22a'], ['GREEN', 140, .95, '#14ff63'], ['TEAL', 170, .9, '#18e0b8'],
+  ['CYAN', 188, 1, '#22d8ff'], ['S.C. BLUE', 200, 1, '#2fb8ff'], ['BLUE', 215, 1, '#1e70ff'], ['VIOLET', 262, .9, '#8a5bff'], ['PURPLE', 280, .9, '#b040ff'], ['MAGENTA', 305, 1, '#ff3ad8'], ['PINK', 330, 1, '#ff5ca8'], ['WHITE', 0, 0, '#f0f0f0']];
+const CGROUPS = [['frame', 'FRAME'], ['labels', 'LABELS'], ['ok', 'ON / GOOD'], ['caution', 'CAUTION'], ['warning', 'WARNING'], ['info', 'INFO / LEVEL'], ['off', 'OFF FIELDS']];
+let UC = {}; try { UC = JSON.parse(localStorage.getItem('cmdglas-tablet-colors') || '{}'); } catch (e) {}
+window.TD_IDENT_SHOW = new URLSearchParams(location.search).has('ident'); /* callsign: preview only until his yes */
+let IDENT = {}; try { IDENT = JSON.parse(localStorage.getItem('cmdglas-ship-ident') || '{}'); } catch (e) {} window.TD_IDENT = IDENT; let h0 = '';
+function curShip() { try { const a = allVals(); return a && a.shipName ? String(a.shipName) : ''; } catch (e) { return ''; } }
+function saveIdent() { const sn = curShip() || '_', cs = (document.getElementById('idcs') || {}).value || '', md = (document.getElementById('idmd') || {}).value || '';
+  IDENT[sn] = { cs: cs.trim(), model: md.trim() }; IDENT._ = { cs: cs.trim() }; window.TD_IDENT = IDENT; try { localStorage.setItem('cmdglas-ship-ident', JSON.stringify(IDENT)); } catch (e) {} lastSvg = ''; drawTravel(); }
+document.addEventListener('input', e => { if (e.target && (e.target.id === 'idcs' || e.target.id === 'idmd')) saveIdent(); });
+/* DEEP SPACE switched on once on every tablet (RAZ 23 NOV: "i want to see the color change on the ipad now"); his earlier color picks kept in cmdglas-tablet-colors-before-deepspace; PRESET 1 = back to red */
+try { if (!localStorage.getItem('cmdglas-deepspace-default-1')) { localStorage.setItem('cmdglas-tablet-colors-before-deepspace', localStorage.getItem('cmdglas-tablet-colors') || '{}'); localStorage.setItem('cmdglas-tablet-colors', '{}'); UC = {}; localStorage.setItem('cmdglas-tablet-theme', '11'); localStorage.setItem('cmdglas-tablet-sat', '1'); localStorage.setItem('cmdglas-deepspace-default-1', '1'); } } catch (e) {}
+/* RSI BLUE switched on once on every tablet (RAZ 24 NOV 12:47 color rule: blue base, green = good, amber/red = caution only). Earlier theme + color picks kept in
+   cmdglas-tablet-theme-before-rsiblue / cmdglas-tablet-colors-before-rsiblue; PRESET 11 = back to DEEP SPACE */
+try { if (!localStorage.getItem('cmdglas-rsiblue-default-1')) { localStorage.setItem('cmdglas-tablet-theme-before-rsiblue', localStorage.getItem('cmdglas-tablet-theme') || ''); localStorage.setItem('cmdglas-tablet-colors-before-rsiblue', localStorage.getItem('cmdglas-tablet-colors') || '{}'); localStorage.setItem('cmdglas-tablet-colors', '{}'); UC = {}; localStorage.setItem('cmdglas-tablet-theme', '12'); localStorage.setItem('cmdglas-rsiblue-default-1', '1'); } } catch (e) {}
+try { const th = localStorage.getItem('cmdglas-tablet-theme'); if (th && !new URLSearchParams(location.search).get('theme')) window.TD_THEME = +th; } catch (e) {}
+window.TD_COLORS = UC; try { window.TD_SAT = +(localStorage.getItem('cmdglas-tablet-sat') || 1.3); } catch (e) { window.TD_SAT = 1.3; } try { if (!localStorage.getItem('cmdglas-glass-default-1')) { localStorage.setItem('cmdglas-tablet-finish', 'shiny'); localStorage.setItem('cmdglas-glass-default-1', '1'); } window.TD_FINISH = localStorage.getItem('cmdglas-tablet-finish') || 'shiny'; } catch (e) { window.TD_FINISH = 'shiny'; } /* GLASS is the default; switched on once on every tablet (23 NOV: "I need the shine update pushed to the iPad") */
+{ const fq = new URLSearchParams(location.search).get('finish'); if (fq) { window.TD_FINISH = /glass|shiny/i.test(fq) ? 'shiny' : 'matte'; try { localStorage.setItem('cmdglas-tablet-finish', window.TD_FINISH); } catch (e) {} } } /* ?finish=glass|matte */
+function saveCol() { try { localStorage.setItem('cmdglas-tablet-colors', JSON.stringify(UC)); localStorage.setItem('cmdglas-tablet-theme', String(window.TD_THEME || 1)); localStorage.setItem('cmdglas-tablet-finish', window.TD_FINISH || 'matte'); localStorage.setItem('cmdglas-tablet-sat', String(window.TD_SAT || 1)); } catch (e) {} window.TD_COLORS = UC; lastSvg = ''; drawTravel(); publishLook(); }
+/* iPAD LOOK FROM THE TOC (chat 2, 25 NOV). RAZ: "install my new toc layout so I can adjust the color of my ipad telemetry page". The iPad keeps its colors in
+   its own browser, so: the TOC opens this page on the PC with ?colors=1&publish=1; every color change there is sent to the PC (POST /api/ipad-look, which saves
+   telemetry/ipad-look.json). The iPad reads ipad-look.json on its 4 s file check and takes the new colors over (stamp = newest change wins). */
+const PUBLISH = new URLSearchParams(location.search).has('publish');
+let pubT = 0; function publishLook() { if (!PUBLISH) return; clearTimeout(pubT); pubT = setTimeout(() => { const look = { stamp: Date.now(), colors: UC, theme: window.TD_THEME || 1, finish: window.TD_FINISH || 'matte', sat: window.TD_SAT || 1 };
+  try { localStorage.setItem('cmdglas-ipad-look-stamp', String(look.stamp)); } catch (e) {}
+  fetch('/api/ipad-look', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(look) }).then(r => { if (typeof ktoast === 'function') ktoast(r.ok ? 'iPAD LOOK SAVED - THE iPAD UPDATES IN A FEW SECONDS' : 'NOT SAVED (' + r.status + ')', r.ok ? '' : 'bad'); }).catch(() => { if (typeof ktoast === 'function') ktoast('NOT SAVED - NO CONNECTION TO THE PC', 'bad'); }); }, 400); }
+async function takeLook() { if (PUBLISH) return; try { const r = await fetch('ipad-look.json', { cache: 'reload' }); if (!r.ok) return; const L = await r.json(); if (!L || !L.stamp) return;
+    let mine = 0; try { mine = +localStorage.getItem('cmdglas-ipad-look-stamp') || 0; } catch (e) {} if (L.stamp <= mine) return;
+    localStorage.setItem('cmdglas-tablet-colors', JSON.stringify(L.colors || {})); localStorage.setItem('cmdglas-tablet-theme', String(L.theme || 1)); localStorage.setItem('cmdglas-tablet-finish', L.finish || 'matte'); localStorage.setItem('cmdglas-tablet-sat', String(L.sat || 1)); localStorage.setItem('cmdglas-ipad-look-stamp', String(L.stamp));
+    location.reload(); } catch (e) {} }
+function colRows() { const T = window.TD_THEMES || [];
+  { const sn = curShip(), e = (IDENT[sn || '_'] || {}); /* CALLSIGN + SHIP MODEL (23 NOV), saved per ship on this tablet */
+    h0 = `<div class="r"><span>CALLSIGN</span><input id="idcs" maxlength="24" value="${(e.cs || (IDENT._ && IDENT._.cs) || '').replace(/"/g, '&quot;')}" placeholder="CALLSIGN OR SHIP NAME" style="width:320px;font:700 15px Oxanium,sans-serif;letter-spacing:2px;color:#fff;background:#050102;border:1.5px solid #5a1622;border-radius:10px;padding:7px 10px"></div>`
+     + `<div class="r"><span>SHIP MODEL</span><input id="idmd" maxlength="24" value="${(e.model || '').replace(/"/g, '&quot;')}" placeholder="${sn ? String(sn).replace(/_/g, ' ').toUpperCase() + ' (FROM GAME)' : 'E.G. PERSEUS, M50'}" style="width:320px;font:700 15px Oxanium,sans-serif;letter-spacing:2px;color:#fff;background:#050102;border:1.5px solid #5a1622;border-radius:10px;padding:7px 10px"></div>`; }
+  let h = (window.TD_IDENT_SHOW ? h0 : '') + `<div class="r"><span>SATURATION</span><input id="satr" type="range" min="50" max="200" step="5" value="${Math.round((window.TD_SAT || 1) * 100)}" style="width:320px;accent-color:#ff2a45"><b id="satv" style="font-size:13px;color:#fff;min-width:48px">${Math.round((window.TD_SAT || 1) * 100)}%</b></div>`;
+  h += `<div class="r"><span>FINISH</span><div class="sh">${[['matte', 'MATTE'], ['shiny', 'GLASS']].map(([f, t]) => `<button data-fin="${f}" class="${(window.TD_FINISH || 'matte') === f ? 'on' : ''}">${t}</button>`).join('')}</div></div>`;
+  h += `<div class="r"><span>PRESET</span><div class="sh">${T.slice(1).map((t, i) => `<button data-th="${i + 1}" class="${(+window.TD_THEME || 1) === i + 1 ? 'on' : ''}">${i + 1}</button>`).join('')}</div></div>`;
+  h += CGROUPS.map(([k, l]) => { const u = UC[k]; return `<div class="r"><span>${l}</span><div class="sw">${SWATCH.map(([n, hh, ss, css]) => `<i title="${n}" data-g="${k}" data-h="${hh}" data-s="${ss}" class="${u && u.h === hh && u.s === ss ? 'on' : ''}" style="background:${css}"></i>`).join('')}</div>
+    <div class="sh">${[[-1, 'DARK'], [0, 'NORMAL'], [1, 'LIGHT']].map(([v, t]) => `<button data-g="${k}" data-sh="${v}" class="${u && (+u.shade || 0) === v ? 'on' : ''}">${t}</button>`).join('')}<button data-g="${k}" data-clr="1">AS THEME</button></div></div>`; }).join('');
+  document.getElementById('colrows').innerHTML = h; }
+document.getElementById('colp').addEventListener('click', e => { const t = e.target;
+  if (t.dataset.fin) window.TD_FINISH = t.dataset.fin;
+  else if (t.dataset.th) { window.TD_THEME = +t.dataset.th; delete UC.frame; delete UC.labels; }
+  else if (t.dataset.h != null && t.dataset.g) UC[t.dataset.g] = { h: +t.dataset.h, s: +t.dataset.s, shade: UC[t.dataset.g] ? UC[t.dataset.g].shade || 0 : 0 };
+  else if (t.dataset.sh != null && t.dataset.g) { if (UC[t.dataset.g]) UC[t.dataset.g].shade = +t.dataset.sh; }
+  else if (t.dataset.clr) delete UC[t.dataset.g];
+  else if (t.id === 'colreset') { UC = {}; window.TD_THEME = 12 /* reset = the default, RSI BLUE (24 NOV) */; window.TD_FINISH = 'shiny'; window.TD_SAT = 1.3; }
+  else if (t.id === 'coldone' || t.id === 'colp') { document.getElementById('colp').classList.remove('open'); return; }
+  else return;
+  saveCol(); colRows(); });
+document.getElementById('colp').addEventListener('input', e => { if (e.target.id !== 'satr') return; window.TD_SAT = +e.target.value / 100; document.getElementById('satv').textContent = e.target.value + '%'; saveCol(); });
+const isFs = () => !!(document.fullscreenElement || document.webkitFullscreenElement || document.webkitCurrentFullScreenElement || document.webkitIsFullScreen);
+/* EXIT works on every iPad Safari version (23 NOV: "I'm also unable to exit full screen mode") */
+function toggleFs() { const de = document.documentElement, d = document;
+  if (isFs()) { const ex = d.exitFullscreen || d.webkitExitFullscreen || d.webkitCancelFullScreen; try { const r = ex && ex.call(d); if (r && r.catch) r.catch(() => {}); } catch (e) {} }
+  else { const rq = de.requestFullscreen || de.webkitRequestFullscreen || de.webkitRequestFullScreen; try { const r = rq && rq.call(de); if (r && r.catch) r.catch(() => {}); } catch (e) {} }
+  setTimeout(() => { lastSvg = ''; drawTravel(); }, 300); }
+['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => { lastSvg = ''; drawTravel(); tbLabel(); }));
+async function doRefresh() { /* fresh copies of the files, then reload */ for (const f of ['telemetry-tablet.html', 'travel-dial-chat8.js', 'component-grades.json']) { try { await fetch(f, { cache: 'reload' }); } catch (e) {} } location.reload(); }
+/* KEY PRESSES (23 NOV, chat 3's tablet key route, lock 355; RAZ chose "with pairing code"): a tap sends HIS keybind for the action that fits the key's
+   current state, one at a time. Keys without a bind in his actionmaps stay read-only. 401 = not paired -> PAIR iPAD link to pair.html */
+function keyControl(k, A) { const p = String(A.power && A.power[k.slice(4)]);
+  switch (k.split(':')[0]) {
+    case 'gear': return A.gear === 'UP' ? ['b392', 'GEAR DOWN'] : A.gear === 'DOWN' ? ['b393', 'GEAR UP'] : ['tel-gear', 'GEAR'];
+    case 'doors': return A.doors === 'OPEN' ? ['b349', 'DOORS CLOSE'] : A.doors === 'CLOSED' ? ['b348', 'DOORS OPEN'] : ['tel-doors', 'DOORS'];
+    case 'doorlock': return A.locked === true ? ['tel-unlock-doors', 'UNLOCK DOORS'] : A.locked === false ? ['tel-lock-doors', 'LOCK DOORS'] : ['tel-doorlock', 'DOOR LOCK'];
+    case 'lights': return A.lights ? ['game-lights-off', 'LIGHTS OFF'] : ['game-lights-on', 'LIGHTS ON'];
+    case 'gimb': return A.gimb === false ? ['b222', 'GIMBALS LOCK'] : ['b223', 'GIMBALS FREE'];
+    case 'vtol': return ['tel-vtol', 'VTOL'];
+    case 'lightamp': return ['b129', 'LAMP'];
+    case 'spdlim': return k.endsWith(':1') ? ['flt-speed-off', 'SPEED LIMITER OFF'] : ['flt-speed-on', 'SPEED LIMITER ON'];
+    case 'pwr': { const g = k.slice(4), on = A.power && A.power[g], base = g === 'POWER PLANTS' ? 'ship' : g === 'ENGINES' ? 'thrusters' : g === 'WEAPONS' ? 'weapons' : 'shields';
+      return on === false ? [`pwr-${base}-on`, `${g} ON`] : on === true ? [`pwr-${base}-off`, `${g} OFF`] : [{ ship: 'b336', thrusters: 'b321', shields: 'b322', weapons: 'b323' }[base], g]; }
+  } return null; }
+let ktT = 0; function ktoast(t, cls) { const el = document.getElementById('ktoast'); el.textContent = t; el.className = cls || ''; el.style.display = 'block'; clearTimeout(ktT); ktT = setTimeout(() => { el.style.display = 'none'; }, 2600); }
+let keyBusy = false;
+async function sendKey(k) { const c = keyControl(k, allVals()); if (!c) return; if (keyBusy) { ktoast('ANOTHER KEY IS BEING SENT', 'bad'); return; } keyBusy = true;
+  try { const r = await fetch('/api/telemetry/key', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Tablet-Key': (() => { try { return localStorage.getItem('cg-tel-key') || ''; } catch (e) { return ''; } })() }, body: JSON.stringify({ control: c[0] }) });
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    if (r.ok && j.ok) ktoast('SENT: ' + c[1], 'ok');
+    else if (r.status === 401) { document.getElementById('tbpair').hidden = false; ktoast('THIS iPAD IS NOT PAIRED - TAP PAIR iPAD', 'bad'); }
+    else if (r.status === 403) { document.getElementById('tbpair').hidden = false; ktoast('KEY NOT ON THE PAIRED LIST - PAIR AGAIN', 'bad'); }
+    else ktoast(String(j.error || ('NOT SENT (' + r.status + ')')).toUpperCase(), 'bad'); }
+  catch (e) { ktoast('NOT SENT - NO CONNECTION TO THE PC', 'bad'); }
+  finally { keyBusy = false; } }
+try { if (!localStorage.getItem('cg-tel-key')) document.getElementById('tbpair').hidden = false; } catch (e) {}
+document.getElementById('travel').addEventListener('click', e => { const kk = e.target.closest && e.target.closest('[data-key]'); if (kk) { sendKey(kk.dataset.key); return; } const k = e.target.closest && e.target.closest('[data-go]'); if (!k) return; if (k.dataset.go === 'mreset') masterReset(); else if (k.dataset.go === 'pair') location.href = 'pair.html'; else if (k.dataset.go === 'refresh') doRefresh(); else if (k.dataset.go === 'plock') plockTap(); else if (k.dataset.go === 'lights') lightsTap(); else if (k.dataset.go === 'fs') toggleFs(); else if (k.dataset.go === 'col') { colRows(); document.getElementById('colp').classList.add('open'); } else show(+k.dataset.go); });
+/* vertical G (calculated): change of vertical speed per second / 9.81 - smoothed */
+let _pv = null, _pt = 0, _gv = null; function vertG(vs) { const t = performance.now() / 1000; if (vs == null) return _gv; if (_pv != null && t - _pt > .05) { const g = (vs - _pv) / (t - _pt) / 9.81; _gv = _gv == null ? g : _gv * .7 + g * .3; } _pv = vs; _pt = t; return _gv; }
+function drawTravel() { const t = Date.now() / 1000, lv = liveVals(); document.getElementById('mode').textContent = lv ? 'LIVE GAME DATA' : 'SAMPLE DATA';
+  if (lv) { lv.gv = vertG(lv.vs); { const b = gp(LIVE, VS + 'ifcs_spacebreak_enables_boost'); lv.bkb = b == null ? null : !!b; } lv.all = Object.assign(allVals(), { src: 'LIVE GAME DATA', fs: isFs(), paired: (() => { try { return !!localStorage.getItem('cg-tel-key'); } catch (e) { return false; } })() }); if (window.TD_HOLO) lv.all.lastAct = lastAction(lv.all, lv.modes); paintTravel(window.travelDial8 ? travelDial8(lv) : ''); return; }
+  paintTravel(window.travelDial8 ? travelDial8({ side64: SIDE64, shipUrl: 'galaxy-port.webp' /* sharp 2K ship picture (RAZ: "the ship looks bad") */, fpa: LEVEL ? 0 : SPIN ? ((t * 45) % 360) - 180 : 7.4 * Math.sin(t / 3), /* ?level=1 = nose + wings level test */ /* ?spin=1 = full 360 test */ accel: sampleMotion(t).accel, vs: 22 * Math.sin(t / 3), turn: LEVEL ? 0 : 5 * Math.sin(t / 4), turnStyle: 'trend',
+    ...(({ speed, stopD, ralt, gear, brake, boost, thr }) => ({ speed, stopD, ralt, gear, brake, boost, thr }))(sampleMotion(t)), safeV: 10, harmV: 40, warn: SWARN ? { hit: 'MAJOR_FLASHING', misl: 'MAJOR', lock: 'MINOR', prox: 'OK' } : {}, modes: { coupled: true, cruise: false, spdlim: true, esp: true, gsafe: !(t % 30 > 22), plock: PLK, lights: LGT },
+    gm: sampleMotion(t).gm, ring: ringSample(t, LEVEL ? 0 : SPIN ? ((t * 45) % 360) - 180 : 7.4 * Math.sin(t / 3), LEVEL ? 0 : 5 * Math.sin(t / 4), sampleMotion(t)), suit: { name: 'Sabine Undersuit Daybreaker', gforce_resistance: .9 }, lowAlt: 3.048, units, bkb: true, gv: 2.2 * Math.sin(t / 2.3), all: Object.assign(allVals(), window.TD_HOLO ? { lastAct: lastAction(allVals(), { coupled: true, cruise: false, spdlim: true, esp: true, gsafe: !(t % 30 > 22), plock: PLK, lights: LGT }) } : {}, { src: LIVEON ? 'LIVE · NO FLIGHT DATA' : 'SAMPLE DATA', fs: isFs(), paired: (() => { try { return !!localStorage.getItem('cg-tel-key'); } catch (e) { return false; } })() }) }) : '') }
+/* the pill is drawn flat here (no tilt) */
+const st = document.createElement('style'); st.textContent = '#travel .tdial{transform:none!important;width:100%!important;margin:0!important}'; document.head.appendChild(st);
+/* deck pages hold one quiet sample (?s=0) instead of cycling, until live data arrives (less redrawing on the tablet) */
+/* FLICKER FIX (RAZ 23 NOV on the iPad: "the page is flickering like crazy"):
+   - the new drawing replaces the old one in ONE step, and the ship picture element is moved over (not decoded again)
+   - nothing is redrawn when the drawing did not change; sample motion only 4x a second */
+/* FLICKER FIX 2 (23 NOV, still flashing on the iPad): swapping the whole drawing 4-5x a second made iPad Safari rebuild every glow, honeycomb and
+   gradient each time (one blank frame per swap). Now the drawing on screen is kept and only the numbers / positions that changed are updated in place. */
+let lastSvg = '';
+function morph(o, n) { /* 25 NOV (chat 2): same result, walks the nodes directly (no throwaway arrays per node) */
+  if (o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) { o.replaceWith(n); return; }
+  if (o.nodeType === 3) { if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue; return; }
+  if (o.nodeType !== 1) return;
+  const oa = o.attributes, na = n.attributes;
+  for (let i = oa.length - 1; i >= 0; i--) { const a = oa[i]; if (!n.hasAttributeNS(a.namespaceURI, a.localName)) o.removeAttributeNS(a.namespaceURI, a.localName); }
+  for (let i = 0; i < na.length; i++) { const a = na[i]; if (o.getAttributeNS(a.namespaceURI, a.localName) !== a.value) o.setAttributeNS(a.namespaceURI, a.name, a.value); }
+  let oc = o.firstChild, nc = n.firstChild;
+  while (nc) { const nx = nc.nextSibling; if (oc) { const ox = oc.nextSibling; morph(oc, nc); oc = ox; } else o.appendChild(nc); nc = nx; }
+  while (oc) { const ox = oc.nextSibling; oc.remove(); oc = ox; } }
+function paintTravel(svg) { if (!svg || svg === lastSvg) return; lastSvg = svg; const box = document.getElementById('travel'), old = box.firstElementChild;
+  const tmp = document.createElement('div'); tmp.innerHTML = svg; const nu = tmp.firstElementChild; if (!nu) return;
+  if (old && old.nodeName === nu.nodeName) morph(old, nu); else { box.innerHTML = ''; box.appendChild(nu); } }
+/* FRONT PAGE KEYS (23 NOV samples, ?front=A|B|C): big keys under the travel pill - gear, doors, lock, lights, power - lit by the same live data */
+const FRONT = new URLSearchParams(location.search).get('front');
+function frontFit() { const f = document.querySelector('#front iframe'); if (!f) return; const w = document.getElementById('front').clientWidth; f.style.height = Math.round(w * 520 / 1360) + 'px';
+  const sv = document.querySelector('#travel svg'); if (sv) sv.style.maxHeight = (innerHeight - document.querySelector('.top').offsetHeight - Math.round(w * 520 / 1360) - 30) + 'px'; }
+if (FRONT) { document.getElementById('front').innerHTML = `<iframe src="${BASE}tablet-front-${FRONT}.html?s=0&stream=parent&noback" title="front keys" scrolling="no"></iframe>`; frontFit(); addEventListener('resize', frontFit); }
+/* FULL SCREEN key: browser full screen where the browser allows it; hidden when already running as a Home Screen web app */
+{ const de = document.documentElement, fb = document.getElementById('fsb'), rq = de.requestFullscreen || de.webkitRequestFullscreen, standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
+  if (rq && !standalone) { fb.style.display = ''; fb.onclick = () => { if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else rq.call(de); }; } }
+/* AUTO-UPDATE (23 NOV: "why can't you upgrade the current address I already have open with the new builds ... iPad doesn't have a keyboard"):
+   every 4 s the page re-reads its own files; when one changed it refreshes the browser copy and reloads itself (same address, settings kept on the tablet) */
+{ const FILES = ['telemetry-tablet.html', 'travel-dial-chat8.js', 'component-grades.json', 'refresh-signal.txt' /* TOC REFRESH button rewrites this file (23 NOV: "I should be able to send a refresh command via my TOC") */], seen = {};
+  const sig = t => t.length + ':' + [...t].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) | 0, 7);
+  async function chk() { for (const f of FILES) { try { const r = await fetch(f, { cache: 'reload' }); if (!r.ok) continue; const v = sig(await r.text());
+      if (seen[f] && seen[f] !== v) { location.reload(); return; } seen[f] = v; } catch (e) {} } }
+  chk(); takeLook(); setInterval(() => { if (!document.hidden) { chk(); takeLook(); } }, 4000); }
+/* light sweep pauses while the page is hidden (chat 3 load note 23 NOV) */
+document.addEventListener('visibilitychange', () => { const sv = document.querySelector('#travel svg'); if (sv && sv.pauseAnimations) { if (document.hidden) sv.pauseAnimations(); else sv.unpauseAnimations(); } });
+document.body.classList.add('p0'); lastSvg = ''; if (new URLSearchParams(location.search).has('colours')) setTimeout(() => { colRows(); document.getElementById('colp').classList.add('open'); }, 300); /* ?colors=1 opens the look panel (pair page CHANGE iPAD LOOK button, 23 NOV) */ build(); drawTravel(); if (FRONT) setTimeout(frontFit, 300); /* 25 NOV (chat 2) RAZ: "the ipad telemetry samples fake telemetry inputs are choppy and stutter. fix that before we connect it to live telemetry".
+   The sample motion was drawn only when the clock fell in a window (Date.now() % 250 < 100) = uneven gaps of 0.1-0.3 s = stutter. Now an even beat on the
+   screen's own refresh: sample data 6 times a second, live data 10 times a second (as before). Nothing is drawn while the page is off screen (hidden tab,
+   the PC's tablet view when this page isn't showing). */
+{ let onScreen = true, lastDraw = 0; try { new IntersectionObserver(es => { onScreen = es.some(e => e.isIntersecting); }).observe(document.getElementById('travel')); } catch (e) {}
+  const beat = now => { const gap = (LIVEON || SPIN || /ING$/.test(sampleMotion(Date.now() / 1000).gear)) ? 100 : 165;
+    if (!document.hidden && onScreen && !hostHidden() && cur === 0 && now - lastDraw >= gap - 8) { lastDraw = now; drawTravel(); }
+    if (document.hidden || !onScreen || hostHidden()) setTimeout(() => requestAnimationFrame(beat), 500); else requestAnimationFrame(beat); };
+  /* 25 NOV (chat 3's host fix): a detached tablet view still reports 'visible', so the host marks the hidden view's page with html.cg-view-hidden; inside it this page draws nothing */
+  function hostHidden() { try { return window.top !== window && window.top.document.documentElement.classList.contains('cg-view-hidden'); } catch (e) { return false; } }
+  requestAnimationFrame(beat); }
+</script><script>if(new URLSearchParams(location.search).has('pill'))document.getElementById('pairwarn').remove();</script></body></html>

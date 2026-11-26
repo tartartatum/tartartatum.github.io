@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CmdGlas Holo deck - simulated telemetry</title>
+<!-- Shop showcase (chat 2, 25 NOV 2026). RAZ: "for the xeneon edge you have to show actual button changes like gear down moving to gear up, doors open switching..."
+     The deck gets the same kind of telemetry the bridge sends, simulated: gear DOWN -> MOVING -> UP -> MOVING, doors CLOSED / OPEN, locks, lights, ESP, ATC replies,
+     warning lights and countermeasures. Simulated data only; no game running. -->
+<style>html,body{margin:0;width:2560px;height:720px;overflow:hidden;background:#02070c}iframe{position:absolute;left:0;top:0;width:2560px;height:720px;border:0;background:transparent;color-scheme:normal}</style>
+<style>html,body{scrollbar-width:none!important;overflow:hidden!important}::-webkit-scrollbar{display:none!important;width:0!important;height:0!important} /* SHOP: RAZ 25 NOV "absolutely no scrollbar" */</style></head><body>
+<iframe id="f" title="Holo deck" src="blue-holo-deck-hd.html?full=1&amp;edge=1&amp;nolive=1&amp;demo=0&amp;mode=FLIGHT&amp;shop=1"></iframe>
+<script>
+/* SHOP DEMONSTRATOR (chat 2, 25 NOV). RAZ: "user has to be able to interact and click the buttons to see all animations to include the melting and growing etc. and how the words change
+   and encourage them to click around" + "this is as much a shop as a demonstrator in itself". A pretend ship: every tap changes its state and the deck answers exactly as it does with the game
+   (same transitions). The demo plays by itself, and pauses for 25 s whenever the visitor taps. Nothing is sent anywhere. */
+(function () {
+  var f = document.getElementById('f');
+  var S = { gear: 'DEPLOYED', doors: false, locked: true, lights: false, lamp: false, esp: true, coupled: true, gsafe: true, pwr: true, atc: 0, warn: 0 };
+  var ATC = [null, { state: 'contacting' }, { state: 'assigned', area: 'HANGAR 03' }, { state: 'assigned', area: 'PAD 07' }, { state: 'assigned', area: 'AIRLOCK 2' }];
+  var lastTap = 0, gearT = 0;
+  function snap() {
+    var s = Date.now() / 1000, k = .5 - .5 * Math.cos(s / 4);
+    return { service: 'on', derived: { speed: Math.round(40 + 220 * k), vertical_speed: +(18 * Math.sin(s / 3)).toFixed(1) }, vehicle: { state: {
+      flight: { instruments: { hydrogen_fuel: .64, quantum_fuel: .47, g_meter: { current: +(1 + .8 * Math.abs(Math.sin(s))).toFixed(1) }, altitude: Math.round(1200 + 900 * k), radar_altitude: Math.round(60 + 500 * k), boost: { reserves: .55 + .3 * Math.sin(s / 5) }, atmo_density: .82 },
+        state: { gear: 'LANDING_GEAR_STATE_' + S.gear }, settings: { ifcs_esp: { active: S.esp }, ifcs_coupled: { active: S.coupled }, ifcs_g_safe: { active: S.gsafe } } },
+      doors: { open_state: S.doors ? 'DOORS_OPENED' : 'DOORS_CLOSED', lock_state: S.locked ? 'LOCKED' : 'UNLOCKED' },
+      power: { powerplants: S.pwr, engines: S.pwr, shield_generators: S.pwr, weapons: S.pwr, coolers: S.pwr, life_support: S.pwr }, lights_enabled: S.lights, flight_light_amplification: S.lamp } } };
+  }
+  function push() { var w = f.contentWindow; if (!w || !w.liveFeed) return; w.liveFeed(snap());
+    w.__warnDemo = ['', 'hit', 'misl', 'prox'][S.warn % 4]; w.__cmDemo = [{ type: 'COUNTERMEASURE_TYPE_DECOY', amount: 24 }, { type: 'COUNTERMEASURE_TYPE_NOISE', amount: 12 }];
+    w.__atcDemo = ATC[S.atc % 5]; if (w.__atcPaint) w.__atcPaint(); }
+  function gear() { if (/ING$/.test(S.gear)) return; S.gear = S.gear === 'DEPLOYED' ? 'RETRACTING' : 'DEPLOYING'; clearTimeout(gearT);
+    gearT = setTimeout(function () { S.gear = S.gear === 'RETRACTING' ? 'RETRACTED' : 'DEPLOYED'; push(); }, 2500); }
+  function tap(name) { name = name.replace(/\s+/g, ' ').trim().toUpperCase();
+    if (/^GEAR/.test(name)) gear(); else if (/^DOOR ?LOCK|^LOCK/.test(name)) S.locked = !S.locked; else if (/^DOORS/.test(name)) { S.doors = !S.doors; if (S.doors) S.locked = false; }
+    else if (/^LIGHTS/.test(name)) S.lights = !S.lights; else if (/^LAMP/.test(name)) S.lamp = !S.lamp; else if (/^ESP/.test(name)) S.esp = !S.esp;
+    else if (/^(DE)?COUPLED/.test(name)) S.coupled = !S.coupled; else if (/^G-?SAFE/.test(name)) S.gsafe = !S.gsafe; else if (/^SHIP ?POWER/.test(name)) S.pwr = !S.pwr;
+    else if (/^(ATC|STANDBY|HANGAR|PAD|AIRLOCK|CONTACTING)/.test(name)) S.atc++; else return; push(); }
+  function auto() { if (Date.now() - lastTap < 25000) return; var r = Math.floor(Math.random() * 7);
+    if (r === 0) gear(); else if (r === 1) { S.doors = !S.doors; S.locked = !S.doors; } else if (r === 2) S.lights = !S.lights; else if (r === 3) S.lamp = !S.lamp; else if (r === 4) S.atc++; else if (r === 5) S.warn++; else S.coupled = !S.coupled; push(); }
+  f.addEventListener('load', function () {
+    var d = f.contentDocument; d.addEventListener('pointerdown', function (e) { var k = e.target.closest && e.target.closest('#deck .nb.k, #deck .dz'); lastTap = Date.now(); if (!k) return;
+      var nm = (k.querySelector('.nt,.kplate') || k).textContent || ''; tap(nm); try { parent.postMessage({ type: 'cg-demo-tap' }, '*'); } catch (x) {} }, true);
+    setTimeout(function () { push(); setInterval(auto, 5000); setInterval(function () { var w = f.contentWindow; if (w && w.liveFeed) w.liveFeed(snap()); }, 500); }, 1500); });
+})();
+</script>
+</body></html>

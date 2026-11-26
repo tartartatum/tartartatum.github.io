@@ -1,0 +1,18 @@
+/* 26 NOV chat 2: comparison table + since line (inline styles are blocked by the shop CSP) */
+
+.cmpx{margin:28px 0;padding:22px 22px 16px;border:1px solid rgba(61,155,255,.45);border-radius:18px;background:rgba(6,22,40,.72)}
+.cmpx h2{margin:0 0 6px;letter-spacing:.16em;font-size:1.15em;color:#d6ebff}
+.cmpx .cmpx-sub{margin:0 0 14px;color:#8fb8dc;font-size:.88em}
+.cmpx .cmpx-wrap{overflow-x:auto;border-radius:14px;border:1px solid rgba(61,155,255,.3);scrollbar-width:none}
+.cmpx .cmpx-wrap::-webkit-scrollbar{display:none}
+.cmpx table{width:100%;border-collapse:collapse;font-size:.9em;min-width:560px}
+.cmpx th,.cmpx td{padding:9px 14px;text-align:left;border-bottom:1px solid rgba(61,155,255,.16);vertical-align:top}
+.cmpx thead th{background:rgba(16,144,239,.18);color:#d6ebff;letter-spacing:.12em;font-size:.82em}
+.cmpx tbody tr.grp td{background:rgba(16,144,239,.08);color:#7fb6e6;letter-spacing:.16em;font-size:.76em;font-weight:700}
+.cmpx td:first-child{color:#cfe3f7}
+.cmpx .y{color:#27e07a;font-weight:700}
+.cmpx .n{color:#8a9bb0}
+.cmpx .c{color:#4fb4ff;font-weight:700}
+.cmpx .cmpx-foot{margin:12px 2px 0;color:#7f9cb8;font-size:.78em;line-height:1.5}
+.intro .since{margin:.2em 0 .9em;letter-spacing:.14em;font-size:.82em;color:#8fc8ff;text-transform:uppercase}
+.intro .since b{color:#d6ebff}

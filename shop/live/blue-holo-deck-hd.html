@@ -1,0 +1,1458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CmdGlas Holo Deck - RSI blue</title>
+<!--
+  22 NOV 2026, chat 2 continuation. HD v2.
+  RAZ on v1: "not even close. more det6ail, smoother same "neon" glow as the samples. that is basic simple not goo enough upgrade"
+  then: "i want the exact same symbology and graphics and detals as in those samples not similar".
+  So v2 copies the sample faces #3, #1 and #7 (ALL 8 numbered.jpg) element for element: same layout, same symbols,
+  same neon tube outlines, same pip bars, same danger keys - recolored to the red shop look. #7 without the hologram
+  pictures / in-game S.C. grabs (his words). v1 kept as "red-holo-deck-hd v1 (not even close).html".
+  v69 24 NOV 2026 LEGIBILITY PASS (RAZ 13:20 on the gallery video "Red holo deck design 7 modes": "teh writing is too small and illegible for the size of buttons ...
+  make it symmetrical and improve the turret pictures. you had this figured out befoe.."). Key names sized per page to fill the key (22-28 px, was 21 / 17.6),
+  keys 168 x 150 on designs 3 and 7, turret symbols back on the TURRET keys (v8 drawings), more detail on normal and danger keys, no cyan / orange fringe.
+  ?d=3 / 1 / 7   ?demo=0   ?shot=1 (scale 1 for stills)   ?freeze=MS&to=MODE (transition still)
+-->
+<style>
+@font-face{font-family:Oxanium;src:url(Oxanium.ttf)}
+:root{--r:31,158,255;--core:#3dabff;--hot:#ffffff;--txt:#ffffff;--sub:#3dabff;--dimtxt:#7296b0}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000101;color:var(--txt);font-family:Oxanium,system-ui,sans-serif;overflow:hidden}
+#wrap{position:fixed;inset:0;display:grid;place-items:center}
+#deck{position:relative;width:2560px;height:720px;transform-origin:center;border-radius:30px;overflow:hidden;isolation:isolate;
+  background:radial-gradient(60% 120% at 8% 0%,rgba(var(--r),.035),transparent 60%),radial-gradient(40% 90% at 100% 60%,rgba(var(--r),.045),transparent 60%),linear-gradient(180deg,#020503,#000101);
+  box-shadow:0 0 0 2px #141e24,0 0 0 6px #05090a,0 0 0 7px rgba(255,255,255,.08),0 40px 90px rgba(0,0,0,.85)}
+#bg{position:absolute;inset:0;z-index:0}
+#dust{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:var(--sto,1)}
+#bg{opacity:var(--bgo,1)}
+#chrome,#area{position:absolute;inset:0;z-index:3}
+#area{transition:opacity .3s,filter .3s}
+#area.out{opacity:0;filter:brightness(2) blur(1.5px)}
+#shw{position:absolute;inset:0;z-index:9;pointer-events:none}
+#fx{position:absolute;inset:0;z-index:8;pointer-events:none} /* no glow wash: particles are crisp metal flecks (23 NOV) */
+#veil{display:none;position:absolute;left:0;top:0;width:78px;height:720px;z-index:7;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#ffffff 0 1.7px,#3dabff 2.3px,transparent 2.9px) 1px 1px/6px 6px;
+  filter:drop-shadow(0 0 3px #1f9eff) drop-shadow(0 0 10px rgba(31,158,255,.8))}
+.oldlayer{position:absolute;inset:0;z-index:3;pointer-events:none}
+.oldlayer *{visibility:hidden!important;animation:none!important}
+.oldlayer [data-mc],.oldlayer [data-mc] *{visibility:visible!important}
+.nb{transition:border-color .45s,box-shadow .45s}
+.dz.flash{filter:brightness(1.8)}
+.cd{pointer-events:none;z-index:1}
+.cdt{fill:none;stroke:rgba(61,171,255,.6);stroke-width:3;stroke-dasharray:.55 .45;filter:drop-shadow(0 0 3px #1f9eff);animation:cdturn 6s linear infinite}
+@keyframes cdturn{to{stroke-dashoffset:-10}}
+.dz.holding .cdt{animation-play-state:paused}
+.cdp{fill:none;stroke:#ffffff;stroke-width:5;stroke-linecap:round;stroke-dasharray:0 100;filter:drop-shadow(0 0 3px #1f9eff) drop-shadow(0 0 10px #1f9eff)}
+.dz .ni,.dz b,.dz small{position:relative;z-index:2}
+.dz.holding{animation:none;box-shadow:var(--ext),0 0 6px #ffffff,0 0 22px #1f9eff,0 0 60px rgba(var(--r),.8),inset 0 0 16px rgba(var(--r),1),inset 0 0 60px rgba(var(--r),.55)}
+.dz .holo .r2{display:none}
+/* ===== hologram build for every button and pill: extruded base (fake depth), double rim, dashed inner rim, color fringe,
+   dot mesh, moving scan lines, light sweep, edge ticks. Pressing a button pushes it down onto its base. ===== */
+.nb,.dz{--ext:0 4px 0 -1px #10395a,0 8px 0 -2px #081b2c,0 9px 0 -2px rgba(31,158,255,.45),0 16px 22px rgba(0,0,0,.8)}
+.nb{box-shadow:var(--ext),0 0 2px rgba(255,255,255,.9),0 0 8px rgba(var(--r),.95),0 0 20px rgba(var(--r),.5),0 0 44px rgba(var(--r),.22),inset 0 0 6px rgba(var(--r),.8),inset 0 0 24px rgba(var(--r),.22),inset 0 3px 0 rgba(255,255,255,.12),inset 0 -6px 12px rgba(0,0,0,.55)}
+.nb.dim{box-shadow:var(--ext),0 0 5px rgba(var(--r),.45),0 0 16px rgba(var(--r),.16),inset 0 0 5px rgba(var(--r),.4),inset 0 0 18px rgba(var(--r),.08),inset 0 3px 0 rgba(255,255,255,.07),inset 0 -6px 12px rgba(0,0,0,.55)}
+.k:active,.k.flash,.k.pressed{transform:translateY(4px)!important}
+.k.pressed,.tab.pressed{filter:none!important}
+.nb.pressed,.dz.pressed{border-color:#ffffff!important;box-shadow:0 1px 0 -1px #10395a,0 3px 0 -2px #081b2c,0 0 4px #ffffff,0 0 16px #1f9eff,0 0 40px rgba(var(--r),.7),inset 0 0 0 2px rgba(255,255,255,.55),inset 0 0 34px rgba(61,171,255,.85),inset 0 0 80px rgba(31,158,255,.45)!important;
+  background:radial-gradient(70% 70% at 50% 50%,rgba(61,171,255,.55),rgba(20,122,200,.35) 55%,rgba(4,27,60,.6)),#06192a!important}
+.pressed [data-mc] .nt,.pressed .nt{color:#ffffff!important;text-shadow:0 0 4px #ffffff,0 0 14px #1f9eff,0 0 26px #1f9eff!important}
+.rip{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;pointer-events:none;z-index:3;border:2px solid #ffffff;box-shadow:0 0 12px #1f9eff,inset 0 0 10px rgba(61,171,255,.8);animation:rip .5s ease-out forwards}
+@keyframes rip{from{transform:scale(.3);opacity:1}to{transform:scale(9);opacity:0}}
+.k:active{--ext:0 1px 0 -1px #10395a,0 3px 0 -2px #081b2c,0 4px 0 -2px rgba(31,158,255,.45),0 8px 12px rgba(0,0,0,.8)}
+.holo{position:absolute;inset:0;border-radius:inherit;pointer-events:none;overflow:hidden}
+.holo i{position:absolute;display:block;border-radius:inherit}
+.holo .gr{opacity:var(--fa,1);inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%2360b5ff' stroke-opacity='.22' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px;-webkit-mask:linear-gradient(180deg,#000000 0,rgba(0,0,0,.45) 50%,transparent 90%);mask:linear-gradient(180deg,#000000 0,rgba(0,0,0,.45) 50%,transparent 90%)}
+.holo .sc{inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 4px);animation:hscan 5s linear infinite}
+@keyframes hscan{to{transform:translateY(48px)}} /* v67: transform instead of background-position (same look, no repaint); the layer starts 48 px higher */
+.holo .sc{top:-48px!important}
+.holo .sh{top:-30%;bottom:-30%;width:38%;left:-70%;border-radius:0;background:linear-gradient(100deg,transparent,rgba(255,255,255,.05) 35%,rgba(255,255,255,.20) 50%,rgba(255,255,255,.05) 65%,transparent);transform:skewX(-20deg);animation:hsheen 8s ease-in-out infinite;animation-delay:var(--sd,0s)}
+@keyframes hsheen{0%,72%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(552.6%) skewX(-20deg)}} /* v67: left -70% -> 140% of the key = 552.6 % of the 38 % wide sheen, by transform */
+.hrim{position:absolute;left:0;top:0;overflow:visible}
+/* MORE: every other button from the real Command Deck, EDGE-shaped, no scrolling: areas on the left, 24 keys per page */
+#more{position:absolute;inset:0;z-index:21;display:none;border-radius:inherit;background:radial-gradient(60% 120% at 50% 0%,rgba(var(--r),.08),transparent 60%),rgba(1,4,4,.97)}
+body.moreopen #more{display:block}
+/* TRAVEL page (23 NOV): the travel pill large, same panel as MORE */
+#travel{position:absolute;inset:0;z-index:22;display:none;border-radius:inherit;background:radial-gradient(60% 120% at 50% 0%,rgba(var(--r),.08),transparent 60%),rgba(1,4,4,.97)}
+body.travelopen #travel{display:block}
+#travel .tvp{position:absolute;left:50%;top:92px;width:1820px;transform:translateX(-50%)}
+#travel .tvp .tdial{width:100%;display:block;--tdp:2730px} /* pill draft 30: perspective about 1.5 x the drawn width (1820), so the tilt stays mild at this size (chat 2) */
+#travel .tvnr{text-align:center;font-size:30px;letter-spacing:6px;padding-top:240px;opacity:.75}
+.tvtag{position:absolute;left:250px;top:30px;font:15px Oxanium,sans-serif;letter-spacing:2px;color:#3dabff;border:1px dashed rgba(var(--r),.6);border-radius:999px;padding:4px 16px;white-space:nowrap}
+.tvtag.on{color:#ffffff;border-style:solid;background:linear-gradient(100deg,#1270b3,#1f9eff)}
+#more .k .ns.bk{position:absolute;left:0;right:0;top:16px;text-align:center;font-size:13.5px!important;opacity:.8}
+.tab.morebtn{font-weight:700}
+.dial path{fill:rgba(31,158,255,.14);stroke:rgba(61,171,255,.35);stroke-width:1}
+.dial path.on{fill:#3dabff;stroke:#ffffff;filter:drop-shadow(0 0 4px #1f9eff)}
+.dtk{fill:none;stroke:rgba(61,171,255,.55);stroke-width:1.6}
+.dring{fill:none;stroke:rgba(61,171,255,.5);stroke-width:1.5;filter:drop-shadow(0 0 3px #1f9eff)}
+.dring2{fill:rgba(3,12,20,.6);stroke:rgba(61,171,255,.25);stroke-width:1;stroke-dasharray:2 4}
+.kplate{padding:2px 0;text-align:center;line-height:1.1;background:none!important;clip-path:none!important;box-shadow:none!important;position:relative}
+.kplate.nt::after{content:"";display:block;width:34px;height:1.5px;margin:7px auto 0;background:linear-gradient(90deg,transparent,#ffffff,transparent);box-shadow:0 0 6px #1f9eff}
+.onoff{display:flex;gap:6px}
+.onoff b{font-size:12px;letter-spacing:2px;padding:4px 10px;border-radius:7px;border:1px solid rgba(61,171,255,.45);color:#7296b0;font-weight:600}
+.onoff b.a{background:linear-gradient(180deg,rgba(61,171,255,.7),rgba(20,122,200,.6));color:#ffffff;border-color:#ffffff;box-shadow:0 0 8px #1f9eff;text-shadow:0 0 6px #ffffff}
+.dno{position:absolute;right:8px;top:5px;font-size:9px;letter-spacing:1px;color:rgba(61,171,255,.6)}
+.dch{position:absolute;inset:10px 16px;border-radius:6px;background:linear-gradient(rgba(61,171,255,.18),rgba(61,171,255,.18)) center/1px 100% no-repeat,linear-gradient(rgba(61,171,255,.18),rgba(61,171,255,.18)) center/100% 1px no-repeat}
+.disp .ni{position:relative}
+.tab.t1{justify-content:flex-start;padding-left:12px;gap:14px;font-size:19px}
+.tbad{flex:none;display:grid;place-items:center}
+
+.mt.mtw{height:auto;padding:6px 8px;gap:0;display:block}
+.mt.mtw i{flex:none;height:var(--ph,64px)}
+.pm .ni{position:relative}
+.k [data-mc] .nt.pmt{font-size:64px!important;line-height:1!important;font-weight:700}
+.tix{position:absolute;right:18px;top:9px;font-size:10px;letter-spacing:1px;opacity:.6}
+/* design 7: one connected segmented mode bar */
+.seg{pointer-events:none}
+.tab.segt{border:none!important;background:none;box-shadow:none;border-radius:0;font-size:19px;clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%)}
+.tab.segt.on{background:linear-gradient(180deg,rgba(61,171,255,.55),rgba(var(--r),.45) 45%,rgba(10,77,140,.6));box-shadow:none;text-shadow:0 0 4px #ffffff,0 0 12px #1f9eff}
+.segd{position:absolute;top:34px;width:2px;height:52px;background:linear-gradient(180deg,transparent,#3dabff,transparent);transform:skewX(-14deg);box-shadow:0 0 6px #1f9eff}
+.ruler{position:absolute;left:60px;right:60px;height:14px;z-index:2;pointer-events:none;opacity:.55;
+  background:repeating-linear-gradient(90deg,rgba(61,171,255,.8) 0 1px,transparent 1px 12px) 0 0/100% 6px no-repeat,repeating-linear-gradient(90deg,rgba(61,171,255,.9) 0 2px,transparent 2px 120px) 0 0/100% 14px no-repeat}
+body.off-lines .ruler{display:none}
+/* design 1: panel header plates and the inset screen behind each key symbol */
+.fh{position:absolute;z-index:4;transform:translateY(-50%);display:flex;align-items:center;gap:10px;padding:6px 18px;font-size:15px;letter-spacing:4px;border-radius:999px;
+  background:#020607;border:1.5px solid rgba(61,171,255,.7);box-shadow:0 0 8px rgba(var(--r),.6),inset 0 0 10px rgba(var(--r),.25)}
+.disp{position:relative;width:118px;height:76px;border-radius:14px;display:grid;place-items:center;
+  background:repeating-linear-gradient(0deg,rgba(61,171,255,.06) 0 1px,transparent 1px 3px),radial-gradient(80% 90% at 50% 40%,rgba(var(--r),.22),rgba(2,7,10,.9));
+  box-shadow:inset 0 0 0 1px rgba(61,171,255,.55),inset 0 0 14px rgba(var(--r),.45),inset 0 2px 6px rgba(0,0,0,.8),0 0 6px rgba(var(--r),.35)}
+.disp:not(:has(svg)){display:none}
+.nt .lw{font-size:.84em;letter-spacing:.6px}
+.nt i.sl,.ns i.sl{position:relative;display:block;width:54px;height:1.5px;margin:6px auto 5px;background:linear-gradient(90deg,transparent,#3dabff 30%,#ffffff 50%,#3dabff 70%,transparent);box-shadow:0 0 6px #1f9eff}
+.nt i.sl::after,.ns i.sl::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;transform:rotate(45deg);background:#ffffff;box-shadow:0 0 6px #1f9eff,0 0 12px #1f9eff}
+.ns i.sl{width:40px;margin:4px auto 3px}
+.led,.onoff{display:none!important}
+.k.lit [data-mc] .nt,#plant.lit .nt{color:#ffffff!important;text-shadow:0 0 3px #ffffff,0 0 10px #ffffff,0 0 18px #1f9eff,0 0 32px #1f9eff,0 0 48px rgba(31,158,255,.8)!important}
+.k [data-mc] .nt{font-size:21px!important;line-height:1.12!important;letter-spacing:1.3px!important;font-weight:500!important;text-shadow:0 0 2px rgba(255,255,255,.5),0 0 6px #1f9eff,0 0 14px rgba(var(--r),.6)!important}
+.k [data-mc] .ns,.k+.ns[data-mc],.ns[data-mc]{font-size:15px!important}
+.k [data-mc]:not(:has(svg)) .kplate.nt{padding:6px 22px}
+.tbad:not(:has(svg)){display:none}
+.tab.t1{justify-content:center!important;padding-left:0!important}
+.tab.t1 .tix{opacity:.45}
+.disp::before,.disp::after{display:none}
+.disp::before{left:-3px;top:-3px;border-right:0;border-bottom:0;border-radius:4px 0 0 0}
+.disp::after{right:-3px;bottom:-3px;border-left:0;border-top:0;border-radius:0 0 4px 0}
+.hrim .p1{fill:none;stroke:rgba(61,171,255,.55);stroke-width:1.3;filter:drop-shadow(0 0 3px rgba(31,158,255,.9))}
+.hrim .p2{fill:none;stroke:rgba(61,171,255,.42);stroke-width:2.4}
+.hrim .p3{fill:none;stroke:#ffffff;stroke-width:2.6;stroke-linecap:round;filter:drop-shadow(0 0 3px #1f9eff) drop-shadow(0 0 7px rgba(31,158,255,.7))}
+.hrim .p4{fill:none;stroke:#3dabff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hrim .p5{fill:rgba(61,171,255,.32)}
+.hrim .p6{font:600 9px Oxanium,sans-serif;letter-spacing:2.5px;fill:rgba(61,171,255,.5)}
+.holo .r2{inset:6px;border:1px solid rgba(61,171,255,.34);box-shadow:inset 0 0 12px rgba(var(--r),.22),0 0 6px rgba(var(--r),.25)}
+.holo .r3{inset:12px;border:1px dashed rgba(61,171,255,.24)}
+.holo .f1{inset:-1px;border:1px solid rgba(80,86,255,.30);transform:translate(1.6px,.6px)}
+.holo .f2{inset:-1px;border:1px solid rgba(60,254,255,.28);transform:translate(-1.6px,-.6px)}
+.holo .tt{left:50%;top:4px;width:46px;height:3px;border-radius:2px;transform:translateX(-50%);background:linear-gradient(90deg,#ffffff 0 12px,transparent 12px 17px,#ffffff 17px 29px,transparent 29px 34px,#ffffff 34px);box-shadow:0 0 8px #1f9eff,0 0 14px rgba(var(--r),.55)}
+.holo .bb{left:50%;bottom:3px;width:22%;height:2px;border-radius:2px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(61,171,255,.7),transparent)}
+.holo .lt,.holo .rt{top:50%;width:3px;height:22%;max-height:46px;border-radius:2px;transform:translateY(-50%);background:linear-gradient(180deg,transparent,#ffffff,transparent);box-shadow:0 0 6px #1f9eff}
+.holo .lt{left:4px}.holo .rt{right:4px}
+.holo .bv{inset:2px;border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(0,0,0,.7),inset 1px 0 0 rgba(255,255,255,.10),inset -1px 0 0 rgba(255,255,255,.10)}
+.holo .vg{inset:5px;border-radius:inherit;box-shadow:inset 0 0 26px rgba(0,0,0,.55),inset 0 -14px 22px rgba(0,0,0,.35)}
+.holo .rf{left:14%;right:14%;bottom:6px;height:34%;border-radius:0 0 999px 999px;background:radial-gradient(60% 90% at 50% 100%,rgba(31,158,255,.22),transparent 70%);opacity:var(--fa,1)}
+.holo .gt{left:18%;right:18%;top:9px;height:1px;border-radius:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent)}
+.lit .holo .rf{background:radial-gradient(60% 90% at 50% 100%,rgba(61,171,255,.5),transparent 70%)}
+.holo .gl{left:7px;right:7px;top:7px;height:48%;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 70%,rgba(255,255,255,0));-webkit-mask:linear-gradient(180deg,#000000 40%,transparent);mask:linear-gradient(180deg,#000000 40%,transparent)}
+.dim .holo{opacity:.55}
+body.off-ro [data-ol=ro]>.holo,body.off-badge [data-ol=badge]>.holo,body.off-level [data-ol=level]>.holo{display:none}
+body.off-ro [data-ol=ro],body.off-badge [data-ol=badge],body.off-level [data-ol=level]{--ext:none}
+
+#deck::after{content:"";position:absolute;inset:0;z-index:7;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 0 120px rgba(0,0,0,.6)}
+
+/* ===== neon building blocks ===== */
+/* frame: the thin glowing outline every group sits in */
+.frame{position:absolute;border-radius:34px;border:1.5px solid rgba(var(--r),.42);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,0) 30%),rgba(2,6,6,.72);
+  box-shadow:0 0 6px rgba(var(--r),.35),0 0 22px rgba(var(--r),.12),inset 0 0 18px rgba(var(--r),.10),inset 0 1px 0 rgba(255,255,255,.08)}
+.frame::before{content:"";position:absolute;left:10%;right:10%;top:-1.5px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(61,171,255,.95),transparent);filter:blur(.4px);box-shadow:0 0 10px rgba(var(--r),.9)}
+.frame i.dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#3dabff;box-shadow:0 0 6px #1f9eff,0 0 12px #1f9eff}
+.frame.redzone{border-color:rgba(61,171,255,.7);background:radial-gradient(90% 70% at 50% 50%,rgba(var(--r),.10),transparent 70%),rgba(2,7,14,.8);box-shadow:0 0 10px rgba(var(--r),.5),0 0 34px rgba(var(--r),.2),inset 0 0 30px rgba(var(--r),.18)}
+/* neon tube outline (keys, pills, readouts) */
+.nb{position:absolute;border:2px solid #35a8ff;border-radius:999px;
+  background:radial-gradient(120% 80% at 50% 0%,rgba(var(--r),calc(.13*var(--fa,1))),transparent 60%),linear-gradient(180deg,rgba(255,255,255,calc(.05*var(--fa,1))),rgba(0,0,0,0) 35%),rgba(2,6,6,var(--fa,1));
+  box-shadow:0 0 2px rgba(255,255,255,.9),0 0 8px rgba(var(--r),.95),0 0 20px rgba(var(--r),.5),0 0 44px rgba(var(--r),.22),inset 0 0 6px rgba(var(--r),.8),inset 0 0 24px rgba(var(--r),.22)}
+.nb.dim{border-color:rgba(61,171,255,.55);box-shadow:0 0 5px rgba(var(--r),.45),0 0 16px rgba(var(--r),.16),inset 0 0 5px rgba(var(--r),.4),inset 0 0 18px rgba(var(--r),.08)}
+.nb.dim .ni{filter:drop-shadow(0 0 1px rgba(255,255,255,.6)) drop-shadow(0 0 5px rgba(var(--r),.7));opacity:.85}
+.nb.dim .nt{text-shadow:0 0 6px rgba(var(--r),.7);color:#3dabff}
+/* neon icon: white-hot core line + red halo */
+.ni{overflow:visible;fill:none;stroke:#ffffff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 1px #ffffff) drop-shadow(0 0 4px #1f9eff) drop-shadow(0 0 11px rgba(var(--r),.85))}
+.ni .s{fill:#ffffff;stroke:none}
+.ni .h{stroke:#3dabff;stroke-width:1.6}
+.ni .F{fill:#ffffff;stroke:none}.ni .Fd{fill:#050d1a;stroke:none}
+.nt{color:var(--txt);text-shadow:0 0 2px rgba(255,255,255,.6),0 0 7px #1f9eff,0 0 16px rgba(var(--r),.7);letter-spacing:2.2px;font-weight:600;text-transform:uppercase}
+.ns{color:var(--sub);text-shadow:0 0 6px rgba(var(--r),.7);letter-spacing:1.8px;font-size:13px;text-transform:uppercase}
+.k{cursor:pointer;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:transform .15s,filter .15s}
+.k:hover{transform:translateY(-2px);filter:brightness(1.18)}
+.k.flash{filter:brightness(1.9)}
+/* glass reflection across the top half of every tube */
+.nb::after{content:"";position:absolute;inset:3px;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 38%,transparent 40%)}
+/* pip bars */
+.pp{display:flex;gap:7px;align-items:center}
+.pp i{width:var(--pw,22px);height:var(--ph,22px);flex:none;cursor:pointer;touch-action:none;border-radius:7px;background:rgba(var(--r),.16);box-shadow:inset 0 0 0 1px rgba(var(--r),.28)}
+.pp i.on{background:radial-gradient(circle at 50% 35%,#ffffff,#3dabff 60%,#1f86d8);box-shadow:0 0 4px #1f9eff,0 0 12px rgba(var(--r),.8),inset 0 0 0 1px rgba(255,255,255,.6)}
+.pp.round i{border-radius:50%}
+.pp.round i{border-radius:14px}
+/* segmented tube meter (sample #1) */
+.mt{position:relative;height:68px;cursor:pointer;touch-action:none;border-radius:999px;border:1.6px solid rgba(61,171,255,.75);display:flex;gap:4px;align-items:center;padding:0 16px;
+  box-shadow:0 0 6px rgba(var(--r),.55),inset 0 0 10px rgba(var(--r),.25);background:#020607}
+.mt i{flex:1;height:44px;border-radius:4px;background:rgba(var(--r),.14)}
+.mt i.on{background:linear-gradient(180deg,#ffffff,#3dabff 45%,#2088d4);box-shadow:0 0 6px #1f9eff,0 0 12px rgba(var(--r),.6)}
+.mt.c2 i.on{background:linear-gradient(180deg,#ffffff,#3dabff 45%,#2f6be0);box-shadow:0 0 6px #3dabff}
+.mt.c3 i.on{background:linear-gradient(180deg,#ffffff,#3dabff 45%,#189bc9);box-shadow:0 0 6px #3bc9ff}
+/* mode tabs */
+.tab{position:absolute;display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;font-size:21px;letter-spacing:3.5px;color:var(--dimtxt);border-radius:999px;
+  border:1.5px solid rgba(var(--r),.32);background:rgba(2,7,8,.7);box-shadow:inset 0 0 10px rgba(var(--r),.08);transition:color .2s}
+.tab svg{width:30px;height:30px}
+.tab .ni{opacity:.55;filter:drop-shadow(0 0 3px rgba(var(--r),.6))}
+.tab:hover{color:#ffffff}
+.tab.on{color:#ffffff;border:2px solid #3dabff;background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(var(--r),.32) 45%,rgba(8,63,120,.5)),#06192a;
+  text-shadow:0 0 4px #ffffff,0 0 12px #1f9eff;box-shadow:0 0 3px #ffffff,0 0 12px #1f9eff,0 0 30px rgba(var(--r),.55),inset 0 0 14px rgba(61,171,255,.5)}
+.tab.on .ni{opacity:1;filter:drop-shadow(0 0 1px #ffffff) drop-shadow(0 0 6px #1f9eff)}
+.tab.left{justify-content:center;padding-left:0}
+/* LED for state keys: dark off, lit on */
+.led{position:absolute;width:8px;height:8px;border-radius:50%;background:#15243a}
+.lit .led{background:#3dabff;box-shadow:0 0 6px #1f9eff,0 0 14px #1f9eff}
+/* danger keys */
+.dz{position:absolute;cursor:pointer;user-select:none;border:2.5px solid #3dabff;
+  background:radial-gradient(80% 90% at 30% 50%,rgba(var(--r),.30),rgba(var(--r),.06) 70%),linear-gradient(180deg,rgba(255,255,255,.08),transparent 40%),rgba(2,8,18,var(--fa,1));
+  box-shadow:0 0 3px #ffffff,0 0 12px #1f9eff,0 0 30px rgba(var(--r),.6),0 0 70px rgba(var(--r),.25),inset 0 0 10px rgba(var(--r),.9),inset 0 0 40px rgba(var(--r),.35);
+  animation:dz 3.2s ease-in-out infinite}
+@keyframes dz{50%{box-shadow:0 0 4px #ffffff,0 0 16px #1f9eff,0 0 40px rgba(var(--r),.75),0 0 90px rgba(var(--r),.32),inset 0 0 14px rgba(var(--r),1),inset 0 0 50px rgba(var(--r),.45)}}
+.dz .ni{stroke:#ffffff;filter:drop-shadow(0 0 1px #ffffff) drop-shadow(0 0 5px #2e7cff) drop-shadow(0 0 14px rgba(40,113,255,.9))}
+.dz b{font-size:30px;letter-spacing:3px;line-height:1.05;color:#ffffff;text-shadow:0 0 3px #ffffff,0 0 10px #1f9eff,0 0 22px #1f9eff}
+.dz small{display:block;font-size:14px;letter-spacing:2.4px;color:#3dabff;text-shadow:0 0 6px #1f9eff;margin-top:6px}
+.ring{fill:none;stroke-linecap:round}
+.ring.base{stroke:rgba(61,171,255,.35);stroke-width:3}
+.ring.arc{stroke:#ffffff;stroke-width:4;filter:drop-shadow(0 0 3px #1f9eff) drop-shadow(0 0 8px #1f9eff)}
+.ring.hp{stroke:#ffffff;stroke-width:6;stroke-dasharray:0 9999;filter:drop-shadow(0 0 6px #1f9eff)}
+/* headings */
+.hd{position:absolute;display:flex;align-items:center;gap:12px;font-size:16px;letter-spacing:4px}
+.line{position:absolute;height:1.5px;background:linear-gradient(90deg,transparent,rgba(61,171,255,.8),transparent);box-shadow:0 0 6px rgba(var(--r),.7)}
+.vsep{position:absolute;width:1.5px;background:linear-gradient(180deg,transparent,rgba(61,171,255,.75),transparent);box-shadow:0 0 6px rgba(var(--r),.7)}
+#switch{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:10px;z-index:9}
+#switch button{font:16px Oxanium,sans-serif;letter-spacing:2px;color:#ffffff;background:#10181a;border:1px solid rgba(var(--r),.6);border-radius:999px;padding:10px 20px;cursor:pointer}
+#trbtn{font:16px Oxanium,sans-serif;letter-spacing:2px;color:#ffffff;background:#10181a;border:1px solid rgba(var(--r),.6);border-radius:999px;padding:10px 20px;cursor:pointer}
+#switch button.on{background:linear-gradient(100deg,#1270b3,#1f9eff)}
+body.shot #switch{display:none}
+/* live game data (23 NOV): tag in the bottom bar; SPEED LIMIT name glows when the game's limiter is on; SAMPLE tag on the pips only while live */
+#liveTag{font:16px Oxanium,sans-serif;letter-spacing:2px;color:#3dabff;background:#10181a;border:1px dashed rgba(var(--r),.6);border-radius:999px;padding:10px 20px;cursor:default;white-space:nowrap}
+#liveTag.on{color:#ffffff;border-style:solid;background:linear-gradient(100deg,#1270b3,#1f9eff)}
+[data-lvl].lvon{color:#ffffff!important;text-shadow:0 0 3px #ffffff,0 0 10px #ffffff,0 0 18px #1f9eff,0 0 32px #1f9eff,0 0 48px rgba(31,158,255,.8)!important}
+.smptag{display:none;font-size:11px;letter-spacing:2px;color:#3dabff;border:1px solid rgba(var(--r),.6);border-radius:999px;padding:2px 10px;margin-left:12px;align-self:center;font-weight:400;text-shadow:none}
+body.live .smptag{display:inline-block}
+/* ===== outline switches (configurator). Buttons always keep their outline. ===== */
+body.off-frame .frame:not(.redzone),body.off-redzone .frame.redzone,body.off-ro [data-ol=ro],body.off-badge [data-ol=badge],body.off-level [data-ol=level],body.off-meter .mt{border-color:transparent!important;box-shadow:none!important;background:transparent!important}
+body.off-frame .frame:not(.redzone)::before,body.off-redzone .frame.redzone::before,body.off-frame .frame:not(.redzone) .dot,body.off-redzone .frame.redzone .dot,
+body.off-ro [data-ol=ro]::after,body.off-badge [data-ol=badge]::after,body.off-level [data-ol=level]::after,body.off-lines .line,body.off-lines .vsep{display:none!important}
+#cfgbtn{font:16px Oxanium,sans-serif;letter-spacing:2px;color:#ffffff;background:#10181a;border:1px solid rgba(var(--r),.6);border-radius:999px;padding:10px 20px;cursor:pointer}
+#cfg{position:absolute;inset:0;z-index:20;display:none;padding:26px 30px 26px;border-radius:inherit;
+  background:rgba(3,4,4,.96);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.14)}
+body.cfgopen #cfg{transition:background .25s}
+body.peek #cfg{background:transparent!important;box-shadow:none!important}
+body.peek #cfg .cfghd,body.peek #cfg .cfgcol h3,body.peek #cfg .cfgcol .note,body.peek #cfg .orow:not(.live){opacity:0;transition:opacity .2s}
+body.peek #cfg .cfgcol{background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+body.peek #cfg .orow.live{background:rgba(1,5,6,.92);border-radius:16px;padding:12px 16px;box-shadow:0 0 0 1.5px rgba(61,171,255,.7),0 0 18px rgba(var(--r),.4)}
+body.cfgopen #cfg{display:grid;grid-template-columns:1.15fr 1fr .85fr;grid-template-rows:64px 1fr;gap:18px 34px}
+.cfghd{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}
+.cfghd h2{margin:0;font-size:26px;letter-spacing:6px;display:flex;align-items:center;gap:14px}
+.cfgdone{position:relative;font:600 20px Oxanium,sans-serif;letter-spacing:4px;color:#ffffff;padding:14px 40px;border-radius:999px;cursor:pointer;border:2px solid #3dabff;
+  background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(var(--r),.32) 45%,rgba(8,63,120,.5)),#06192a;box-shadow:0 0 12px #1f9eff,inset 0 0 14px rgba(61,171,255,.5)}
+.cfgcol{position:relative;border-radius:28px;padding:20px 26px;border:1.5px solid rgba(var(--r),.42);background:rgba(2,6,8,.7);box-shadow:0 0 10px rgba(var(--r),.25),inset 0 0 18px rgba(var(--r),.10);overflow:hidden}
+.cfgcol h3{margin:0 0 4px;font-size:21px;letter-spacing:4px;display:flex;align-items:center;gap:12px}
+.cfgcol .note{margin:0 0 8px;font-size:13px;color:#3dabff;letter-spacing:1px;line-height:1.35}
+.cfgcol .orow{padding:9px 4px}
+#cfg h3{margin:0 0 6px;font-size:22px;letter-spacing:4px;display:flex;align-items:center;gap:12px}
+#cfg .note{margin:0 0 20px;font-size:14px;color:#3dabff;letter-spacing:1px;line-height:1.4}
+.orow{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px 6px;border-bottom:1px solid rgba(var(--r),.14);font-size:17px;letter-spacing:1.2px;color:#ffffff}
+.orow:last-child{border-bottom:0}
+.colrow{display:flex;align-items:center;gap:16px}
+.colrow .ns{color:#ffffff!important;text-shadow:none}
+#deck>:not(#cfg),#cfg .cfgcol,#cfg .cfghd h2,#cfg .cfgdone{filter:var(--hf,none)}
+.cols{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;max-width:620px}
+.cw{display:block;width:62px;height:62px;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 40% 35%,#ffffff 0 8%,var(--cw) 40%,rgba(0,0,0,.5) 100%);box-shadow:0 0 0 2px rgba(255,255,255,.15),0 0 10px var(--cw)}
+.cw.on{box-shadow:0 0 0 3px #ffffff,0 0 0 6px var(--cw),0 0 22px var(--cw)}
+.sl{display:flex;align-items:center;gap:14px;flex:none}
+.sl input{-webkit-appearance:none;appearance:none;width:240px;height:10px;border-radius:999px;background:linear-gradient(90deg,#1f9eff var(--v),#0d1b2a var(--v));box-shadow:0 0 8px rgba(var(--r),.5);outline:none;cursor:pointer}
+.sl input::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#ffffff;box-shadow:0 0 8px #ffffff,0 0 16px #1f9eff;cursor:pointer}
+.sl b{width:52px;text-align:right;font-size:17px;color:#ffffff}
+.orow.lock{color:#7a8f9d}
+.sw{position:relative;width:76px;height:36px;flex:none;border-radius:999px;cursor:pointer;border:1.5px solid rgba(61,171,255,.45);background:#060d12;transition:all .2s}
+.sw::after{content:"";position:absolute;left:5px;top:5px;width:24px;height:24px;border-radius:50%;background:#2a3b4a;transition:all .2s}
+.sw.on{border-color:#3dabff;background:radial-gradient(120% 120% at 30% 0%,rgba(61,171,255,.55),rgba(var(--r),.35)),#06192a;box-shadow:0 0 4px #ffffff,0 0 14px #1f9eff,inset 0 0 10px rgba(61,171,255,.5)}
+.sw.on::after{left:43px;background:#ffffff;box-shadow:0 0 8px #ffffff,0 0 14px #1f9eff}
+.lk{font-size:13px;letter-spacing:2px;color:#3dabff;text-shadow:0 0 6px rgba(var(--r),.6);white-space:nowrap}
+.orow{break-inside:avoid}
+
+/* ===== HOLOGRAM GLASS look (RAZ 23 NOV, chat 2: "rebuild the entire deck we just made to that look. remove that blue underglow and make it black instead").
+   Same recipe as the travel pill (travel-dial-chat8.js draft 23): black smoked glass, thick lit slab edge under each panel,
+   symbols and names drawn as projected light (soft dark-red shadow under the glass 3/8 px, faint 0.6 px red / cyan fringe, tight glow),
+   glass sheen + top highlight, scan lines, thin dark text halo. Look only: layout, keys, rules, color switcher, telemetry unchanged.
+   No tilt: keys stay flat so the finger lands where the key is drawn; the depth comes from the slab edge.
+   Underglow under each key is black now (was red). Backup before: v26 (before hologram glass). ===== */
+:root{--proj:3px 8px 3.2px rgba(4,62,122,.42);--fringe:-.6px 0 0 rgba(235,178,0,.16),.6px 0 0 rgba(40,183,255,.16)}
+/* slab edge: two offset dark-red layers + a lit edge, then a black drop shadow (no red glow line under the base) */
+.nb,.dz{--ext:0 4.5px 0 0 #0c233a,0 9px 0 0 #050f1a,0 9px 0 2px #123c5e,0 18px 20px rgba(0,0,0,.8)}
+.k:active{--ext:0 1.5px 0 0 #0c233a,0 3px 0 0 #050f1a,0 3px 0 2px #123c5e,0 8px 12px rgba(0,0,0,.8)}
+/* black smoked glass, about 90 %; the deck's fill setting (--fa) still applies */
+.nb{border-color:#35a8ff;background:radial-gradient(120% 70% at 50% 0%,rgba(var(--r),calc(.14*var(--fa,1))),transparent 60%),
+   linear-gradient(180deg,rgba(4,6,10,calc(.9*var(--fa,1))),rgba(1,2,3,calc(.9*var(--fa,1))) 55%,rgba(0,0,0,calc(.9*var(--fa,1))))}
+.nb{box-shadow:var(--ext),0 0 2px rgba(255,255,255,.8),0 0 3px #1f9eff,0 0 10px rgba(var(--r),.55),inset 0 0 6px rgba(var(--r),.55),inset 0 0 18px rgba(var(--r),.14),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -6px 12px rgba(0,0,0,.6)}
+.nb.dim{box-shadow:var(--ext),0 0 3px rgba(var(--r),.45),0 0 9px rgba(var(--r),.2),inset 0 0 5px rgba(var(--r),.35),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -6px 12px rgba(0,0,0,.6)}
+.dz{background:radial-gradient(80% 90% at 30% 50%,rgba(var(--r),.22),rgba(var(--r),.04) 70%),linear-gradient(180deg,rgba(4,6,10,calc(.9*var(--fa,1))),rgba(1,2,3,calc(.9*var(--fa,1))) 55%,rgba(0,0,0,calc(.9*var(--fa,1))))}
+.dz{box-shadow:var(--ext),0 0 3px #ffffff,0 0 12px #1f9eff,0 0 30px rgba(var(--r),.5),inset 0 0 10px rgba(var(--r),.8),inset 0 0 40px rgba(var(--r),.25)}
+@keyframes dz{50%{box-shadow:var(--ext),0 0 4px #ffffff,0 0 16px #1f9eff,0 0 40px rgba(var(--r),.65),inset 0 0 14px rgba(var(--r),1),inset 0 0 50px rgba(var(--r),.38)}}
+.nb.pressed,.dz.pressed{box-shadow:0 1.5px 0 0 #0c233a,0 3px 0 0 #050f1a,0 3px 0 2px #123c5e,0 0 4px #ffffff,0 0 14px #1f9eff,inset 0 0 0 2px rgba(255,255,255,.55),inset 0 0 34px rgba(61,171,255,.8),inset 0 0 80px rgba(31,158,255,.4)!important;
+  background:radial-gradient(70% 70% at 50% 50%,rgba(61,171,255,.45),rgba(20,122,200,.28) 55%,rgba(2,10,20,.85)),#02060a!important}
+.frame{background:linear-gradient(180deg,rgba(4,6,10,.9),rgba(1,2,3,.9) 55%,rgba(0,0,0,.9));
+  box-shadow:0 4.5px 0 0 #08192a,0 9px 0 0 #040d12,0 9px 0 1.5px #0e2c4a,0 18px 24px rgba(0,0,0,.8),0 0 3px rgba(var(--r),.45),0 0 10px rgba(var(--r),.18),inset 0 0 16px rgba(var(--r),.08),inset 0 1px 0 rgba(255,255,255,.12)}
+.frame.redzone{background:radial-gradient(90% 70% at 50% 50%,rgba(var(--r),.08),transparent 70%),linear-gradient(180deg,rgba(4,6,10,.9),rgba(0,0,0,.92));
+  box-shadow:0 4.5px 0 0 #0c233a,0 9px 0 0 #050f1a,0 9px 0 1.5px #123c5e,0 18px 24px rgba(0,0,0,.8),0 0 4px rgba(var(--r),.6),0 0 16px rgba(var(--r),.22),inset 0 0 24px rgba(var(--r),.14)}
+.tab{background:linear-gradient(180deg,rgba(4,6,10,.9),rgba(0,0,0,.9));box-shadow:0 3px 0 0 #08192a,0 6px 0 0 #040d12,0 6px 0 1.5px #0c263e,inset 0 1px 0 rgba(255,255,255,.1),inset 0 0 10px rgba(var(--r),.06)}
+.tab.on{box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 6px 0 1.5px #123c5e,0 0 3px #ffffff,0 0 10px #1f9eff,inset 0 0 14px rgba(61,171,255,.45)}
+.tab.segt,.tab.segt.on{box-shadow:none}
+.fh{background:linear-gradient(180deg,#04060a,#000000);box-shadow:0 3px 0 0 #08192a,0 0 4px rgba(var(--r),.5),inset 0 0 8px rgba(var(--r),.2)}
+.mt{background:linear-gradient(180deg,#04060a,#000000)}
+/* glass sheen (diagonal) + top highlight, scan lines with a dark line, finer hex mesh, 0.6 px red / cyan fringe, black underglow */
+.nb::after{inset:2px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 18%),
+  linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 28%,rgba(255,255,255,.09) 42%,rgba(255,255,255,0) 50%,rgba(255,255,255,.03))}
+.holo .sc{background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 2px,rgba(0,0,0,.10) 2px 3px,transparent 3px 4px)}
+.holo .gr{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%2360b5ff' stroke-opacity='.14' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px}
+.holo .f1{border-color:rgba(235,178,0,.18);transform:translate(-.6px,0)}
+.holo .f2{border-color:rgba(40,183,255,.22);transform:translate(.6px,0)}
+.holo .rf,.lit .holo .rf{background:radial-gradient(60% 90% at 50% 100%,rgba(0,0,0,.55),transparent 70%)}
+/* symbols and names as projected light: thin dark halo, red / cyan fringe, tight glow, soft dark-red shadow under the glass */
+.nt,.ns,.dz b,.dz small,.tab,.hd,.kplate,.smptag,.tvtag{-webkit-text-stroke:1.2px rgba(2,10,20,.6);paint-order:stroke fill}
+.nt,.tab.on{text-shadow:var(--fringe),0 0 2.6px color-mix(in srgb,currentColor 75%,transparent),var(--proj)}
+.ns,.dz small,.tab{text-shadow:var(--fringe),0 0 2.6px color-mix(in srgb,currentColor 60%,transparent),var(--proj)}
+.dz b{text-shadow:var(--fringe),0 0 2.6px color-mix(in srgb,currentColor 80%,transparent),0 0 8px rgba(var(--r),.6),var(--proj)}
+.k [data-mc] .nt{text-shadow:var(--fringe),0 0 2.6px color-mix(in srgb,currentColor 75%,transparent),var(--proj)!important}
+.k.lit [data-mc] .nt,#plant.lit .nt,[data-lvl].lvon{color:#ffffff!important;text-shadow:var(--fringe),0 0 3px #ffffff,0 0 8px #ffffff,0 0 16px #1f9eff,0 0 28px rgba(31,158,255,.8),var(--proj)!important}
+.pressed [data-mc] .nt,.pressed .nt{color:#ffffff!important;text-shadow:var(--fringe),0 0 3px #ffffff,0 0 12px #1f9eff,var(--proj)!important}
+.ni,.nb.dim .ni,.tab .ni,.tab.on .ni,.dz .ni{filter:drop-shadow(-.6px 0 0 rgba(235,178,0,.22)) drop-shadow(.6px 0 0 rgba(40,183,255,.22)) drop-shadow(0 0 1.3px rgba(61,171,255,.85)) drop-shadow(3px 8px 1.6px rgba(4,62,122,.42))}
+.tab .ni{opacity:.6}.tab.on .ni{opacity:1}
+
+/* ===== NO PILL ROUND EACH POWER BAR (RAZ 23 NOV: "remove the pills" ... "of the individual power thing").
+   The outline round each single power row is gone: design 1 meter track, design 3 readout pill. Pips, icons (and their rings), labels and the
+   outer POWER panel stay. The two settings switches for those outlines (Readout pills, Meter tubes) are removed with them. ===== */
+.mt,[data-ol=ro]{border-color:transparent!important;box-shadow:none!important;background:transparent!important;--ext:none}
+[data-ol=ro]>.holo,[data-ol=ro]::after{display:none!important}
+
+/* scanner animation OFF (SETTINGS > MODE CHANGE, saved with the look): moving scan lines on every key stand still, light sweep off; mode change is instant (switchMode) */
+body.noscan .holo .sc,body.noscan .holo .sh{animation:none!important}
+body.noscan .holo .sh{display:none}
+/* MINING / SALVAGE power: the sample tag is always shown there (that value is never in the game data) */
+.smptag.nogd{display:inline-block}
+
+/* ===== ONE COLOR PER KEY (RAZ 23 NOV, typed in chat 8: "if the top of the button is green red or whatever the shadow going down to include the honeycomb
+   on each button field should be the same color" / "so the honeycomb and the button changes in color as the condition changes" / "that applies to the whole deck").
+   Every key's top, 3D slab edge (two dark layers + lit edge), glow and honeycomb come from the key's own color: --e1 / --e2 / --e3 slab, --gl glow (r,g,b).
+   Default = the deck red (looks as before). A key that takes a state color gets .kg green / .ka amber / .kr red and all four parts change together
+   (same classes and slab colors as chat 8's ship-status page). The color switcher turns the whole face, slabs and honeycomb included. ===== */
+.nb,.dz{--e1:#0c233a;--e2:#050f1a;--e3:#123c5e;--ext:0 4.5px 0 0 var(--e1),0 9px 0 0 var(--e2),0 9px 0 2px var(--e3),0 18px 20px rgba(0,0,0,.8)}
+.k:active{--ext:0 1.5px 0 0 var(--e1),0 3px 0 0 var(--e2),0 3px 0 2px var(--e3),0 8px 12px rgba(0,0,0,.8)}
+.nb.pressed,.dz.pressed{box-shadow:0 1.5px 0 0 var(--e1),0 3px 0 0 var(--e2),0 3px 0 2px var(--e3),0 0 4px #ffffff,0 0 14px rgb(var(--r)),inset 0 0 0 2px rgba(255,255,255,.55),inset 0 0 34px rgba(var(--r),.8),inset 0 0 80px rgba(var(--r),.4)!important}
+/* ===== STATE COLOR = INSIDE ONLY (RAZ 23 NOV, on chat 8's ship status page: "make all button outlines the same color but change the interior to match the status
+   instead of the entire button changing colors. it looks a bit busy and crowded" / "ensure the button changes trickle down to all pages"). Replaces v34 "one color per key".
+   Rim, 3D slab, top "- - -" tab, heartbeat bottom line and rim glow ALWAYS stay the deck color. Only the inside takes the state color: lit fill (the underglow
+   layer), honeycomb, scan lines and the words. Off = dark inside. Filter goes on the inside layers only, never on the key (same as chat 8's page).
+   The color switcher hue is subtracted (--swh) so green stays green on any deck color. ===== */
+.kg>.holo>.gr,.kg>.holo>.sc,.kg>.holo>.rf,.kg>[data-mc],.dz.kg>:not(.holo):not(svg.cd){filter:hue-rotate(calc(125deg - var(--swh,0deg))) saturate(2.4) brightness(1.18) contrast(1.12)}
+.ka>.holo>.gr,.ka>.holo>.sc,.ka>.holo>.rf,.ka>[data-mc],.dz.ka>:not(.holo):not(svg.cd){filter:hue-rotate(calc(70deg - var(--swh,0deg))) saturate(2.6) brightness(1.2) contrast(1.12)}
+.kr>.holo>.gr,.kr>.holo>.sc,.kr>.holo>.rf,.kr>[data-mc],.dz.kr>:not(.holo):not(svg.cd){filter:hue-rotate(calc(0deg - var(--swh,0deg))) saturate(1.2)}
+:is(.kg,.ka,.kr)>.holo>.rf{left:4px;right:4px;top:4px;bottom:4px;height:auto;border-radius:inherit;opacity:1!important;background:radial-gradient(85% 90% at 50% 45%,rgba(31,158,255,.36),rgba(31,158,255,.09) 70%,transparent)!important}
+/* danger keys with a state: dark glass inside so the state fill shows (rim and pulse glow stay deck color); amber 70 deg on this deck (46 pulled red under the face boost) */
+.dz:is(.kg,.ka,.kr){background:linear-gradient(180deg,rgba(4,6,10,.9),rgba(0,0,0,.92))}
+:is(.kg,.ka,.kr)>.holo>.gr{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.34' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px}
+/* SETTINGS keys (DONE, on / off switches) get the same slab edge and honeycomb in the deck color */
+.cfgdone{box-shadow:0 4.5px 0 0 #0c233a,0 9px 0 0 #050f1a,0 9px 0 2px #123c5e,0 18px 20px rgba(0,0,0,.8),0 0 12px #1f9eff,inset 0 0 14px rgba(61,171,255,.5);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.34' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(var(--r),.32) 45%,rgba(8,63,120,.5)),#06192a}
+.sw{box-shadow:0 3px 0 0 #08192a,0 6px 0 0 #040d12,0 6px 0 1.5px #0c263e;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%2360b5ff' stroke-opacity='.14' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,#060d12}
+.sw.on{box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 6px 0 1.5px #123c5e,0 0 4px #ffffff,0 0 14px #1f9eff,inset 0 0 10px rgba(61,171,255,.5);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.34' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,radial-gradient(120% 120% at 30% 0%,rgba(61,171,255,.55),rgba(var(--r),.35)),#06192a}
+
+/* ===== DIGITAL SHINE (RAZ 23 NOV: "i dislike the pastel like colors of everything i want digital shine and brightness, even though some colors are bright they are not sharp").
+   Recipe from chat 8's ship status deck: whole face saturate 1.55 / contrast 1.14 / brightness 1.06 (applyLook, every color), stronger switcher colors,
+   white-hot letters with a tight glow and no stroke, sharper pips, saturated red stars. Layout unchanged. ===== */
+.nt,.dz b,.fh,.tab.on,.hd{color:#ffffff!important;-webkit-text-stroke:0!important;text-shadow:0 0 1px #ffffff,0 0 3px rgba(255,255,255,.9),0 0 7px rgba(40,157,255,.95),0 0 14px rgba(30,153,255,.55)!important}
+.k [data-mc] .nt{color:#ffffff!important;-webkit-text-stroke:0!important;text-shadow:0 0 1px #ffffff,0 0 3px rgba(255,255,255,.9),0 0 7px rgba(40,157,255,.95),0 0 14px rgba(30,153,255,.55)!important}
+.ns,.dz small,.k [data-mc] .ns{color:#ffffff!important;-webkit-text-stroke:0!important;text-shadow:0 0 1px rgba(255,255,255,.7),0 0 5px rgba(40,157,255,.8)!important}
+.tab{-webkit-text-stroke:0}
+/* "on" keeps the brighter name (his rule): stronger white core + wider red glow */
+.k.lit [data-mc] .nt,#plant.lit .nt,[data-lvl].lvon{color:#ffffff!important;text-shadow:0 0 1px #ffffff,0 0 4px #ffffff,0 0 9px #ffffff,0 0 16px rgba(40,157,255,1),0 0 30px rgba(30,153,255,.85)!important}
+.nb{border-width:2.4px}
+.hrim .p1{stroke:rgba(255,255,255,.8)}.hrim .p2{stroke:rgba(61,171,255,.6)}
+.pp i.on{background:radial-gradient(90% 70% at 50% 22%,#4fb0ff 0,#1090ef 45%,#0a78d0 72%,#075a9e);box-shadow:0 0 3px #1090ef,0 0 9px rgba(16,144,239,.75),inset 0 0 0 1px rgba(255,255,255,.35)} /* no pastels: no white core, solid RSI blue (24 NOV) */
+.mt i.on{background:linear-gradient(180deg,#ffffff 0,#3dabff 30%,#1f9bff 60%,#0071c8);box-shadow:0 0 3px #2a9cff,0 0 9px rgba(30,153,255,.75)}
+
+/* ===== SHARP COLORS (pill draft 31 palette: neon red #1f9eff / #35a8ff / #3dabff, green #ff142b, amber #4000ff): white sheen and red haze halved ===== */
+#deck{background:radial-gradient(60% 120% at 8% 0%,rgba(var(--r),.018),transparent 60%),radial-gradient(40% 90% at 100% 60%,rgba(var(--r),.022),transparent 60%),linear-gradient(180deg,#020503,#000101)}
+.nb{background:radial-gradient(120% 70% at 50% 0%,rgba(var(--r),calc(.07*var(--fa,1))),transparent 60%),
+   linear-gradient(180deg,rgba(4,6,10,calc(.9*var(--fa,1))),rgba(1,2,3,calc(.9*var(--fa,1))) 55%,rgba(0,0,0,calc(.9*var(--fa,1))))}
+.nb{box-shadow:var(--ext),0 0 2px rgba(255,255,255,.8),0 0 3px #1f9eff,0 0 10px rgba(var(--r),.28),inset 0 0 6px rgba(var(--r),.5),inset 0 0 18px rgba(var(--r),.07),inset 0 1px 0 rgba(255,255,255,.08),inset 0 -6px 12px rgba(0,0,0,.6)}
+.nb::after{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0) 18%),
+  linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01) 28%,rgba(255,255,255,.045) 42%,rgba(255,255,255,0) 50%,rgba(255,255,255,.015))}
+.holo .gl{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015) 70%,rgba(255,255,255,0))}
+.frame{box-shadow:0 4.5px 0 0 #08192a,0 9px 0 0 #040d12,0 9px 0 1.5px #0e2c4a,0 18px 24px rgba(0,0,0,.8),0 0 3px rgba(var(--r),.45),0 0 10px rgba(var(--r),.09),inset 0 0 16px rgba(var(--r),.04),inset 0 1px 0 rgba(255,255,255,.06)}
+.dz{box-shadow:var(--ext),0 0 3px #ffffff,0 0 12px #1f9eff,0 0 30px rgba(var(--r),.25),inset 0 0 10px rgba(var(--r),.8),inset 0 0 40px rgba(var(--r),.12)}
+@keyframes dz{50%{box-shadow:var(--ext),0 0 4px #ffffff,0 0 16px #1f9eff,0 0 40px rgba(var(--r),.33),inset 0 0 14px rgba(var(--r),1),inset 0 0 50px rgba(var(--r),.19)}}
+/* the TRAVEL pill keeps its own colors: color switcher hue only, no extra face boost */
+#travel{filter:var(--hfc,none)!important}
+/* ===== MISSILE RING (RAZ 23 NOV, chat 8: "make it so the outer ring of the entire deck flashes red when missile is locked"): thick #1f9eff + glow, 1 s pulse.
+   Always red (not turned by the color switcher). Same look as chat 8's ship status deck. ===== */
+#mslring{display:none;position:absolute;inset:0;border-radius:30px;pointer-events:none;z-index:60;filter:none!important;border:5px solid #1f9eff;
+  box-shadow:0 0 6px #ffffff,0 0 22px #1f9eff,0 0 50px rgba(31,158,255,.7),inset 0 0 6px #ffffff,inset 0 0 26px #1f9eff,inset 0 0 60px rgba(31,158,255,.45);animation:mslring 1s ease-in-out infinite}
+#deck.misl #mslring{display:block}
+@keyframes mslring{0%,100%{opacity:1}50%{opacity:.12}}
+
+/* VJOY / REL key: active mode bright, the other dim */
+.mm{text-align:center;line-height:1.1}
+.mm span{display:block;opacity:.32;text-shadow:none!important}
+.mm span.on{opacity:1;text-shadow:0 0 1px #ffffff,0 0 4px #ffffff,0 0 9px #ffffff,0 0 16px rgba(40,157,255,1),0 0 30px rgba(30,153,255,.85)!important}
+/* ===== NO INNER RIM LINE (RAZ 23 NOV, chat 8: "remove the inner pill line" / "it's an extra line"): only the outer neon rim and the little rim dots stay ===== */
+.hrim .p1,.hrim .p2,.holo .r2,.holo .r3{display:none!important}
+
+/* ===== TRAVEL page clear glass (RAZ 23 NOV: "the colors of the travel page still look like pastel and not the clean clear glass look of the caution page"):
+   page background = the deck face (no red haze), SAMPLE / LIVE tag without dusty pink, header keys + VJOY / REL key get the same face boost as the deck.
+   The pill itself gets NO filter and NO text-shadow (inside its 3D tilt either one blurs the text - chat 2). ===== */
+#travel{background:linear-gradient(180deg,#020503,#000101)}
+#travel>:not(.tvp){filter:saturate(1.55) contrast(1.14) brightness(1.06)}
+#travel .tvp,#travel .tvp svg{filter:none!important;text-shadow:none!important}
+.tvtag{color:#ffffff;border:1px solid rgba(31,158,255,.7)}
+
+/* top tab marks follow the rim curve (replaces the straight .holo .tt strip) */
+.holo .tt{display:none!important}
+.hrim .tabm path{fill:none;stroke-width:3;stroke-linecap:butt}
+.hrim .tabm{filter:drop-shadow(0 0 4px #1f9eff) drop-shadow(0 0 8px rgba(31,158,255,.55))}
+.hrim .tA{stroke:#ffffff}.hrim .tB{stroke:#ffffff}
+.tab svg.hrim{width:100%;height:100%} /* the tab icon size rule (.tab svg 30 px) had squashed the rim drawing on mode tabs */
+
+/* bottom-centre little lines: follow the rim, heartbeat pulse (lub-dub, rest), 15 % -> white-hot, per-key phase; scanner switch OFF stops it */
+.holo .bb{display:none!important}
+.hrim .botm path{fill:none;stroke:#ffffff;stroke-width:2.2;stroke-linecap:round}
+.hrim .botm{filter:drop-shadow(0 0 3px #1f9eff) drop-shadow(0 0 8px rgba(31,158,255,.75));opacity:.15;animation:hbeat 2.8s ease-in-out infinite}
+@keyframes hbeat{0%{opacity:.15}7%{opacity:1}14%{opacity:.35}21%{opacity:1}34%,100%{opacity:.15}}
+body.noscan .hrim .botm{animation:none;opacity:.6}
+/* press flash: outer pair / middle dash alternate every 180 ms for 3 s after a press */
+.tabpress .hrim .tabm{filter:drop-shadow(0 0 3px #ffffff) drop-shadow(0 0 9px #1f9eff) drop-shadow(0 0 16px rgba(31,158,255,.8))}
+.tabpress .hrim .tB{stroke:#ffffff;animation:tpo .36s steps(1) infinite}
+.tabpress .hrim .tA{animation:tpi .36s steps(1) infinite}
+@keyframes tpo{0%{opacity:1}50%{opacity:.06}}
+@keyframes tpi{0%{opacity:.06}50%{opacity:1}}
+.pp i.pipflash,.dial path.pipflash{animation:pipf .36s steps(1) infinite}
+@keyframes pipf{0%{filter:brightness(2.2) saturate(.5)}50%{filter:brightness(.55)}}
+
+/* ===== SOFT BOTTOM LIGHT RESTORED (RAZ 23 NOV: "you have cheapened the blinking light on each button. it was supposed to be the beautiful photo realistic slow pulse it was before, now it's very basic just a line").
+   The hard white heartbeat line (v45) is gone; the original soft light is back with its exact look (v44 .holo .bb: 22 % wide, 2 px, transparent - pink .7 - transparent,
+   3 px above the bottom edge), now with a slow soft breath (3.2 s, the danger-key pace), staggered per key. Scanner switch OFF holds it steady.
+   Fine line under the three top dashes removed ("there's a fine line under the three dots it needs to go"): the 1 px glass highlight .holo .gt, on every key / tab. ===== */
+.hrim .botm{display:none!important}
+.holo .bb{display:block!important;left:50%;bottom:3px;width:22%;height:2px;border-radius:2px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(61,171,255,.7),transparent);animation:bbp 3.2s ease-in-out infinite;animation-delay:calc(var(--sd,0s) * -.4)}
+@keyframes bbp{0%,100%{opacity:.45}50%{opacity:1}}
+body.noscan .holo .bb{animation:none;opacity:1}
+.holo .gt{display:none!important}
+.holo .bv{box-shadow:inset 0 -1px 0 rgba(0,0,0,.7),inset 1px 0 0 rgba(255,255,255,.10),inset -1px 0 0 rgba(255,255,255,.10)!important} /* the fine line he circled: the bevel's 1 px top highlight, right under the three dashes - removed (bottom and side bevel kept) */
+
+/* UNITS selector (SETTINGS > LOOK) */
+.unitsel{display:flex;gap:8px}
+.unitsel b{font:600 14px Oxanium,sans-serif;letter-spacing:2px;color:#ffffff;padding:7px 16px;border-radius:999px;border:1.5px solid rgba(61,171,255,.45);background:#060d12;cursor:pointer}
+.unitsel b.on{color:#ffffff;border-color:#3dabff;background:radial-gradient(120% 120% at 30% 0%,rgba(61,171,255,.55),rgba(var(--r),.35)),#06192a;box-shadow:0 0 4px #ffffff,0 0 12px #1f9eff}
+/* TRAVEL page: softer warning glow (RAZ: "tone down the warning color brightness ... too bright") - the deck's missile ring while TRAVEL is open */
+body.travelopen #mslring{border-width:4px;border-color:rgba(31,158,255,.75);box-shadow:0 0 4px rgba(255,255,255,.5),0 0 12px rgba(31,158,255,.55),0 0 26px rgba(31,158,255,.3),inset 0 0 4px rgba(255,255,255,.45),inset 0 0 14px rgba(31,158,255,.45)}
+
+/* ===== STRAY DOTS / TITLES (RAZ 23 NOV: "pages have additional dots in their pills like speed limiter has a button outside of the pill itself and then between flight ready
+   and exit seat there's another one" / "remove the star thing. center the titles on each pill on top of it").
+   Removed: the group-frame side dots (.frame i.dot) and the rim dots of group holders that are not keys (level / readout / badge holders).
+   Kept: the rim dots INSIDE keys (the text limit). Section title plates centred on their panel; no star or bolt in front. ===== */
+.frame i.dot{display:none!important}
+[data-ol] > .holo .hrim .p5{display:none!important}
+.fh.fhc,.hd.fhc{transform:translate(-50%,-50%)!important;white-space:nowrap}
+.hd.fhc{transform:translateX(-50%)!important}
+/* emergency exit: fast dash flash while EMERGENCY EXIT shows */
+.emx .hrim .tB{stroke:#ffffff;animation:tpo .16s steps(1) infinite}
+.emx .hrim .tA{animation:tpi .16s steps(1) infinite}
+.emx .ns{text-align:center;font-size:12px!important;letter-spacing:1px!important;line-height:1.15;color:#ffffff!important;text-shadow:0 0 2px #ffffff,0 0 8px #1f9eff,0 0 16px #1f9eff!important}
+
+/* ===== TOP MARKS = RIM DOTS (v55, RAZ 23 NOV: "the three lines on all buttons need to look more like the side dots and lines throughout the decks"):
+   at rest the three dots are the side marker dot look (.p5 color, no glow); the press flash / emergency exit brighten them to white with the red glow. ===== */
+.hrim .tabm path{stroke-width:2.4;stroke-linecap:round}
+.hrim .tabm{filter:none}
+.hrim .tA,.hrim .tB{stroke:rgba(61,171,255,.32)}
+.tabpress .hrim .tA,.tabpress .hrim .tB,.emx .hrim .tA,.emx .hrim .tB{stroke:#ffffff}
+.emx .hrim .tabm{filter:drop-shadow(0 0 3px #ffffff) drop-shadow(0 0 9px #1f9eff) drop-shadow(0 0 16px rgba(31,158,255,.8))}
+
+/* ===== v56 DECK-WIDE LOOK (RAZ 23 NOV via chat 2: "yes roll out to all pages" / "remove honeycom from buttons and make them straight gloss with no honeycomb" /
+   "some buttons have it some don't" / "make it even across all pages" / "the big honeycomb is fine for the page deck itself but buttons and lights must be fine").
+   1 BUTTONS (every key, tab, Eject / Self Destruct, settings and TRAVEL header key): no honeycomb, straight gloss stays.
+   2 READOUTS (class ro: shown only, nothing to press - the icon badges on the design 3 power rows): no pill outline, 5 px corners, flat dark fill + flat status wash,
+     fine honeycomb (14 x 24) inside, no gloss / sheen / radial glow, the bright left + right line kept, dashed line under. Copied from chat 8's READOUT PREVIEW block.
+   3 FRAME SIDE SYMBOL: Low Signal clan eclipse on the frame line (see eclT). Status colors unchanged. ===== */
+/* v59 (RAZ 23 NOV: "why isn't there fine honeycomb behind every button on the pages of the deck" - corrects v56): every button has the FINE key honeycomb (14 x 24)
+   again, straight gloss kept; even over the whole key (the old top-to-bottom fade mask made short and tall keys look different); page background keeps the big one */
+.holo .gr{display:block!important;opacity:calc(.9*var(--fa,1));-webkit-mask:none!important;mask:none!important}
+.ro .holo .gr{display:block!important;opacity:.9}
+#deck .nb.ro,#deck .dz.ro{border-radius:5px!important;box-shadow:none!important;outline:0!important;border:0!important;background:linear-gradient(180deg,rgba(5,9,14,.92),rgba(1,3,5,.95))!important;animation:none!important}
+#deck .ro>.holo{border-radius:5px!important;background:rgba(40,153,255,.2)!important}
+#deck .ro.dim>.holo{background:rgba(40,153,255,.05)!important}
+#deck .ro::after{display:none!important}
+#deck .ro .holo .gl{display:none!important}
+#deck .ro .holo>i:not(.gr):not(.lt):not(.rt),#deck .ro .holo .hrim{display:none!important}
+#deck .ro .holo .lt,#deck .ro .holo .rt{display:block!important;height:46%!important}
+#deck .nb.ro::before,#deck .dz.ro::before{content:"";position:absolute;left:8px;right:8px;bottom:-1px;border-bottom:1.5px dashed rgba(61,171,255,.35);border-radius:0;z-index:5;pointer-events:none}
+/* frame side symbol: centred on the side line, above the frame glass */
+.frame .eclf{position:absolute;top:50%;margin-top:-55px;margin-left:-30px;overflow:visible;z-index:1;pointer-events:none;color:rgba(var(--r),.42)}
+.frame .eclf[style*="right"]{margin-left:0;margin-right:-30px}
+.frame.redzone .eclf{color:rgba(61,171,255,.7)}
+.frame .eclc{fill:#020304}
+body.off-frame .frame:not(.redzone) .eclf,body.off-redzone .frame.redzone .eclf{display:none}
+
+/* v57: clan symbol only on the outermost left + right frame edge of the page (eclEdges); inner panel edges plain */
+.frame .eclf{display:none}
+.frame .eclf.edge{display:block}
+
+/* v60 exterior dots removed: design 7 top / bottom tick rulers (read as dotted lines along the frame). Kept: the 3 top dots + rim dots inside every button,
+   readout dashed underlines, clan symbols, solid separator lines, stars. */
+.ruler{display:none!important}
+
+/* ===== v63 LIVE KEYS + TELEMETRY ===== */
+/* gear honeycomb cells on the GEAR key (deck red; the key's state color turns them green / amber) */
+.gearc{display:block;overflow:visible}
+.gearc g{transition:transform .35s ease}.gearc .c0{transform:translate(7px,0)}.gearc .c1{transform:translate(0,12px)}.gearc .c2{transform:translate(14px,12px)}
+.gearc path.h{fill:#031122;stroke:#2a577a;stroke-width:1.1}
+.gearc.gon path.h{fill:#1f9eff;stroke:#ffffff;stroke-opacity:.7}
+.gearc.gmv path.h{stroke:none}
+.gearc.gdn .c0{transform:translate(7px,-6px)}.gearc.gdn .c1{transform:translate(-5.2px,15px)}.gearc.gdn .c2{transform:translate(19.2px,15px)}
+.gearc.gmv g{transition:none}
+.gearc .gch{display:none;fill:none;stroke:#ffffff;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.gearc.gvdep .gch.vdep,.gearc.gvret .gch.vret{display:inline;animation:gchf .5s steps(1) infinite}
+@keyframes gchf{50%{opacity:0}}
+/* moving color swap every 0.45 s: deploying orange <-> green, retracting orange <-> red (same filters as the ka / kg / kr state colors) */
+.gdep>.holo>.gr,.gdep>.holo>.sc,.gdep>.holo>.rf,.gdep>[data-mc]{animation:gswd .9s steps(1) infinite!important}
+.gret>.holo>.gr,.gret>.holo>.sc,.gret>.holo>.rf,.gret>[data-mc]{animation:gswr .9s steps(1) infinite!important}
+@keyframes gswd{0%{filter:hue-rotate(calc(70deg - var(--swh,0deg))) saturate(2.6) brightness(1.2) contrast(1.12)}50%{filter:hue-rotate(calc(125deg - var(--swh,0deg))) saturate(2.4) brightness(1.18) contrast(1.12)}}
+@keyframes gswr{0%{filter:hue-rotate(calc(70deg - var(--swh,0deg))) saturate(2.6) brightness(1.2) contrast(1.12)}50%{filter:hue-rotate(calc(0deg - var(--swh,0deg))) saturate(1.2)}}
+.gearc.gmv .c0{animation:gm0 1.2s ease-in-out infinite}.gearc.gmv .c1{animation:gm1 1.2s ease-in-out infinite}.gearc.gmv .c2{animation:gm2 1.2s ease-in-out infinite}
+@keyframes gm0{0%,100%{transform:translate(7px,0)}50%{transform:translate(7px,-6px)}}
+@keyframes gm1{0%,100%{transform:translate(0,12px)}50%{transform:translate(-5.2px,15px)}}
+@keyframes gm2{0%,100%{transform:translate(14px,12px)}50%{transform:translate(19.2px,15px)}}
+.disp .gearc{position:absolute;left:50%;top:50%;width:52px;height:57px;margin:-28px 0 0 -26px}
+.nb.k [data-mc]>.gearc{width:52px;height:57px} /* v68: gear cells on the normal-size keys (130 high) use the design 1 window size, so GEAR keeps its name size */
+/* moving = amber flashing */
+.kfl>[data-mc]{animation:kfl .6s steps(1) infinite}
+@keyframes kfl{50%{opacity:.45}}
+/* TELEMETRY chooser + page frame */
+#telem{position:absolute;inset:0;z-index:22;display:none;border-radius:inherit;background:linear-gradient(180deg,#020503,#000101)}
+body.telemopen #telem{display:block}
+#telem .tfr{display:none;position:absolute;inset:0;background:#000000;border-radius:inherit;overflow:hidden}
+#telem.page .tfr{display:block}
+#telem iframe{position:absolute;left:128px;top:72px;width:2560px;height:720px;border:0;background:#000000;transform:scale(.9);transform-origin:0 0} /* page at 90 % under a 72 px top bar with the two back keys, nothing covered */
+.tab.telebtn{font-weight:700}
+
+/* ===== v67 PERFORMANCE TRIMS (chat 3 stress test 23 NOV; RAZ picked 1: "invisible trims only"). Same look. =====
+   Danger keys (Eject / Self Destruct): the breathing glow is a ready-drawn layer whose opacity pulses, instead of an animated box-shadow. */
+.dz{animation:none!important}
+.dz::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  box-shadow:0 0 4px #ffffff,0 0 16px #1f9eff,0 0 40px rgba(var(--r),.33),inset 0 0 14px rgba(var(--r),1),inset 0 0 50px rgba(var(--r),.19);opacity:0;animation:dzg 3.2s ease-in-out infinite}
+@keyframes dzg{50%{opacity:.7}}
+.dz.holding::before,body.noscan .dz::before{animation:none}
+.dz.ro::before{box-shadow:none;animation:none;opacity:1}
+/* page hidden: every CSS animation pauses */
+body.pghid *,body.pghid *::before,body.pghid *::after{animation-play-state:paused!important}
+/* ===== v69 LEGIBILITY + DETAIL PASS (RAZ 24 NOV 13:20). Names: --kf per page (22-28 px), sub-tags --ksf (18-20 px). ===== */
+#area .k [data-mc] .nt{font-size:var(--kf,24px)!important;letter-spacing:.8px!important;line-height:1.06!important}
+#area .k [data-mc] .nt .lw{font-size:1em;letter-spacing:.4px}
+#area .k [data-mc] .ns,#area .ns[data-mc]{font-size:var(--ksf,19px)!important;letter-spacing:1.2px!important}
+#area .k [data-mc] .kplate.nt::after{margin-top:5px}
+#area .k.sm [data-mc] .nt,#plant .nt{font-size:22px!important;letter-spacing:.8px!important}
+#area .k.sm [data-mc] .ns{display:none}
+#area .k [data-mc]{gap:5px!important}
+#area .k [data-mc] .nt.pmt{font-size:64px!important;line-height:1!important}
+#area .kplate[data-lvl]{font-size:18px!important} /* design 1 level name (was 14 px) */
+#area .disp:has(svg.ni){height:56px;width:104px}
+.dz b{letter-spacing:1.6px!important;line-height:1.02}
+.dz small{font-size:18px!important;letter-spacing:1.4px!important;margin-top:4px}
+/* turret symbols: same glow treatment as the danger key symbols, a touch brighter so the barrel reads at arm's length */
+#area .k svg.ni{stroke-width:2.8}
+#area .k svg.ni.tur{filter:drop-shadow(0 0 1px #ffffff) drop-shadow(0 0 4px #3ba3ff) drop-shadow(0 0 10px rgba(31,158,255,.75))!important}
+/* DETAIL PARITY (RAZ: "are the buttons and self destruct buttons as intriquet and detailed as the rest of the deck"): normal keys get the full-height honeycomb,
+   a holo core glow behind the name and a bright glass sheen line; danger keys get a hazard band and the same honeycomb. No inner pill line (his v40 rule). */
+#area .nb.k>.holo>.gr{opacity:1!important;-webkit-mask:radial-gradient(95% 85% at 50% 40%,#000000 0,rgba(0,0,0,.7) 55%,rgba(0,0,0,.25) 100%);mask:radial-gradient(95% 85% at 50% 40%,#000000 0,rgba(0,0,0,.7) 55%,rgba(0,0,0,.25) 100%);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%2360b5ff' stroke-opacity='.26' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px}
+#area .nb.k:not(.kg):not(.ka):not(.kr)>.holo>.rf{left:10%;right:10%;top:16%;bottom:16%;height:auto;border-radius:50%;opacity:1;background:radial-gradient(closest-side,rgba(var(--r),.17),rgba(var(--r),.05) 60%,transparent)!important}
+#area .nb.k>.holo>.gt{left:14%;right:14%;top:7px;height:1.2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7) 30%,#ffffff 50%,rgba(255,255,255,.7) 70%,transparent);box-shadow:0 0 6px rgba(31,158,255,.8)}
+.dz>.holo>.gr{opacity:1!important;-webkit-mask:radial-gradient(90% 90% at 50% 50%,#000000,rgba(0,0,0,.35));mask:radial-gradient(90% 90% at 50% 50%,#000000,rgba(0,0,0,.35));
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%2360b5ff' stroke-opacity='.26' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px}
+.dz>.holo>.rf{left:24%;right:24%;bottom:14px;top:auto;height:6px;border-radius:3px;opacity:.6!important;
+  background:repeating-linear-gradient(-45deg,rgba(60,165,255,.8) 0 5px,rgba(3,14,30,.15) 5px 10px)!important;-webkit-mask:linear-gradient(90deg,transparent,#000000 20%,#000000 80%,transparent);mask:linear-gradient(90deg,transparent,#000000 20%,#000000 80%,transparent)}
+/* colors (12:47 rule: green / amber only for status): the cyan + orange chromatic fringes become red-family */
+:root{--fringe:-.6px 0 0 rgba(61,171,255,.16),.6px 0 0 rgba(40,183,255,.16)}
+.holo .f1{border-color:rgba(61,171,255,.18)!important}
+.ni,.nb.dim .ni,.tab .ni,.tab.on .ni,.dz .ni{filter:drop-shadow(-.6px 0 0 rgba(61,171,255,.22)) drop-shadow(.6px 0 0 rgba(40,183,255,.22)) drop-shadow(0 0 1.3px rgba(61,171,255,.85)) drop-shadow(3px 8px 1.6px rgba(4,62,122,.42))}
+</style>
+<style>/* 24 NOV fix (found by chat 4): #area is a full-deck layer that sat over the mode tabs and caught every tap; its empty space now passes taps through, its keys still take them */#area{pointer-events:none}#area>*{pointer-events:auto}</style><style>html,body{scrollbar-width:none!important;overflow:hidden!important}::-webkit-scrollbar{display:none!important;width:0!important;height:0!important} /* SHOP: RAZ 25 NOV "absolutely no scrollbar" */</style><style>#deck{--swh:208deg!important} /* SHOP COPY 25 NOV: the key art is RSI blue (hue ~208), so the state colors shift from blue: green = green, red = red (was pink with 0deg) */</style></head>
+<body>
+<div id="wrap"><div id="deck">
+  <canvas id="bg" width="2560" height="720"></canvas><canvas id="dust" width="2560" height="720"></canvas>
+  <div id="chrome"></div><div id="area"></div><div id="cfg"></div><div id="more"></div><div id="travel"></div><div id="telem"></div><div id="veil"></div><div id="mslring"></div><canvas id="fx" width="2560" height="720"></canvas><canvas id="shw" width="2560" height="720"></canvas>
+</div></div>
+<div id="switch"><button data-d="3">DESIGN 3</button><button data-d="1">DESIGN 1</button><button data-d="7">DESIGN 7</button><button id="cfgbtn">SETTINGS</button><button id="trbtn">TRANSITION</button><span id="liveTag" title="Star Citizen game data from chat 8's bridge (127.0.0.1:8529)">SAMPLE</span></div>
+<script>window.TD_EDGE_SYMBOLS=false; /* v62 (chat 2, 23 NOV): the tilted desktop TRAVEL pill has no outer clan symbols; its dividers stay */</script><script src="travel-dial-chat8%20(copy%20of%20draft%2069).js"></script>
+<script src="more-keys.js"></script>
+<script>
+const Q=new URLSearchParams(location.search);let D=+(Q.get('d')||3);const SHOT=Q.get('shot')==='1';if(SHOT)document.body.classList.add('shot');
+const $=id=>document.getElementById(id);const deck=$('deck'),area=$('area'),chrome=$('chrome'),fx=$('fx'),cx=fx.getContext('2d');
+/* v67: page hidden -> CSS animations pause (canvas loops already stop: requestAnimationFrame does not run on a hidden page) */
+document.addEventListener('visibilitychange',()=>document.body.classList.toggle('pghid',document.hidden));
+let FROZEN=false;const loop=SHOT?(f=>setTimeout(()=>f(performance.now()),16)):(f=>requestAnimationFrame(f));
+function fit(){const s=SHOT?1:Math.min(innerWidth/2620,(innerHeight-90)/780);deck.style.transform=SHOT?'none':`translate(-50%,-50%) scale(${s})`;if(!SHOT){deck.style.position='absolute';deck.style.left='50%';deck.style.top='calc(50% - 30px)';}}addEventListener('resize',fit);fit();
+
+/* background: near-black glass, faint dot grid, faint circuit lines, a soft red bloom behind each zone */
+/* v60 (RAZ 23 NOV via chat 2, option 1: "remove the EXTERIOR dots, keep the internal ones"): the background dot grid and the dot at the end of each circuit line
+   are no longer drawn; the faint circuit lines stay. */
+(function(){const c=$('bg').getContext('2d');
+  let s=11;const r=()=>(s=(s*16807)%2147483647)/2147483647;c.lineWidth=1;
+  for(let n=0;n<46;n++){let x=r()*2560,y=r()*720;c.beginPath();c.moveTo(x,y);for(let k=0;k<3;k++){const L=60+r()*200;r()<.5?x+=L*(r()<.5?-1:1):(x+=L*.5,y+=L*.5*(r()<.5?-1:1));c.lineTo(x,y);}
+    c.strokeStyle=`rgba(31,158,255,${.035+r()*.04})`;c.stroke();}})();
+/* background sand swirl: tiny specks drift slowly on the same curling wind as the swirl change, no trails (RAZ 22 NOV).
+   Light on the PC: 1400 specks of 1-2 px on one canvas, cleared every frame (no trails). */
+const dust=$('dust').getContext('2d');
+function starSprite(r,g,b){const c=document.createElement('canvas');c.width=c.height=24;const x=c.getContext('2d'),gr=x.createRadialGradient(12,12,0,12,12,12);
+  gr.addColorStop(0,`rgba(255,255,255,1)`);gr.addColorStop(.14,`rgba(${r},${g},${b},.95)`);gr.addColorStop(.32,`rgba(${r},${g},${b},.35)`);gr.addColorStop(.6,`rgba(${r},${g},${b},.08)`);gr.addColorStop(1,`rgba(${r},${g},${b},0)`);
+  x.fillStyle=gr;x.beginPath();x.arc(12,12,12,0,6.2832);x.fill();return c;}
+function flareSprite(){const c=document.createElement('canvas');c.width=c.height=28;const x=c.getContext('2d');
+  const g=x.createRadialGradient(14,14,0,14,14,7);g.addColorStop(0,'#ffffff');g.addColorStop(.25,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(61,171,255,0)');x.fillStyle=g;x.fillRect(0,0,28,28);
+  [[14,0,14,28],[0,14,28,14]].forEach(([a,b,c2,d],k)=>{const l=x.createLinearGradient(a,b,c2,d);l.addColorStop(0,'rgba(61,171,255,0)');l.addColorStop(.5,'rgba(255,255,255,.95)');l.addColorStop(1,'rgba(61,171,255,0)');x.fillStyle=l;k?x.fillRect(0,13.5,28,1):x.fillRect(13.5,0,1,28);});
+  return c;}
+const STARS=[starSprite(255,236,240),starSprite(255,120,135),starSprite(255,170,180)],FLARE=flareSprite();
+/* v69 SPARKLES (RAZ 24 NOV 13:35: "keep the sparkeles flying only in their own pages. and make them finer. they are huge, also the should all move in the same direction neatly"):
+   1600 specks (was 3000), 1 px core (15 % 2 px) with a tight 1 px soft halo (was a 2 px block + 3 px in changes), all drift one way: 24 px/s right, 4.5 px/s up, speed 90-110 %,
+   no curl wind; the canvas is masked to the page panels (frames) so specks never cross into another panel. */
+const SAND=Array.from({length:1600},()=>({x:Math.random()*2560,y:Math.random()*720,s:Math.random()<.85?.6+Math.random()*.3:1+Math.random()*.3,w:.9+Math.random()*.2,p:Math.random()*6.3,h:Math.random()}));
+function fine(cx2,x,y,big,m){const X=Math.round(x),Y=Math.round(y),C=FLK[m]||FLK[0],z=big?2:1;cx2.save();cx2.globalAlpha*=.22;cx2.fillStyle=m===2?'#2ea1ff':'#3dabff';cx2.fillRect(X-1,Y-1,z+2,z+2);cx2.restore();
+  cx2.fillStyle=C[0];cx2.fillRect(X,Y,z,z);cx2.fillStyle='#ffffff';cx2.fillRect(X,Y,1,1);}
+function dustMask(){const c=document.getElementById('dust');if(!c)return;const sh=[];document.querySelectorAll('#area .frame,#chrome .frame').forEach(f=>{if(!f.offsetWidth)return;const r=rel(f);const cs=getComputedStyle(f).borderTopLeftRadius;const rr=Math.min(parseFloat(cs)||0,r.w/2,r.h/2);
+  sh.push(`<rect x="${(r.x+4).toFixed(1)}" y="${(r.y+4).toFixed(1)}" width="${(r.w-8).toFixed(1)}" height="${(r.h-8).toFixed(1)}" rx="${Math.max(0,rr-4).toFixed(1)}"/>`);});
+  const url=sh.length?`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='2560' height='720' viewBox='0 0 2560 720'><g fill='#ffffff'>${sh.join('')}</g></svg>`)}")`:'';
+  c.style.webkitMaskImage=c.style.maskImage=url;c.style.webkitMaskSize=c.style.maskSize='100% 100%';c.style.webkitMaskRepeat=c.style.maskRepeat='no-repeat';}
+let sandT=0,sandLast=0;const SWEEP={on:false,front:-999};
+function sandWind(x,y,t){const ax=.0016*x+t*.11,ay=.0024*y+1.3,a2=.0011*x-.0019*y-t*.07,c2=Math.cos(a2);return [.65*Math.sin(ax)*Math.cos(ay)-.45*c2,-(.65*.667*Math.cos(ax)*Math.sin(ay)+.45*.58*c2)];}
+let DUSTDRAWN=0;
+function dustTick(t){if(!FROZEN&&!SHOT&&t-DUSTDRAWN<32){loop(dustTick);return;}DUSTDRAWN=t; /* v67: background specks drawn 30 times a second (they move by time, same speed) */
+  if(!FROZEN){const dt=Math.min(.05,(t-(sandLast||t))/1000);sandLast=t;sandT+=dt;
+  dust.globalAlpha=1;dust.clearRect(0,0,2560,720);
+  for(const g of SAND){
+    if(SWEEP.on&&!g.c&&g.x>SWEEP.front-4&&g.x<SWEEP.front+40&&!g.done){g.c=1;g.c0=SWEEP.front;g.drag=260;g.off=Math.pow(Math.random(),1.5)*140;g.done=1;}
+    if(g.c){if(SWEEP.front-g.c0<g.drag){g.x=SWEEP.front-g.off;g.glow=1;continue;}g.c=0;}
+    if(g.glow>0){g.glow=Math.max(0,g.glow-dt/.55);if(g.glow>0)continue;}
+    g.x+=24*g.w*dt;g.y-=4.5*g.w*dt; /* v69: one neat drift, no wind */
+    if(g.x>2570||g.y<-10||g.y>730){g.x=-10;g.y=Math.random()*720;}if(g.x<-12)g.x=2560;
+    /* tiny clear specks (RAZ: "tiny clear specks not the current washed out stuff"): solid round dots, 0.6 - 1.3 px radius, no halo */
+    const tw=.7+.3*Math.sin(sandT*1.3+g.p*3);dust.globalAlpha=tw;dust.fillStyle=g.h<.45?'#ffffff':(g.h<.9?'#d9dbd0':'#2ea1ff'); /* RAZ 23 NOV: stars just white / silver with a little red: 45 % white, 45 % silver, 10 % pale red */
+    fine(dust,g.x,g.y,g.s>=1,g.h<.45?1:(g.h<.9?0:2));}} /* crisp 2 px metallic fleck (RAZ: "particles floating around the screen no tail, sharp and not washed out") */
+  loop(dustTick);}
+loop(dustTick);
+
+/* ===== symbols, drawn after the samples (s = solid part, h = thin secondary line) ===== */
+const I={
+ tstar:'<path d="M24 3Q25.6 22.4 45 24Q25.6 25.6 24 45Q22.4 25.6 3 24Q22.4 22.4 24 3Z" class="s"/>',
+ tcross:'<circle cx="24" cy="24" r="12"/><circle cx="24" cy="24" r="3" class="s"/><path d="M24 4v10M24 34v10M4 24h10M34 24h10"/>',
+ tturret:'<path d="M6 41h36"/><path d="M11 41v-4h26v4"/><path d="M14 37a10 10 0 0 1 20 0"/><path d="M16 37a8 8 0 0 1 16 0z" class="s"/><path d="M27 28.5L42 19M29 32L44 22.5"/>',
+ tfps:'<circle cx="21" cy="8" r="4.5" class="s"/><path d="M21 14v14M21 18l-8 7M21 18l9 3 5-3M21 28l-6 14M21 28l7 14"/><path d="M29 21l14-9" class="h"/>',
+ tmine:'<path d="M7 31l6-12 12-4 12 6 4 12-8 9H15z"/><path d="M21 27l5-9 5 9-5 6z" class="s"/><path d="M42 4L31 18" stroke-width="3"/><circle cx="42" cy="4" r="2.6" class="s"/>',
+ tcog:'<circle cx="24" cy="24" r="6"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11.3 11.3l4.2 4.2M32.5 32.5l4.2 4.2M36.7 11.3l-4.2 4.2M15.5 32.5l-4.2 4.2"/><circle cx="24" cy="24" r="13"/>',
+ gear:'<path d="M4 6h40"/><path d="M12 6l10 13M36 6L26 19" class="h"/><path d="M24 6v13"/><rect x="20.5" y="18" width="7" height="11" rx="2" class="s"/><path d="M24 29v5"/><path d="M12 34h24l5 7H7z" class="s"/><path d="M12 34h24l5 7H7z"/>',
+ door:'<rect x="6" y="7" width="36" height="34" rx="3"/><path d="M22 7v34M26 7v34"/><path d="M18 24h-8m3.5-3.5L10 24l3.5 3.5M30 24h8m-3.5-3.5L38 24l-3.5 3.5" class="h"/>',
+ atc:'<path d="M20 43l3-21h2l3 21M17 43h14"/><path d="M21 31h6" class="h"/><circle cx="24" cy="17" r="3" class="s"/><path d="M17.5 11a9.5 9.5 0 0 0 0 12M30.5 11a9.5 9.5 0 0 1 0 12M12.5 6.5a16 16 0 0 0 0 21M35.5 6.5a16 16 0 0 1 0 21" class="h"/>',
+ bolt:'<path d="M28 4L12 27h11l-4 17 17-24H25z" class="s"/><path d="M28 4L12 27h11l-4 17 17-24H25z"/>',
+ powerbtn:'<path d="M17 12a14 14 0 1 0 14 0"/><path d="M24 5v17"/>',
+ engines:'<rect x="12" y="7" width="9" height="34" rx="4.5"/><rect x="27" y="7" width="9" height="34" rx="4.5"/><rect x="14.5" y="21" width="4" height="17" rx="2" class="s"/><rect x="29.5" y="21" width="4" height="17" rx="2" class="s"/>',
+ quantum:'<circle cx="24" cy="24" r="15"/><ellipse cx="24" cy="24" rx="7" ry="15" class="h"/><path d="M9 24h30M12 16h24M12 32h24" class="h"/><circle cx="24" cy="24" r="4" class="s"/>',
+ gauge:'<path d="M7 33a17 17 0 0 1 34 0"/><path d="M11 33h3M34 33h3M12 22l2.5 2M24 16v3M36 22l-2.5 2" class="h"/><path d="M24 33l8-10"/><circle cx="24" cy="33" r="3" class="s"/><path d="M15 41a12 12 0 0 0 18 0" class="h"/>',
+ spool:'<path d="M40 24a16 16 0 1 1-4.7-11.3"/><path d="M36 4v8.7h-8.7"/><circle cx="24" cy="24" r="6.5" class="h"/><circle cx="24" cy="24" r="2.2" class="s"/>',
+ cog:'<circle cx="24" cy="24" r="6"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11.3 11.3l4.2 4.2M32.5 32.5l4.2 4.2M36.7 11.3l-4.2 4.2M15.5 32.5l-4.2 4.2"/><circle cx="24" cy="24" r="13"/>',
+ thrustbadge:'<path d="M24 5l5 14 14 1-11 9 4 14-12-8-12 8 4-14-11-9 14-1z"/><path d="M24 17v12M19 24h10" class="h"/>',
+ shield:'<path d="M24 5l16 6v12c0 10-7 16-16 20-9-4-16-10-16-20V11z"/><path d="M24 13v22M15 22h18" class="h"/>',
+ cross:'<circle cx="24" cy="24" r="12"/><circle cx="24" cy="24" r="3" class="s"/><path d="M24 4v10M24 34v10M4 24h10M34 24h10"/><path d="M15.5 15.5l2.5 2.5M32.5 15.5L30 18M15.5 32.5l2.5-2.5M32.5 32.5L30 30" class="h"/>',
+ crossnext:'<circle cx="20" cy="24" r="11"/><circle cx="20" cy="24" r="3" class="s"/><path d="M20 8v5M20 35v5M4 24h5M31 24h3" class="h"/><path d="M36 16l8 8-8 8"/><path d="M33 20l4 4-4 4" class="h"/>',
+ crossprev:'<circle cx="28" cy="24" r="11"/><circle cx="28" cy="24" r="3" class="s"/><path d="M28 8v5M28 35v5M44 24h-5M17 24h-3" class="h"/><path d="M12 16l-8 8 8 8"/><path d="M15 20l-4 4 4 4" class="h"/>',
+ missile:'<g transform="rotate(-35 24 24)"><path d="M7 20.5h25l11 3.5-11 3.5H7z"/><path d="M32 20.5v7" class="h"/><rect x="17" y="20.5" width="5" height="7" class="s"/><path d="M11 20.5l-4-8h6l5 8M11 27.5l-4 8h6l5-8"/><path d="M7 22.5H1M7 25.5H2" class="h"/></g>',
+ launch:'<path d="M24 4c5 4 7 10 7 18v10H17V22c0-8 2-14 7-18z"/><circle cx="24" cy="17" r="2.6" class="s"/><path d="M17 25l-6 6v5h6M31 25l6 6v5h-6"/><path d="M20 36l-1.5 6M24 36v8M28 36l1.5 6" class="h"/>',
+ shieldf:'<path d="M24 5l15 5v13c0 10-6 16-15 20C15 39 9 33 9 23V10z"/><path d="M24 5l15 5v4H9v-4z" class="s"/><path d="M24 19l6 8H18z" class="h"/>',
+ shieldb:'<path d="M24 5l15 5v13c0 10-6 16-15 20C15 39 9 33 9 23V10z"/><path d="M10.5 31h27c-3 6-8 10-13.5 12-5.5-2-10.5-6-13.5-12z" class="s"/><path d="M24 26l6-8H18z" class="h"/>',
+ decouple:'<path d="M24 6l7.5 18L24 19.5 16.5 24z" class="s"/><path d="M24 6l7.5 18L24 19.5 16.5 24z"/><path d="M24 29v12M20 37l4 4 4-4"/><circle cx="24" cy="24" r="21" stroke-dasharray="3.5 4" class="h"/>',
+ center:'<path d="M6 15V7h8M34 7h8v8M42 33v8h-8M14 41H6v-8" class="h"/><circle cx="24" cy="27" r="8.5"/><path d="M24 18.5V9"/><path d="M21.5 18.8V12.5M26.5 18.8V12.5" class="h"/><circle cx="24" cy="27" r="2.4" class="s"/><path d="M2 27h8M7 24l3 3-3 3M46 27h-8M41 24l-3 3 3 3"/>',
+ reload:'<g transform="scale(.75)"><path d="M50 24A20 20 0 1 0 52 38"/><path d="M52 10v14H38"/><path d="M27 22h10v22H27z M30 28h4M30 34h4"/></g>',
+ repool:'<g transform="scale(.75)"><path d="M11 20l5-9 5 9v30H11z M27 20l5-9 5 9v30H27z M43 20l5-9 5 9v30H43z M11 43h10 M27 43h10 M43 43h10"/></g>',
+ fist:'<g transform="scale(.75)"><path d="M15 27V15h8v12-17h8v17-16h8v16-10h8v23L35 53H23L11 40v-9z"/></g>',
+ helmet:'<g transform="scale(.75)"><path d="M14 49V25C14 5 50 5 50 25v24l-10 7H24z M18 24h28l-3 13H21z M27 46h10"/></g>',
+ helmetoff:'<g transform="scale(.75)"><g opacity=".45"><path d="M14 49V25C14 5 50 5 50 25v24l-10 7H24z M18 24h28l-3 13H21z M27 46h10"/></g><path d="M8 8l48 48"/></g>',
+ lower:'<g transform="scale(.75)"><path d="M10 19h42v12H30v5h-6l-3 16H11l5-22H10z M40 19v-5h8v5 M31 36h10V31"/><path d="M52 40v14M46 48l6 6 6-6"/></g>',
+ raise:'<g transform="scale(.75)"><path d="M10 19h42v12H30v5h-6l-3 16H11l5-22H10z M40 19v-5h8v5 M31 36h10V31"/><path d="M52 54V40M46 46l6-6 6 6"/></g>',
+ turret:'<ellipse cx="22" cy="40" rx="17" ry="4.5"/><ellipse cx="22" cy="40" rx="11" ry="2.6" class="h"/><path d="M7 37.5a17 6 0 0 1 3-3.2M37 37.5a17 6 0 0 0-3-3.2" class="h"/><circle cx="22" cy="27" r="11"/><circle cx="22" cy="27" r="6.5" class="h"/><rect x="14.5" y="24.5" width="10" height="3.4" rx="1.7" class="s"/><path d="M30.5 21.5L43 11.5M33 25.5L45.5 15.5"/><path d="M33 19.5l3.2 4M35.6 17.4l3.2 4" class="h"/><path d="M42 10l2.2 2.8M44.5 14l2.2 2.8" class="h"/><path d="M18 44.5h8" class="h"/>',
+ tnext:'<path d="M4 41h30"/><path d="M8 41v-4h22v4"/><path d="M11 37a8 8 0 0 1 16 0"/><path d="M13 37a6 6 0 0 1 12 0z" class="s"/><path d="M21 29.5L33 22M22.5 32.5L34.5 25"/><path d="M38 25l6 6-6 6"/><path d="M36 28l3 3-3 3" class="h"/>',
+ mouse:'<rect x="14" y="5" width="20" height="34" rx="10"/><path d="M24 5v12M14 17h20" class="h"/><rect x="22.5" y="8.5" width="3" height="6" rx="1.5" class="s"/><path d="M24 39v5" class="h"/>',
+ gyro:'<circle cx="24" cy="21" r="16"/><ellipse cx="24" cy="21" rx="16" ry="5" transform="rotate(-20 24 21)" class="h"/><ellipse cx="24" cy="21" rx="10" ry="3.2" transform="rotate(-20 24 21)"/><ellipse cx="24" cy="21" rx="10" ry="3.2" transform="rotate(-20 24 21) translate(0 1.6)" class="h"/><path d="M18.5 6.2L29.5 35.8"/><circle cx="24" cy="21" r="2.4" class="s"/><path d="M24 37v4M15 45h18M18 45l6-4 6 4"/>',
+ exit:'<path d="M26 8H10v32h16"/><path d="M26 8v5M26 35v5" class="h"/><path d="M19 24h23M35 17l7 7-7 7"/>',
+ minus:'<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="12.5" class="h"/><path d="M16 24h16"/>',
+ plus:'<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="12.5" class="h"/><path d="M16 24h16M24 16v16"/>',
+ holster:'<path d="M6 13h30l2.5 3v5H25l-3 3-3 12h-8l3-12-3-3H6z"/><path d="M27 21v4h-4.5" class="h"/><path d="M41 26v12M37.5 34.5L41 38l3.5-3.5" class="h"/>',
+ helmet:'<path d="M10 31C10 17 16 8 24 8s14 9 14 23v5c0 3-2 5-5 5H15c-3 0-5-2-5-5z"/><path d="M14 25c3-4 6-6 10-6s7 2 10 6v6c-3 2-6 3-10 3s-7-1-10-3z" class="s"/><path d="M17 23c2-2 4-3 7-3" class="h"/><path d="M11 36h4M33 36h4" class="h"/><path d="M18 41v3h12v-3"/><path d="M24 8v4" class="h"/>',
+ ammo:'<path d="M10 42V20c0-5 3.5-9 3.5-9s3.5 4 3.5 9v22zM20.5 42V20c0-5 3.5-9 3.5-9s3.5 4 3.5 9v22zM31 42V20c0-5 3.5-9 3.5-9s3.5 4 3.5 9v22z"/><path d="M10 34h7M20.5 34h7M31 34h7" class="h"/><path d="M6 42h36"/>',
+ drop:'<path d="M15 7l9-4 9 4v10l-9 4-9-4z"/><path d="M15 7l9 4 9-4M24 11v10" class="h"/><path d="M24 25v10M19 30.5l5 5 5-5"/><path d="M7 41h34"/><path d="M12 45h24" class="h"/>',
+ inspect:'<circle cx="20" cy="20" r="12"/><path d="M29 29l12 12" stroke-width="4.5"/><path d="M13.5 17.5a7 7 0 0 1 6-5.5" class="h"/>',
+ custom:'<path d="M9 39L27 21" stroke-width="4"/><path d="M27 21c-2-4 0-10 6-11l-3 5 3 3 5-3c-1 6-7 8-11 6z" class="s"/><g transform="rotate(45 24 24)"><rect x="21" y="3" width="6" height="12" rx="2" class="s"/><path d="M24 15v22M22.5 37h3"/></g>',
+ firemode:'<rect x="7" y="13" width="8" height="21" rx="4" class="s"/><rect x="20" y="13" width="8" height="21" rx="4"/><rect x="33" y="13" width="8" height="21" rx="4"/><path d="M7 40h34" class="h"/><path d="M11 40v-3" />',
+ drill:'<path d="M29 19l8-8 6 6-8 8z"/><path d="M29 19L15 33" stroke-width="3.2"/><path d="M7 34l6-8 8 4 2 10-10 4z" class="s"/><path d="M7 34l6-8 8 4 2 10-10 4z"/>',
+ laser:'<rect x="4" y="18" width="14" height="12" rx="3"/><path d="M18 21h4M18 27h4" class="h"/><path d="M22 24h18" stroke-width="3.2"/><circle cx="42" cy="24" r="2.4" class="s"/><path d="M40 16l3 3M40 32l3-3" class="h"/>',
+ swap:'<path d="M8 16h28M30 10l6 6-6 6"/><path d="M40 32H12M18 26l-6 6 6 6"/>',
+ mod:'<path d="M24 5l16 9.5v19L24 43 8 33.5v-19z"/><path d="M24 14l9 10-9 10-9-10z" class="s"/><path d="M24 5v4M24 39v4M8 14.5l3.5 2M40 14.5l-3.5 2M8 33.5l3.5-2M40 33.5l-3.5-2" class="h"/><circle cx="24" cy="24" r="2.4" class="Fd"/>',
+ scan:'<circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="11" class="h"/><path d="M24 24L36.7 11.3"/><path d="M24 24L36.7 11.3A18 18 0 0 1 42 24z" class="s" opacity=".45"/><circle cx="30" cy="31" r="2.2" class="s"/>',
+ jettison:'<path d="M12 8H6v28h6"/><g transform="rotate(-12 28 21)"><rect x="19" y="12" width="17" height="17" rx="2"/><path d="M19 18h17M19 23h17" class="h"/></g><path d="M13 16h4M13 22h5M13 28h3" class="h"/><path d="M10 42h30M35 37l5 5-5 5"/>',
+ cam:'<rect x="5" y="14" width="27" height="20" rx="4"/><path d="M32 21l11-6v18l-11-6"/><circle cx="18" cy="24" r="5.5"/><circle cx="18" cy="24" r="2" class="s"/><path d="M9 18h3" class="h"/>',
+ music:'<path d="M18 36V11l20-4v25"/><path d="M18 17l20-4" class="h"/><circle cx="13.5" cy="36" r="4.5" class="s"/><circle cx="33.5" cy="32" r="4.5" class="s"/>',
+ mic:'<rect x="18" y="5" width="12" height="23" rx="6"/><path d="M18 13h5M18 18h5" class="h"/><path d="M12 22a12 12 0 0 0 24 0M24 34v8M17 42h14"/>',
+ check:'<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="12.5" class="h"/><path d="M17 24.5l5 5 9-10"/>',
+ x:'<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="12.5" class="h"/><path d="M19 19l10 10M29 19L19 29"/>',
+ eye:'<path d="M4 24s8-12 20-12 20 12 20 12-8 12-20 12S4 24 4 24z"/><circle cx="24" cy="24" r="6.5"/><circle cx="24" cy="24" r="2.5" class="s"/>',
+ comms:'<path d="M10 28v-4a14 14 0 0 1 28 0v4"/><rect x="7" y="25" width="7" height="12" rx="2.5" class="s"/><rect x="34" y="25" width="7" height="12" rx="2.5" class="s"/><path d="M38 37c0 4-4 6-10 6h-3" class="h"/>',
+ hail:'<path d="M8 11h21a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H17l-7 6v-6H8a3 3 0 0 1-3-3V14a3 3 0 0 1 3-3z"/><path d="M11 18h15M11 23h9" class="h"/><path d="M37 13a10 10 0 0 1 0 14M41.5 9a16 16 0 0 1 0 22"/>',
+ respawn:'<path d="M39 24a15 15 0 1 1-4.4-10.6"/><path d="M36 5v8h-8"/><path d="M24 18v12M18 24h12" class="h"/>',
+ cruise:'<path d="M12 13l11 11-11 11M23 13l11 11-11 11"/><path d="M40 11v26" class="h"/><path d="M4 24h5" class="h"/>',
+ keycard:'<rect x="5" y="11" width="38" height="26" rx="4"/><path d="M5 18h38" class="h"/><rect x="10" y="24" width="10" height="8" rx="1.6" class="s"/><path d="M26 27h12M26 32h8" class="h"/>',
+ star:'<path d="M24 3Q25.6 22.4 45 24Q25.6 25.6 24 45Q22.4 25.6 3 24Q22.4 22.4 24 3Z" class="s"/>',
+ warn:'<path d="M24 5l21 37H3z"/><path d="M24 18v12"/><circle cx="24" cy="36" r="2" class="s"/>',
+ warnx:'<path d="M24 5l21 37H3z"/><path d="M24 15l2 7 6-3-3 6 7 2-7 2 3 6-6-3-2 7-2-7-6 3 3-6-7-2 7-2-3-6 6 3z" class="s"/>',
+ ejectc:'<path d="M24 9l14 16H10z" class="s"/><path d="M24 9l14 16H10z"/><rect x="10" y="31" width="28" height="6" rx="2" class="s"/><rect x="10" y="31" width="28" height="6" rx="2"/>',
+ /* in-game power symbols, redrawn from Deck/public/assets (Weapons.png, Thrusters.png, Shield.png, Cooler1.png) */
+ scw:'<g transform="rotate(45 24 24)"><path class="F" d="M11.5 34V16Q11.5 9 15 6Q18.5 9 18.5 16V34ZM20.5 34V16Q20.5 9 24 6Q27.5 9 27.5 16V34ZM29.5 34V16Q29.5 9 33 6Q36.5 9 36.5 16V34Z"/><path class="F" d="M10 32h28v8a3 3 0 0 1-3 3H13a3 3 0 0 1-3-3z"/><circle class="Fd" cx="15" cy="13" r="1.2"/><circle class="Fd" cx="24" cy="13" r="1.2"/><circle class="Fd" cx="33" cy="13" r="1.2"/></g>',
+ sct:'<path class="F" d="M3 15L13 24L3 33Z"/><circle class="Fd" cx="7" cy="24" r="1.5"/><path class="F" d="M15 5L34 24L15 43L21 24Z"/><path class="F" d="M35 13L45 24L35 35L38.5 24Z"/>',
+ scs:'<path d="M15 6Q24 2.6 33 6M15 42Q24 45.4 33 42M6 16Q3.8 24 6 32M42 16Q44.2 24 42 32" stroke-width="3.4"/><path d="M24 10C30 10 35 12 35 16V25C35 31 30 35 24 38C18 35 13 31 13 25V16C13 12 18 10 24 10Z" stroke-width="3"/><path class="F" d="M24 10C18 10 13 12 13 16V25C13 31 18 35 24 38Z"/>',
+ scc:'<circle cx="24" cy="24" r="19.5" stroke-width="3.2"/><g class="F"><path d="M24 24C21 17 23 11 30 8C30 15 28 20 24 24Z"/><path d="M24 24C21 17 23 11 30 8C30 15 28 20 24 24Z" transform="rotate(72 24 24)"/><path d="M24 24C21 17 23 11 30 8C30 15 28 20 24 24Z" transform="rotate(144 24 24)"/><path d="M24 24C21 17 23 11 30 8C30 15 28 20 24 24Z" transform="rotate(216 24 24)"/><path d="M24 24C21 17 23 11 30 8C30 15 28 20 24 24Z" transform="rotate(288 24 24)"/></g><circle class="Fd" cx="24" cy="24" r="3"/>',
+ scp:'<path d="M24 4L45 41H3Z" stroke-width="3"/><path class="F" d="M27 14L16 30h8l-3 9 11-15h-8z"/>',
+ life:'<path d="M24 41C10 31 5 24 5 16a9 9 0 0 1 19-4 9 9 0 0 1 19 4c0 8-5 15-19 25z"/><path d="M8 24h9l3-6 4 11 3-5h13" class="h"/>',
+ sdc:'<path d="M14 6l8 14H6z"/><path d="M34 6l8 14H26z"/><path d="M24 25l8 14H16z"/><circle cx="24" cy="20" r="3" class="s"/>',
+};
+const KEEP=new Set(['keycard','tstar','tcross','tturret','tfps','tmine','tcog','scw','sct','scs','scc','scp','life','minus','plus','warn','warnx','ejectc','sdc']);
+const sv=(n,w,cls='ni')=>(n=String(n||''),n.startsWith('T:')?(n=n.slice(2),true):KEEP.has(n))?`<svg class="${cls}${n==='turret'||n==='tnext'?' tur':''}" width="${w}" height="${w}" viewBox="0 0 48 48">${I[n]||I.cross}</svg>`:''; const svOld=(n,w,cls='ni')=>!KEEP.has(n)?'':`<svg class="${cls}" width="${w}" height="${w}" viewBox="0 0 48 48">${I[n]||I.cross}</svg>`;
+/* per mode: 9 keys [icon, LABEL, sub, state, starts lit] + a level bar */
+/* Keys copied from the real Command Deck (Deck/public/deck.js groups + control-layout.js flows, 23 NOV).
+   [symbol, LABEL, how the key works, ON/OFF state, starts on]. Only the in-game symbols are drawn. lvl = the real - / + pair for that mode. */
+const MODES={
+ FLIGHT:{keys:[['','GEAR','',1],['','DOORS','',1],['','ATC','TAP'],['','FLIGHT READY','TAP'],['','LIGHTS','',1],['','LAMP','',1],['','EXIT SEAT','HOLD']],lvl:'SPEED LIMITER'},
+ COMBAT:{keys:[['','LOCK TARGET','TAP'],['','UNLOCK TARGET','TAP'],['','PIN 1','TAP'],['','PIN 2','TAP'],['','PIN 3','TAP'], /* 24 NOV: game actions v_target_toggle_pin_index_1/2/3 (tap pins, tap again unpins); replaces PIN / UNPIN TARGET (RAZ: "for pinning targets ... can we do pin 1 2 3") */['','CLEAR ALL PINS','TAP'],['','GIMBALS','',1],['','MISSILE MODE','TAP'],['','LAUNCH MISSILE','TAP']],lvl:'ARMED MISSILES'},
+ TURRET:{keys:[['T:turret','ENTER TURRET 1','TAP'],['T:turret','ENTER TURRET 2','TAP'],['T:turret','ENTER TURRET 3','TAP'],['T:gyro','GYRO','',1],['T:cross','ESP','',1],['T:center','CENTER TURRET','HOLD'],['T:exit','EXIT TURRET','HOLD']],lvl:'TURRET SPEED'} /* 24 NOV: NEXT TURRET + SPEED LIMITER moved to the flat row (with PREV TURRET + HITS); TURRET SPEED box far left (RAZ) */, /* v69: 'T:' = turret symbols drawn on the key (RAZ 24 NOV: "improve the turret pictures. you had this figured out befoe" - the v2-v8 TURRET keys carried these drawings) */
+ FPS:{keys:[['','HOLSTER','HOLD'],['','PRIMARY','TAP'],['','SECONDARY','TAP'],['T:reload','RELOAD','TAP'],['','FIRE MODE','TAP'],['T:helmet','HELMET','TAP'],['','FLASHLIGHT','',1],['T:repool','REPOOL AMMO','TAP'],['','INSPECT ITEM','TAP'],['','DROP ITEM','TAP'],['','EXIT SEAT','HOLD'],['T:fist','FISTS','TAP'],['','SIDEARM / MED GUN','TAP'],['','UTILITY TOOL','TAP'],['','WIPE VISOR','TAP'],['','CONSUME ITEM','HOLD'],['T:lower','LOWER WEAPON','TAP'],['','STORE ALL','TAP'],['','PREVIOUS WEAPON','TAP'],['','NEXT WEAPON','TAP'],['','FREELOOK','HOLD'],['','CAMERA VIEW','TOGGLE'],['','MOBIGLAS','TOGGLE'],['','RESPAWN','HOLD'],['','MAP','TOGGLE']],lvl:null},
+ MINING:{keys:[['','ENTER MINING','TAP'],['','FIRE LASER','TAP'],['','FRACTURE / EXTRACT','TAP'],['','MODULE 1','TAP'],['','MODULE 2','TAP'],['','MODULE 3','TAP'],['','BEAM HIGH / LOW','TAP']],lvl:'LASER POWER'} /* SCAN MODE + JETTISON CARGO moved to the flat row */,
+ SALVAGE:{keys:[['','SELECT BOTH HEADS','TAP'],['','SELECT LEFT HEAD','TAP'],['','SELECT RIGHT HEAD','TAP'],['','FIRE FOCUSED','TOGGLE'],['','SELECT FRACTURE TOOL','TAP'],['','STRUCTURE MODE','CYCLE'],['','SELECT DISINT.','TAP'],['','BRING BEAMS CLOSER','TAP'],['','SPREAD BEAMS APART','TAP'],['','HORIZONTAL / VERTICAL','TAP']],lvl:null}, /* RAZ 23 NOV: "where is the salvage stuff, should be on the front page". Real deck SALVAGE keys (more-keys.js); the game has no salvage power - / + key, so no level pair */
+ UTILITY:{keys:[['','SPECTATE','TAP'],['','VIEW & COMMS','TAP'],['','CAMERA','TAP'],['','MUSIC','TAP'],['','SOCIAL','TAP'],['','PUSH TO TALK','HOLD'],['','ACCEPT','TAP'],['','DECLINE','TAP'],['','MOBIGLAS','TOGGLE'],['','MAP','TOGGLE'],['','RESPAWN','HOLD']],lvl:null}};
+const NAMES=Object.keys(MODES);let mode='FLIGHT';
+/* RAZ 23 NOV: tab symbols only on FLIGHT and UTILITY ("get rid of combat reticle, looks cheap") */
+const MODEICON={FLIGHT:'tstar',COMBAT:'',TURRET:'',FPS:'',MINING:'',SALVAGE:'',UTILITY:'tcog'};
+const lit={};NAMES.forEach(n=>MODES[n].keys.forEach((k,i)=>{if(k[4])lit[n+i]=1;}));
+
+/* ===== live game state (RAZ 23 NOV: "wire the new deck into telemetry as well").
+   Reads chat 8's read-only bridge telemetry-bridge.cjs (http://127.0.0.1:8529/stream, Server-Sent Events). Read only: pressing a key still does only what it did.
+   Bridge off, or game not sending (service not 'on') -> the deck works exactly as before (keys keep their own on / off).
+   Game sending -> the keys below follow the game: on = brighter name glow (his rule, no ON / OFF marks).
+   Enums: 0 = UNSPECIFIED (no reading) -> both keys of a pair stay dark. Missing frame (not in a ship) -> ship keys dark.
+   NOT in the game data, left as they were: power pip levels (SAMPLE tag shows while live), shield %, hull, Eject / Self Destruct,
+   turret gyro / speed limit, flashlight, helmet, mining, scan mode. ===== */
+let LIVE=null,LIVEON=false;
+const gp=(o,p)=>p.split('.').reduce((a,k)=>a==null?undefined:a[k],o);
+const tail=e=>String(e||'').replace(/^.*_(?=[A-Z]+$)/,'');            // 'VEHICLE_COMPONENT_DEPLOYMENT_STATE_DEPLOYED' -> 'DEPLOYED'
+const hasV=()=>!!(LIVE&&LIVE.vehicle&&LIVE.vehicle.state),hasW=()=>!!(LIVE&&LIVE.weapons);
+const VSt=p=>gp(LIVE,'vehicle.state.'+p),gearS=()=>tail(VSt('flight.state.gear')),doorO=()=>tail(VSt('doors.open_state')),doorL=()=>tail(VSt('doors.lock_state'));
+const ifcs=k=>hasV()&&!!VSt('flight.settings.'+k+'.active'),wset=k=>hasW()&&!!gp(LIVE,'weapons.settings.'+k);
+/* key label -> is it on in the game right now. Same labels on the deck faces and the MORE page. */
+const LIVEKEY={
+ 'GEAR UP':()=>hasV()&&/^RETRACT/.test(gearS()),'GEAR DOWN':()=>hasV()&&/^DEPLOY/.test(gearS()),
+ 'OPEN DOORS':()=>hasV()&&doorO()==='OPENED','CLOSE DOORS':()=>hasV()&&doorO()==='CLOSED',
+ 'LOCK DOORS':()=>hasV()&&doorL()==='LOCKED','UNLOCK DOORS':()=>hasV()&&doorL()==='UNLOCKED',
+ 'LIGHTS':()=>hasV()&&!!VSt('lights_enabled'),
+ 'CRUISE ON':()=>ifcs('ifcs_cruise_mode'),'CRUISE OFF':()=>hasV()&&!ifcs('ifcs_cruise_mode'),
+ 'SPEED LIMITER ON':()=>ifcs('ifcs_speed_limiter'),'SPEED LIMITER OFF':()=>hasV()&&!ifcs('ifcs_speed_limiter'),
+ 'ESP':()=>ifcs('ifcs_esp'),
+ 'LOCK GIMBALS':()=>wset('gimbals_locked'),'UNLOCK GIMBALS':()=>hasW()&&!wset('gimbals_locked'),
+ 'LAG PIP':()=>wset('use_lag_pips'),'LEAD PIP':()=>hasW()&&!wset('use_lag_pips'),
+ 'PIP PRECISION LINES ON':()=>wset('precision_lines'),'PIP PRECISION LINES OFF':()=>hasW()&&!wset('precision_lines'),
+ 'GUN HUD MAGNIFY ON':()=>wset('magnified_ui'),'GUN HUD MAGNIFY OFF':()=>hasW()&&!wset('magnified_ui'),
+ 'STAGGER FIRE ON':()=>wset('staggered_fire'),'STAGGER FIRE OFF':()=>hasW()&&!wset('staggered_fire'),
+ 'PIP FADING ON':()=>wset('use_fading_pips'),'PIP FADING OFF':()=>hasW()&&!wset('use_fading_pips')};
+const liveOn=label=>LIVEON&&LIVEKEY[label]?!!LIVEKEY[label]():undefined;  // undefined = not live / no game data for this key
+const keyLit=i=>{const v=liveOn(MODES[mode].keys[i][1]);return v===undefined?!!lit[mode+i]:v;};
+const plantLit=()=>LIVEON?hasV()&&!!VSt('power.powerplants'):PLANT;
+
+/* ===== MERGED STATE KEYS (RAZ 23 NOV: "rebuilt for telemetry so the buttons just show the states instead of having multiple buttons" - "Yes, red holo deck").
+   Each on / off pair is ONE key; the inside shows the live state (rim stays the deck color, state color inside), the state word replaces TAP.
+   Live game data -> the game's state. Bridge off or no reading -> the key keeps its own shown state and a press flips it.
+   A press always gives the 3 s dash flash. Real deck: sends the game's toggle bind, or the bind for the opposite state (list in the RESUME). ===== */
+const ONOFF={w:['OFF','ON'],tone:{ON:'kg'}};
+/* v63: a field the game did not send = no reading (plain key), never OFF */
+const ab=(v,y,n)=>v==null?null:(v?y:n);
+const SK={
+ 'GEAR':{w:['UP','DOWN'],tone:{DOWN:'kg',MOVING:'ka'},live:()=>hasV()?({RETRACTED:'UP',RETRACTING:'MOVING',DEPLOYING:'MOVING',DEPLOYED:'DOWN'})[gearS()]||null:null},
+ 'DOORS':{w:['CLOSED','OPEN'],tone:{OPEN:'kr',CLOSED:'kg'},live:()=>hasV()?({OPENED:'OPEN',CLOSED:'CLOSED'})[doorO()]||null:null},
+ 'LOCK':{w:['UNLOCKED','LOCKED'],tone:{LOCKED:'kg',UNLOCKED:'kr'},icon:'keycard',live:()=>hasV()?({LOCKED:'LOCKED',UNLOCKED:'UNLOCKED'})[doorL()]||null:null},
+ 'LIGHTS':{...ONOFF,live:()=>ab(VSt('lights_enabled'),'ON','OFF')},
+  'ESP':{...ONOFF,live:()=>hasV()?(ifcs('ifcs_esp')?'ON':'OFF'):null}, /* 24 NOV: ESP shows its real state (telemetry ifcs_esp) */
+  'GYRO':{...ONOFF,live:()=>window.__gyroOn?'ON':'OFF'}, /* no gyro field in the game data: the deck's own toggle (each tap flips it; starts OFF) */ /* GYRO: the game sends no gyro state; shows ON / OFF from the deck's own toggle until a source exists */
+  'LAMP':{...ONOFF,live:()=>ab(VSt('flight_light_amplification'),'ON','OFF')}, /* 24 NOV: LAMP replaces DOCK on FLIGHT (RAZ: "replace dock tap with LAMP"); = light amplification, same value as the iPad LAMP key */
+ 'GIMBALS':{w:['FREE','LOCKED'],tone:{LOCKED:'kg'},live:()=>{const v=gp(LIVE,'weapons.settings.gimbals_locked');return v!=null?(v?'LOCKED':'FREE'):(gp(LIVE,'weapons')?'FREE':null);}}, /* 25 NOV: the stream leaves out false values, so weapon data present + no gimbals_locked = FREE (RAZ: "gimbals should say their status if tele is available") */
+ 'CRUISE':{...ONOFF,live:()=>ab(VSt('flight.settings.ifcs_cruise_mode.active'),'ON','OFF')},
+ 'SPEED LIMITER':{...ONOFF,live:()=>ab(VSt('flight.settings.ifcs_speed_limiter.active'),'ON','OFF')},
+ 'TURRET SPEED LIMITER':{...ONOFF},
+ 'ESP':{...ONOFF,live:()=>ab(VSt('flight.settings.ifcs_esp.active'),'ON','OFF')},
+ 'G-FORCE':{...ONOFF,live:()=>ab(VSt('flight.settings.ifcs_g_safe.active'),'ON','OFF')},'ADV HUD':{...ONOFF,live:()=>{const a=VSt('flight.settings.advanced_hud_enabled_scm'),b=VSt('flight.settings.advanced_hud_enabled_nav');return a==null&&b==null?null:ab(!!(a||b),'ON','OFF');}},/* wired 24 NOV (chat 8 GHOST BUTTONS) */'AUTO TARGET':{...ONOFF},'PORTS':{w:['UNLOCKED','LOCKED'],tone:{LOCKED:'kg'}},
+ 'PIP LINES':{...ONOFF,live:()=>ab(gp(LIVE,'weapons.settings.precision_lines'),'ON','OFF')},
+ 'GUN HUD MAGNIFY':{...ONOFF,live:()=>ab(gp(LIVE,'weapons.settings.magnified_ui'),'ON','OFF')},
+ 'STAGGER FIRE':{...ONOFF,live:()=>ab(gp(LIVE,'weapons.settings.staggered_fire'),'ON','OFF')},
+ 'PIP FADING':{...ONOFF,live:()=>ab(gp(LIVE,'weapons.settings.use_fading_pips'),'ON','OFF')},
+ 'PIP':{w:['LEAD','LAG'],tone:{LAG:'kg'},live:()=>ab(gp(LIVE,'weapons.settings.use_lag_pips'),'LAG','LEAD')},
+ 'CONFIG':{w:['RETRACTED','EXPANDED'],tone:{EXPANDED:'kg',MOVING:'ka'},live:()=>hasV()?({RETRACTED:'RETRACTED',RETRACTING:'MOVING',DEPLOYING:'MOVING',DEPLOYED:'EXPANDED'})[tail(VSt('flight.state.transformation'))]||null:null}};
+const SKS={}; /* own shown state per key: index into w */
+const skId=(l,m)=>m==='TURRET'&&l==='SPEED LIMITER'?'TURRET SPEED LIMITER':l;
+const skDef=id=>SK[id]||ONOFF;
+/* v63 (RAZ 23 NOV via chat 2: "i need a version where telemetry and the regular deck buttons are on the same window" - option 1, the keys show the game's state):
+   live reading -> the game's state word + color (green = closed / locked / down / on, red = open / unlocked, amber flashing = moving, dark = up / off).
+   No reading (helper off or field missing) -> the plain key: no state color, TAP underneath. Never a guessed state; a press only sends the key. */
+function skVal(id){const d=skDef(id);const v=LIVEON&&d.live?d.live():null;return v||'TAP';}
+function skLive(id){const d=skDef(id);return !!(LIVEON&&d.live&&d.live());}
+function skTone(id){return skDef(id).tone[skVal(id)]||'';}
+function skFlip(id){return; /* v63: no own toggled state any more */const d=skDef(id);SKS[id]=((SKS[id]||0)+1)%d.w.length;}
+/* paint every state key on screen (front + MORE) from its state */
+/* gear on the key = the pill's 3-cell honeycomb (RADIAL): UP touching, MOVING all three move straight out from the centre together and back, DOWN held spread */
+/* v64 gear = pill draft 69 (RAZ 23 NOV approved: "also approve gear down moving and up symbology" / "it rotates between orange and green while extending and orange and red when
+   retracted" / "flip those two chevrons"): DEPLOYING = orange <-> green every 0.45 s, cells move out together and back, top chevron up, lower chevrons out;
+   RETRACTING = orange <-> red, top chevron down, lower chevrons in. Chevrons white, flashing every 0.25 s. UP dark touching, DOWN green spread. */
+const GEARSVG='<svg class="gearc" width="66" height="72" viewBox="-7 -8 42 46"><g class="c0"><path class="h" d="M7 0l7 4v8l-7 4-7-4V4z"/><polyline class="gch vdep" points="4.40,7.93 7.00,5.33 9.60,7.93"/><polyline class="gch vret" points="4.40,8.07 7.00,10.67 9.60,8.07"/></g><g class="c1"><path class="h" d="M7 0l7 4v8l-7 4-7-4V4z"/><polyline class="gch vdep" points="4.17,6.62 3.21,10.17 6.75,11.13"/><polyline class="gch vret" points="9.83,9.38 10.79,5.83 7.25,4.87"/></g><g class="c2"><path class="h" d="M7 0l7 4v8l-7 4-7-4V4z"/><polyline class="gch vdep" points="7.25,11.13 10.79,10.17 9.83,6.62"/><polyline class="gch vret" points="6.75,4.87 3.21,5.83 4.17,9.38"/></g></svg>';
+function gearCells(k,v){let g=k.querySelector('.gearc');if(!g){const host=k.querySelector('.disp')||k.querySelector('[data-mc]');if(!host)return;host.insertAdjacentHTML(host.classList.contains('disp')?'beforeend':'afterbegin',GEARSVG);g=k.querySelector('.gearc');}
+  const raw=v==='MOVING'?gearS():'';g.classList.toggle('gdn',v==='DOWN');g.classList.toggle('gmv',v==='MOVING');g.classList.toggle('gon',v==='DOWN'||v==='MOVING');
+  g.classList.toggle('gvdep',raw==='DEPLOYING');g.classList.toggle('gvret',raw==='RETRACTING');k.classList.toggle('gdep',raw==='DEPLOYING');k.classList.toggle('gret',raw==='RETRACTING');}
+/* v66 (chat 3 stress test via chat 2, 23 NOV): updates arrive 10 times a second; a key's classes and text are touched only when its value changes
+   (last value kept per key in k._sv; a re-drawn key has none, so it is painted once). */
+function paintStates(){document.querySelectorAll('[data-sk]').forEach(k=>{const id=k.dataset.sk,v=skVal(id),t=skTone(id),sv=v+'|'+t+'|'+(id==='GEAR'&&v==='MOVING'?gearS():'');
+  if(k._sv===sv)return;k._sv=sv;
+  k.classList.remove('kg','ka','kr','kfl','gdep','gret');if(t)t.split(' ').forEach(c=>k.classList.add(c));k.classList.toggle('lit',!!t);if(id==='GEAR')gearCells(k,v);k.querySelectorAll('.stw').forEach(e=>e.textContent=v);});}
+/* MORE page: the same pairs merged (labels from the real deck list) */
+const MERGE=[['GEAR UP','GEAR DOWN','GEAR'],['OPEN DOORS','CLOSE DOORS','DOORS'],['LOCK DOORS','UNLOCK DOORS','LOCK'],['L/L ON','L/L OFF','LIGHTS'],
+ ['LOCK GIMBALS','UNLOCK GIMBALS','GIMBALS'],['CRUISE ON','CRUISE OFF','CRUISE'],['SPEED LIMITER ON','SPEED LIMITER OFF','SPEED LIMITER'],['G-FORCE ON','G-FORCE OFF','G-FORCE'],
+ ['ADV HUD ON','ADV HUD OFF','ADV HUD'],['AUTO TARGET ON','AUTO TARGET OFF','AUTO TARGET'],['PIP PRECISION LINES ON','PIP PRECISION LINES OFF','PIP LINES'],
+ ['GUN HUD MAGNIFY ON','GUN HUD MAGNIFY OFF','GUN HUD MAGNIFY'],['STAGGER FIRE ON','STAGGER FIRE OFF','STAGGER FIRE'],['PIP FADING ON','PIP FADING OFF','PIP FADING'],
+ ['LEAD PIP','LAG PIP','PIP'],['LOCK PORTS','UNLOCK PORTS','PORTS'],['EXPAND CONFIG','RETRACT CONFIG','CONFIG']];
+(function mergeMore(){const M2={};MERGE.forEach(([a,b,m])=>{M2[a]=m;M2[b]=m;});
+  (window.MORE_AREAS||[]).forEach(ar=>{const seen=new Set();ar.banks.forEach(bk=>{bk.keys=bk.keys.flatMap(k=>{const m=M2[k[0]]||(k[0]==='ESP'?'ESP':null);if(!m)return [k];if(seen.has(m))return [];seen.add(m);return [[m,'STATE']];});});
+    ar.banks=ar.banks.filter(bk=>bk.keys.length);});})();
+/* put the game state on the keys already on screen (no re-draw, so mode changes and press effects are not disturbed) */
+function applyLive(){document.body.classList.toggle('live',LIVEON);
+  paintStates();
+  const pl=$('plant');if(pl)pl.classList.toggle('lit',plantLit());
+  const la=$('latag'),lav=LIVEON?gp(LIVE,'turret.light_amplification'):undefined;if(la){const on=lav!=null;la.style.display=on?'flex':'none';la.classList.toggle('kg',lav===true);la.classList.toggle('dim',lav===false);const lw=la.querySelector('.stw'),lt=lav?'ON':'OFF';if(lw.textContent!==lt)lw.textContent=lt;}
+  document.querySelectorAll('[data-lvl]').forEach(e=>e.classList.toggle('lvon',LIVEON&&e.dataset.lvl==='SPEED LIMITER'&&ifcs('ifcs_speed_limiter')));
+  /* missile lock: annunciator misl active (anything but NOMINAL / OFF / UNSPECIFIED / not sent) -> the deck's whole outer ring flashes red */
+  const ms=LIVEON&&hasV()?tail(VSt('annunciators.misl')):'';deck.classList.toggle('misl',FORCE_MISL||(!!ms&&!['NOMINAL','OFF','UNSPECIFIED'].includes(ms)));
+  const t=$('liveTag'),tt=LIVEON?'LIVE GAME DATA':'SAMPLE';if(t&&t.textContent!==tt){t.textContent=tt;t.classList.toggle('on',LIVEON);}}
+const FORCE_MISL=new URLSearchParams(location.search).get('misl')==='1'; /* test only: &misl=1 shows the ring without the game */
+/* v66: the first live message stops the sample cycles for good (demo mode switch every 4.5 s, MINING / SALVAGE head-count cycle every 8 s) */
+let DEMO_T=0,HEADS_T=0;function stopSamples(){if(DEMO_T){clearInterval(DEMO_T);DEMO_T=0;}if(HEADS_T){clearInterval(HEADS_T);HEADS_T=0;}}
+function liveFeed(s){LIVE=s;LIVEON=!!(s&&s.service==='on');if(LIVEON)stopSamples();applyLive();}
+/* own retry every 5 s while the bridge is off (the browser's own retry is every 3 s) */
+(function liveLink(){if(new URLSearchParams(location.search).get('nolive')||new URLSearchParams(location.search).has('shop'))return; /* SHOP COPY: never the owner's bridge */ /* v69: ?nolive=1 = sample only (for showing transitions) */let es;try{es=new EventSource('http://127.0.0.1:8529/stream');}catch(e){return;}
+  es.onmessage=e=>{try{liveFeed(JSON.parse(e.data));}catch(x){}};
+  es.onerror=()=>{es.close();if(LIVEON||LIVE)liveFeed(null);setTimeout(liveLink,5000);};})();
+
+/* ===== pieces ===== */
+/* v56 FRAME SIDE SYMBOL (RAZ 23 NOV via chat 2: "change that to the one you created for my clan symbol" / "make the clan org symbol centered on the lines and before the pill lines
+   touch the symbol the line shrinks to the size of the clan symbol's line about 2 honeycombs distance away" / "the line you created for the clan symbol entry isn't the same color as
+   the rest of the pill line" / "there's a line going through my clan symbol"). Copied from chat 8's make-ship-status-deck.cjs ecl() / eclT(): black disc r 11, red rim r*.17 with glow,
+   white crescent upper-left, 4-point white star flare on top. Centred on the frame's side line; the line tapers over 34 px from its own width to the rim width in the frame's own
+   color (currentColor). Last child of the frame, above its glass, so no line runs through it. */
+const ecl=(cx,cy,r=9)=>`<g class="ecl"><circle cx="${cx}" cy="${cy}" r="${r+3}" fill="#1f9eff" opacity=".16" style="filter:blur(3px)"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#000000"/>
+ <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#1f9eff" stroke-width="${(r*.17).toFixed(2)}" style="filter:drop-shadow(0 0 ${(r*.25).toFixed(1)}px #1f9eff)"/>
+ <path d="M${(cx-r*.82).toFixed(2)} ${(cy+r*.1).toFixed(2)} A${(r*.86).toFixed(2)} ${(r*.86).toFixed(2)} 0 0 1 ${(cx-r*.1).toFixed(2)} ${(cy-r*.83).toFixed(2)}" fill="none" stroke="#ffffff" stroke-opacity=".75" stroke-width="${(r*.09).toFixed(2)}" stroke-linecap="round"/>
+ <path d="M${cx} ${(cy-r*1.55).toFixed(2)} L${(cx+r*.09).toFixed(2)} ${(cy-r*1.06).toFixed(2)} L${(cx+r*.45).toFixed(2)} ${(cy-r).toFixed(2)} L${(cx+r*.09).toFixed(2)} ${(cy-r*.94).toFixed(2)} L${cx} ${(cy-r*.45).toFixed(2)} L${(cx-r*.09).toFixed(2)} ${(cy-r*.94).toFixed(2)} L${(cx-r*.45).toFixed(2)} ${(cy-r).toFixed(2)} L${(cx-r*.09).toFixed(2)} ${(cy-r*1.06).toFixed(2)}Z" fill="#ffffff" style="filter:drop-shadow(0 0 ${(r*.3).toFixed(1)}px #1f9eff)"/></g>`;
+const eclT=(cx,cy,r,lw,d)=>{const g=r+1,e=g+d,k=+(r*.17).toFixed(2);
+  const tr=s=>`<polygon points="${cx-lw/2},${cy+s*e} ${cx+lw/2},${cy+s*e} ${cx+k/2},${cy+s*g} ${cx-k/2},${cy+s*g}" fill="currentColor"/>`;
+  return `<rect class="eclc" x="${cx-lw*.9}" y="${cy-e}" width="${lw*1.8}" height="${e*2}"/>${tr(-1)}${tr(1)}${ecl(cx,cy,r)}`;};
+const eclSide=side=>`<svg class="eclf" width="60" height="110" viewBox="-30 -55 60 110" style="${side}:-.75px">${eclT(0,0,11,1.5,34)}</svg>`;
+const frame=(x,y,w,h,cls='',r)=>`<div class="frame ${cls}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;${r?'border-radius:'+r+'px':''}">${eclSide('left')}${eclSide('right')}</div>`;
+/* power levels set on the deck (the deck cannot read the ship; it sends the game's increase / decrease keys) */
+const PW={weapons:4,thrusters:5,shields:4,coolers:6,life:3,plant:8};let PLANT=true;
+const pv=(g,d)=>PW[g]!=null?PW[g]:(PW[g]=d);
+const pips=(n,g,d,cls='',w=36,h=64,gap=6)=>`<div class="pp ${cls}" data-g="${g}" style="--pw:${w}px;--ph:${h}px;gap:${gap}px">${Array.from({length:n},(_,i)=>`<i class="${i<pv(g,d)?'on':''}"></i>`).join('')}</div>`;
+const meter=(n,g,d,c='')=>`<div class="mt ${c}" data-g="${g}">${Array.from({length:n},(_,i)=>`<i class="${i<pv(g,d)?'on':''}"></i>`).join('')}</div>`;
+function cls(i){const k=MODES[mode].keys[i];return k[3]?'state '+skTone(skId(k[1],mode)):'';}
+const skAttr=i=>{const k=MODES[mode].keys[i];return k[3]?` data-sk="${skId(k[1],mode)}"`:'';};
+const subOf=i=>{const k=MODES[mode].keys[i];return k[3]?`<span class="stw">${skVal(skId(k[1],mode))}</span>`:st(k[2]);};
+/* sample #3 key: rounded pill, icon on top, label, small sub-label */
+function key3(i,x,y,w,h){const [ic,l,s]=MODES[mode].keys[i];return `<div class="nb k ${cls(i)}${h<90?' sm':''}" data-i="${i}"${skAttr(i)} style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:70px">
+  <div data-mc style="display:flex;flex-direction:column;align-items:center;gap:8px">${MODES[mode].keys[i][3]?`<span class="led" style="position:relative;margin-bottom:10px"></span>`:''}${sv(ic,46)}<div class="nt" style="font-size:21px;text-align:center;line-height:1.1">${st(l)}</div><div class="ns">${subOf(i)}</div></div></div>`;}
+/* sample #1 key: rounded square, label on top, icon, status underneath */
+function key1(i,x,y,w,h){const [ic,l,s]=MODES[mode].keys[i];return `<div class="nb k ${cls(i)}" data-i="${i}"${skAttr(i)} style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:26px;gap:12px">
+  <div data-mc style="display:flex;flex-direction:column;align-items:center;gap:12px"><div class="kplate nt" style="font-size:15px">${st(l)}</div><div class="disp"><span class="dno">${String(i).padStart(2,'0')}</span><i class="dch"></i>${sv(ic,44)}</div><div class="kplate ns" style="font-size:13px">${subOf(i)}</div></div>
+  ${MODES[mode].keys[i][3]?`<span class="led" style="right:14px;top:14px"></span>`:''}</div>`;}
+/* design 1 level dial: 10 tappable segments on a 270 degree arc, fine scale ring, the mode's own symbol and the level in the middle */
+const LVICON={FLIGHT:'spool',COMBAT:'missile',TURRET:'gyro',FPS:'holster',MINING:'laser',SALVAGE:'',UTILITY:'music'};
+function dial(g,d,icon){const v=pv(g,d),P=(r,a)=>[(r*Math.cos(a)).toFixed(2),(r*Math.sin(a)).toFixed(2)],A0=135*Math.PI/180,SP=270*Math.PI/180,N=10,gap=.035;let segs='',ticks='';
+  for(let i=0;i<N;i++){const a0=A0+SP*i/N+gap,a1=A0+SP*(i+1)/N-gap,[x0,y0]=P(92,a0),[x1,y1]=P(92,a1),[x2,y2]=P(74,a1),[x3,y3]=P(74,a0);
+    segs+=`<path class="${i<v?'on':''}" d="M${x0} ${y0}A92 92 0 0 1 ${x1} ${y1}L${x2} ${y2}A74 74 0 0 0 ${x3} ${y3}Z"/>`;}
+  for(let i=0;i<=40;i++){const a=A0+SP*i/40,[x0,y0]=P(101,a),[x1,y1]=P(i%4?105:110,a);ticks+=`M${x0} ${y0}L${x1} ${y1}`;}
+  return `<div data-mc style="position:relative;width:224px;height:224px"><svg width="224" height="224" viewBox="-112 -112 224 224" style="overflow:visible">
+    <path class="dtk" d="${ticks}"/><circle class="dring" r="66"/><circle class="dring2" r="60"/><g class="dial" data-dial="${g}">${segs}</g></svg>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none"><span class="nt" data-num="${g}" style="font-size:64px;font-weight:700;letter-spacing:0">${v}</span></div></div>`;}
+/* RAZ 23 NOV: "no 2 words next to each other" - every word of a button name on its own line, on all designs.
+   Small joiners (/, &, +, minus, numbers) stay with the word before them. */
+const st=l=>{const out=[];String(l).trim().split(/\s+/).forEach(t=>{if(out.length&&/^([\/&+\u2212\-\u00b7]|\d+%?)$/i.test(t))out[out.length-1]+=' '+t;else out.push(t);});return out.map(w=>{const sl=/ \/$/.test(w);w=w.replace(/ \/$/,'');const bare=w;w=bare.length>=10?`<span class="lw">${w}</span>`:w;return sl?w+'<i class="sl"></i>':w+'<br>';}).join('').replace(/<br>$/,'');};
+function pmKey(sign,x,y,w,h,label,below){const t=sign<0?'−':'+';return `<div class="nb k pm" data-pm="${sign}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${Math.min(60,w/2)}px">
+  <div data-mc style="display:flex;flex-direction:column;align-items:center;gap:4px"><span class="nt pmt">${t}</span>${below?'':`<span class="ns">TAP</span>`}</div></div>${below?`<div class="ns" data-mc data-lvl="${label}" style="position:absolute;left:${x}px;top:${y+h+16}px;width:${w}px;text-align:center">${st(label+" "+t)}</div>`:''}`;}
+/* sample #7 key: pill, icon + label inside, sub-label under the key */
+function key7(i,x,y,w,h){const [ic,l,s]=MODES[mode].keys[i];return `<div class="nb k ${cls(i)}" data-i="${i}"${skAttr(i)} style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:60px">
+  <div data-mc style="display:flex;flex-direction:column;align-items:center;gap:8px">${sv(ic,46)}<div class="nt" style="font-size:19px;text-align:center;line-height:1.1">${st(l)}</div>${MODES[mode].keys[i][3]?`<div class="ns">${subOf(i)}</div>`:(String(l).length<=2?'':`<div class="ns">${st(s)}</div>`)}</div>${MODES[mode].keys[i][3]?`<span class="led" style="left:50%;bottom:16px;margin-left:-4px"></span>`:''}</div>
+  ${!MODES[mode].keys[i][3]&&String(l).length<=2?`<div class="ns" data-mc style="position:absolute;left:${x}px;top:${y+h+14}px;width:${w}px;text-align:center;font-size:14px">${st(s)}</div>`:''}`;} /* v69: every caption inside its key (symmetric); only symbol keys (- / +) keep their name under the key */
+/* danger keys */
+/* danger keys (RAZ 23 NOV): text and symbol centred on the button; the inner oval IS the hold countdown ring.
+   The ring is a dashed track that runs round the inner oval from the top centre; holding fills it solid, the time counts down. */
+function cdPath(w,h,r){r=Math.min(r,w/2,h/2);const c=w/2;return `M${c} 0H${w-r}A${r} ${r} 0 0 1 ${w} ${r}V${h-r}A${r} ${r} 0 0 1 ${w-r} ${h}H${r}A${r} ${r} 0 0 1 0 ${h-r}V${r}A${r} ${r} 0 0 1 ${r} 0Z`;}
+function dz(x,y,w,h,r,label,icon,isz,fs,row){const I=9,iw=w-2*I,ih=h-2*I,d=cdPath(iw,ih,r-I);
+  return `<div class="dz" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center">
+   <svg class="cd" width="${iw}" height="${ih}" viewBox="-2 -2 ${iw+4} ${ih+4}" style="position:absolute;left:${I-2}px;top:${I-2}px;overflow:visible">
+    <path class="cdt" d="${d}" pathLength="100"/><path class="cdp" d="${d}" pathLength="100"/></svg>
+   ${row?`<div style="display:flex;align-items:center;gap:16px;position:relative;z-index:2">${sv(icon,isz)}<div style="text-align:center"><b style="font-size:${fs}px">${label}</b><small class="cds">HOLD 1.5 s</small></div></div>`
+        :`${sv(icon,isz)}<b style="font-size:${fs}px">${label}</b><small class="cds">HOLD 1.5 s</small>`}</div>`;}
+const dz3=(x,y,w,h,label,icon)=>dz(x,y,w,h,70,label,icon,56,28,true); /* v69: symbol 56 (was 72) so SELF DESTRUCT stays 28 px (was shrunk to 24.2) */ /* v68: symbol left of the name (key is now 280 x 160, not 398 x 300) */
+const dz1=(x,y,w,h,label)=>dz(x,y,w,h,34,label,label.startsWith('EJECT')?'ejectc':'warnx',56,28,true); /* v69: 56 / 28 (was 84 / 24) */ /* v68: symbol left of the name (key is now 280 x 160, not 222 x 500) */
+const dz7=(x,y,w,h,label,icon)=>dz(x,y,w,h,h/2,label,icon,56,28,true); /* v69: 56 / 28 (was 58 / 24) */
+/* readout pill, sample #3: round badge, label, 12 pips, number */
+function ro3(x,y,w,h,icon,label,g,d,nogd){return `<div class="nb" data-ol="ro" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:40px;display:flex;align-items:center;gap:10px;padding:0 14px 0 12px">
+  ${icon?`<div class="nb ro" data-ol="badge" style="position:relative;width:66px;height:66px;flex:none;display:grid;place-items:center;border-radius:50%">${sv(icon,46)}</div>`:''}
+  <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:baseline;gap:14px;padding-left:4px"><span class="nt" style="font-size:16px">${label}</span><span class="nt" data-num="${g}" style="font-size:38px;line-height:.9;font-weight:700;letter-spacing:0">${pv(g,d)}</span>${nogd?NOGD:'<span class="smptag">SAMPLE</span>'}</div>
+  ${pips(10,g,d,'',64,66,4)}</div></div>`;}
+const tabsV=(x,y,w,h,gap)=>NAMES.map((n,i)=>`<div class="tab left ${n===mode?'on':''}" data-m="${n}" style="left:${x}px;top:${y+i*(h+gap)}px;width:${w}px;height:${h}px">${sv(MODEICON[n],30)}${n}</div>`).join('');
+/* 24 NOV RAZ: "i still find the left side too compressed. do a industrial tab and put turret under combat": 7 tabs instead of 9. COMBAT holds TURRET,
+   INDUSTRIAL holds MINING + SALVAGE. The open group's tab splits in two halves (tap a half = that page); a closed group tab opens the page used last. */
+const GROUPS=[['FLIGHT',['FLIGHT']],['COMBAT',['COMBAT','TURRET']],['FPS',['FPS']],['INDUSTRIAL',['MINING','SALVAGE']],['UTILITY',['UTILITY']]],GLAST={};
+const tabsVG=(x,y,w,h,gap)=>{GROUPS.forEach(([g,ms])=>{if(ms.includes(mode))GLAST[g]=mode;});
+ return GROUPS.map(([g,ms],i)=>{const on=ms.includes(mode),top=y+i*(h+gap),st=`left:${x}px;top:${top}px;width:${w}px;height:${h}px`;
+  if(on&&ms.length>1)return `<div class="tab left on grp" style="${st}">${ms.map((m,j)=>`<span class="gseg ${m===mode?'on':''}" data-m="${m}">${m}</span>${j<ms.length-1?'<i class="gdiv"></i>':''}`).join('')}</div>`;
+  const tg=ms.includes(GLAST[g])?GLAST[g]:ms[0];return `<div class="tab left ${on?'on':''}" data-m="${tg}" style="${st}">${sv(MODEICON[ms[0]]||'',30)}${g}</div>`;}).join('')+
+ `<div class="tab left telebtn" style="left:${x}px;top:${y+5*(h+gap)}px;width:${w}px;height:${h}px">TELEMETRY</div><div class="tab left morebtn" style="left:${x}px;top:${y+6*(h+gap)}px;width:${w}px;height:${h}px">MORE</div>`;};
+const tabsH=(x,y,w,h,gap)=>NAMES.map((n,i)=>`<div class="tab ${n===mode?'on':''}" data-m="${n}" style="left:${x+i*(w+gap)}px;top:${y}px;width:${w}px;height:${h}px">${sv(MODEICON[n],28)}${n}</div>`).join('');
+
+/* ===== the three faces ===== */
+/* MINING / SALVAGE: the power section shows the mining laser / salvage beam power instead of the ship power (RAZ 23 NOV). Not in the game data (chat 8 field list) -> sample numbers, fixed tag. */
+const PWX={MINING:['MINING LASER POWER','laser',6],SALVAGE:['SALVAGE BEAM POWER','beam',5]};
+const NOGD='<span class="smptag nogd">SAMPLE · NO GAME DATA</span>';
+/* heads (RAZ 23 NOV: "some salvagers and miners have more than one mining salvage head. this depends on game telemetry once they send the component list").
+   One pip bar per head. No head count in the game data yet -> sample cycles 1, 2, 3 heads (URL &heads=N holds one). 1 head = the single bar as before. */
+let HEADS=Math.max(1,Math.min(3,+(Q.get('heads')||1)));
+const headG=(PX,k)=>k?PX[1]+(k+1):PX[1];
+function headRow(x,y,w,h,label,g,d){const ph=Math.min(66,h-12);return `<div style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;display:flex;align-items:center;gap:18px"><span class="nt" style="font-size:16px;width:110px">${label}</span><span class="nt" data-num="${g}" style="font-size:36px;font-weight:700;letter-spacing:0;width:40px">${pv(g,d)}</span>${pips(10,g,d,'',64,ph,4)}</div>`;}
+if(!Q.get('heads')&&!SHOT)HEADS_T=setInterval(()=>{if(PWX[mode]&&!busy&&!/cfgopen|moreopen|travelopen/.test(document.body.className)){HEADS=HEADS%3+1;layout();}},8000);
+function layout(){let c='',a='';const M=MODES[mode];const FPS=mode==='FPS',PX=PWX[mode]; // on foot: no ship power, pips or Eject / Self Destruct (RAZ 23 NOV)
+ if(D===3){
+  /* v68 NORMAL KEYS (RAZ 24 NOV: "make the buttons smaller, you don't have to use the whole deck ... no extra wide buttons ... symmetry" / "they can be normal size but not huge wide"):
+     tabs 220 wide (were 282) centred in the column; keys 160 x 130 (were 180 x 310 / 134 x 274 / 266 x 136 / 398 x 300); EJECT / SELF DESTRUCT 280 x 160 centred in the red zone. */
+  const KW=168,KH=176,KG=16,CX=1226,TY=150; /* v69: 168 x 176 (was 160 x 130), row centred in the band above the readouts */
+  c=frame(22,22,330,676)+tabsVG(77,40,220,62,16); /* 24 NOV: 7 tabs 62 high, 16 apart (40 - 570); was 9 tabs 54 high, 7 apart */ /* v63: TELEMETRY tab added; tabs 54 high, 7 apart */ /* 7 modes (SALVAGE added): tabs 62 high, 8 apart; Ship Power below at 602 */
+  a=frame(372,22,1708,676);
+  // one centred row of normal keys. With a level: 6 keys, the - / + pair under its label in a holder, 1 key. Without: 9 keys. FPS: 3 rows spread evenly (9, 6, 6).
+  const ky=FPS?59:TY,PMW=112,HW=2*PMW+14+32;
+  if(M.lvl){const x0=CX-(7*KW+HW+7*KG)/2,LEFTG=!!M.lvl; /* 24 NOV: every page with a level box gets it at the far left (RAZ: "make all pages that have this layout look like this") */ /* 24 NOV: COMBAT's ARMED MISSILES box at the very left of the row (RAZ) */ if(LEFTG){for(let k=0;k<6;k++)a+=key3(k,x0+HW+KG+k*(KW+KG),ky,KW,KH);}else{for(let k=0;k<6;k++)a+=key3(k,x0+k*(KW+KG),ky,KW,KH);} const hx=LEFTG?x0:x0+6*(KW+KG);
+    a+=`<div class="nb" data-ol="level" style="left:${hx}px;top:${ky-66}px;width:${HW}px;height:${KH+82}px;border-radius:40px"></div><div class="nt" data-mc data-lvl="${M.lvl}" style="position:absolute;left:${hx}px;top:${ky-60}px;width:${HW}px;text-align:center;font-size:22px;line-height:1.05">${st(M.lvl)}</div>`+pmKey(-1,hx+16,ky,PMW,KH,M.lvl)+pmKey(1,hx+16+PMW+14,ky,PMW,KH,M.lvl)+key3(6,LEFTG?x0+HW+KG+6*(KW+KG):hx+HW+KG,ky,KW,KH);}
+  else{const x0=CX-(9*KW+8*KG)/2;for(let k=0;k<9;k++)a+=key3(k,x0+k*(KW+KG),ky,KW,KH);}
+  if(FPS)a+=key3(9,87,602,200,78);else a+=`<div class="nb k ${PLANT?'lit':''}" id="plant" style="left:87px;top:602px;width:200px;height:78px;border-radius:40px;flex-direction:row;gap:16px">${sv('scp',46)}<div style="text-align:center"><div class="nt" style="font-size:22px;line-height:1.05">SHIP<br>POWER</div><div class="ns"></div></div><span class="led" style="right:20px;top:50%;margin-top:-4px"></span></div>`;
+  if(FPS){const x0=CX-(6*KW+5*KG)/2;for(let k=0;k<12;k++)a+=key3(10+k,x0+(k%6)*(KW+KG),k>5?485:272,KW,KH);}else if(PX){if(HEADS<2)a+=ro3(402,465,1648,136,'',PX[0],PX[1],PX[2],true);else{a+=`<div class="ns" style="position:absolute;left:420px;top:394px;font-size:15px;display:flex;align-items:center;gap:6px">${PX[0]}${NOGD}</div>`;
+    const rh=(250-(HEADS-1)*8)/HEADS;for(let k=0;k<HEADS;k++)a+=headRow(420,424+k*(rh+8),1612,rh,'HEAD '+(k+1),headG(PX,k),PX[2]-k);}}else a+=ro3(402,392,818,136,'scw','WEAPONS','weapons',4)+ro3(1232,392,818,136,'sct','THRUSTERS','thrusters',5)+ro3(402,538,818,136,'scs','SHIELDS','shields',4)+ro3(1232,538,818,136,'scc','COOLERS','coolers',6);
+  if(FPS)a+=key3(22,2235,133,KW,KH)+key3(23,2235,412,KW,KH); /* v69: centred in the right column (2100-2538) */else a+=frame(2100,22,438,676,'redzone')+dz3(2179,141,280,160,'EJECT','warn')+dz3(2179,420,280,160,'SELF<br>DESTRUCT','warnx');
+ } else if(D===1){
+  c=`<div class="line" style="left:110px;width:150px;top:64px"></div><div class="line" style="left:2290px;width:150px;top:64px"></div>`+NAMES.map((n,i)=>`<div class="tab t1 ${n===mode?'on':''}" data-m="${n}" style="left:${278+i*222}px;top:26px;width:210px;height:76px"><span class="tbad">${sv(MODEICON[n],34)}</span><span>${n}</span><span class="tix">0${i+1}</span></div>`).join('')+`<div class="tab t1 morebtn" style="left:1832px;top:26px;width:190px;height:76px">MORE</div><div class="tab t1 telebtn" style="left:2034px;top:26px;width:236px;height:76px">TELEMETRY</div>`; /* v63: tabs moved left 130 px for the TELEMETRY tab */
+  a=frame(22,124,1080,574)+`<div class="fh nt fhc" data-mc style="left:562px;top:124px">${mode} MODE</div>`;
+  /* v68 NORMAL KEYS (RAZ 24 NOV): keys 170 x 170 (were 174 x 248 / 204 x 236 / 204 x 248 / 222 x 500; they carry the display window between name and state),
+     - / + 140 x 170 (were 184 x 190), two rows centred on the frame (y 229 / 423); short rows are centred, not stretched; EJECT / SELF DESTRUCT 280 x 160. */
+  const KW=170,KH=180,KG=20,RY=[221,421]; /* v69: 180 high (was 170), rows still centred on 411 */
+  a+=(M.lvl?`<div class="nb" data-ol="level" style="left:78px;top:169px;width:180px;height:440px;border-radius:30px"></div><div class="kplate nt" data-mc data-lvl="${M.lvl}" style="position:absolute;left:168px;top:177px;transform:translateX(-50%);width:max-content;font-size:14px;padding:4px 18px">${st(M.lvl)}</div>`+pmKey(1,98,RY[0],140,KH,M.lvl)+pmKey(-1,98,RY[1],140,KH,M.lvl)
+         :key1(8,83,RY[0],KW,KH)+key1(9,83,RY[1],KW,KH))+`<div class="vsep" style="left:304px;top:180px;height:460px"></div>`;
+  {const n=M.lvl?Math.min(8,M.keys.length):8,r1=n>=8?4:Math.ceil(n/2);for(let k=0;k<n;k++){const row=k<r1?0:1,cnt=row?n-r1:r1,j=row?k-r1:k;a+=key1(k,704-(cnt*KW+(cnt-1)*KG)/2+j*(KW+KG),RY[row],KW,KH);}} /* short rows centred; v69: centre 704 = middle of the space between the divider (305.5) and the frame edge (1102), was 706 (30.5 / 26 px gaps, now 28.5 / 28) */
+  if(FPS){a+=frame(1122,124,900,574)+`<div class="fh nt fhc" style="left:1572px;top:124px">ON FOOT</div>`;for(let k=0;k<8;k++)a+=key1(10+k,1572-(4*KW+3*KG)/2+(k%4)*(KW+KG),RY[k>3?1:0],KW,KH);}else{
+  a+=frame(1122,124,900,574)+`<div class="fh nt fhc" style="left:1572px;top:124px">${PX&&HEADS>1?PX[0]:'POWER'}${PX?NOGD:'<span class="smptag">SAMPLE</span>'}</div>`;
+  const G=PX?(HEADS<2?[['',PX[0],PX[1],PX[2]]]:Array.from({length:HEADS},(_,k)=>['','HEAD '+(k+1),headG(PX,k),PX[2]-k])):[['scw','WEAPONS','weapons',4],['sct','THRUSTERS','thrusters',5],['scs','SHIELDS','shields',4],['scc','COOLERS','coolers',6],['life','LIFE SUPPORT','life',3],['scp','POWER PLANT','plant',8]];
+  G.forEach(([ic,l,g,d],k)=>{a+=`<div style="position:absolute;left:1140px;top:${(PX?378-(G.length-1)*42:168)+k*84}px;width:872px;display:flex;align-items:center;gap:10px">${sv(ic,44)}<div style="width:126px;display:flex;flex-direction:column"><span class="ns" style="font-size:13px">${l}</span><span class="nt" data-num="${g}" style="font-size:36px;line-height:1;font-weight:700;letter-spacing:0">${pv(g,d)}</span></div><div class="mt mtw">${pips(10,g,d,'',62,64,4)}</div></div>`;});
+  }
+  if(FPS)a+=key1(23,2205,204,KW,KH)+key1(22,2205,448,KW,KH);else a+=frame(2042,124,496,574,'redzone')+dz1(2150,209,280,160,'EJECT')+dz1(2150,453,280,160,'SELF<br>DESTRUCT');
+ } else {
+  c=`<div class="line" style="left:150px;width:250px;top:60px"></div><div class="tab telebtn" style="left:420px;top:28px;width:222px;height:64px">TELEMETRY</div><div class="line" style="left:2120px;width:200px;top:60px"></div><div class="nb seg" style="left:660px;top:24px;width:1240px;height:72px;border-radius:999px"></div>`+
+    NAMES.map((n,i)=>`<div class="tab segt ${n===mode?'on':''}" data-m="${n}" style="left:${672+i*175}px;top:32px;width:173px;height:56px">${n}</div>${i?`<i class="segd" style="left:${670+i*175}px"></i>`:''}`).join('')+`<div class="tab morebtn" style="left:1930px;top:28px;width:170px;height:64px">MORE</div>`;
+  a=frame(14,118,2532,588,'',40)+`<div class="ruler" style="top:124px"></div><div class="ruler" style="top:686px;transform:scaleY(-1)"></div>`;
+  /* v68 NORMAL KEYS (RAZ 24 NOV): keys 160 x 130 (were 166 x 270 / 190 x 118 / 380 x 210), row centred on the page; EJECT / SELF DESTRUCT 280 x 160 (were 380 x 210),
+     level with the key row, same gap to the row on both sides; pip strip moved up 30 px (was 28 px from the frame bottom). */
+  const KW=168,KH=176,KY=217; /* v69: 168 x 176 (was 160 x 130), centre 305 = danger key centre */
+  if(FPS)a+=key7(22,150,KY,KW,KH)+key7(23,2560-150-KW,KY,KW,KH); /* v69: mirrored (was 150 / 2250) */else a+=dz7(90,225,280,160,'EJECT','ejectc')+dz7(2190,225,280,160,'SELF<br>DESTRUCT','sdc');
+  const groups=[[0,1],[2,3],[4,5,6,7,8]];let x=1280-(9*KW+8*20+2*26)/2;
+  groups.forEach((g,gi)=>{g.forEach(i=>{a+=(M.lvl&&i>=7)?pmKey(i===7?-1:1,x,KY,KW,KH,M.lvl,true):key7(i,x,KY,KW,KH);x+=KW+20;});if(gi<2){a+=`<div class="vsep" style="left:${x+2.25}px;top:${KY+10}px;height:${KH-20}px"></div>`;x+=26;}});
+  // pip strip along the bottom, as in the sample
+  if(FPS){for(let k=0;k<8;k++)a+=key7(9+k,1280-(8*KW+7*24)/2+k*(KW+24),470,KW,KH);}else{
+  const SY=PX?(HEADS<2?[['',PX[0],PX[1],PX[2]]]:Array.from({length:HEADS},(_,k)=>['','HEAD '+(k+1),headG(PX,k),PX[2]-k])):[['scw','WEAPONS','weapons',4],['sct','THRUSTERS','thrusters',5],['scs','SHIELDS','shields',4],['scc','COOLERS','coolers',6]];
+  a+=PX?`<span style="position:absolute;left:60px;top:${HEADS>1?530:568}px;display:flex;flex-direction:column;gap:8px">${HEADS>1?`<span class="ns" style="font-size:15px">${PX[0]}</span>`:''}${NOGD}</span>`:`<span class="smptag" style="position:absolute;left:60px;top:568px">SAMPLE</span>`;
+  (PX?(HEADS<2?[[0]]:HEADS<3?[[0,1]]:[[0,1],[2]]):[[0,1],[2,3]]).forEach((pr,row)=>{a+=`<div style="position:absolute;left:40px;width:2480px;top:${(PX&&HEADS<3?542:502)+row*80}px;display:flex;justify-content:center;align-items:center;gap:18px">`+
+   pr.map((n,j)=>{const [ic,l,g,d]=SY[n];return `${j?'<i class="vsep" style="position:relative;height:60px;margin:0 22px"></i>':''}${sv(ic,48)}<span class="ns" style="font-size:15px;width:${PX?'auto':'112px'}">${l}</span><span class="nt" data-num="${g}" style="font-size:36px;font-weight:700;letter-spacing:0;width:34px">${pv(g,d)}</span>${pips(10,g,d,'round',66,66,6)}`;}).join('')+`</div>`;});
+  }
+  a+=`<div class="hd nt fhc" data-mc style="left:1280px;top:150px;font-size:15px">${mode} MODE</div>`;
+ }
+ /* v65 TURRET LIGHT AMP (RAZ 23 NOV: "show light amplification on the turret page when it arrives"): game field turret.light_amplification (chat 8 schema TurretFrame 1,
+    only sent in a turret seat). Readout tag, hidden until the game sends the field; then ON (green) / OFF (dark). Never shown from a guess. */
+ if(mode==='TURRET')a+=`<div class="nb ro latag" id="latag" style="${({3:'left:1700px;top:398px',1:'left:700px;top:102px',7:'left:1400px;top:128px'})[D]||'left:1700px;top:398px'};height:44px;display:none;align-items:center;gap:14px;padding:0 20px"><span class="nt" data-mc style="font-size:15px;letter-spacing:2px">LIGHT AMP</span><span class="nt stw" data-mc style="font-size:17px;font-weight:700"></span></div>`;
+ chrome.innerHTML=c;area.innerHTML=a;
+ chrome.querySelectorAll('.tab[data-m],.gseg[data-m]').forEach(t=>t.onclick=e=>{e.stopPropagation();switchMode(t.dataset.m);});
+ chrome.querySelectorAll('.telebtn').forEach(t=>t.onclick=()=>openTelem());
+ chrome.querySelectorAll('.morebtn').forEach(t=>t.onclick=()=>{const want={FLIGHT:'flight',COMBAT:'combat',TURRET:'combat',FPS:'page-p17',MINING:'mining',SALVAGE:'salvage-tools',UTILITY:'camera'}[mode];const ai=(window.MORE_AREAS||[]).findIndex(x=>x.id===want);openMore(ai<0?0:ai);});
+ area.querySelectorAll('.k[data-i]').forEach(k=>k.onclick=()=>{const i=k.dataset.i;if(MODES[mode].keys[i][3]){skFlip(k.dataset.sk);paintStates();}
+   else{k.classList.add('flash');setTimeout(()=>k.classList.remove('flash'),160);}burst(k);});
+ const pl=$('plant');if(pl)pl.onclick=()=>{PLANT=!PLANT;pl.classList.toggle('lit',PLANT);};
+ area.querySelectorAll('.dz').forEach(holdRing);holoize(area);holoize(chrome);applyLive();sizeLabels(area);fitDots(area);dustMask();eclEdges();alignBadges();
+}
+/* ===== RIM DOTS = OUTER LIMIT (RAZ 23 NOV, chat 8: "the bezel type little dots should be the extreme outer limits of all text and symbology").
+   Every key with rim dots (rimSVG .p5, keys 90 px and taller): if any word or symbol crosses the dot line (17 px in, danger keys 27 px, + dot radius),
+   that key's content is shrunk about the key centre until it fits. Keys that already fit are not touched. ===== */
+/* v57 (RAZ 23 NOV via chat 2: "only put the clan symbol on the very left and right of each deck page. currently they are squeezed on top on some pages in the center"):
+   the clan symbol shows only on the outermost left frame edge and the outermost right frame edge of the page, at that frame's vertical centre (v58). Inner panel edges = plain frame line. */
+/* v59 (RAZ 23 NOV: "the symbology boxes in front of the weapon shields thrusters coolers pips aren't aligned with the pips. check the entire deck"):
+   each icon box is the pip height (66) and is moved so its centre is level with the centre of its own pip row (top and bottom edges level with the pips). */
+function alignBadges(){document.querySelectorAll('#deck [data-ol=badge]').forEach(b=>{const row=b.parentElement,pp=row&&row.querySelector('.pp');if(!pp)return;b.style.transform='';
+  const k=b.getBoundingClientRect().height/b.offsetHeight||1,bb=b.getBoundingClientRect(),pb=pp.getBoundingClientRect();b.style.transform=`translateY(${(((pb.top+pb.bottom)-(bb.top+bb.bottom))/2/k).toFixed(1)}px)`;});}
+function eclEdges(){const fr=[...document.querySelectorAll('#area .frame,#chrome .frame')].filter(f=>f.offsetWidth);document.querySelectorAll('#area .frame .eclf,#chrome .frame .eclf').forEach(s=>{s.classList.remove('edge');s.style.top='';});if(!fr.length)return;
+  const L=fr.reduce((a,f)=>f.offsetLeft<a.offsetLeft?f:a),Rt=fr.reduce((a,f)=>f.offsetLeft+f.offsetWidth>a.offsetLeft+a.offsetWidth?f:a);
+  [[L,'left'],[Rt,'right']].forEach(([f,side])=>{if(side==='left'?f.offsetLeft>120:f.offsetLeft+f.offsetWidth<2440)return; /* that frame is not at the page edge (FPS: keys sit outside it) -> no symbol */const s=f.querySelector(`.eclf[style*="${side}"]`);if(!s)return;s.style.top='';s.classList.add('edge'); /* v58 (RAZ 23 NOV: "the clan symbol icon isn't centered vertically on all the pills"): exact vertical centre of that outer frame (CSS top 50%), not page y 360 */});}
+/* v69 KEY NAME SIZE (RAZ 24 NOV: "teh writing is too small and illegible for the size of buttons"): one name size per page, the largest that fits every
+   key inside its rim dots: start 28 px (design 1: 26), step down, never below 22 px. Sub-tags (TAP / HOLD) follow at 72 % (18-20 px). Small keys (under 90 px) fixed 22 px. */
+function keyNeed(key){const R=e=>e.getBoundingClientRect(),w=key.offsetWidth,h=key.offsetHeight;if(!w)return 1;const kids=[...key.children].filter(c=>!c.matches('.holo,.hrim,svg.cd,.led,.rip'));
+  kids.forEach(c=>{c.style.transform='';c.style.transformOrigin='';});const kb=R(key),sc=kb.width/w||1,ins=(h<90?12:(key.classList.contains('dz')?27:17)+1.2)*sc;
+  const L=kb.left+ins,Rr=kb.right-ins,T=kb.top+ins,B=kb.bottom-ins,ox=(kb.left+kb.right)/2,oy=(kb.top+kb.bottom)/2;let u=null;
+  const add=r=>{if(r.width<.5||r.height<.5)return;u=u?{l:Math.min(u.l,r.left),t:Math.min(u.t,r.top),r:Math.max(u.r,r.right),b:Math.max(u.b,r.bottom)}:{l:r.left,t:r.top,r:r.right,b:r.bottom};};
+  kids.forEach(c=>{const tw=document.createTreeWalker(c,NodeFilter.SHOW_TEXT);let n;while((n=tw.nextNode())){if(!n.textContent.trim())continue;const g=document.createRange();g.selectNodeContents(n);[...g.getClientRects()].forEach(add);}
+    c.querySelectorAll('svg.ni').forEach(v=>add(R(v)));});if(!u)return 1;let f=1;
+  if(u.l<L)f=Math.min(f,(ox-L)/(ox-u.l));if(u.r>Rr)f=Math.min(f,(Rr-ox)/(u.r-ox));if(u.t<T)f=Math.min(f,(oy-T)/(oy-u.t));if(u.b>B)f=Math.min(f,(B-oy)/(u.b-oy));return f;}
+function sizeLabels(root){if(!root)return;const ks=[...root.querySelectorAll('.nb.k[data-i]')].filter(k=>k.offsetHeight>=90);const MX=D===1?26:28;
+  const set=F=>{root.style.setProperty('--kf',F+'px');root.style.setProperty('--ksf',Math.max(18,Math.min(20,Math.round(F*.72)))+'px');};let F=MX;set(F);
+  for(let it=0;it<8&&ks.length;it++){let m=1;ks.forEach(k=>{m=Math.min(m,keyNeed(k));});if(m>=.995||F<=22)break;F=Math.max(22,Math.min(F-.5,Math.floor(F*(1-(1-m)*.7)*2)/2));set(F);}
+  root.dataset.kf=F;}
+function fitDots(root){if(!root)return;const R=e=>e.getBoundingClientRect();
+  root.querySelectorAll('.nb.k,.dz').forEach(key=>{const w=key.offsetWidth,h=key.offsetHeight;if(!w)return; /* keys under 90 px have no dots: 12 px inside the rim (clear of the top dashes and bottom line) */
+    const kids=[...key.children].filter(c=>!c.matches('.holo,.hrim,svg.cd,.led,.rip'));if(!kids.length)return;
+    kids.forEach(c=>{c.style.transform='';c.style.transformOrigin='';});
+    const kb=R(key),sc=kb.width/w||1,ins=(h<90?12:(key.classList.contains('dz')?27:17)+1.2)*sc;
+    const L=kb.left+ins,Rr=kb.right-ins,T=kb.top+ins,B=kb.bottom-ins,ox=(kb.left+kb.right)/2,oy=(kb.top+kb.bottom)/2;
+    let u=null;const add=r=>{if(r.width<.5||r.height<.5)return;u=u?{l:Math.min(u.l,r.left),t:Math.min(u.t,r.top),r:Math.max(u.r,r.right),b:Math.max(u.b,r.bottom)}:{l:r.left,t:r.top,r:r.right,b:r.bottom};};
+    kids.forEach(c=>{const tw=document.createTreeWalker(c,NodeFilter.SHOW_TEXT);let n;while((n=tw.nextNode())){if(!n.textContent.trim())continue;const g=document.createRange();g.selectNodeContents(n);[...g.getClientRects()].forEach(add);}
+      c.querySelectorAll('svg.ni').forEach(v=>add(R(v)));if(c.matches('svg.ni'))add(R(c));});
+    if(!u)return;let f=1;
+    if(u.l<L)f=Math.min(f,(ox-L)/(ox-u.l));if(u.r>Rr)f=Math.min(f,(Rr-ox)/(u.r-ox));if(u.t<T)f=Math.min(f,(oy-T)/(oy-u.t));if(u.b>B)f=Math.min(f,(B-oy)/(u.b-oy));
+    if(f>=1)return;f=Math.max(.5,f*.98);
+    kids.forEach(c=>{const cb=R(c);c.style.transformOrigin=`${((ox-cb.left)/sc).toFixed(1)}px ${((oy-cb.top)/sc).toFixed(1)}px`;c.style.transform=`scale(${f.toFixed(3)})`;});});}
+if(document.fonts)document.fonts.ready.then(()=>{sizeLabels(area);fitDots(area);fitDots(document.getElementById('more'));alignBadges();});
+/* add the hologram layers to every button and pill */
+function holoize(root){root.querySelectorAll('.nb,.dz,.tab:not(.segt)').forEach((e,i)=>{if(e.querySelector(':scope>.holo'))return;const h=document.createElement('span');h.className='holo';
+  h.style.setProperty('--sd',((i*1.37)%8).toFixed(2)+'s');h.innerHTML='<i class="gr"></i><i class="sc"></i><i class="vg"></i><i class="rf"></i><i class="gl"></i><i class="gt"></i><i class="bv"></i><i class="f1"></i><i class="f2"></i><i class="tt"></i><i class="bb"></i><i class="lt"></i><i class="rt"></i>'+rimSVG(e,i);e.prepend(h);});}
+/* inner rim: broken inner line with gaps top and bottom, fine scale ticks, bright corner brackets, side chevrons, marker dots, tiny ID */
+function rrPath(x,y,w,h,r){r=Math.max(0,Math.min(r,w/2,h/2));const c=x+w/2;return `M${c} ${y}H${x+w-r}A${r} ${r} 0 0 1 ${x+w} ${y+r}V${y+h-r}A${r} ${r} 0 0 1 ${x+w-r} ${y+h}H${x+r}A${r} ${r} 0 0 1 ${x} ${y+h-r}V${y+r}A${r} ${r} 0 0 1 ${x+r} ${y}Z`;}
+function rimSVG(e,i){const w=e.offsetWidth,h=e.offsetHeight;if(!w||!h)return '';const cs=getComputedStyle(e).borderTopLeftRadius;
+  let R0=cs.includes('%')?Math.min(w,h)/2:parseFloat(cs)||0;R0=Math.min(R0,w/2,h/2);const dz=e.classList.contains('dz'),small=h<90;
+  const a=dz?17:7,b=dz?22:12;let o=`<svg class="hrim" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  if(!dz)o+=`<path class="p1" d="${rrPath(a,a,w-2*a,h-2*a,R0-a)}" pathLength="100" stroke-dasharray="0 4 42 8 42 4"/>`;
+  if(!small)o+=`<path class="p2" d="${rrPath(b,b,w-2*b,h-2*b,R0-b)}" pathLength="400" stroke-dasharray=".6 3.4"/>`;
+  if(!small){[.38,.62].forEach(f=>{o+=`<circle class="p5" cx="${b+5}" cy="${(h*f).toFixed(1)}" r="1.2"/><circle class="p5" cx="${w-b-5}" cy="${(h*f).toFixed(1)}" r="1.2"/>`;});}
+  if(!small){[.3,.7].forEach(f=>{o+=`<circle class="p5" cx="${(w*f).toFixed(1)}" cy="${b+5}" r="1.2"/><circle class="p5" cx="${(w*f).toFixed(1)}" cy="${h-b-5}" r="1.2"/>`;});}
+  /* top "- - -" tab marks drawn ALONG the rim (RAZ 23 NOV: "the three dots don't curve with the pill outline, they're straight"):
+     the rim path 5.5 px in, from top centre: white middle mark 12 px, 5 px gap, outer marks 12 px each side. Straight on a flat top, curved on round keys. */
+  /* v55 (RAZ 23 NOV: "the three lines on all buttons need to look more like the side dots and lines throughout the decks. they make everything look cheap"):
+     the three 12 px white dashes are now three small dots like the side marker dots (.p5: r 1.2, same color), 9 px apart along the same rim path.
+     Round-cap zero-length dashes = 2.4 px dots that follow the rim curve. Middle dot drawn once (not mirrored) so it is not doubled. */
+  {const d=5.5,tp=rrPath(d,d,w-2*d,h-2*d,Math.max(0,R0-d)),half=`<path class="tB" d="${tp}" stroke-dasharray="0 100000" stroke-dashoffset="-9"/>`;
+   o+=`<g class="tabm"><path class="tA" d="${tp}" stroke-dasharray="0 100000"/>${half}<g transform="matrix(-1 0 0 1 ${w} 0)">${half}</g></g>`;
+   /* bottom-centre little line (RAZ: "make all those little lines pulse" / "like a heartbeat"): drawn along the rim from bottom centre, 22 % of the key width,
+      heartbeat pulse with a per-key phase so the deck does not beat in sync */
+   const bh=`<path d="${tp}" transform="matrix(1 0 0 -1 0 ${h})" stroke-dasharray="${(w*.11).toFixed(1)} 100000"/>`;
+   o+=`<g class="botm" style="animation-delay:${(-(((i||0)*.53)%2.8)).toFixed(2)}s">${bh}<g transform="matrix(-1 0 0 1 ${w} 0)">${bh}</g></g>`;}
+  return o+'</svg>';}
+/* press feedback for every key, tab and Eject / Self Destruct */
+function pressFx(el,cx,cy){el.classList.add('pressed');const r=el.getBoundingClientRect(),k=r.width/el.offsetWidth||1,old=el.querySelector('.rip');if(old)old.remove(); /* v67: one ripple per key at a time */
+  const i=document.createElement('i');i.className='rip';
+  i.style.left=((cx-r.left)/k)+'px';i.style.top=((cy-r.top)/k)+'px';(el.querySelector(':scope>.holo')||el).appendChild(i);setTimeout(()=>i.remove(),520);}
+addEventListener('pointerdown',e=>{const el=e.target.closest&&e.target.closest('#deck .k,#deck .tab,#deck .dz');if(el)pressFx(el,e.clientX,e.clientY);});
+/* EMERGENCY EXIT (RAZ 23 NOV: "also need an emergency seat exit button that activates when user double taps the exit seat key on the deck").
+   Two presses on an EXIT SEAT key within 400 ms = EMERGENCY EXIT SEAT (game action v_emergency_exit; his profile binds it to Left Shift + Y).
+   One press stays EXIT SEAT (hold, as before). The key shows EMERGENCY EXIT with a fast dash flash for 2 s. Design copy: nothing is sent. */
+addEventListener('pointerdown',e=>{const k=e.target.closest&&e.target.closest('#deck .nb.k');if(!k)return;const nm=(k.querySelector('.nt,.kplate')||{}).textContent||'';if(!/^EXIT\s*SEAT$/.test(nm.replace(/\s+/g,' ').trim()))return;
+  const now=performance.now();if(now-(k._et||0)<400){k._et=0;k.classList.add('emx');const n=k.querySelector('.ns:not(.bk)');if(n){if(n._o==null)n._o=n.innerHTML;n.innerHTML='EMERGENCY<br>EXIT';}fitDots(k.parentElement);
+    clearTimeout(k._ex);k._ex=setTimeout(()=>{k.classList.remove('emx');if(n&&n._o!=null){n.innerHTML=n._o;n._o=null;}fitDots(k.parentElement);},2000);}else k._et=now;});
+/* PRESS FLASH (RAZ 23 NOV: "when a button is pressed the top 3 little dashes on each button flash outer two lines inner line back and forth ... for 3 seconds" /
+   "every button needs some sort of feedback to the user when pressed. even the power pips"). Outer pair and middle dash alternate every 180 ms for 3 s;
+   a new press restarts it. Pips: the tapped pip flashes in the same rhythm. Press feedback, so the scanner switch does not stop it. */
+function pressFlash(el,cls='tabpress'){if(!el)return;el.classList.add(cls); /* v67: a new press while flashing extends the 3 s (no forced re-layout to restart it) */clearTimeout(el['_'+cls]);el['_'+cls]=setTimeout(()=>el.classList.remove(cls),3000);}
+addEventListener('pointerdown',e=>{const t=e.target.closest&&e.target;if(!t)return;const pip=t.closest('[data-g] > i,[data-g] > path');if(pip){pressFlash(pip,'pipflash');return;}
+  const seg=t.closest('.tab.segt');if(seg){pressFlash(document.querySelector('#chrome .seg'));return;}
+  const el=t.closest('#deck .nb.k,#deck .tab,#deck .dz');if(el)pressFlash(el);});
+addEventListener('pointerup',()=>setTimeout(()=>document.querySelectorAll('#deck .pressed').forEach(x=>{if(!x.classList.contains('holding'))x.classList.remove('pressed');}),140));
+function holdRing(el){const ci=el.querySelector('.cdp'),tx=el.querySelector('.cds');if(!ci)return;let t0=0,h=0;
+  const set=p=>{ci.style.strokeDasharray=`${100*p} 100`;el.classList.toggle('holding',p>0&&p<1);if(tx)tx.textContent=p>0&&p<1?(1.5*(1-p)).toFixed(1)+' s':(p>=1?'SENT':'HOLD 1.5 s');};
+  el.onpointerdown=()=>{t0=performance.now();const st=()=>{const p=Math.min(1,(performance.now()-t0)/1500);set(p);if(p<1&&t0)h=requestAnimationFrame(st);else if(p>=1){burst(el);t0=0;setTimeout(()=>set(0),700);}};st();};
+  el.onpointerup=el.onpointerleave=()=>{if(!t0)return;t0=0;cancelAnimationFrame(h);set(0);};}
+
+/* ===== mode change: ONLY the content moves (icons, labels, sub-labels, LEDs). Outlines and pills stay where they are.
+   Three types, picked in the configurator:
+   sweep = board 23: a light front wipes left to right all the way across; old content crumbles to pixels at the front and the
+           same pixels re-form the new content behind it.
+   swirl = every key dissolves to sand on a curling wind and comes back in place; no scanner (RAZ 23 NOV).
+   grow  = each label falls in on itself to its centre and crumbles, then the new label builds from its centre outwards (RAZ 23 NOV). ===== */
+const TYPES=[['sweep','Sweep: left to right, all the way across'],['swirl','Dissolve to sand + return'],['grow','Fall in + build out']];
+let TRT='swirl';try{TRT=localStorage.getItem('cmdglas-holo-change')||'swirl';if(TRT==='sweep'&&!localStorage.getItem('cmdglas-holo-wipe-ok'))TRT='swirl';}catch(e){} /* 25 NOV RAZ: "transition wipe is still bad" -> default = dissolve to sand + return (each key's words turn to sand inside the key); the old sweep wipe only if chosen again in the TOC */
+if(Q.get('tr'))TRT=Q.get('tr');if(!TYPES.some(t=>t[0]===TRT))TRT='swirl';
+const CELL=3,SPEED=1970,REVEAL=.8,NE_OFF=140;
+const pctx=fx.getContext('2d'),IMG=pctx.createImageData(2560,720),d8=IMG.data;
+const veil=$('veil');
+function rel(el){const d=deck.getBoundingClientRect(),k=d.width/2560,r=el.getBoundingClientRect();return {x:(r.left-d.left)/k,y:(r.top-d.top)/k,w:r.width/k,h:r.height/k};}
+const svgCache=new Map();
+function svgImg(svg){const c=svg.cloneNode(true);c.setAttribute('xmlns','http://www.w3.org/2000/svg');c.removeAttribute('class');c.removeAttribute('style');
+  c.setAttribute('fill','none');c.setAttribute('stroke','#ffffff');c.setAttribute('stroke-width','2.6');c.setAttribute('stroke-linecap','round');c.setAttribute('stroke-linejoin','round');
+  c.querySelectorAll('.s').forEach(e=>{e.setAttribute('fill','#ffffff');e.setAttribute('stroke','none');});
+  c.querySelectorAll('.h').forEach(e=>{e.setAttribute('stroke','#3dabff');e.setAttribute('stroke-width','1.6');});
+  c.querySelectorAll('.F').forEach(e=>{e.setAttribute('fill','#ffffff');e.setAttribute('stroke','none');});
+  c.querySelectorAll('.Fd').forEach(e=>{e.setAttribute('fill','#050d1a');e.setAttribute('stroke','none');});
+  const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c));
+  if(svgCache.has(src))return svgCache.get(src);
+  const im=new Image();const pr=new Promise(res=>{im.onload=()=>res(im);im.onerror=()=>res(null);});im.src=src;svgCache.set(src,pr);return pr;}
+/* paint the content of every [data-mc] block into a canvas and turn it into 3 px pixels */
+async function sample(root){
+  const c=document.createElement('canvas');c.width=2560;c.height=720;const g=c.getContext('2d');
+  const mcs=[...root.querySelectorAll('[data-mc]')],rects=mcs.map(rel),jobs=[];const d=deck.getBoundingClientRect(),k=d.width/2560;
+  mcs.forEach(m=>{
+    m.querySelectorAll('svg.ni').forEach(sv=>{const r=rel(sv);jobs.push(svgImg(sv).then(im=>{if(im)g.drawImage(im,r.x,r.y,r.w,r.h);}));});
+    m.querySelectorAll('.pp i').forEach(q=>{const r=rel(q);g.fillStyle=q.classList.contains('on')?'#3dabff':'rgba(31,158,255,.28)';g.fillRect(r.x,r.y,r.w,r.h);});
+    const leds=m.matches('.led')?[m]:[...m.querySelectorAll('.led')];leds.forEach(q=>{const r=rel(q);g.fillStyle=q.closest('.lit')?'#3dabff':'#2a425a';g.fillRect(r.x,r.y,r.w,r.h);});
+    const tw=document.createTreeWalker(m,NodeFilter.SHOW_TEXT);let n;
+    while((n=tw.nextNode())){const t=n.textContent.trim();if(!t)continue;const pe=n.parentElement;if(pe.closest('svg'))continue;const cs=getComputedStyle(pe);
+      const rg=document.createRange();rg.selectNodeContents(n);const rr=rg.getBoundingClientRect();if(!rr.width)continue;
+      g.font=`${cs.fontWeight} ${cs.fontSize} Oxanium`;try{g.letterSpacing=cs.letterSpacing;}catch(e){}g.fillStyle=cs.color;
+      g.fillText(cs.textTransform==='uppercase'?t.toUpperCase():t,(rr.left-d.left)/k,(rr.top-d.top)/k+(rr.height/k)*.78);}
+  });
+  await Promise.all(jobs);
+  const D=g.getImageData(0,0,2560,720).data,P=[];
+  rects.forEach(r=>{const x0=Math.max(0,Math.floor((r.x-6)/CELL)*CELL),x1=Math.min(2557,r.x+r.w+6),y0=Math.max(0,Math.floor((r.y-6)/CELL)*CELL),y1=Math.min(717,r.y+r.h+6);
+    for(let y=y0;y<y1;y+=CELL)for(let x=x0;x<x1;x+=CELL){let mx=0,mp=0;for(let yy=0;yy<CELL;yy++){let q=((y+yy)*2560+x)*4+3;for(let xx=0;xx<CELL;xx++,q+=4)if(D[q]>mx){mx=D[q];mp=q;}}
+      if(mx>90)P.push({x,y,r:D[mp-3],g:D[mp-2],b:D[mp-1],a:Math.min(1,.35+mx/255),bed:Math.min(y+40,r.y+r.h),cx:r.x+r.w/2,cy:r.y+r.h/2});}});
+  return P;}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+const SIZES=[1,1,1,2,2]; /* v69: 1-2 px (was 2-5 px) */
+function mk(k,o,n){return {k,o,n,s:SIZES[(Math.random()*SIZES.length)|0],jit:Math.random(),w:.6+Math.random()*.8,sw:(Math.random()<.5?-1:1)*(.8+Math.random()*1.2),
+  dA:.12+Math.random()*.12,rise:.04+Math.random()*.12,dead:false,life:0};}
+function pair(O,N,type){const B=type==='grow'?90:30,key=q=>((q.x/B)|0)+'_'+((q.y/B)|0),mo=new Map(),mn=new Map();
+  O.forEach(q=>{const k=key(q);(mo.get(k)||mo.set(k,[]).get(k)).push(q);});N.forEach(q=>{const k=key(q);(mn.get(k)||mn.set(k,[]).get(k)).push(q);});
+  const parts=[];new Set([...mo.keys(),...mn.keys()]).forEach(k=>{const a=shuffle(mo.get(k)||[]),b=shuffle(mn.get(k)||[]);let m=Math.min(a.length,b.length);if(type==='swirl')m=Math.floor(m*.6);
+    for(let i=0;i<m;i++)parts.push(mk(0,a[i],b[i]));for(let i=m;i<a.length;i++)parts.push(mk(2,a[i],null));for(let i=m;i<b.length;i++)parts.push(mk(1,null,b[i]));});
+  return parts;}
+/* curl-noise wind (board 24) */
+const K1X=.0045,K1Y=.0068,K2X=.0031,K2Y=.0052,B1=.65,B1X=.65*K1X/K1Y,B2=.45,B2X=.45*K2X/K2Y,WINDV=280,CURLV=220;let CVX=0,CVY=0;
+function curl(x,y,t){const ax=K1X*x+t*.9,ay=K1Y*y+1.3,a2=K2X*x-K2Y*y-t*.6,c2=Math.cos(a2);CVX=B1*Math.sin(ax)*Math.cos(ay)-B2*c2;CVY=-(B1X*Math.cos(ax)*Math.sin(ay)+B2X*c2);}
+let TR=null;
+/* v69 GLIMMER (RAZ 24 NOV 13:34: "the glimmer needs to go away faster and stay within their respective buttons not spill all over the place"):
+   GLS = the mode-change clock runs 2x, so every glimmer phase (sweep, dissolve, fall-in, the star shower behind the front, the dragged background stars) lasts half as long.
+   glimMask() = the two glimmer canvases (#fx particles, #shw star shower) are masked to the outline of every key / pill / tab (rounded shape, both the old and the new page)
+   and to the box of each loose label, so nothing shows outside its own button. */
+const GLS=(()=>{let v=1.2;try{const q=new URLSearchParams(location.search).get('gls')||localStorage.getItem('cmdglas-holo-gls');if(q)v=Math.max(.4,Math.min(3,+q));}catch(e){}return v;})(); /* 24 NOV: slower swaps (RAZ: "slower page swaps, it's currently too fast") - was 2 */
+function glimMask(roots){const sh=[];const d=deck.getBoundingClientRect(),k=d.width/2560||1;
+  roots.forEach(root=>{root.querySelectorAll('.nb,.dz,.tab').forEach(e=>{if(!e.offsetWidth)return;const r=rel(e);if(r.w<4||r.h<4)return;const cs=getComputedStyle(e).borderTopLeftRadius;
+      let rr=cs.includes('%')?Math.min(r.w,r.h)/2:parseFloat(cs)||0;rr=Math.min(rr,r.w/2,r.h/2);sh.push(`<rect x="${r.x.toFixed(1)}" y="${r.y.toFixed(1)}" width="${r.w.toFixed(1)}" height="${r.h.toFixed(1)}" rx="${rr.toFixed(1)}"/>`);});
+    root.querySelectorAll('[data-mc]').forEach(e=>{if(e.closest('.nb,.dz,.tab'))return;const r=rel(e);if(r.w<2||r.h<2)return;sh.push(`<rect x="${(r.x-3).toFixed(1)}" y="${(r.y-3).toFixed(1)}" width="${(r.w+6).toFixed(1)}" height="${(r.h+6).toFixed(1)}" rx="4"/>`);});});
+  const url=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='2560' height='720' viewBox='0 0 2560 720'><g fill='#ffffff'>${sh.join('')}</g></svg>`)}")`;
+  [fx,document.getElementById('shw')].forEach(c=>{c.style.webkitMaskImage=url;c.style.maskImage=url;c.style.webkitMaskSize=c.style.maskSize='100% 100%';c.style.webkitMaskRepeat=c.style.maskRepeat='no-repeat';});}
+function tRel(x,y){let e=40*(.6*Math.sin(y*.013+TR.p1)+.4*Math.sin(y*.031+TR.p2));let h=Math.sin(((x/24)|0)*127.1+((y/40)|0)*311.7+TR.p3)*43758.5453;h-=Math.floor(h);e+=(h-.5)*40;return (x+120-e)/SPEED;}
+/* METALLIC FLECKS (RAZ 23 NOV: "the individual particles don't look metallic enough, still looks like water colors rushing across the screen during the transition. no tails on those either"):
+   every particle is a crisp solid fleck - hard white specular pixel top-left, silver body, darker steel edge; a thin red glint on the bottom-right pixel of bigger flecks
+   from red keys. No blur, no color wash, no tails (the canvas is cleared fully every frame). */
+function put(x,y,sz,c,a,br){if(a<=0.01)return;const A=Math.min(255,a*255),L=Math.min(1.25,Math.max(.6,br)),red=c.r>c.g*1.6&&c.r>c.b*1.6;
+  const x0=Math.floor(x),y0=Math.floor(y);for(let yy=0;yy<sz;yy++){const Y=y0+yy;if(Y<0||Y>=720)continue;for(let xx=0;xx<sz;xx++){const X=x0+xx;if(X<0||X>=2560)continue;const o=(Y*2560+X)*4;
+    let r,g,b;if((xx===0&&yy===0)||(sz>3&&xx+yy===1)){r=g=b=255;}else if(red&&sz>3&&xx===sz-1&&yy===sz-1){r=255;g=40;b=64;}else if(xx===sz-1||yy===sz-1){r=92;g=98;b=110;}else{r=200;g=206;b=218;}
+    d8[o]=Math.min(255,r*L);d8[o+1]=Math.min(255,g*L);d8[o+2]=Math.min(255,b*L);d8[o+3]=A;}}}
+function stepParts(lt){d8.fill(0);let vis=0;const T=TR.type,front=SPEED*lt-120,ne=SPEED*(lt-REVEAL)-NE_OFF,dt=Math.min(.05,lt-(TR.last||lt));TR.last=lt;
+  for(const q of TR.parts){if(q.dead)continue;const u=lt-q.t0;let x,y,sz=CELL,c=q.o||q.n,a=c.a,br=1;
+    if(T==='grow'){
+      const fadeEnd=Math.max(0,1-Math.max(0,lt-1.05)/.25);
+      if(q.k!==1&&u<.5){if(u<0){x=q.o.x;y=q.o.y;}
+        else if(u<.35){const f=u/.35,e=f*f*f;x=q.o.x+(q.o.cx-q.o.x)*e*.94;y=q.o.y+(q.o.cy-q.o.y)*e*.94;sz=Math.max(1,Math.round(CELL*(1-.55*e)));br=1+.7*e;}
+        else{const f=(u-.35)/.15;x=q.o.cx+14*f*(.92+.16*q.jit);y=q.o.cy-3*f*(.92+.16*q.jit);sz=1;br=1.7-.6*f;a*=q.k===2?1-f:1;}}
+      else if(q.k===2){q.dead=true;continue;}
+      else{const f=Math.min(1,(u-.5)/.5),e=1-Math.pow(1-f,3),sx=q.n.cx+(q.jit-.5)*10,sy=q.n.cy+(q.w-1)*6;c=q.n;
+        x=sx+(q.n.x-sx)*e;y=sy+(q.n.y-sy)*e;sz=f<1?1+Math.round(e*(CELL-1)):CELL;a=q.n.a*Math.min(1,f*3);
+        if(f>=1){const gg=u-1;br=gg<.15?1+(1-gg/.15)*.9:1;a=q.n.a*fadeEnd;if(a<=0){q.dead=true;continue;}}}
+    }else if(T!=='sweep'){
+      const fadeEnd=Math.max(0,1-Math.max(0,lt-.9)/.25);
+      if(q.k!==1){
+        if(u<0){x=q.o.x;y=q.o.y;}
+        else if(u<.15){const f=u/.15;x=q.o.x;y=q.o.y+8*f*f;sz=q.s;br=1+.4*f;}
+        else if(q.k===2){if(T==='swirl'){const ur=u-.15;if(!q.life){q.X=q.o.x;q.Y=q.o.y+8;q.vx=150*(.92+.16*q.jit);q.vy=-28*(.92+.16*q.jit);q.life=1+Math.random()*.6;}
+            const kk=ur/q.life;if(kk>=1){q.dead=true;continue;}q.X+=q.vx*dt;q.Y+=q.vy*dt; /* v69: straight drift */x=q.X;y=q.Y;if(x<-20||x>2580||y<-20||y>740){q.dead=true;continue;}sz=Math.max(1,Math.round(q.s*(1-.75*kk)));a*=1-kk;}
+          else{const f=(u-.15)/.45;if(f>=1){q.dead=true;continue;}x=q.o.x+30*f*(.92+.16*q.jit);y=q.o.y+8-6*f*(.92+.16*q.jit);a*=1-f;sz=Math.max(1,Math.round(q.s*(1-f)));}}
+        else{const f=Math.min(1,(u-.15)/.6),e=1-Math.pow(1-f,3),sx=q.o.x,sy=q.o.y+8,dx=sx-q.n.x,dy=sy-q.n.y,an=(1-e)*q.sw;
+          x=q.n.x+(dx*Math.cos(an)-dy*Math.sin(an))*(1-e);y=q.n.y+(dx*Math.sin(an)+dy*Math.cos(an))*(1-e);c=f<.5?q.o:q.n;sz=f<1?q.s:CELL;
+          if(f>=1){const gg=u-.75;br=gg<.15?1+(1-gg/.15)*.9:1;a=q.n.a*fadeEnd;if(a<=0){q.dead=true;continue;}}}
+      }else{if(u<.25)continue;const f=Math.min(1,(u-.25)/.4);x=q.n.x;y=q.n.y+6*(1-f);sz=1+Math.round(f*(CELL-1));c=q.n;a=q.n.a*f*fadeEnd;if(lt>1.2){q.dead=true;continue;}}
+    }else{
+      if(q.k!==1&&u<0){if(q.o.x<front){x=q.o.x;y=q.o.y;}else continue;}
+      else{const dA=q.dA,ob=q.o?q.o.y+(q.o.bed-q.o.y)*.55:0;
+        if(q.k!==1&&u<dA){const f=u/dA;x=q.o.x;y=q.o.y+(ob-q.o.y)*f*f;sz=q.s;br=1+.3*f;}
+        else if(q.k===2){
+          if(T==='sweep'){const f=(u-dA)/.35;if(f>=1){q.dead=true;continue;}x=q.o.x;y=ob+f*4;sz=f<.5?3:2;a*=1-f;}
+          else{const ur=u-dA-q.rise;if(ur<0){x=q.o.x;y=ob;}else{if(!q.life){q.X=q.o.x;q.Y=ob;q.vx=150*(.92+.16*q.jit);q.vy=-28*(.92+.16*q.jit);q.life=1+Math.random()*.6;}
+            const kk=ur/q.life;if(kk>=1){q.dead=true;continue;}q.X+=q.vx*dt;q.Y+=q.vy*dt; /* v69: straight drift */x=q.X;y=q.Y;
+            if(x<-20||x>2580||y<-20||y>740){q.dead=true;continue;}sz=Math.max(1,Math.round(q.s*(1-.75*kk)));a*=1-kk;}}
+        }else{
+          if(q.k===1&&u<dA)continue;const tb1=dA+.1,tr0=tb1+q.rise,tr1=tr0+.26,lb=q.n.y+(q.n.bed-q.n.y)*.55;c=q.n;a=q.n.a;
+          if(u<tb1){if(q.k===0){const f=(u-dA)/.1;x=q.o.x+(q.n.x-q.o.x)*f;y=ob+(lb-ob)*f;sz=q.s;}else{const f=(u-dA)/.1;sz=1+Math.floor(f*2.99);x=q.n.x;y=lb;}}
+          else if(u<tr0){x=q.n.x;y=lb;sz=q.s>3?3:q.s;}
+          else if(u<tr1){const f=(u-tr0)/.26,e=1-(1-f)*(1-f)*(1-f);x=q.n.x;y=lb+(q.n.y-lb)*e;sz=q.s>4?4:(q.s<3?2:3);br=1.15;}
+          else{x=q.n.x;y=q.n.y;const sg=u-tr1;if(sg<.15)br=1+(1-sg/.15)*.9;const f=(ne-x+60)/160;if(f>0){if(f>=1){q.dead=true;continue;}a*=1-f;}}
+        }}
+    }
+    br*=.92+.08*Math.sin(lt*31+q.jit*40);put(x,y,sz,c,a,br);vis++;}
+  pctx.putImageData(IMG,0,0);return vis;}
+/* sweep front (RAZ: "a tight formation ... of solid bright dots", then "looks like a huge bandaid not small dots"):
+   made of the background stars: stars the front reaches are carried with it, then dropped behind it and fade back (RAZ: "made out of the same stars ... leaving them behind", "denser and wider by x2"), redrawn every frame so it shimmers. No solid strip. */
+const SHOWER=[],shw=document.getElementById('shw').getContext('2d');let showerOn=false,showerLast=0;
+function showerTick(t){if(FROZEN)return;const dt=Math.min(.05,(t-(showerLast||t))/1000)*GLS;showerLast=t;shw.clearRect(0,0,2560,720);shw.globalCompositeOperation='source-over';
+  for(let i=SHOWER.length-1;i>=0;i--){const q=SHOWER[i];q.age+=dt;if(q.age>=q.life){SHOWER.splice(i,1);continue;}
+    q.x+=q.vx*dt;q.y+=q.vy*dt; /* v69: no fall, straight drift */const k=q.age/q.life,a=(1-k)*(1-k)*q.a;
+    shw.globalAlpha=a;fine(shw,q.x,q.y,q.r>=1.2,q.m);}
+  shw.globalAlpha=1;if(SHOWER.length)loop(showerTick);else{showerOn=false;showerLast=0;const c=document.getElementById('shw');c.style.maskImage=c.style.webkitMaskImage='';}}
+function showerEmit(front,dt){const n=Math.round(1300*dt/GLS); /* v69: half the density (was 2600/s) */for(let k=0;k<n&&SHOWER.length<3500;k++){const w=Math.random();
+  SHOWER.push({x:front-Math.pow(Math.random(),1.6)*170,y:Math.random()*720,vx:-200*(.9+.2*w),vy:-38*(.9+.2*w),r:w<.8?.7+Math.random()*.6:1.3+Math.random()*.7,
+    a:.6+Math.random()*.4,m:w<.45?1:(w<.9?0:2),age:0,life:.7+Math.random()*1.1});} /* v69: its clock runs x GLS, so it lasts half as long (was .7-1.8 s, now .35-.9 s) */
+  if(!showerOn&&SHOWER.length){showerOn=true;loop(showerTick);}}
+/* one metallic fleck on a 2D canvas: m 0 = silver, 1 = white, 2 = red. Whole pixels only (sharp at 2560 x 720). */
+const FLK=[['#d4d6ca','#6a6e5c'],['#f3f4ef','#888c7a'],['#2ea1ff','#0a4e8a']];
+function fleck(cx2,x,y,sz,m){const X=Math.round(x),Y=Math.round(y),C=FLK[m]||FLK[0];cx2.fillStyle=C[1];cx2.fillRect(X,Y,sz,sz);cx2.fillStyle=C[0];cx2.fillRect(X,Y,sz-1,sz-1);cx2.fillStyle='#ffffff';cx2.fillRect(X,Y,1,1);}
+let scanLast=0;
+function scanDots(front){const now=performance.now(),dt=Math.min(.05,(now-(scanLast||now))/1000);scanLast=now;if(front>-60&&front<2620)showerEmit(front,dt);SWEEP.on=true;SWEEP.front=front;pctx.save();pctx.globalCompositeOperation='lighter';
+  pctx.globalCompositeOperation='source-over';
+  for(const g of SAND){const a=g.c?1:(g.glow||0);if(a<=0)continue;pctx.globalAlpha=a;fine(pctx,g.x,g.y,g.s>=1,g.h<.45?1:(g.h<.9?0:2));}
+  pctx.restore();return;pctx.save();
+  for(let k=0;k<320;k++){const t=k<40?-Math.random()*4:-Math.log(1-Math.random()*.985)*34,x=front-t,y=Math.random()*720,a=Math.exp(-Math.max(0,t)/42); // bright at the front, fading toward the tail
+    pctx.globalAlpha=a*(.55+Math.random()*.45);pctx.fillStyle=Math.random()<.45?'#ffffff':'#3dabff';pctx.beginPath();pctx.arc(x,y,.7+Math.random()*1.1,0,6.2832);pctx.fill();}
+  pctx.restore();}
+function trTick(now){if(FROZEN||!TR)return;const lt=(now-TR.t0)/1000*GLS,T=TR.type;
+  if(T!=='sweep'){const ao=Math.max(0,1-lt/.18);TR.oldMC.forEach(o=>o.e.style.opacity=ao);const an=Math.min(1,Math.max(0,(lt-(T==='grow'?1.02:.85))/.25));TR.newMC.forEach(o=>o.e.style.opacity=an);}
+  else{const front=SPEED*lt-120,ne=SPEED*(lt-REVEAL)-NE_OFF;
+    TR.oldMC.forEach(({e,r})=>{const c=Math.max(0,Math.min(r.w,front-r.x));e.style.clipPath=`inset(-20px -20px -20px ${c}px)`;});
+    TR.newMC.forEach(({e,r})=>{const c=Math.max(0,Math.min(r.w,r.x+r.w-ne));e.style.clipPath=`inset(-20px ${c}px -20px -20px)`;});
+    veil.style.transform=`translateX(${front-39}px)`;veil.style.opacity=String(Math.min(1,lt/.12)*Math.max(0,Math.min(1,(2560+300-front)/250)));}
+  const vis=stepParts(lt);if(T==='sweep')scanDots(SPEED*lt-120);const end=T==='grow'?1.4:T!=='sweep'?1.25:(2560+200+NE_OFF)/SPEED+REVEAL;
+  if(lt>end&&!vis){finishTR();return;}loop(trTick);}
+function finishTR(){if(!TR)return;fx.style.maskImage=fx.style.webkitMaskImage='';SWEEP.on=false;scanLast=0;SAND.forEach(g=>{g.c=0;g.done=0;});TR.old.remove();TR.newMC.forEach(o=>{o.e.style.clipPath='';o.e.style.opacity='';});pctx.clearRect(0,0,2560,720);veil.style.opacity=0;TR=null;busy=false;}
+function burst(el){el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),220);}
+let busy=false;
+async function switchMode(m){if(m===mode||busy)return;busy=true;
+  chrome.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.m===m));
+  if(!LOOK.scan){mode=m;layout();busy=false;return;} /* scanner animation OFF (RAZ 23 NOV: "just have the buttons change without the sweeping"): no sweep / swirl / crumble */
+  const O=await sample(area);
+  const old=area.cloneNode(true);old.removeAttribute('id');old.className='oldlayer';deck.insertBefore(old,fx);
+  const type=TRT;mode=m;layout();
+  const newMC=[...area.querySelectorAll('[data-mc]')];newMC.forEach(e=>{if(type!=='sweep')e.style.opacity=0;else e.style.clipPath='inset(-20px 100% -20px -20px)';});
+  const N=await sample(area);
+  TR={type,old,p1:Math.random()*6.28,p2:Math.random()*6.28,p3:Math.random()*100,oldMC:[...old.querySelectorAll('[data-mc]')].map(e=>({e,r:rel(e)})),newMC:newMC.map(e=>({e,r:rel(e)}))};
+  TR.parts=pair(O,N,type);TR.parts.forEach(q=>{const c=q.o||q.n;q.t0=type!=='sweep'?(c.x/2560)*.25+q.jit*.08:tRel(c.x,c.y);});
+  glimMask([area,old]);TR.t0=performance.now();loop(trTick);}
+/* pips: tap a pip to set the level there, or drag along the row (tap the first pip again for 0) */
+function setLevel(g,v,max){v=Math.max(0,Math.min(max==null?10:max,v));PW[g]=v;
+  document.querySelectorAll(`#area [data-g="${g}"]`).forEach(b=>[...b.children].forEach((c,i)=>c.classList.toggle('on',i<v)));
+  document.querySelectorAll(`#area [data-dial="${g}"]`).forEach(b=>[...b.children].forEach((c,i)=>c.classList.toggle('on',i<v)));
+  document.querySelectorAll(`#area [data-num="${g}"]`).forEach(n=>n.textContent=v);}
+area.addEventListener('click',e=>{const b=e.target.closest('[data-pm]');if(!b)return;b.classList.add('flash');setTimeout(()=>b.classList.remove('flash'),160);});
+function pipSet(el,drag){const box=el.parentNode,g=box.dataset.g;if(!g)return;const idx=[...box.children].indexOf(el)+1;let v=idx;if(!drag&&PW[g]===1&&idx===1)v=0;if(PW[g]===v)return;PW[g]=v;
+  document.querySelectorAll(`#area [data-g="${g}"]`).forEach(b=>[...b.children].forEach((c,i)=>c.classList.toggle('on',i<v)));document.querySelectorAll(`#area [data-num="${g}"]`).forEach(n=>n.textContent=v);}
+let dragG=null;
+area.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-g] > i,[data-g] > path');if(!el)return;dragG=el.parentNode.dataset.g;pipSet(el,false);e.preventDefault();});
+addEventListener('pointermove',e=>{if(!dragG)return;const el=document.elementFromPoint(e.clientX,e.clientY),q=el&&el.closest&&el.closest('[data-g] > i,[data-g] > path');if(q&&q.parentNode.dataset.g===dragG)pipSet(q,true);});
+addEventListener('pointerup',()=>dragG=null);
+if(!SHOT&&Q.get('demo')!=='0'&&!LIVEON){const DN=Q.has('shop')?NAMES.filter(n=>n!=='FPS'):NAMES; /* 25 NOV ?shop=1: shop demo never shows the FPS page (personal until after Squadron 42) */ DEMO_T=setInterval(()=>switchMode(DN[(DN.indexOf(mode)+1)%DN.length]),4500);}
+document.querySelectorAll('#switch button').forEach(b=>{b.classList.toggle('on',+b.dataset.d===D);b.onclick=()=>{D=+b.dataset.d;document.querySelectorAll('#switch button').forEach(x=>x.classList.toggle('on',x===b));layout();};});
+
+/* ===== MORE: all the other buttons of the real deck (more-keys.js), finger-size keys, paged ===== */
+let moreArea=0,morePage=0;const PER=24;
+function moreKeys(a){const out=[];(window.MORE_AREAS[a]||{banks:[]}).banks.forEach(b=>b.keys.forEach(k=>out.push([k[0],k[1],b.name])));return out;}
+function openMore(a){if(a!=null){moreArea=a;morePage=0;}document.body.classList.remove('cfgopen');document.body.classList.add('moreopen');renderMore();}
+function renderMore(){const A=window.MORE_AREAS||[],ks=moreKeys(moreArea),pages=Math.max(1,Math.ceil(ks.length/PER));morePage=Math.min(morePage,pages-1);
+  let h=`<div class="hd nt" style="left:40px;top:30px;font-size:22px;letter-spacing:6px">MORE</div><div class="hd nt" style="left:380px;top:30px;font-size:22px;letter-spacing:5px">${A[moreArea]?A[moreArea].title:''}</div>`+
+    `<div class="hd ns" style="left:1720px;top:36px;font-size:16px">PAGE ${morePage+1} / ${pages}</div>`+
+    `<div class="nb k mk" data-mv="-1" style="left:1880px;top:18px;width:150px;height:64px;border-radius:32px"><div data-mc><span class="nt">‹ PREV</span></div></div>`+
+    `<div class="nb k mk" data-mv="1" style="left:2046px;top:18px;width:150px;height:64px;border-radius:32px"><div data-mc><span class="nt">NEXT ›</span></div></div>`+
+    `<div class="nb k mk" data-close="1" style="left:2228px;top:18px;width:300px;height:64px;border-radius:32px"><div data-mc><span class="nt">‹ BACK TO DECK</span></div></div>`+
+    `<div class="nb k mk" data-tv="1" style="left:1490px;top:18px;width:200px;height:64px;border-radius:32px"><div data-mc><span class="nt">TRAVEL</span></div></div>`;
+  A.forEach((ar,i)=>{const c=i%2,r=(i/2)|0;h+=`<div class="tab ${i===moreArea?'on':''}" data-ma="${i}" style="left:${24+c*160}px;top:${100+r*88}px;width:152px;height:80px;font-size:16px;letter-spacing:1.5px;text-align:center;line-height:1.1;padding:0 8px">${st(ar.title)}</div>`;});
+  ks.slice(morePage*PER,morePage*PER+PER).forEach((k,i)=>{const c=i%8,r=(i/8)|0;
+    if(k[0]==='MOUSE VJOY / REL.'){h+=mouseKey(360+c*272,100+r*206,262,196,40).replace('class="nb k mousek"','class="nb k mousek" data-ml="MOUSE VJOY / REL."').replace('</div></div>',`</div>${k[2]?`<span class="ns bk">${k[2]}</span>`:''}</div>`);return;}
+    const isS=k[1]==='STATE',d=isS?skDef(k[0]):null;
+    h+=`<div class="nb k${isS?' state '+skTone(k[0]):''}" data-ml="${k[0]}"${isS?` data-sk="${k[0]}"`:''} style="left:${360+c*272}px;top:${100+r*206}px;width:262px;height:196px;border-radius:40px">${k[2]?`<span class="ns bk">${k[2]}</span>`:''}<div data-mc style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 18px">${isS&&d.icon?`<span title="${k[0]}">${sv(d.icon,58)}</span>`:`<div class="nt" style="text-align:center">${st(k[0])}</div>`}<div class="ns">${isS?`<span class="stw">${skVal(k[0])}</span>`:k[1]}</div></div></div>`;});
+  const m=$('more');m.innerHTML=h;holoize(m);
+  m.querySelectorAll('[data-ma]').forEach(t=>t.onclick=()=>{moreArea=+t.dataset.ma;morePage=0;renderMore();});
+  m.querySelectorAll('[data-mv]').forEach(t=>t.onclick=()=>{morePage=Math.max(0,Math.min(pages-1,morePage+ +t.dataset.mv));renderMore();});
+  m.querySelectorAll('[data-close]').forEach(t=>t.onclick=()=>document.body.classList.remove('moreopen'));
+  m.querySelectorAll('[data-tv]').forEach(t=>t.onclick=openTravel);
+  m.querySelectorAll('.nb.k:not(.mk)').forEach(k=>k.onclick=()=>{if(k.dataset.sk){skFlip(k.dataset.sk);paintStates();}k.classList.add('flash');setTimeout(()=>k.classList.remove('flash'),160);});applyLive();fitDots(m);}
+if(Q.get('more')!=null)setTimeout(()=>{morePage=+(Q.get('mp')||0);openMore(+Q.get('more'));renderMore();},50);
+
+/* ===== VJOY / REL key (RAZ 23 NOV, chat 8: "also need a vjoy and rel button that switches and indicates whatever mode the user is in").
+   Game action v_toggle_relative_mouse_mode, his bind Left Ctrl + Left Shift + W. The game sends NO mouse-mode value, so the deck keeps the shown state:
+   TAP = switch (the real deck would also send the bind; this design copy sends nothing), HOLD 0.6 s = switch the display only (resync after a respawn / new ship).
+   Active mode = bright name, the other dim (deck rule: on = brighter). Saved per device. On the TRAVEL page and the MORE page (real deck key "MOUSE VJOY / REL."). ===== */
+let MOUSE='VJOY';try{MOUSE=localStorage.getItem('cmdglas-holo-mouse')||'VJOY';}catch(e){}
+const mouseInner=()=>`<div data-mc style="display:flex;flex-direction:column;align-items:center;gap:6px"><div class="nt mm"><span class="${MOUSE==='VJOY'?'on':''}">VJOY</span><i class="sl"></i><span class="${MOUSE==='REL'?'on':''}">REL</span></div><div class="ns mms">TAP</div></div>`;
+function mouseKey(x,y,w,h,r){return `<div class="nb k mousek" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${r}px">${mouseInner()}</div>`;}
+function setMouse(m,why){MOUSE=m;try{localStorage.setItem('cmdglas-holo-mouse',m);}catch(e){}
+  document.querySelectorAll('.mousek').forEach(k=>{k.querySelectorAll('.mm span').forEach(s=>s.classList.toggle('on',s.textContent===m));const n=k.querySelector('.mms');if(n){n.textContent=why||'TAP';clearTimeout(k._t);if(why)k._t=setTimeout(()=>n.textContent='TAP',1200);}});
+  if(typeof drawTravel==='function')drawTravel();}
+document.addEventListener('pointerdown',e=>{const k=e.target.closest('.mousek');if(!k)return;let long=false;
+  const t=setTimeout(()=>{long=true;setMouse(MOUSE==='VJOY'?'REL':'VJOY','RESYNC');},600);
+  const up=()=>{clearTimeout(t);removeEventListener('pointerup',up);if(!long){setMouse(MOUSE==='VJOY'?'REL':'VJOY');k.classList.add('flash');setTimeout(()=>k.classList.remove('flash'),160);}};
+  addEventListener('pointerup',up);});
+/* ===== TRAVEL page (RAZ 23 NOV, chat 2, about the travel pill: "and i also want that as a page for the edge and desktop").
+   Pill = chat 2's travel-dial-chat8.js, COPIED here as draft 69 (was 22-47, 59, 61, 63; gear color swap + chevrons; 23 NOV: readout cells, throttle band, suit line, gear animation, clan symbols). This tilted TRAVEL page is for DESKTOP use; the EDGE uses chat 8's flat page deck-build	ravel-flat-edge.html (RAZ 23 NOV) (this folder's server cannot reach the HUD builder folder) - re-copy it when chat 2 changes the pill.
+   Values copied from hud-builder.html travelVals() and its travelDial8 call.
+   Bridge off -> moving SAMPLE numbers, wings turn a full 360 (10 s a turn). Live -> snap.derived (flight_path_angle_deg - travel_angle_360 does not exist, chat 8 24 NOV, speed, accel,
+   vertical_speed, turn_rate_deg_s, throttle_stick_pct, stopping_distance) + radar_altitude. Live with no reading -> "NO READING" (no sample numbers mixed in).
+   Reached from MORE > TRAVEL (header key). Same 2560 x 720 face, so the desktop program shows it scaled like every other page. ===== */
+const TV={T:0,timer:0};let SHIP64={side:'',top:''};
+Promise.all(['port','top'].map(k=>fetch(`ship-rsi-galaxy-${k}.b64`).then(r=>r.ok?r.text():'').catch(()=>''))).then(([a,b])=>{SHIP64={side:a.trim(),top:b.trim()};drawTravel();});
+let LIMS={};try{LIMS=JSON.parse(localStorage.getItem('cmdglas-hud-stoplim-ships')||'{}')||{};}catch(e){}
+const tvShip=()=>((hasV()&&[VSt('manufacturer'),VSt('name')].filter(Boolean).join(' '))||'RSI GALAXY').toUpperCase();
+const tvLim=()=>LIMS[tvShip()]||{safe:10,harm:40};
+function tvVals(){const T=TV.T,d=LIVEON&&LIVE&&LIVE.derived;if(LIVEON&&(!d||d.speed==null))return null; /* chat 8: derived can hold only throttle_stick_pct when no ship is flown */
+  if(d){const ra=gp(LIVE,'vehicle.state.flight.instruments.radar_altitude');
+    return {fpa:+d.flight_path_angle_deg||0,speed:+d.speed||0,accel:+d.accel||0,vs:+d.vertical_speed||0,turn:+d.turn_rate_deg_s||0,
+      thr:d.throttle_stick_pct==null?null:+d.throttle_stick_pct,ralt:ra==null?null:+ra,stopD:d.stopping_distance==null?null:+d.stopping_distance,
+      /* draft 25: gear lights, boost, brake. gear UNSPECIFIED or no ship = no reading; space brake is not in the game data (live = null) */
+      gear:(g=>/RETRACTED$/.test(g)?'UP':/DEPLOYED$/.test(g)?'DOWN':/(DEPLOYING|RETRACTING)$/.test(g)?'MOVING':null)(String(VSt('flight.state.gear')||'')),
+      boost:VSt('flight.instruments.boost')||null,brake:null,
+      /* draft 41: picture of the ship the player is in, from chat 8's bridge (ship-art, CORS *); no ship -> null, the pill shows the Galaxy */
+      shipUrl:LIVE.ship&&LIVE.ship.slug?'http://127.0.0.1:8529/ship-art/port/'+LIVE.ship.slug+'.webp':null,
+      /* draft 29: warning lights (vehicle annunciators radr / hit / misl / prox; 'radr' = radar lock UNCONFIRMED until a live test), flight modes, G meter [current, max] */
+      warn:(A=>A?{lock:A.radr,hit:A.hit,misl:A.misl,prox:A.prox}:null)(VSt('annunciators')),
+      /* draft 38: ship damage color from the warning lights - hit + shield light = hull, hit = shield, any system light = component (chat 8 rule, UNCONFIRMED until live) */
+      damage:(A=>{if(!A)return null;const on=x=>x&&!/NOMINAL|OFF|UNSPECIFIED/.test(String(x));return on(A.hit)&&on(A.shld)?'hull':on(A.hit)?'shield':['pwr','wpn','thr','cool','qdrv','radr'].some(k=>on(A[k]))?'component':null;})(VSt('annunciators')),
+      modes:hasV()?{coupled:VSt('flight.settings.ifcs_coupled.active'),cruise:VSt('flight.settings.ifcs_cruise_mode.active'),spdlim:VSt('flight.settings.ifcs_speed_limiter.active')}:null,
+      gm:(g=>g?[+g.current||0,+g.max||0]:null)(VSt('flight.instruments.g_meter'))};}
+  const speed=212+40*Math.sin(T/3),accel=-1.5+4*Math.sin(T/2);
+  return {fpa:9*Math.sin(T/3),speed,accel,vs:14*Math.sin(T/3),turn:6*Math.sin(T/4),thr:Math.round(70*Math.sin(T/5)),wingDeg:(T*36)%360,
+    ralt:420+120*Math.sin(T/5),stopD:accel<-.5?speed*speed/(2*-accel):null,
+    gear:['UP','MOVING','DOWN','MOVING'][Math.floor(T/3)%4],boost:{engaged:Math.floor(T/2)%3===0,reserves:.5+.45*Math.sin(T/4),critical:false},brake:Math.floor(T/2.5)%3===1,
+    warn:{lock:Math.floor(T/4)%3===1?'MINOR_ON':null,hit:Math.floor(T/3)%4===2?'MAJOR_ON':null,misl:Math.floor(T/5)%3===2?'MAJOR_FLASHING':null,prox:Math.floor(T/6)%4===3?'MINOR_FLASHING':null},
+    modes:{coupled:Math.floor(T/7)%3!==2,cruise:Math.floor(T/5)%2===1,spdlim:true},gm:[1+3.2*Math.abs(Math.sin(T/2)),6.1],
+    damage:[null,'shield',null,'hull',null,'component'][Math.floor(T/3)%6]};}
+function drawTravel(){const el=$('tvpill');if(!el||!document.body.classList.contains('travelopen'))return;const v=tvVals(),tag=$('tvtag');
+  if(tag){tag.textContent=LIVEON?'LIVE GAME DATA':'SAMPLE';tag.classList.toggle('on',LIVEON);}
+  if(!window.travelDial8){el.innerHTML='<div class="tvnr nt">TRAVEL PILL FILE NOT FOUND</div>';return;}
+  if(!v){el.innerHTML='<div class="tvnr nt">NO READING</div>';return;}
+  const L=tvLim();el.innerHTML=window.travelDial8({...v,side64:SHIP64.side,top64:SHIP64.top,turnStyle:'trend',safeV:L.safe,harmV:L.harm,lowAlt:lowFt()*0.3048,units:UNITS,wordsOnly:WORDS});}
+/* LOW LEVEL WARNING (RAZ via chat 8: "let the pilot set their warning indicator for low level flight so it's not just one set setting"):
+   feet, default 10, saved per ship in the builder's store (localStorage cmdglas-hud-stoplim-ships, field low); passed to the pill in metres. */
+/* UNITS (RAZ via chat 8: "let the user set either feet or meters"): saved in localStorage cmdglas-units ('m' | 'ft'), same key as the builder; passed to the pill as units */
+/* WORDS ONLY (RAZ via chat 8: "for the desktop version allow the user to remove the pill outlines and the honeycomb only leaving the written words to change color ... must be an option. that's only for the desktop travel telemetry deck"):
+   saved in localStorage cmdglas-flightpage-wordsOnly ('1' / '0'), same key as the desktop flight page; passed to the pill on the TRAVEL page only. Default OFF. */
+let WORDS=false;try{WORDS=localStorage.getItem('cmdglas-flightpage-wordsOnly')==='1';}catch(e){}
+function setWords(v){WORDS=!!v;try{localStorage.setItem('cmdglas-flightpage-wordsOnly',WORDS?'1':'0');}catch(e){}const w=document.getElementById('wordsw');if(w)w.classList.toggle('on',WORDS);drawTravel();}
+let UNITS='m';try{UNITS=localStorage.getItem('cmdglas-units')==='ft'?'ft':'m';}catch(e){}
+const lowTxt=ft=>UNITS==='ft'?ft+' ft':(ft*0.3048).toFixed(1)+' m';
+function setUnits(u){UNITS=u==='ft'?'ft':'m';try{localStorage.setItem('cmdglas-units',UNITS);}catch(e){}document.querySelectorAll('#cfg .unitsel b').forEach(b=>b.classList.toggle('on',b.dataset.u===UNITS));
+  const r=document.querySelector('#cfg input[data-low]');if(r)r.nextElementSibling.textContent=lowTxt(+r.value);drawTravel();}
+const lowFt=()=>{const r=LIMS[tvShip()];return r&&r.low!=null?+r.low:10;};
+function setLowFt(v){const k=tvShip();LIMS[k]=Object.assign({safe:10,harm:40},LIMS[k]||{},{low:v});try{localStorage.setItem('cmdglas-hud-stoplim-ships',JSON.stringify(LIMS));}catch(e){}drawTravel();}
+function renderTravel(){const t=$('travel');
+  t.innerHTML=`<div class="hd nt" style="left:40px;top:30px;font-size:22px;letter-spacing:6px">TRAVEL</div><span class="tvtag" id="tvtag">SAMPLE</span>`+
+   `<div class="nb k mk" data-tm="1" style="left:1880px;top:18px;width:316px;height:64px;border-radius:32px"><div data-mc><span class="nt">${TVFROM==='telem'?'‹ TELEMETRY':'‹ BACK TO MORE'}</span></div></div>`+
+   `<div class="nb k mk" data-close="1" style="left:2228px;top:18px;width:300px;height:64px;border-radius:32px"><div data-mc><span class="nt">‹ BACK TO DECK</span></div></div>`+
+   `<div class="tvp" id="tvpill"></div>`; /* VJOY / REL key removed from TRAVEL (RAZ: "that's not for that part of the edge, this is only telemetry") */
+  holoize(t);fitDots(t);t.querySelector('[data-tm]').onclick=()=>closeTravel(true);t.querySelector('[data-close]').onclick=()=>closeTravel(false);}
+function openTravel(e){if(e&&e.type)TVFROM='more'; /* from the MORE page (click event) or from TELEMETRY (TVFROM set first) */
+  document.body.classList.remove('cfgopen','moreopen');document.body.classList.add('travelopen');renderTravel();drawTravel();
+  clearInterval(TV.timer);TV.timer=setInterval(()=>{if(!FROZEN)TV.T+=.1;drawTravel();},100);}
+function closeTravel(toMore){document.body.classList.remove('travelopen');clearInterval(TV.timer);if(toMore){if(TVFROM==='telem')openTelem();else openMore();}}
+/* ===== TELEMETRY (RAZ 23 NOV via chat 2: "what if i want to see the full telemetry deck from the buttons themselves" -> TELEMETRY tab, "do it").
+   The tab opens a chooser: TRAVEL (this page's tilted travel pill), SHIP STATUS, SERVER STATUS (chat 2's pages, for now from 127.0.0.1:8530/deck-build/ - the installer sets the
+   final paths in TELEM_PAGES). Each page has a way back to the chooser and to the deck. ===== */
+let TVFROM='more';
+const TELEM_PAGES={SHIP:'http://127.0.0.1:8530/deck-build/ship-status-deck.html',SERVER:'http://127.0.0.1:8530/deck-build/server-status-deck.html'};
+function openTelem(){document.body.classList.remove('cfgopen','moreopen','travelopen');clearInterval(TV.timer);document.body.classList.add('telemopen');const t=$('telem');t.classList.remove('page');
+  const big=(x,lbl,sub,attr)=>`<div class="nb k mk" ${attr} style="left:${x}px;top:200px;width:700px;height:330px;border-radius:70px"><div data-mc style="display:flex;flex-direction:column;align-items:center;gap:14px"><span class="nt" style="font-size:40px;letter-spacing:6px">${lbl}</span><span class="ns" style="font-size:16px">${sub}</span></div></div>`;
+  t.innerHTML=`<div class="hd nt" style="left:40px;top:30px;font-size:22px;letter-spacing:6px">TELEMETRY</div>`+
+   `<div class="nb k mk" data-close="1" style="left:2228px;top:18px;width:300px;height:64px;border-radius:32px"><div data-mc><span class="nt">‹ BACK TO DECK</span></div></div>`+
+   big(110,'TRAVEL','FLIGHT PATH · SPEED · ALTITUDE','data-tp="TRAVEL"')+big(930,'SHIP STATUS','DAMAGE · POWER · WARNINGS','data-tp="SHIP"')+big(1750,'SERVER STATUS','SERVER · CONNECTION','data-tp="SERVER"')+
+   `<div class="tfr" id="tfr"><iframe id="tframe" title="telemetry page"></iframe><div class="nb k mk" data-tb="1" style="left:128px;top:8px;width:260px;height:56px;border-radius:28px"><div data-mc><span class="nt">‹ TELEMETRY</span></div></div>`+
+   `<div class="nb k mk" data-close="1" style="left:2172px;top:8px;width:260px;height:56px;border-radius:28px"><div data-mc><span class="nt">‹ DECK</span></div></div></div>`;
+  holoize(t);fitDots(t);
+  t.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeTelem);t.querySelector('[data-tb]').onclick=openTelem;
+  t.querySelectorAll('[data-tp]').forEach(b=>b.onclick=()=>{const w=b.dataset.tp;if(w==='TRAVEL'){document.body.classList.remove('telemopen');TVFROM='telem';openTravel();return;}
+    $('tframe').src=TELEM_PAGES[w];t.classList.add('page');});}
+function closeTelem(){document.body.classList.remove('telemopen');const f=$('tframe');if(f)f.src='about:blank';}
+/* v64 TAP ANYWHERE = BACK (RAZ 23 NOV via chat 2: "an easy way to get back to the main button page as in touch anywhere on the deck to go back").
+   Chat 2's ship status / server status pages post {type:'cmdglas-back'} to this page when tapped anywhere that is not a button -> back to the button page.
+   This page's tilted TRAVEL page: a tap anywhere that is not a key = back to the button page. */
+addEventListener('message',e=>{if(e.data&&e.data.type==='cmdglas-back'&&document.body.classList.contains('telemopen')&&e.source===($('tframe')||{}).contentWindow)closeTelem();});
+addEventListener('pointerup',e=>{if(!document.body.classList.contains('travelopen'))return;const t=e.target;if(!t.closest||!t.closest('#travel')||t.closest('#travel .nb.k'))return;closeTravel(false);});
+if(Q.get('travel')!=null)setTimeout(openTravel,60);
+/* ===== configurator: outline switches. Buttons (keys, mode tabs, Eject, Self Destruct) always keep theirs. ===== */
+const OL=[['frame','Group frames'],['redzone','Danger zone frame'],['badge','Readout icon rings'],['level','Level pill (Spool, Missiles, ...)'],['lines','Glow lines and dividers']];
+let olOff={};try{olOff=JSON.parse(localStorage.getItem('cmdglas-holo-outlines')||'{}')||{};}catch(e){olOff={};}
+if(Q.get('off')!==null){olOff={};Q.get('off').split(',').filter(Boolean).forEach(k=>olOff[k]=1);}
+function applyOL(){OL.forEach(([k])=>document.body.classList.toggle('off-'+k,!!olOff[k]));try{localStorage.setItem('cmdglas-holo-outlines',JSON.stringify(olOff));}catch(e){}}
+/* [key, name, hue, saturate, brightness, contrast] - RAZ 23 NOV: "i dislike the pastel like colors ... i want digital shine and brightness". Values from chat 8's ship status page. */
+const COLORS=[['red','RSI BLUE',0,1,1,1,'#1090ef'],['ion-cobalt','ION COBALT',4,1.08,1.09,1.08,'#428DD9'],['amethyst','AMETHYST',66,1,1.16,1.08,'#AC74DC'],['emerald','EMERALD',304,0.91,1.03,1.08,'#39B879'],['solar-gold','SOLAR GOLD',197,1.16,1.12,1.08,'#E4BB51'],['ruby-obsidian','RUBY OBSIDIAN',146,0.82,1.06,1.08,'#BA4958'],['star-silver','STAR SILVER',358,0.18,1.29,1.08,'#CADBE6'],['copper-nova','COPPER NOVA',181,1,1.13,1.08,'#D89761'],['teal-pearl','TEAL PEARL',332,0.84,1.05,1.08,'#45BCB9'],['nebula-magenta','NEBULA MAGENTA',110,0.98,1.11,1.08,'#D359B3'],['electrum-lime','ELECTRUM LIME',225,0.96,1.12,1.08,'#BED35E'],['vermilion-plasma','VERMILION PLASMA',161,1.47,1.13,1.08,'#FE533E'],['black-diamond','BLACK DIAMOND',4,0.08,1.07,1.08,'#788898']]; /* sale: RSI blue (default) + the Raz head palette, no Aurora Opal (RAZ 24 NOV) */ /* hues re-tuned after the extra saturation: orange 28->52, gold 46->72, cyan 175->195 (tested 23 NOV) */
+const BOOST='saturate(1.55) contrast(1.14) brightness(1.06)'; /* whole face deeper + crisper (chat 8: #area) */
+let LOOK={bo:100,fa:100,bgo:60,sto:100,col:'red',scan:true};try{Object.assign(LOOK,JSON.parse(localStorage.getItem('cmdglas-holo-look')||'{}'));}catch(e){}
+if(Q.get('col'))LOOK.col=Q.get('col');if(Q.get('bo'))LOOK.bo=+Q.get('bo');if(Q.get('fa'))LOOK.fa=+Q.get('fa');if(Q.get('sto'))LOOK.sto=+Q.get('sto');if(Q.get('bgo'))LOOK.bgo=+Q.get('bgo');if(Q.get('scan'))LOOK.scan=Q.get('scan')!=='0';
+function applyLook(){const C=COLORS.find(c=>c[0]===LOOK.col)||COLORS[0];const hc=C[0]==='red'?'':`hue-rotate(${C[2]}deg) saturate(${C[3]}) brightness(${C[4]}) contrast(${C[5]})`,hf=(hc?hc+' ':'')+BOOST;deck.style.setProperty('--hf',hf);deck.style.setProperty('--hfc',hc||'none');deck.style.setProperty('--swh',(C[0]==='red'?0:C[2])+'deg');const f=((hf?hf+' ':'')+(LOOK.bo<100?`brightness(${LOOK.bo/100})`:'')).trim();area.style.filter=f;chrome.style.filter=f;deck.style.setProperty('--fa',LOOK.fa/100);deck.style.setProperty('--bgo',LOOK.bgo/100);deck.style.setProperty('--sto',LOOK.sto/100);document.body.classList.toggle('noscan',!LOOK.scan);try{localStorage.setItem('cmdglas-holo-look',JSON.stringify(LOOK));}catch(e){}}
+applyLook();
+function cfgHTML(){$('cfg').innerHTML=`<div class="cfghd"><h2 class="nt">${sv('cog',30)}DECK SETTINGS</h2><div class="colrow"><span class="ns" style="font-size:15px">COLOR</span><div class="cols">${COLORS.map(([k,l,h,sat])=>`<i class="cw ${LOOK.col===k?'on':''}" data-col="${k}" title="${l}" style="--cw:${(COLORS.find(c=>c[0]===k)||[])[6]||'#1090ef'}"></i>`).join('')}</div></div><div class="cfgdone" id="cfgdone">DONE</div></div><div class="cfgcol"><h3 class="nt">${sv('cog',26)}OUTLINES</h3><p class="note">Turn off any outline you do not want. Buttons always keep their outline so you can see what to press.</p>`+
+  OL.map(([k,l])=>`<div class="orow"><span>${l}</span><div class="sw ${olOff[k]?'':'on'}" data-k="${k}"></div></div>`).join('')+
+  `<div class="orow lock"><span>Buttons: keys, mode tabs, Eject, Self Destruct</span><span class="lk">ALWAYS ON</span></div></div>`+
+  `<div class="cfgcol"><h3 class="nt">${sv('eye',26)}LOOK</h3><p class="note">Button brightness dims the buttons. Button see-through lets the background show through the button glass; outlines and labels stay.</p>`+
+  `<div class="orow"><span>Button brightness</span><div class="sl"><input type="range" min="20" max="100" value="${LOOK.bo}" data-look="bo"><b>${LOOK.bo}%</b></div></div>`+
+  `<div class="orow"><span>Button see-through (100 % = solid)</span><div class="sl"><input type="range" min="0" max="100" value="${LOOK.fa}" data-look="fa"><b>${LOOK.fa}%</b></div></div>`+
+  `<div class="orow"><span>Background brightness</span><div class="sl"><input type="range" min="0" max="100" value="${LOOK.bgo}" data-look="bgo"><b>${LOOK.bgo}%</b></div></div>`+
+  `<div class="orow"><span>Low level warning, ${(typeof tvShip==='function'?tvShip():'RSI GALAXY')} (TRAVEL)</span><div class="sl"><input type="range" min="0" max="500" step="5" value="${typeof lowFt==='function'?lowFt():10}" data-low="1"><b>${typeof lowTxt==='function'?lowTxt(lowFt()):'10 ft'}</b></div></div>`+
+  `<div class="orow"><span>Words only (desktop TRAVEL): no key outlines or honeycomb, words show the state</span><div class="sw ${typeof WORDS!=='undefined'&&WORDS?'on':''}" id="wordsw"></div></div>`+
+  `<div class="orow"><span>Units (TRAVEL)</span><div class="unitsel">${['m','ft'].map(u=>`<b data-u="${u}" class="${(typeof UNITS!=='undefined'?UNITS:'m')===u?'on':''}">${u==='m'?'METRES':'FEET'}</b>`).join('')}</div></div>`+
+  `<div class="orow"><span>Stars brightness</span><div class="sl"><input type="range" min="0" max="100" value="${LOOK.sto}" data-look="sto"><b>${LOOK.sto}%</b></div></div>`+
+  `</div><div class="cfgcol"><h3 class="nt">${sv('swap',26)}MODE CHANGE</h3><p class="note">How the keys change when you pick another mode. Tap one to see it.</p>`+
+  `<div class="orow"><span>Scanner animation (off = keys change at once, scan lines stand still)</span><div class="sw ${LOOK.scan?'on':''}" id="scansw"></div></div>`+
+  TYPES.map(([k,l])=>`<div class="orow"><span>${l}</span><div class="sw ${TRT===k?'on':''}" data-tr="${k}"></div></div>`).join('')+`</div>`;
+  $('cfgdone').onclick=()=>document.body.classList.remove('cfgopen');
+  $('scansw').onclick=()=>{LOOK.scan=!LOOK.scan;$('scansw').classList.toggle('on',LOOK.scan);applyLook();};
+  $('cfg').querySelectorAll('.cw').forEach(w=>w.onclick=()=>{LOOK.col=w.dataset.col;$('cfg').querySelectorAll('.cw').forEach(x=>x.classList.toggle('on',x===w));applyLook();});
+  $('cfg').querySelectorAll('input[data-low]').forEach(r=>{r.style.setProperty('--v',(r.value/5)+'%');r.oninput=()=>{r.style.setProperty('--v',(r.value/5)+'%');r.nextElementSibling.textContent=lowTxt(+r.value);setLowFt(+r.value);};});
+  $('cfg').querySelectorAll('.unitsel b').forEach(b=>b.onclick=()=>setUnits(b.dataset.u));
+  {const w=$('wordsw');if(w)w.onclick=()=>setWords(!WORDS);}
+  $('cfg').querySelectorAll('input[data-look]').forEach(r=>{r.style.setProperty('--v',r.value+'%');r.oninput=()=>{LOOK[r.dataset.look]=+r.value;r.style.setProperty('--v',r.value+'%');r.nextElementSibling.textContent=r.value+'%';applyLook();};});
+  $('cfg').querySelectorAll('.sw[data-tr]').forEach(w=>w.onclick=()=>{TRT=w.dataset.tr;try{localStorage.setItem('cmdglas-holo-change',TRT);}catch(e){}
+    $('cfg').querySelectorAll('.sw[data-tr]').forEach(x=>x.classList.toggle('on',x===w));document.body.classList.remove('cfgopen');setTimeout(()=>switchMode(NAMES[(NAMES.indexOf(mode)+1)%NAMES.length]),250);});
+  $('cfg').querySelectorAll('.sw[data-k]').forEach(w=>w.onclick=()=>{const k=w.dataset.k;olOff[k]=!olOff[k];if(!olOff[k])delete olOff[k];w.classList.toggle('on',!olOff[k]);applyOL();});}
+cfgHTML();applyOL();
+let peekT=0;function peek(row,ms){clearTimeout(peekT);document.querySelectorAll('#cfg .orow.live').forEach(r=>r.classList.remove('live'));if(row)row.classList.add('live');document.body.classList.add('peek');
+  if(ms)peekT=setTimeout(unpeek,ms);}
+function unpeek(){document.body.classList.remove('peek');document.querySelectorAll('#cfg .orow.live').forEach(r=>r.classList.remove('live'));}
+$('cfg').addEventListener('pointerdown',e=>{const r=e.target.closest('input[type=range]');if(r)peek(r.closest('.orow'));});
+addEventListener('pointerup',()=>{if(document.querySelector('#cfg input[type=range]:active')||document.body.classList.contains('peek'))peekT=setTimeout(unpeek,700);});
+$('cfg').addEventListener('click',e=>{const w=e.target.closest('.sw[data-k]');if(w)peek(w.closest('.orow'),1600);});
+if(Q.get('peek')){const r=document.querySelector(`#cfg input[data-look="${Q.get('peek')}"]`);if(r)peek(r.closest('.orow'));}if(Q.get('cfg')==='1')document.body.classList.add('cfgopen');
+$('cfgbtn').onclick=()=>{if(!document.body.classList.contains('cfgopen'))cfgHTML();document.body.classList.toggle('cfgopen');}; /* rebuilt on open: the low level row names the current ship */
+$('trbtn').onclick=()=>{document.body.classList.remove('cfgopen');switchMode(NAMES[(NAMES.indexOf(mode)+1)%NAMES.length]);};
+if(Q.get('mode'))mode=Q.get('mode');
+layout();
+if(Q.get('lit')){Q.get('lit').split(',').forEach(n=>{const k=MODES[mode].keys[+n];if(k&&k[3])SKS[skId(k[1],mode)]=1;});layout();} /* test switch: &lit=N shows state key N in its second state */
+if(Q.get('press')){const e=area.querySelectorAll('.k')[+Q.get('press')];if(e){const r=e.getBoundingClientRect();pressFx(e,r.left+r.width*.55,r.top+r.height*.45);document.getAnimations().forEach(a=>{if(a.animationName==='rip'){a.currentTime=160;a.pause();}});}}
+if(Q.get('hold')){const e=area.querySelector('.dz'),v=+Q.get('hold');e.querySelector('.cdp').style.strokeDasharray=`${100*v} 100`;e.classList.add('holding');e.querySelector('.cds').textContent=(1.5*(1-v)).toFixed(1)+' s';}
+if(Q.get('freeze')){setTimeout(()=>switchMode(Q.get('to')||'COMBAT'),300);setTimeout(()=>{FROZEN=true;document.getAnimations().forEach(x=>x.pause());},300+ +Q.get('freeze'));}
+</script>
+<script src="body-helpers.js"></script>
+<script src="key-morph.js"></script>
+<script>/* 25 NOV ?dbg=1 (chat 2): shows the real window size in the top-left corner and the window title, for checking the Edge / kiosk fit */ if(new URLSearchParams(location.search).has('dbg')){const d=document.createElement('div');d.style.cssText='position:fixed;left:6px;top:6px;z-index:99999;font:700 18px Consolas,monospace;color:#0f0;background:#000;padding:4px 8px';document.body.appendChild(d);const up=()=>{const de=document.getElementById('deck'),r=de&&de.getBoundingClientRect();const s=`view ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} deck ${r?Math.round(r.left)+','+Math.round(r.top)+' '+Math.round(r.width)+'x'+Math.round(r.height):'-'} scroll ${document.documentElement.scrollWidth}`;d.textContent=s;document.title=s;};up();addEventListener('resize',up);setInterval(up,1000);}</script>
+<script>/* 25 NOV: ?full=1 = the CURRENT Holo on its own (loads hd-float.css + atc-states.js itself), for filming: ...blue-holo-deck-hd.html?full=1&nolive=1&mode=COMBAT */ {const inFrame=window!==window.top&&new URLSearchParams(location.search).get('edge')!=='1',bg=inFrame?'transparent':'#000101'; /* 25 NOV: the Edge inside the iCUE widget frame keeps a dark page (a white rim showed at the widget edge) */[document.documentElement,document.body].forEach(n=>{n.style.setProperty('background',bg,'important');n.style.setProperty('background-color',bg,'important');});} /* 25 NOV: inside the Holo (an iframe) the page is clear at once, before hd-float.css arrives (line 23 paints #000101); opened on its own (kiosk / Edge photo) it keeps a dark page */
+if(new URLSearchParams(location.search).has('full')&&!document.querySelector('script[src*="atc-states"]')){const l=document.createElement('link');l.rel='stylesheet';l.href='hd-float.css';document.head.appendChild(l);const s=document.createElement('script');s.src='atc-states.js';document.body.appendChild(s);}</script>
+</body>
+</html>

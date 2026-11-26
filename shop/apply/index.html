@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self' https://lowsig-crew.cmdglas-key-service.workers.dev; form-action 'self' https://lowsig-crew.cmdglas-key-service.workers.dev; object-src 'none'; base-uri 'none'">
+<title>CmdGlas org testing - apply</title>
+<link rel="stylesheet" href="apply.css">
+</head><body>
+<!-- Org test application page (chat 2, 25 NOV, STAGED). RAZ: "the link should take them directly to the application page that shows requriemtns and lets them complete the form" + "whgy are they dm'ing me": no DM step; the leader reads the requirements and applies here. -->
+<main>
+<header><p class="kicker">CMDGLAS · ORG TESTING</p><h1>ORG LEADERS NEEDED FOR TESTING</h1>
+<p class="lede">Your org tests the whole CmdGlas pack before it goes on sale. Give us feedback, keep the key, and get 10 more free keys after each test cycle and feedback, up to 40 keys per test org.</p></header>
+
+<section class="box"><h2>REQUIREMENTS</h2><ul>
+<li>A Star Citizen org of <b>15 to 60 members</b> (RSI member count), recruiting and not set to exclusive.</li>
+<li>A public Discord with people online, and a written charter.</li>
+<li>You are the org's <b>Founder or an Officer</b> on the RSI org members page.</li>
+<li>Members with intermediate PC skills: they install programs and follow setup steps on their own.</li>
+<li>Up-to-date PCs: Windows 10 or 11, 64-bit (the Speech Petal needs Windows 11), latest updates and graphics drivers. 18+.</li>
+<li>Your org plans an operation with another test org and a fight against another test org during the test.</li>
+</ul></section>
+
+<section class="box"><h2>APPLY</h2>
+<form id="apply" action="https://lowsig-crew.cmdglas-key-service.workers.dev/api/org-apply" method="post" novalidate>
+<label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<label>Org name<input name="org" required maxlength="80"></label>
+<label>RSI org page link<input name="rsi_org" type="url" required placeholder="https://robertsspaceindustries.com/orgs/..."></label>
+<label>RSI org tag (Spectrum ID)<input name="org_tag" required maxlength="20" placeholder="e.g. LOWSIG"></label>
+<label>Members on the RSI org page<input name="members" type="number" min="15" max="60" step="1" required></label>
+<label>Your RSI handle<input name="handle" required maxlength="60"></label>
+<label>Your role on the RSI org members page<select name="role" required><option value="">Choose</option><option>Founder</option><option>Officer</option></select></label>
+<label>Your org's public Discord invite<input name="discord_invite" type="url" required placeholder="https://discord.gg/..."></label>
+<label>Your Discord name (so we can reach you)<input name="discord_name" required maxlength="60"></label>
+<label>What does your org mostly do in Star Citizen?<textarea name="play" rows="3" maxlength="600"></textarea></label>
+<fieldset><legend>Gear in your org</legend>
+<label class="ck"><input type="checkbox" name="gear" value="edge"> XENEON EDGE</label><label class="ck"><input type="checkbox" name="gear" value="ipad"> iPad</label>
+<label class="ck"><input type="checkbox" name="gear" value="touch"> Touch screen</label><label class="ck"><input type="checkbox" name="gear" value="streamdeck"> Stream Deck</label>
+<label class="ck"><input type="checkbox" name="gear" value="voiceattack"> VoiceAttack</label></fieldset>
+<label class="ck agree"><input type="checkbox" name="agree" required> I have read the tester agreement and agree to it.</label>
+<p class="priv">Your application is stored privately for 90 days and is seen only by RAZ (CmdGlas).</p>
+<button type="submit">SEND APPLICATION</button>
+<p class="msg" id="msg" role="status"></p>
+</form></section>
+
+<section class="box small"><h2>WHAT HAPPENS NEXT</h2><ol>
+<li>We check your RSI org page and your Discord invite.</li>
+<li>Accepted org leaders get an invite to the CmdGlas Discord with the Test Org Leader role. From then on everything happens in the private TEST ORGS section: the tester agreement, the download link and the keys.</li>
+<li>Every key works on one PC.</li></ol>
+<p>Full honesty: CmdGlas is built with the help of AI coding tools. No AI is installed with any CmdGlas program. Unofficial fan-made tools, not affiliated with or endorsed by Cloud Imperium Games.</p></section>
+</main>
+<script src="apply.js"></script>
+</body></html>

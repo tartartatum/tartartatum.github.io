@@ -1,0 +1,31 @@
+.tt-row .tt-desk{display:flex;flex-direction:column}.tt-row .tt-desk .tt-win{margin:auto 0}.tt-fps2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.tt-fps2 figure{margin:0;text-align:center}.tt-fps2 img{width:100%;height:auto;border-radius:14px}.tt-fps2 figcaption{margin-top:6px;font:600 13px Oxanium,sans-serif;letter-spacing:2px;color:#cfe6ff}@media(max-width:800px){.tt-fps2{grid-template-columns:1fr}}img.tt-zoom,.tabshots img{cursor:zoom-in;transition:transform .2s}img.tt-zoom:hover,.tabshots img:hover{transform:scale(1.02)}#ttlb{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,4,10,.88);cursor:zoom-out;padding:24px;box-sizing:border-box}#ttlb.on{display:flex}#ttlb img{max-width:96vw;max-height:92vh;border-radius:14px;box-shadow:0 0 30px rgba(31,158,255,.35)}#ttlb b{position:fixed;top:14px;right:22px;font:600 14px Oxanium,sans-serif;letter-spacing:2px;color:#cfe6ff}
+.tabshots{margin-top:14px}.tabshots.one{grid-template-columns:1fr}.tabshots figcaption b{letter-spacing:2px}
+.orgcall{margin:0 0 22px;padding:26px 30px;border:2px solid #3dabff;border-radius:22px;text-align:center;background:radial-gradient(120% 140% at 50% 0%,rgba(31,158,255,.22),transparent 60%),rgba(4,10,18,.85);box-shadow:0 0 14px rgba(31,158,255,.35)}.orgcall h2{margin:0 0 8px;font:600 clamp(26px,3.6vw,42px)/1.1 Oxanium,sans-serif;letter-spacing:4px;color:#fff;text-shadow:0 0 10px rgba(31,158,255,.7)}.orgcall p{margin:0 auto 14px;max-width:60ch;color:#cfe6ff;font-size:17px}
+.tt-fps2.tt-fpswide{grid-template-columns:1fr}
+/* 25 NOV: large views fill the screen; moving displays open full screen; wider page ("the page seems kind of narrow") */
+#ttlb img{width:96vw;height:90vh;max-width:none;max-height:none;object-fit:contain;box-shadow:none}
+#ttdemo{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,4,10,.92);cursor:zoom-out}#ttdemo.on{display:flex}
+#ttdemo .box{position:relative;overflow:hidden;border-radius:16px;box-shadow:0 0 30px rgba(31,158,255,.35);background:#000}#ttdemo iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:none;background:transparent;color-scheme:normal}
+#ttdemo b{position:fixed;top:14px;right:22px;font:600 14px Oxanium,sans-serif;letter-spacing:2px;color:#cfe6ff}
+main,footer{max-width:1680px!important}
+/* 25 NOV RAZ: "put it into a ipad outline" - the iPad card sits in an iPad: black bezel, rounded corners, thin metal edge */
+.tele-top .tt-ipad .tt-win{border:clamp(5px,.75vw,10px) solid #050608;border-radius:clamp(16px,2vw,26px);box-shadow:0 0 0 2px #5b6573,0 0 0 4px #20262e,0 10px 30px rgba(0,0,0,.6),0 0 18px rgba(31,158,255,.18);overflow:hidden;position:relative}
+.tele-top .tt-win iframe,#ttdemo iframe{overflow:hidden;scrollbar-width:none}
+/* numbered guide card (25 NOV) */
+.tt-guide figure{margin:0 0 14px}.tt-guide figure img{width:100%;height:auto;border-radius:14px}
+.tt-glist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px 18px}@media(max-width:1100px){.tt-glist{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.tt-glist{grid-template-columns:1fr}}
+.tt-glist li{background:rgba(7,26,51,.75);border:1px solid #1e5fae;border-radius:12px;padding:8px 10px;color:#d6ebff;font-size:14px;line-height:1.4}
+.tt-glist .n{display:inline-block;width:22px;height:22px;line-height:22px;margin-right:6px;border-radius:50%;background:#fff;color:#000;font:700 12px Arial,sans-serif;text-align:center}
+.tt-glist b{letter-spacing:1px;color:#fff}
+.tt-glist .tg{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:10px;font-size:10px;letter-spacing:1px;border:1px solid #1e5fae;color:#cfe6ff;white-space:nowrap}
+/* tags all RSI blue (colour rule: no decorative colours) */
+/* 25 NOV RAZ: red notice under every display with a real ship picture */
+.tt-cig{margin:8px 0 0;padding:8px 12px;border:1px solid #ff1f3d;border-radius:12px;background:rgba(60,4,10,.45);color:#ff7f8f;font-size:13px;line-height:1.45}.tt-cig b{color:#ff3a52;letter-spacing:1px}.tt-cig a{color:#ffb3bd}
+/* 25 NOV RAZ: "change the orange coming soon to a different color that matches the motive" -> RSI blue (no orange, pink, purple, earth or pastel) */
+.tele-top .tt-fat{background:linear-gradient(180deg,#2a8fff,#0b5fae);color:#fff;border:1px solid #6cc4ff;box-shadow:0 0 10px rgba(31,158,255,.45)}
+.tele-top .tt-banner{background:rgba(31,158,255,.1);border-color:#3dabff}.tele-top .tt-banner b{color:#6cc4ff;text-shadow:0 0 8px rgba(31,158,255,.6)}.tele-top .tt-banner a{color:#a6d4ff}
+/* 25 NOV: shop = demonstrator. The Edge deck is tappable in the card; FULL SCREEN button under every display */
+.tele-top .tt-win.tt-live iframe,#ttdemo.live iframe{pointer-events:auto!important}
+.tt-fullbtn{display:inline-block;margin:8px 0 0;padding:6px 14px;border-radius:10px;border:1px solid #3dabff;background:linear-gradient(180deg,#0f3a66,#071a33);color:#cfe6ff;font:700 12px Oxanium,sans-serif;letter-spacing:2px;cursor:pointer}.tt-fullbtn:hover{box-shadow:0 0 10px rgba(31,158,255,.5);color:#fff}
+.tt-try{margin:0 0 8px;padding:8px 12px;border-radius:12px;border:1px solid #3dabff;background:rgba(31,158,255,.12);color:#d6ebff;font-size:14px}.tt-try b{color:#6cc4ff;letter-spacing:2px}
+#ttdemo{cursor:default}#ttdemo .ttclose{position:fixed;top:12px;right:18px;padding:6px 14px;border-radius:10px;border:1px solid #3dabff;background:#071a33;color:#cfe6ff;font:700 13px Oxanium,sans-serif;letter-spacing:2px;cursor:pointer}

@@ -1,0 +1,1171 @@
+{
+ "source": "api.star-citizen.wiki v2 items (game files)",
+ "fetched": "2026-11-23",
+ "items": {
+  "COOL_ACOM_S01_IcePlunge_SCItem": {
+   "grade": "C",
+   "class": "Competition",
+   "name": "IcePlunge"
+  },
+  "COOL_ACOM_S01_QuickCool_SCItem": {
+   "grade": "D",
+   "class": "Competition",
+   "name": "QuikCool"
+  },
+  "COOL_ACOM_S01_ZeroRush_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "ZeroRush"
+  },
+  "COOL_ACOM_S02_AbsoluteZero_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "AbsoluteZero"
+  },
+  "COOL_AEGS_S01_Bracer_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Bracer"
+  },
+  "COOL_AEGS_S01_Glacier_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "Glacier"
+  },
+  "COOL_AEGS_S01_Polar_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Polar"
+  },
+  "COOL_AEGS_S02_Arctic_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Arctic"
+  },
+  "COOL_AEGS_S02_Avalanche_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "Avalanche"
+  },
+  "COOL_AEGS_S02_Boreal_SCItem": {
+   "grade": "D",
+   "class": "Military",
+   "name": "Boreal"
+  },
+  "COOL_AEGS_S02_Permafrost_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Permafrost"
+  },
+  "COOL_AEGS_S03_Blizzard_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "Blizzard"
+  },
+  "COOL_AEGS_S03_Mercury_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Mercury"
+  },
+  "COOL_AEGS_S04_Idris_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "Exotherm"
+  },
+  "COOL_AEGS_S04_Javelin_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "<= PLACEHOLDER =>"
+  },
+  "COOL_AEGS_S04_Reclaimer": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Algid"
+  },
+  "COOL_JSPN_S00_CryoStarSL_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "Cryo-Star SL"
+  },
+  "COOL_JSPN_S00_FrostStarSL_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Frost-Star SL"
+  },
+  "COOL_JSPN_S00_WinterStarSL_SCItem": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "Winter-Star SL"
+  },
+  "COOL_JSPN_S01_FrostStar_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Frost-Star"
+  },
+  "COOL_JSPN_S01_WinterStar_SCItem": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "Winter-Star"
+  },
+  "COOL_JSPN_S02_FrostStarEX_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Frost-Star EX"
+  },
+  "COOL_JSPN_S03_FrostStarXL_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Frost-Star XL"
+  },
+  "COOL_JUST_S01_EcoFlow_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Eco-Flow"
+  },
+  "COOL_JUST_S01_Hydrocel_SCItem": {
+   "grade": "D",
+   "class": "Industrial",
+   "name": "Hydrocel"
+  },
+  "COOL_JUST_S01_Thermax_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Thermax"
+  },
+  "COOL_JUST_S01_UltraFlow_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Ultra-Flow"
+  },
+  "COOL_JUST_S02_CoolCore_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "CoolCore"
+  },
+  "COOL_JUST_S02_Snowfall_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Snowfall"
+  },
+  "COOL_JUST_S02_Snowpack_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Snowpack"
+  },
+  "COOL_JUST_S03_ChillMax_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Chill-Max"
+  },
+  "COOL_JUST_S03_IceFlush_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Ice-Flush"
+  },
+  "COOL_JUST_S03_ThermalCore_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "ThermalCore"
+  },
+  "COOL_LPLT_S01_ArcticStorm_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "ArcticStorm"
+  },
+  "COOL_LPLT_S01_BlastChill_SCItem": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "BlastChill"
+  },
+  "COOL_LPLT_S02_ColdSnap_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "ColdSnap"
+  },
+  "COOL_LPLT_S03_FrostBurn_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "FrostBurn"
+  },
+  "COOL_ORIG_S04_890J_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Serac"
+  },
+  "COOL_RSI_S04_Polaris_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Serac"
+  },
+  "COOL_TYDT_S01_HeatSafe_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "HeatSafe"
+  },
+  "COOL_TYDT_S01_SnowBlind_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "SnowBlind"
+  },
+  "COOL_TYDT_S01_VaporBlock_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "VaporBlock"
+  },
+  "COOL_TYDT_S02_HeatSink_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "HeatSink"
+  },
+  "COOL_TYDT_S02_IceBox_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "IceBox"
+  },
+  "COOL_TYDT_S02_NightFall_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "NightFall"
+  },
+  "COOL_VNCL_S04_Mauler": {
+   "grade": "A",
+   "class": null,
+   "name": "Mauler Cooler"
+  },
+  "COOL_WCPR_S00_Fridan_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Fridan"
+  },
+  "COOL_WCPR_S00_Kelvid_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "Kelvid"
+  },
+  "COOL_WCPR_S00_Tepilo_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Tepilo"
+  },
+  "COOL_WCPR_S01_Gelid_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Gelid"
+  },
+  "COOL_WCPR_S02_Aufeis_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Aufeis"
+  },
+  "COOL_WCPR_S02_Graupel_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Graupel"
+  },
+  "LFSP_S04_AEGS_Idris": {
+   "grade": "C",
+   "class": null,
+   "name": "Safehab"
+  },
+  "LFSP_S04_ORIG_890": {
+   "grade": "C",
+   "class": null,
+   "name": "Safehab"
+  },
+  "LFSP_S04_RSI_Polaris": {
+   "grade": "C",
+   "class": null,
+   "name": "Safehab"
+  },
+  "LFSP_TYDT_S00_ComfortAirLite": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "ComfortAir Lite"
+  },
+  "LFSP_TYDT_S01_ComfortAir": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "ComfortAir"
+  },
+  "LFSP_TYDT_S02_ComfortAirPlus": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "ComfortAir Plus"
+  },
+  "LFSP_TYDT_S03_ComfortAirMax": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "ComfortAir Max"
+  },
+  "POWR_ACOM_S01_LumaCore_SCItem": {
+   "grade": "A",
+   "class": "Competition",
+   "name": "LumaCore"
+  },
+  "POWR_ACOM_S01_StarHeart_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "StarHeart"
+  },
+  "POWR_ACOM_S01_SunFlare_SCItem": {
+   "grade": "C",
+   "class": "Competition",
+   "name": "SunFlare"
+  },
+  "POWR_ACOM_S02_LuxCore_SCItem": {
+   "grade": "A",
+   "class": "Competition",
+   "name": "LuxCore"
+  },
+  "POWR_AEGS_S01_Charger_SCItem": {
+   "grade": "D",
+   "class": "Military",
+   "name": "Charger"
+  },
+  "POWR_AEGS_S01_FierellCascade_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Fierell Cascade"
+  },
+  "POWR_AEGS_S01_Quadracell_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "QuadraCell"
+  },
+  "POWR_AEGS_S01_Regulus_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Regulus"
+  },
+  "POWR_AEGS_S02_Bolide_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Bolide"
+  },
+  "POWR_AEGS_S02_Maelstrom_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Maelstrom"
+  },
+  "POWR_AEGS_S02_QuadracellMT_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "QuadraCell MT"
+  },
+  "POWR_AEGS_S03_Centurion_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Centurion"
+  },
+  "POWR_AEGS_S04_Idris_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "Main Powerplant"
+  },
+  "POWR_AEGS_S04_Reclaimer_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "Main Powerplant"
+  },
+  "POWR_AMRS_S01_DynaFlux_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "DynaFlux"
+  },
+  "POWR_AMRS_S01_JS300_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "JS-300"
+  },
+  "POWR_AMRS_S01_OverDrive_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "OverDrive"
+  },
+  "POWR_AMRS_S02_ExoGen_SCItem": {
+   "grade": "D",
+   "class": "Military",
+   "name": "ExoGen"
+  },
+  "POWR_AMRS_S02_JS400_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "JS-400"
+  },
+  "POWR_AMRS_S02_TurboDrive_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "TurboDrive"
+  },
+  "POWR_AMRS_S02_UltraFlux_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "UltraFlux"
+  },
+  "POWR_AMRS_S03_JS500_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "JS-500"
+  },
+  "POWR_AMRS_S03_SuperDrive_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "SuperDrive"
+  },
+  "POWR_JUST_S00_Defiant_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Defiant"
+  },
+  "POWR_JUST_S00_SteadFast_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Steadfast"
+  },
+  "POWR_JUST_S01_Breton_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Breton"
+  },
+  "POWR_JUST_S01_Endurance_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Endurance"
+  },
+  "POWR_JUST_S01_Fortitude_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Fortitude"
+  },
+  "POWR_JUST_S01_Roughneck_SCItem": {
+   "grade": "D",
+   "class": "Industrial",
+   "name": "Roughneck"
+  },
+  "POWR_JUST_S02_Diligence_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Diligence"
+  },
+  "POWR_JUST_S02_Genoa_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Genoa"
+  },
+  "POWR_JUST_S02_Sedulity_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Sedulity"
+  },
+  "POWR_JUST_S02_Trommel_SCItem": {
+   "grade": "D",
+   "class": "Industrial",
+   "name": "Trommel"
+  },
+  "POWR_JUST_S03_Durango_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Durango"
+  },
+  "POWR_JUST_S03_Ginzel_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Ginzel"
+  },
+  "POWR_JUST_S03_Reliance_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Reliance"
+  },
+  "POWR_LPLT_S00_IonWave_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "IonWave"
+  },
+  "POWR_LPLT_S00_Radix_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Radix"
+  },
+  "POWR_LPLT_S01_IonBurst_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "IonBurst"
+  },
+  "POWR_LPLT_S01_PowerBolt_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "PowerBolt"
+  },
+  "POWR_LPLT_S01_ZapJet_SCItem": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "ZapJet"
+  },
+  "POWR_LPLT_S02_FullForce_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "FullForce"
+  },
+  "POWR_LPLT_S02_IonSurge_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "IonSurge"
+  },
+  "POWR_ORIG_S04_890J_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Stellate"
+  },
+  "POWR_RSI_S04_Polaris_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Stellate"
+  },
+  "POWR_SASU_S01_LightBlossom_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "LightBlossom"
+  },
+  "POWR_SASU_S01_MagnaBloom_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "MagnaBloom"
+  },
+  "POWR_SASU_S01_WhiteRose_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "WhiteRose"
+  },
+  "POWR_SASU_S02_DayBreak_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "DayBreak"
+  },
+  "POWR_SASU_S02_Lotus_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Lotus"
+  },
+  "POWR_SASU_S03_NewDawn_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "NewDawn"
+  },
+  "POWR_TYDT_S01_DeltaMax_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "DeltaMax"
+  },
+  "POWR_TYDT_S01_Slipstream_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "Slipstream"
+  },
+  "POWR_TYDT_S01_SonicLite_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "SonicLite"
+  },
+  "POWR_TYDT_S02_Eclipse_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "Eclipse"
+  },
+  "POWR_TYDT_S02_GammaMax_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "GammaMax"
+  },
+  "POWR_VNCL_S04_Mauler": {
+   "grade": "A",
+   "class": null,
+   "name": "Mauler Power Plant"
+  },
+  "QDRV_ACAS_S01_FoxFire_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "FoxFire"
+  },
+  "QDRV_ACAS_S01_LightFire_SCItem": {
+   "grade": "C",
+   "class": "Competition",
+   "name": "LightFire"
+  },
+  "QDRV_ACAS_S02_SparkFire_SCItem": {
+   "grade": "C",
+   "class": "Competition",
+   "name": "SparkFire"
+  },
+  "QDRV_ACAS_S02_SunFire_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "SunFire"
+  },
+  "QDRV_AEGS_S04_Javelin_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "<= PLACEHOLDER =>"
+  },
+  "QDRV_ARCC_S01_Flood_SCItem": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "Flood"
+  },
+  "QDRV_ARCC_S01_Rush_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Rush"
+  },
+  "QDRV_ARCC_S02_Torrent_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Torrent"
+  },
+  "QDRV_JUST_S01_Colossus_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Colossus"
+  },
+  "QDRV_JUST_S01_Goliath_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Goliath"
+  },
+  "QDRV_JUST_S02_Bolon_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Bolon"
+  },
+  "QDRV_JUST_S02_Huracan_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Huracan"
+  },
+  "QDRV_JUST_S03_Kama_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Kama"
+  },
+  "QDRV_ORIG_S04_890J_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Allegro"
+  },
+  "QDRV_RACO_S01_Drift_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "Drift"
+  },
+  "QDRV_RACO_S01_Spectre_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "Spectre"
+  },
+  "QDRV_RACO_S01_Zephyr_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "Zephyr"
+  },
+  "QDRV_RACO_S02_Bolt_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "Bolt"
+  },
+  "QDRV_RACO_S02_Nova_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "Nova"
+  },
+  "QDRV_RSI_S01_Atlas_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Atlas"
+  },
+  "QDRV_RSI_S01_Eos_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Eos"
+  },
+  "QDRV_RSI_S01_Hyperion_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "Hyperion"
+  },
+  "QDRV_RSI_S02_Hemera_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Hemera"
+  },
+  "QDRV_RSI_S02_Khaos_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Khaos"
+  },
+  "QDRV_RSI_S03_Erebos_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "Erebos"
+  },
+  "QDRV_S04_VNCL_Mauler": {
+   "grade": "A",
+   "class": null,
+   "name": "Mauler Quantum Drive"
+  },
+  "QDRV_TARS_S01_Expedition_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Expedition"
+  },
+  "QDRV_TARS_S02_Odyssey_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Odyssey"
+  },
+  "QDRV_TARS_S03_Wanderer_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Wanderer"
+  },
+  "QDRV_WETK_S01_Beacon_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Beacon"
+  },
+  "QDRV_WETK_S01_Siren_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Siren"
+  },
+  "QDRV_WETK_S01_VK00_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "VK-00"
+  },
+  "QDRV_WETK_S02_Crossfield_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Crossfield"
+  },
+  "QDRV_WETK_S02_XL1_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "XL-1"
+  },
+  "QDRV_WETK_S02_Yeager_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Yeager"
+  },
+  "QDRV_WETK_S03_Balandin_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Balandin"
+  },
+  "QDRV_WETK_S03_Pontes_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Pontes"
+  },
+  "QDRV_WETK_S04_Idris_TEMP": {
+   "grade": "A",
+   "class": null,
+   "name": "Frontline"
+  },
+  "RADR_BLTR_S01_Pelerous": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "Pelerous"
+  },
+  "RADR_CHCO_S00_SurveyorGo": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Surveyor-Go"
+  },
+  "RADR_CHCO_S01_ObserverLite": {
+   "grade": "D",
+   "class": "Industrial",
+   "name": "Observer-Lite"
+  },
+  "RADR_CHCO_S01_SurveyorLite": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Surveyor-Lite"
+  },
+  "RADR_CHCO_S02_FullSpec": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "FullSpec"
+  },
+  "RADR_CHCO_S02_Surveyor": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Surveyor"
+  },
+  "RADR_CHCO_S03_SurveyorMax": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Surveyor-Max"
+  },
+  "RADR_CHCO_S04_BroadSpecMax": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "BroadSpec-Max"
+  },
+  "RADR_Default": {
+   "grade": "A",
+   "class": null,
+   "name": "Radar"
+  },
+  "RADR_GNRP_S03_Idris_TEMP": {
+   "grade": "A",
+   "class": null,
+   "name": "radr_gnrp_s03_idris_temp"
+  },
+  "RADR_GRNP_S00_Prevenir": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Prevenir"
+  },
+  "RADR_GRNP_S00_Sens": {
+   "grade": "B",
+   "class": "Military",
+   "name": "Sens"
+  },
+  "RADR_GRNP_S01_Ecouter": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Ecouter"
+  },
+  "RADR_GRNP_S01_Voir": {
+   "grade": "D",
+   "class": "Military",
+   "name": "Voir"
+  },
+  "RADR_GRNP_S02_Epier": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Epier"
+  },
+  "RADR_GRNP_S03_Resolu": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Resolu"
+  },
+  "RADR_NAVE_S01_SNSR6": {
+   "grade": "C",
+   "class": "Competition",
+   "name": "SNS-R6"
+  },
+  "RADR_RSI_S04_Polaris": {
+   "grade": "A",
+   "class": null,
+   "name": "radr_rsi_s04_polaris"
+  },
+  "RADR_S00_Fake": {
+   "grade": "A",
+   "class": null,
+   "name": "<= PLACEHOLDER =>"
+  },
+  "RADR_S02_Fake": {
+   "grade": "A",
+   "class": null,
+   "name": "Radar"
+  },
+  "RADR_VNCL_S02_Mauler": {
+   "grade": "B",
+   "class": null,
+   "name": "Mauler Radar"
+  },
+  "RADR_WLOP_S00_Denning": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Denning"
+  },
+  "RADR_WLOP_S01_Capstan": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Capston"
+  },
+  "RADR_WLOP_S01_Fleming": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "Fleming"
+  },
+  "RADR_WLOP_S02_Chernykh": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Chernykh"
+  },
+  "RADR_WLOP_S03_Capsulo": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "Capsulo"
+  },
+  "RADR_WLOP_S03_Lephari": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "Lephari"
+  },
+  "SHLD_AEGS_S04_Reclaimer_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "RS-Barrier"
+  },
+  "SHLD_ASAS_S01_Cloak_SCItem": {
+   "grade": "D",
+   "class": "Stealth",
+   "name": "Cloak"
+  },
+  "SHLD_ASAS_S01_Mirage_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "Mirage"
+  },
+  "SHLD_ASAS_S01_Shimmer_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "Shimmer"
+  },
+  "SHLD_ASAS_S01_Veil_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "Veil"
+  },
+  "SHLD_ASAS_S02_Obscura_SCItem": {
+   "grade": "C",
+   "class": "Stealth",
+   "name": "Obscura"
+  },
+  "SHLD_ASAS_S02_Sheut_SCItem": {
+   "grade": "B",
+   "class": "Stealth",
+   "name": "Sheut"
+  },
+  "SHLD_ASAS_S02_Umbra_SCItem": {
+   "grade": "A",
+   "class": "Stealth",
+   "name": "Umbra"
+  },
+  "SHLD_BANU_S02_Placeholder_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "Sukoran"
+  },
+  "SHLD_BASL_S00_Castra_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Castra"
+  },
+  "SHLD_BASL_S01_Bulwark_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Bulwark"
+  },
+  "SHLD_BASL_S01_Guardian_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Guardian"
+  },
+  "SHLD_BASL_S01_Palisade_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Palisade"
+  },
+  "SHLD_BASL_S02_Armada_SCItem": {
+   "grade": "D",
+   "class": "Industrial",
+   "name": "Armada"
+  },
+  "SHLD_BASL_S02_Aspis_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Aspis"
+  },
+  "SHLD_BASL_S02_Citadel_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Citadel"
+  },
+  "SHLD_BASL_S02_Rampart_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Rampart"
+  },
+  "SHLD_BASL_S03_Barbican_SCItem": {
+   "grade": "B",
+   "class": "Industrial",
+   "name": "Barbican"
+  },
+  "SHLD_BASL_S03_Parapet_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Parapet"
+  },
+  "SHLD_BASL_S03_Stronghold_SCItem": {
+   "grade": "C",
+   "class": "Industrial",
+   "name": "Stronghold"
+  },
+  "SHLD_BEHR_S01_5SA_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "5SA 'Rhada'"
+  },
+  "SHLD_BEHR_S01_7SA_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "7SA 'Concord'"
+  },
+  "SHLD_BEHR_S02_5MA_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "5MA 'Chimalli'"
+  },
+  "SHLD_BEHR_S02_7MA_SCItem": {
+   "grade": "A",
+   "class": "Civilian",
+   "name": "7MA 'Lorica'"
+  },
+  "SHLD_BEHR_S03_5CA_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "5CA 'Akura'"
+  },
+  "SHLD_GODI_S01_AllStop_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "AllStop"
+  },
+  "SHLD_GODI_S01_FR66_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "FR-66"
+  },
+  "SHLD_GODI_S01_ForceWall_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "ForceWall"
+  },
+  "SHLD_GODI_S01_SecureHyde_SCItem": {
+   "grade": "D",
+   "class": "Military",
+   "name": "SecureHyde"
+  },
+  "SHLD_GODI_S02_CoverAll_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "CoverAll"
+  },
+  "SHLD_GODI_S02_FR76_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "FR-76"
+  },
+  "SHLD_GODI_S02_FullStop_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "FullStop"
+  },
+  "SHLD_GODI_S02_SecureShield_SCItem": {
+   "grade": "D",
+   "class": "Military",
+   "name": "SecureShield"
+  },
+  "SHLD_GODI_S03_FR86_SCItem": {
+   "grade": "A",
+   "class": "Military",
+   "name": "FR-86"
+  },
+  "SHLD_GODI_S03_FullBlock_SCItem": {
+   "grade": "B",
+   "class": "Military",
+   "name": "FullBlock"
+  },
+  "SHLD_GODI_S03_SureStop_SCItem": {
+   "grade": "C",
+   "class": "Military",
+   "name": "SureStop"
+  },
+  "SHLD_GODI_S04_Idris_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "Holdstrong"
+  },
+  "SHLD_GODI_S04_Javelin_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "<= PLACEHOLDER =>"
+  },
+  "SHLD_ORIG_S04_890J_SCItem": {
+   "grade": "A",
+   "class": "Industrial",
+   "name": "Glacis"
+  },
+  "SHLD_RSI_S04_Polaris_SCItem": {
+   "grade": "A",
+   "class": null,
+   "name": "Deterrent"
+  },
+  "SHLD_SECO_S00_PIN_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "PIN"
+  },
+  "SHLD_SECO_S01_HEX_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "HEX"
+  },
+  "SHLD_SECO_S01_INK_SCItem": {
+   "grade": "D",
+   "class": "Civilian",
+   "name": "INK"
+  },
+  "SHLD_SECO_S01_WEB_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "WEB"
+  },
+  "SHLD_SECO_S02_BLOC_SCItem": {
+   "grade": "B",
+   "class": "Civilian",
+   "name": "BLOC"
+  },
+  "SHLD_SECO_S02_STOP_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "STOP"
+  },
+  "SHLD_SECO_S03_GUARD_SCItem": {
+   "grade": "C",
+   "class": "Civilian",
+   "name": "GUARD"
+  },
+  "SHLD_VNCL_S04_Mauler": {
+   "grade": "A",
+   "class": null,
+   "name": "Mauler Shield Generator"
+  },
+  "SHLD_YORM_S01_Falco_SCItem": {
+   "grade": "D",
+   "class": "Competition",
+   "name": "Falco"
+  },
+  "SHLD_YORM_S01_Jaghte_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "Jaghte"
+  },
+  "SHLD_YORM_S01_Targa_SCItem": {
+   "grade": "C",
+   "class": "Competition",
+   "name": "Targa"
+  },
+  "SHLD_YORM_S02_Haltur_SCItem": {
+   "grade": "B",
+   "class": "Competition",
+   "name": "Haltur"
+  }
+ }
+}

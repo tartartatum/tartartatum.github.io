@@ -1,0 +1,437 @@
+/* HD HOLO DECK, FLOATING (chat 2, 24 NOV). RAZ: "hd holo deck.... it's right there. just remove the edge outline and pill surounding everything."
+   Only the deck's outer edge outline and the rounded panels around the key groups go; every key, bar and label stays exactly as designed. */
+html,body,#wrap,#deck{background:transparent!important}
+#deck#deck{border:0!important;box-shadow:none!important;outline:0!important}
+#deck#deck::before,#deck#deck::after{display:none!important}
+#deck#deck .frame,#deck#deck .frame.redzone{border-color:transparent!important;box-shadow:none!important;background:transparent!important;outline:0!important}
+#deck#deck .frame::before,#deck#deck .frame::after{display:none!important}
+#deck#deck .hrim,#deck#deck .rimdot,#deck#deck svg.slab,#deck#deck svg.slabover{display:none!important}
+#deck#deck svg.eclfedge{display:none!important}
+/* design switcher row under the deck is a preview control, not part of the Holo */
+body > .dsw, #dsw, .designbar{display:none!important}
+svg.eclfedge,svg.eclfedge *{display:none!important}
+#switch{display:none!important}
+.ecl,g.ecl,.eclc,rect.eclc,[class*="eclf"]{display:none!important;visibility:hidden!important}
+/* no background glitter (RAZ 24 NOV: "remvoe the backgroudn glitter") */
+#deck canvas#dust,#deck canvas#bg{display:none!important}
+/* moving / doors state colour: DARK PURPLE, not pink (RAZ 24 NOV: "it looks too pink make it a dark purple"). Fixed value, independent of the deck colour. */
+#deck#deck .ka>.holo>.gr,#deck#deck .ka>.holo>.sc,#deck#deck .ka>.holo>.rf,#deck#deck .ka>[data-mc],#deck#deck .dz.ka>:not(.holo):not(svg.cd){filter:saturate(.12) brightness(.95) contrast(1.35)!important}
+#deck#deck .gmov>.holo>.gr,#deck#deck .gmov>.holo>.sc,#deck#deck .gmov>.holo>.rf,#deck#deck .gmov>[data-mc],#deck#deck .gret>.holo>.gr,#deck#deck .gret>.holo>.sc,#deck#deck .gret>.holo>.rf,#deck#deck .gret>[data-mc]{animation:none!important;filter:saturate(.12) brightness(.95) contrast(1.35)!important}
+/* state colours on the BLUE deck: the colour-shift offsets were tuned on the red deck (hue ~355); without this, green showed pink and amber purple. -148deg = blue 207 - red 355, so green = green, amber = amber, red = red again. */
+#deck#deck{--swh:-148deg!important}
+/* ATC reply text fits inside the key (RAZ 24 NOV: "pad 07 and the underlying writing needs adjusting its outside of the pill") */
+#deck#deck .nb.k[data-atc="1"] .nt{font-size:26px!important;line-height:1.05!important;white-space:nowrap!important}
+#deck#deck .nb.k[data-atc="1"] .ns{font-size:18px!important;line-height:1.15!important;white-space:normal!important;max-width:118px!important;margin:4px auto 0!important;text-align:center!important}
+/* moving / transition = GUNMETAL HONEYCOMB (RAZ 24 NOV: "gunmetal honeycomb maybe?"): steel grey state fill, the deck's hex mesh brought forward */
+#deck#deck .ka>.holo>.gr,#deck#deck .gmov>.holo>.gr,#deck#deck .gret>.holo>.gr{opacity:1!important;filter:saturate(0) brightness(1.6) contrast(1.4)!important}
+/* ATC reply = the lit FLIGHT tab's RSI blue (RAZ 24 NOV: "the blue u used looks more turcoise , make it rsi blue" / "like the flight background on the left") */
+#deck#deck .nb.k.atc-reply>.holo>.rf,#deck#deck .nb.k.blue-fill>.holo>.rf{left:4px!important;right:4px!important;top:4px!important;bottom:4px!important;height:auto!important;border-radius:inherit!important;opacity:1!important;filter:none!important;
+ background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(31,158,255,.32) 45%,rgba(8,63,120,.5)),#06192a!important}
+/* GEAR UP = red status fill (RAZ 24 NOV: "gear up is a status so it's red") */
+#deck#deck .nb.k[data-gup="1"]>.holo>.rf{left:4px!important;right:4px!important;top:4px!important;bottom:4px!important;height:auto!important;border-radius:inherit!important;opacity:1!important;filter:none!important;
+ background:radial-gradient(120% 120% at 50% 0%,rgba(178,18,40,.6),rgba(200,15,42,.4) 45%,rgba(90,0,14,.55)),#1a0005!important}
+#deck#deck .nb.k[data-atc="1"] .nt,#deck#deck .nb.k[data-atc="1"] .ns{position:relative!important;z-index:50!important}
+/* ATC reply: only the place, big, may wrap to 2 lines (HANGAR / 03) */
+#deck#deck .nb.k.atc-reply .nt{font-size:32px!important;line-height:1.05!important;white-space:normal!important;max-width:132px!important;margin:0 auto!important;text-align:center!important}
+#deck#deck .nb.k.atc-reply .ns{display:none!important}
+/* CONTACTING a bit smaller (RAZ 24 NOV: "contacting atc is a little bit tooo big") */
+#deck#deck .nb.k.atc-talk .nt{font-size:21px!important}
+#deck#deck .nb.k.atc-talk .ns{font-size:15px!important}
+/* FLIGHT READY extinguished (dark) once systems are on */
+#deck#deck .nb.k.fr-off{opacity:.28!important;filter:saturate(.2) brightness(.6)!important;transition:opacity .6s,filter .6s}
+#deck#deck .nb.k.blue-fill>.holo>.gr,#deck#deck .nb.k.blue-fill>.holo>.sc,#deck#deck .nb.k.blue-fill>[data-mc]{filter:none!important}
+#deck#deck .nb.k.blue-fill .nt,#deck#deck .nb.k.blue-fill .ns,#deck#deck .nb.k.blue-fill .stw{position:relative!important;z-index:50!important}
+/* LIGHTS ON: ON big in the middle of the blue (RAZ 24 NOV: "on in the middle of the blue"); the key name small above */
+#deck#deck .nb.k.blue-fill .nt{font-size:17px!important;opacity:.85}
+#deck#deck .nb.k.blue-fill .stw{font-size:34px!important;line-height:1!important;display:block!important;margin-top:2px!important}
+/* LIGHTS ON background = dark grey (RAZ 24 NOV: "make the lights on backgroudn more of a dark gray"); the ATC reply keeps the RSI blue */
+#deck#deck .nb.k.blue-fill>.holo>.rf{background:radial-gradient(120% 120% at 50% 0%,rgba(120,130,140,.42),rgba(70,78,88,.4) 45%,rgba(30,34,40,.6)),#14171b!important}
+/* flat top-row keys = the left page column's flat key look */
+#deck .flatrow .flatk{min-width:210px;height:50px;padding:0 24px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-radius:999px;cursor:pointer;
+ font:700 19px/1 Oxanium,'Segoe UI',sans-serif;letter-spacing:3px;color:#cfe6ff;text-shadow:0 0 6px rgba(31,158,255,.7);
+ background:linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92));border:1px solid rgba(31,158,255,.5);
+ box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 0 8px rgba(31,158,255,.25),inset 0 0 8px rgba(31,158,255,.18)}
+#deck .flatrow .flatk.on{background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(31,158,255,.32) 45%,rgba(8,63,120,.5)),#06192a;border:1.6px solid #3dabff;color:#fff;
+ box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 0 3px #fff,0 0 10px #1f9eff,inset 0 0 14px rgba(61,171,255,.45)}
+/* armed / available missile numbers in the box header */
+#deck .mslcount{display:flex;justify-content:center;gap:18px;font:700 15px/1.1 Oxanium,'Segoe UI',sans-serif;letter-spacing:2px;color:#cfe6ff;text-shadow:0 0 6px rgba(31,158,255,.7);margin:2px 0 4px}
+#deck .mslcount b{font-size:24px;color:#fff;margin-left:4px;text-shadow:0 0 3px #fff,0 0 10px #1f9eff}
+/* flat keys: equal width across the row, corners like the round keys' curves (not full pills) (RAZ 24 NOV) */
+#deck .flatrow .flatk{flex:1 1 0!important;min-width:0!important;border-radius:16px!important;padding:0 10px!important}
+/* flat keys get the round keys' glass + honeycomb (RAZ 24 NOV: "make those puttons look like the others with the glass and honeycomb") */
+#deck .flatrow .flatk{position:relative;overflow:hidden;border:2px solid #35a8ff!important;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.34' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,
+  radial-gradient(85% 90% at 50% 45%,rgba(31,158,255,.22),rgba(31,158,255,.05) 70%,transparent),linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92))!important;
+ box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 6px 0 1.5px #123c5e,0 0 2px rgba(255,255,255,.8),0 0 3px #1f9eff,0 0 10px rgba(31,158,255,.28),inset 0 0 6px rgba(31,158,255,.5),inset 0 -6px 12px rgba(0,0,0,.6)!important;
+ color:#fff!important;text-shadow:0 0 2px rgba(255,255,255,.5),0 0 6px #1f9eff,0 0 14px rgba(31,158,255,.6)!important}
+#deck .flatrow .flatk::after{content:"";position:absolute;inset:3px;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 38%,transparent 42%)}
+/* HITS display: quiet dim, red for MISSILE / HIT (MISSILE flashes), amber for PROXIMITY */
+#deck .flatrow .flatk.warnd{cursor:default;opacity:.55}
+#deck .flatrow .flatk.warnd.wr{opacity:1;border-color:#a00d22!important;color:#fff!important;text-shadow:0 0 3px #fff,0 0 10px #a00d22!important;
+ background:radial-gradient(120% 120% at 50% 0%,rgba(178,18,40,.6),rgba(200,15,42,.4) 45%,rgba(90,0,14,.55)),#1a0005!important;box-shadow:0 3px 0 0 #3a0710,0 6px 0 0 #1a0005,0 0 12px rgba(160,13,34,.6)!important}
+#deck .flatrow .flatk.warnd.wa{opacity:1;border-color:#ffae00!important;color:#fff!important;text-shadow:0 0 3px #fff,0 0 10px #ffae00!important;
+ background:radial-gradient(120% 120% at 50% 0%,rgba(255,191,58,.55),rgba(217,138,0,.35) 45%,rgba(90,55,0,.5)),#140c00!important;box-shadow:0 3px 0 0 #3a2a07,0 6px 0 0 #1a1200,0 0 12px rgba(255,174,0,.5)!important}
+#deck .flatrow .flatk.warnd.flash{animation:wflash .6s steps(1) infinite}@keyframes wflash{50%{opacity:.35}}
+/* ARMED / AVAILABLE stacked and centred (RAZ 24 NOV: "that count looks uneven and messes up the flow unless you stack them" / "centered") */
+#deck .mslcount{flex-direction:column!important;align-items:center!important;gap:2px!important;margin:0 0 4px!important}
+#deck .mslcount span{display:flex;justify-content:space-between;align-items:baseline;width:150px}
+#deck .mslcount b{font-size:22px}
+#deck .nt[data-lvl] .ttl{font-size:18px;line-height:1.1;margin:0 0 2px}
+/* EDIT key + edit mode */
+#deck .editk{width:150px;height:46px;display:flex;align-items:center;justify-content:center;gap:4px;border-radius:16px;cursor:pointer;font:700 17px/1 Oxanium,'Segoe UI',sans-serif;letter-spacing:3px;color:#cfe6ff;
+ background:linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92));border:1.5px solid rgba(53,168,255,.6);box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 0 8px rgba(31,158,255,.3);text-shadow:0 0 6px #1f9eff}
+#deck .editk span{font-size:20px}
+#deck .editk.on{color:#fff;border-color:#3dabff;background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(31,158,255,.32) 45%,rgba(8,63,120,.5)),#06192a;box-shadow:0 3px 0 0 #0c233a,0 0 10px #1f9eff}
+#deck.editing #area .nb.k,#deck.editing #area .flatk:not(.warnd){animation:editglow 1.4s ease-in-out infinite}
+@keyframes editglow{50%{filter:brightness(1.35) drop-shadow(0 0 8px #1f9eff)}}
+#deck .ptype{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);z-index:60;padding:3px 10px;border-radius:10px;white-space:nowrap;
+ font:700 13px/1 Oxanium,'Segoe UI',sans-serif;letter-spacing:2px;color:#fff;background:#06192a;border:1.5px solid #3dabff;box-shadow:0 0 8px rgba(31,158,255,.6)}
+#deck .editpop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:80;min-width:420px;padding:20px 26px;border-radius:18px;text-align:center;
+ font:600 18px/1.5 Oxanium,'Segoe UI',sans-serif;letter-spacing:1.5px;color:#d6ebff;background:rgba(2,6,10,.96);border:2px solid #35a8ff;box-shadow:0 0 20px rgba(31,158,255,.4)}
+#deck .editpop b{display:block;font-size:26px;color:#fff;margin-bottom:6px}#deck .editpop .h{font-size:14px;color:#9fc3e6;margin:8px 0 12px}
+#deck .editpop .x{display:inline-block;padding:6px 22px;border-radius:12px;border:1.5px solid #35a8ff;cursor:pointer;color:#fff}
+/* FPS EQUIPMENT panel - the game's layout in the holo look */
+#deck .fpsk .nt{font-size:17px!important}#deck .fpsk .ns,#deck .fpsk .stw{font-size:12px!important}#deck .fpsk svg.hrim{display:none!important}
+#deck .eqpanel{border-radius:22px;border:2px solid #35a8ff;background:linear-gradient(180deg,rgba(4,10,18,.9),rgba(0,0,0,.92));box-shadow:0 0 3px #1f9eff,0 0 14px rgba(31,158,255,.3),inset 0 0 14px rgba(31,158,255,.15);font-family:Oxanium,'Segoe UI',sans-serif}
+#deck .eqhead{display:flex;align-items:center;gap:14px;margin:12px 18px 10px 92px}#deck .eqhead b{font-size:26px;letter-spacing:5px;color:#d6ebff;font-weight:600;text-shadow:0 0 6px #1f9eff}
+#deck .eqhead i{flex:1;height:20px;background:repeating-linear-gradient(135deg,rgba(53,168,255,.35) 0 8px,transparent 8px 16px);border-radius:4px}
+#deck .eqtabs{position:absolute;left:14px;top:14px;display:flex;flex-direction:column;gap:12px}
+#deck .eqt{width:62px;height:72px;border-radius:12px;display:grid;place-items:center;cursor:pointer;border:1.5px solid rgba(53,168,255,.4);background:rgba(4,10,18,.9)}
+#deck .eqt svg{width:44px;height:30px}#deck .eqt.on{border:2px solid #3dabff;box-shadow:0 0 10px #1f9eff,inset 0 0 10px rgba(61,171,255,.4);background:#06192a}
+#deck .eqbody{position:absolute;left:92px;right:16px;top:62px;bottom:14px;display:flex;flex-direction:column;gap:10px}
+#deck .eqrow{flex:1;display:flex;gap:8px}#deck .eqrow:first-child{flex:.9}
+#deck .eqslot{flex:1;position:relative;border-radius:14px;border:1.5px solid rgba(53,168,255,.45);background:rgba(8,20,32,.75);display:grid;place-items:center;cursor:pointer;box-shadow:inset 0 0 10px rgba(31,158,255,.15)}
+#deck .eqrow.att .eqslot{flex:0 0 46%}
+#deck .eqslot svg{width:62%;max-height:58%;filter:drop-shadow(0 0 4px rgba(31,158,255,.8))}
+#deck .eqslot.on{border:2px solid #3dabff;background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.45),rgba(31,158,255,.22) 45%,rgba(8,63,120,.45)),#06192a;box-shadow:0 0 12px #1f9eff}
+#deck .eql{position:absolute;left:12px;bottom:8px;font-size:13px;letter-spacing:2px;color:#9fc3e6}
+#deck .eqn{position:absolute;right:10px;bottom:8px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:700;color:#fff;background:#000;border:1.5px solid rgba(53,168,255,.6)}
+#deck .eqa{flex:1;border-radius:12px;border:1.5px solid rgba(53,168,255,.35);background:rgba(8,20,32,.6);display:grid;place-items:center}
+#deck .eqa svg{width:58%;opacity:.8}
+#deck .eqrow.att .eqmod{flex:0 0 22%}#deck .eqrow.att .eqslot:has(+ .eqmod){flex:0 0 52%}
+#deck .invgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;height:100%}
+#deck .invc{position:relative;border-radius:12px;border:1.5px solid rgba(53,168,255,.4);background:rgba(8,20,32,.7);display:grid;place-items:center}
+#deck .invc svg{width:46%;max-height:52%;filter:drop-shadow(0 0 4px rgba(31,158,255,.8))}
+#deck .invn{position:absolute;right:10px;top:6px;font-size:18px;font-weight:700;color:#fff;text-shadow:0 0 6px #1f9eff}
+#deck .eqtabs .eqt{height:60px}
+#deck .fpsk .nt{font-size:15px!important;line-height:1.05!important}#deck .invc svg{width:56%;max-height:60%}
+#deck .eqslot img.eqimg{max-width:44%;max-height:46%;filter:drop-shadow(0 0 4px rgba(31,158,255,.85))}#deck .eqa img.eqimg{max-width:62%;max-height:56%;opacity:.85}#deck .eqt img.eqimg{max-width:70%;max-height:60%}#deck .invc img.eqimg{max-width:60%;max-height:56%}
+#deck#deck .nb.k.fpsk .nt{font-size:14px!important;line-height:1!important}#deck#deck .nb.k.fpsk .ns{font-size:11px!important}
+/* EQUIPMENT panel - GLASS treatment (RAZ 24 NOV: "give it the glam glass treatment"): every slot, tab and button gets the deck key's rim, honeycomb, glass sheen, glow and 3D edge */
+#deck .eqslot,#deck .eqa,#deck .eqt,#deck .invc,#deck .eqb{position:relative;overflow:hidden;border:2px solid #35a8ff!important;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.3' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,
+  radial-gradient(85% 90% at 50% 45%,rgba(31,158,255,.2),rgba(31,158,255,.05) 70%,transparent),linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92))!important;
+ box-shadow:0 3px 0 0 #0c233a,0 5px 0 0 #050f1a,0 0 2px rgba(255,255,255,.7),0 0 3px #1f9eff,0 0 10px rgba(31,158,255,.25),inset 0 0 6px rgba(31,158,255,.45),inset 0 -6px 12px rgba(0,0,0,.6)!important}
+#deck .eqslot::after,#deck .eqa::after,#deck .eqt::after,#deck .invc::after,#deck .eqb::after{content:"";position:absolute;inset:3px;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 38%,transparent 42%)}
+#deck .eqslot.on,#deck .eqt.on,#deck .eqb.on{border-color:#3dabff!important;background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(31,158,255,.32) 45%,rgba(8,63,120,.5)),#06192a!important;box-shadow:0 3px 0 0 #0c233a,0 0 3px #fff,0 0 12px #1f9eff,inset 0 0 14px rgba(61,171,255,.45)!important}
+#deck .eqtabs{gap:8px!important}#deck .eqtabs .eqt{height:54px!important}
+#deck .eqacts{position:absolute;left:14px;top:204px;display:flex;flex-direction:column;gap:8px}
+#deck .eqb{width:62px;height:70px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer}
+#deck .eqb svg{width:32px;height:32px;fill:none;stroke:#d6ebff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px #1f9eff)}
+#deck .eqb svg .s{fill:#d6ebff;stroke:none}#deck .eqb svg .h{stroke-width:1.5;opacity:.7}
+#deck .eqb span{font:700 9px/1 Oxanium,'Segoe UI',sans-serif;letter-spacing:1px;color:#cfe6ff;text-shadow:0 0 4px #1f9eff;white-space:nowrap}
+#deck .eqpanel{border-width:2px!important}
+#deck .eqb{height:62px!important}#deck .eqacts{gap:6px!important;top:196px!important}
+#deck .eqacts{top:136px!important}
+/* filled panel-button symbols */
+#deck .eqb svg{fill:#d6ebff!important;stroke:none!important;color:#d6ebff;width:36px!important;height:36px!important}
+/* panel buttons = the deck key line style (approved Command Deck symbols) */
+#deck .eqb svg{fill:none!important;stroke:#d6ebff!important;stroke-width:3.2!important;stroke-linecap:round;stroke-linejoin:round;width:38px!important;height:38px!important}
+#deck .eqb svg{stroke:none!important;fill:none!important;width:40px!important;height:40px!important;filter:drop-shadow(0 0 4px rgba(31,158,255,.85))!important}
+/* panel v3 (RAZ 24 NOV: "move the top left pistol down and stretch the equipment out all the way across", "get rid of that crossed line and put something in line with our honeycomb cells") */
+#deck .eqhead{margin:12px 18px 10px 18px!important}
+#deck .eqhead i{height:22px!important;border-radius:6px!important;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%233dabff' stroke-opacity='.9' stroke-width='1'/%3E%3C/svg%3E") 0 -1px/14px 24px,linear-gradient(90deg,transparent,rgba(31,158,255,.25) 30%,rgba(31,158,255,.25) 70%,transparent)!important;
+ -webkit-mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);filter:drop-shadow(0 0 4px rgba(31,158,255,.7))}
+#deck .eqtabs{top:62px!important;gap:6px!important}#deck .eqtabs .eqt{height:50px!important}
+#deck .eqacts{top:174px!important;gap:5px!important}
+#deck .eqb{height:48px!important;gap:1px!important}#deck .eqb svg{width:28px!important;height:28px!important}#deck .eqb span{font-size:8px!important}
+#deck .eqacts{top:184px!important}#deck .eqb{height:46px!important}
+#deck .eqb[data-act=holster] svg{width:44px!important;height:44px!important}#deck .eqb[data-act=holster] span:empty{display:none}
+/* only the weapon in hand is lit; the hand slot is DROP */
+#deck .eqslot.dimq,#deck .eqb.dimq{opacity:.42!important;filter:saturate(.6)}
+#deck .eqb.sel{border-color:#3dabff!important;background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(31,158,255,.32) 45%,rgba(8,63,120,.5)),#06192a!important;box-shadow:0 3px 0 0 #0c233a,0 0 3px #fff,0 0 12px #1f9eff,inset 0 0 14px rgba(61,171,255,.45)!important}
+#deck .eqslot[data-slot=DROP] .eql{font-size:15px;color:#fff;letter-spacing:3px}
+#deck .eqa.dimq{opacity:.42!important;filter:saturate(.6)}
+/* FPS vitals strip (replaces the DROP slot) */
+#deck .eqrow.vitrow{flex:1.15!important}
+#deck .vit{flex:1;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;gap:6px}
+#deck .vt{position:relative;overflow:hidden;border-radius:10px;border:1.5px solid rgba(53,168,255,.55);padding:4px 7px 6px;display:flex;flex-direction:column;justify-content:space-between;
+ background:linear-gradient(180deg,rgba(8,20,32,.85),rgba(2,6,10,.92));box-shadow:inset 0 0 8px rgba(31,158,255,.18),0 0 4px rgba(31,158,255,.2);font-family:Oxanium,'Segoe UI',sans-serif}
+#deck .vt .vk{font-size:9.5px;letter-spacing:1.5px;color:#9fc3e6}
+#deck .vt b{font-size:17px;color:#fff;letter-spacing:.5px;text-shadow:0 0 6px rgba(31,158,255,.8);white-space:nowrap}
+#deck .vt i{position:absolute;left:6px;right:6px;bottom:3px;height:3px;border-radius:2px;background:rgba(53,168,255,.18)}
+#deck .vt i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p);border-radius:2px;background:#1f9eff;box-shadow:0 0 6px #1f9eff}
+#deck .vt.vg{border-color:rgba(20,255,99,.6)}#deck .vt.vg b{text-shadow:0 0 6px rgba(20,255,99,.7)}#deck .vt.vg i::after{background:#14ff63;box-shadow:0 0 6px #14ff63}
+#deck .vt.va{border-color:#ffae00}#deck .vt.va b{color:#ffd27a;text-shadow:0 0 6px rgba(255,174,0,.8)}#deck .vt.va i::after{background:#ffae00}
+#deck .vt.vr{border-color:#a00d22;animation:wflash .8s steps(1) infinite}#deck .vt.vr b{color:#d9384c;text-shadow:0 0 6px rgba(160,13,34,.9)}#deck .vt.vr i::after{background:#a00d22}
+/* VITALS v2 graphics */
+#deck .eqrow.vitrow{flex:1.35!important}
+#deck .vit{display:block!important}
+#deck .vit2{height:100%;display:grid;grid-template-columns:2.3fr 1.6fr .45fr;gap:8px;font-family:Oxanium,'Segoe UI',sans-serif;
+ border-radius:14px;border:2px solid rgba(53,168,255,.55);padding:8px 10px;box-sizing:border-box;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.22' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,linear-gradient(180deg,rgba(6,14,24,.92),rgba(0,0,0,.92));
+ box-shadow:0 0 6px rgba(31,158,255,.3),inset 0 0 12px rgba(31,158,255,.15)}
+#deck .vit2 span{font-size:10px;letter-spacing:2px;color:#9fc3e6;display:flex;align-items:center;justify-content:center;gap:4px}
+#deck .vring{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+#deck .vring svg{width:100%;max-height:calc(100% - 14px);overflow:visible}
+#deck .vring .trk{fill:none;stroke:rgba(53,168,255,.18);stroke-width:7}
+#deck .vring .arc{fill:none;stroke-width:7;stroke-linecap:round;transform:rotate(-90deg);transform-origin:45px 45px;transition:stroke-dashoffset .6s}
+#deck .vring .tick{stroke:rgba(159,210,255,.45);stroke-width:1.4}
+#deck .vring .rv{font:800 22px Oxanium,sans-serif;fill:#fff;text-anchor:middle}#deck .vring .ru{font:700 10px Oxanium,sans-serif;fill:#9fc3e6;text-anchor:middle}
+#deck .vtank{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+#deck .vtank .tk{position:relative;flex:1;width:34px;border-radius:17px;border:2px solid rgba(53,168,255,.6);overflow:hidden;background:rgba(2,8,14,.9);box-shadow:inset 0 0 8px rgba(31,158,255,.2)}
+#deck .vtank .lq{position:absolute;left:0;right:0;bottom:0;transition:height .6s}
+#deck .vtank .lq::before{content:"";position:absolute;left:-10%;right:-10%;top:-3px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);filter:blur(1px)}
+#deck .vtank .tkg{position:absolute;inset:2px;border-radius:inherit;background:linear-gradient(90deg,rgba(255,255,255,.18),transparent 40%)}
+#deck .vtank b{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-size:12px;color:#fff;text-shadow:0 0 4px #000,0 0 6px #000}
+#deck .vtank .ti{width:12px;height:12px;color:#9fc3e6}
+#deck .vmid{display:flex;flex-direction:column;gap:5px;min-width:0}
+#deck .vheart{position:relative;flex:1.2;border-radius:10px;border:1.5px solid rgba(53,168,255,.45);overflow:hidden;background:rgba(2,8,14,.8)}
+#deck .vheart > svg{position:absolute;inset:0;width:100%;height:100%}
+#deck .vheart .ecg{animation:ecg linear infinite}#deck .vheart .ecg path{fill:none;stroke-width:2;stroke-linejoin:round}
+@keyframes ecg{from{transform:translateX(0)}to{transform:translateX(-120px)}}
+#deck .vheart .hv{position:absolute;right:8px;top:4px;display:flex;align-items:baseline;gap:4px}
+#deck .vheart .hico{width:14px;height:13px;align-self:center;animation:beat ease-in-out infinite}@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.3)}}
+#deck .vheart .hv b{font-size:20px;color:#fff;text-shadow:0 0 6px rgba(31,158,255,.8)}#deck .vheart .hv small{font-size:9px;color:#9fc3e6;letter-spacing:1px}
+#deck .vchips{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+#deck .vchip{display:flex;align-items:center;justify-content:center;gap:4px;height:26px;border-radius:8px;border:1.5px solid rgba(53,168,255,.45);background:rgba(2,8,14,.85);color:#3dabff}
+#deck .vchip svg{width:15px;height:15px}#deck .vchip b{font-size:12px;color:#fff}
+#deck .vchip.vg{border-color:rgba(20,255,99,.55);color:#14ff63}#deck .vchip.va{border-color:#ffae00;color:#ffae00}#deck .vchip.vr{border-color:#a00d22;color:#a00d22;animation:wflash .8s steps(1) infinite}
+#deck .vloc{font-size:10px;letter-spacing:2.5px;color:#9fc3e6;text-align:center}
+#deck .vtherm{display:flex;flex-direction:column;align-items:center;min-width:0}
+#deck .vtherm svg{flex:1;width:100%;max-height:calc(100% - 28px)}#deck .vtherm .trk{fill:rgba(2,8,14,.9);stroke:rgba(53,168,255,.6);stroke-width:1.5}
+#deck .vtherm b{font-size:13px;color:#fff}
+#deck .vring.vr .rv,#deck .vtank.vr b{fill:#d9384c;color:#d9384c}
+#deck .vbars{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px 10px;min-width:0}
+#deck .vpill{display:flex;align-items:center;gap:6px;min-width:0}
+#deck .vpill .pic{flex:0 0 26px;height:26px;border-radius:7px;display:grid;place-items:center;color:#d6ebff;background:linear-gradient(180deg,#0f3a66,#082a4c);border:1.5px solid #35a8ff;box-shadow:0 0 6px rgba(31,158,255,.5)}
+#deck .vpill .pic svg{width:16px;height:16px}#deck .vpill .pic .ti{width:15px;height:15px;color:#d6ebff}
+#deck .vpill .pr{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+#deck .vpill .ph{display:flex;justify-content:space-between;align-items:baseline}#deck .vpill .ph span{justify-content:flex-start;font-size:9px}
+#deck .vpill .ph b{font-size:15px;color:#fff;text-shadow:0 0 6px rgba(31,158,255,.8)}#deck .vpill .ph small{font-size:9px;color:#9fc3e6;margin-left:1px}
+#deck .vpill .pc{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;height:16px}
+#deck .vpill .pc i{border-radius:4px;background:rgba(18,40,62,.85);border:1px solid rgba(53,168,255,.18)}
+#deck .vpill .pc i.on{background:linear-gradient(180deg,#fff 0,var(--c) 30%,var(--c) 70%,rgba(0,0,0,.25));border-color:var(--c);box-shadow:0 0 6px var(--c)}
+/* no moving pulse line (RAZ 24 NOV: "pulse graphic is too much, distracting"): HEART = the same symbol box + pills as HEALTH; chips = symbol boxes too */
+#deck .vmid{justify-content:center;gap:10px!important}
+#deck .vmid .vpill{flex:0 0 auto}
+#deck .vchip{background:linear-gradient(180deg,#0f3a66,#082a4c)!important;border:1.5px solid #35a8ff!important;box-shadow:0 0 6px rgba(31,158,255,.45);height:30px!important;color:#d6ebff!important}
+#deck .vchip.vg svg{color:#14ff63}#deck .vchip.va svg{color:#ffae00}#deck .vchip.vr svg{color:#a00d22}
+/* body temperature v2: symbol box + vertical level pills, the normal band (35 - 39 °C) outlined */
+#deck .vtherm{display:none!important}
+#deck .vtherm2{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+#deck .vtherm2 .pic{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:#d6ebff;background:linear-gradient(180deg,#0f3a66,#082a4c);border:1.5px solid #35a8ff;box-shadow:0 0 6px rgba(31,158,255,.5)}
+#deck .vtherm2 .pic svg{width:16px;height:16px}
+#deck .vtherm2 b{font-size:14px;color:#fff;text-shadow:0 0 6px rgba(31,158,255,.8)}#deck .vtherm2 b small{font-size:9px;color:#9fc3e6}
+#deck .vtherm2 .tcol{flex:1;display:grid;grid-template-rows:repeat(10,1fr);gap:3px;width:22px}
+#deck .vtherm2 .tcol i{border-radius:4px;background:rgba(18,40,62,.85);border:1px solid rgba(53,168,255,.18)}
+#deck .vtherm2 .tcol i.band{border-color:rgba(53,168,255,.55)}
+#deck .vtherm2 .tcol i.on{background:linear-gradient(90deg,#fff 0,var(--c) 30%,var(--c) 70%,rgba(0,0,0,.25));border-color:var(--c);box-shadow:0 0 6px var(--c)}
+/* EQUIPMENT lower section: rotating info pane + quick FPS keys */
+#deck .eqlow{flex:2.2;display:grid;grid-template-columns:1.25fr 1fr;gap:10px;min-height:0}
+#deck .rot{position:relative;display:flex;flex-direction:column;min-height:0;border-radius:14px;border:2px solid rgba(53,168,255,.55);padding:8px 10px;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.22' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,linear-gradient(180deg,rgba(6,14,24,.92),rgba(0,0,0,.92));box-shadow:0 0 6px rgba(31,158,255,.3),inset 0 0 12px rgba(31,158,255,.15);font-family:Oxanium,'Segoe UI',sans-serif}
+#deck .rot.held{border-color:#3dabff;box-shadow:0 0 12px #1f9eff,inset 0 0 12px rgba(31,158,255,.25)}
+#deck .rhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}#deck .rhead .rname{font-size:14px;letter-spacing:3px;color:#fff;text-shadow:0 0 6px #1f9eff}
+#deck .rdots{flex:1;display:flex;gap:5px;justify-content:center}#deck .rdots i{width:9px;height:9px;border-radius:50%;background:rgba(53,168,255,.25);border:1px solid rgba(53,168,255,.5);cursor:pointer}#deck .rdots i.on{background:#3dabff;box-shadow:0 0 6px #1f9eff}
+#deck .rgear{cursor:pointer;color:#9fc3e6;font-size:16px}
+#deck .rpage{flex:1;display:flex;flex-direction:column;gap:6px;min-height:0;transition:opacity .38s,filter .38s;position:relative}
+#deck .rpage.out{opacity:0;filter:blur(4px)}
+#deck .rpage .eqslot.rw{flex:1;display:flex!important;align-items:center;gap:10px;padding:0 10px;place-items:unset}
+#deck .rpage .eqslot.rw img.eqimg{max-height:70%;max-width:34%;position:static}#deck .rpage .eqslot.rw .eql{position:static;font-size:12px}#deck .rpage .eqslot.rw .eqn{position:static;margin-left:auto}
+#deck .rcard{flex:1;border-radius:10px;border:1.5px solid rgba(53,168,255,.4);background:rgba(2,8,14,.8);padding:5px 9px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+#deck .rcard.down{border-color:#a00d22;animation:wflash .8s steps(1) infinite}
+#deck .rt{display:flex;justify-content:space-between;align-items:baseline;gap:6px}#deck .rt b{font-size:13px;color:#fff;letter-spacing:1.5px}#deck .rt span{font-size:10px;color:#9fc3e6;letter-spacing:1px;white-space:nowrap}
+#deck .rp{display:flex;align-items:center;gap:6px}#deck .rp > span{font-size:11px;color:#fff;width:34px}#deck .rp .pc{flex:1}
+#deck .rot .pc{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;height:10px}#deck .rot .pc i{border-radius:3px;background:rgba(18,40,62,.85);border:1px solid rgba(53,168,255,.18)}
+#deck .rot .pc i.on{background:var(--c);border-color:var(--c);box-shadow:0 0 5px var(--c)}
+#deck .rot .vg{color:#14ff63!important}#deck .rot .va{color:#ffae00!important}#deck .rot .vr{color:#c4182f!important}
+#deck .rfeed{flex:1;display:flex;align-items:center;gap:8px;border-radius:8px;border:1.5px solid rgba(53,168,255,.35);background:rgba(2,8,14,.8);padding:0 8px;font-size:11px;color:#9fc3e6}
+#deck .rfeed b{color:#fff;letter-spacing:1px}#deck .rfeed.vr{border-color:#a00d22}
+#deck .rwal{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}#deck .rwal b{font-size:34px;color:#fff;text-shadow:0 0 10px #1f9eff}#deck .rwal span{font-size:11px;letter-spacing:2px;color:#9fc3e6}
+#deck .smp{position:absolute;right:2px;bottom:-2px;font-style:normal;font-size:8px;letter-spacing:1.5px;color:#9fc3e6;opacity:.7}
+#deck .rcfg{display:none;position:absolute;inset:34px 8px 8px;z-index:5;border-radius:10px;background:rgba(2,6,12,.97);border:1.5px solid #35a8ff;padding:8px;flex-wrap:wrap;gap:6px;align-content:flex-start}
+#deck .rcfg.open{display:flex}#deck .rcfg b{width:100%;font-size:10px;letter-spacing:2px;color:#9fc3e6}
+#deck .rcfg span{padding:5px 9px;border-radius:8px;border:1.5px solid rgba(53,168,255,.4);font-size:11px;color:#9fc3e6;cursor:pointer}#deck .rcfg span.on{color:#fff;border-color:#3dabff;background:#06192a;box-shadow:0 0 6px #1f9eff}
+#deck .quick{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:6px;min-height:0}
+#deck .qk{position:relative;overflow:hidden;border-radius:12px;border:2px solid #35a8ff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='24'%3E%3Cpath d='M7 0l7 4v8l-7 4-7-4V4z M7 16v8' fill='none' stroke='%231f9eff' stroke-opacity='.3' stroke-width='.6'/%3E%3C/svg%3E") 0 0/14px 24px,radial-gradient(85% 90% at 50% 45%,rgba(31,158,255,.2),rgba(31,158,255,.05) 70%,transparent),linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92));
+ box-shadow:0 3px 0 0 #0c233a,0 5px 0 0 #050f1a,0 0 3px #1f9eff,inset 0 0 6px rgba(31,158,255,.45)}
+#deck .qk::after{content:"";position:absolute;inset:3px;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.03) 38%,transparent 42%)}
+#deck .qk img.eqimg{max-width:58%;max-height:42%}#deck .qk span{font-size:10px;letter-spacing:1.2px;color:#fff;font-weight:700;text-align:center;text-shadow:0 0 5px #1f9eff;line-height:1.1}
+#deck .qk.on{border-color:#3dabff;background:radial-gradient(120% 120% at 50% 0%,rgba(61,171,255,.55),rgba(31,158,255,.32) 45%,rgba(8,63,120,.5)),#06192a}
+#deck .rpage .eqslot.rw{display:grid!important;grid-template-columns:42% 1fr auto;align-items:center;padding:0 12px}#deck .rpage .eqslot.rw img.eqimg{max-width:90%;max-height:64%;justify-self:center}#deck .rpage .eqslot.rw .eql{font-size:13px;letter-spacing:2px}
+/* BODY page (health on the body outline) + wallet send key */
+#deck .rbody{flex:1;display:flex;gap:12px;align-items:center;min-height:0}
+#deck .rbody .bfig{height:100%;max-height:100%;flex:0 0 auto;width:auto;filter:drop-shadow(0 0 6px rgba(31,158,255,.6))}
+#deck .binfo{display:flex;flex-direction:column;gap:3px}#deck .binfo span{font-size:10px;letter-spacing:2px;color:#9fc3e6}
+#deck .binfo b{font-size:28px;color:#fff;text-shadow:0 0 8px #1f9eff}#deck .binfo em{font-style:normal;font-size:12px;letter-spacing:1px;color:#9fc3e6}
+#deck .rwal .wsend{margin-top:6px;padding:8px 14px;height:auto}#deck .rwal .wsend span{font-size:11px;letter-spacing:1.5px}
+/* EQUIPMENT box: no outline pill (RAZ 24 NOV) - floats like the rest of the hologram */
+#deck .eqpanel{border:0!important;box-shadow:none!important;background:transparent!important}
+/* rotating pane + vitals: no pastel, softer red, less blocky type (RAZ 24 NOV: "colors look pastel inside the mission area and the red is too bright. the font is all blocky still") */
+#deck .rot,#deck .vit2,#deck .eqpanel .eqhead b{font-weight:500!important}
+#deck .rot b,#deck .vit2 b,#deck .vpill .ph b,#deck .binfo b,#deck .rwal b{font-weight:600!important;letter-spacing:1px}
+#deck .rot span,#deck .rt span,#deck .rfeed,#deck .vit2 span,#deck .binfo span,#deck .binfo em,#deck .rwal span,#deck .vloc{color:#3dabff!important;font-weight:500!important}
+#deck .rt b,#deck .rfeed b{color:#fff!important}
+#deck .rot .vr,#deck .rfeed .vr{color:#a00d22!important}#deck .rcard.down,#deck .rfeed.vr{border-color:#7d0a1a!important}
+#deck .rot .vg{color:#14ff63!important}#deck .rot .va{color:#ffae00!important}
+#deck .rcard,#deck .rfeed{background:rgba(0,4,8,.88)!important;border-color:rgba(31,158,255,.45)!important}
+/* small panel buttons on the RIGHT of the equipment pills (RAZ 24 NOV: "move the small buttons on the fps page to the right side of the bigger center equipment pills") */
+#deck .eqtabs,#deck .eqacts{left:auto!important;right:14px!important}
+#deck .eqbody{left:16px!important;right:92px!important}
+
+/* 24 NOV: red darker, blood red (RAZ: "the red is still too bright, a little more dark and bloody") */
+/* no EDIT key on the Holo (settings live in the TOC) + the fat CAUTION card */
+#deck .editk{display:none!important}
+#deck .tocwarn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+#deck .tocwarn.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#deck .tw-in{display:flex;align-items:center;gap:30px;padding:30px 48px;border-radius:26px;border:4px solid #ffae00;font-family:Oxanium,'Segoe UI',sans-serif;
+ background:repeating-linear-gradient(135deg,rgba(255,174,0,.12) 0 18px,transparent 18px 36px),rgba(10,6,0,.96);box-shadow:0 0 30px rgba(255,174,0,.45),inset 0 0 24px rgba(255,174,0,.2)}
+#deck .tw-ic{flex:0 0 auto;width:110px;height:96px;display:grid;place-items:center;font-size:72px;font-weight:900;color:#0a0600;background:#ffae00;clip-path:polygon(50% 0,100% 100%,0 100%);padding-top:22px;box-sizing:border-box}
+#deck .tw-in b{display:block;font-size:30px;letter-spacing:10px;color:#ffae00;font-weight:900}
+#deck .tw-in strong{display:block;font-size:52px;letter-spacing:3px;color:#fff;font-weight:900;line-height:1.05;text-shadow:0 0 12px rgba(255,174,0,.6)}
+#deck .tw-in span{display:block;margin-top:8px;font-size:20px;letter-spacing:3px;color:#ffd27a;font-weight:700}
+/* FPS page symmetric v2 (RAZ 24 NOV: "is that symmetrical ... uneven height"): the small button column spans exactly the height of the pills beside it (9 equal buttons) */
+#deck .eqtabs{top:62px!important;gap:7.4px!important}#deck .eqtabs .eqt{height:53px!important;width:62px!important}
+#deck .eqacts{top:182.8px!important;gap:7.4px!important}#deck .eqb{height:53px!important;width:62px!important}
+#deck .eqbody{top:62px!important;bottom:14px!important}
+#deck .qk svg{width:56%;max-height:40%;filter:drop-shadow(0 0 4px rgba(31,158,255,.85))}#deck .qk img.eqimg{max-width:56%;max-height:44%;object-fit:contain;filter:drop-shadow(0 0 4px rgba(31,158,255,.85))}
+/* 24 NOV compact FPS: MOBIGLAS / RESPAWN / DROP ITEM as small keys in a column right of the small buttons, centred on the panel height */
+#deck .eqside{position:absolute;left:623.4px;top:243px;width:62px;display:flex;flex-direction:column;gap:7.4px;z-index:3}
+#deck .eqside .eqb{height:53px!important;width:62px!important;display:flex;align-items:center;justify-content:center;text-align:center}
+#deck .eqside .eqb span{font-size:9px!important;line-height:1.15;letter-spacing:.8px;position:static!important}
+/* 24 NOV TELEMETRY FLOAT v2: one area, no outline at all; only the page shows, everything else on the Holo disappears */
+body.telemfloat #deck > :not(#tfloat){visibility:hidden!important;pointer-events:none!important}
+body.telemfloat #deck{background:transparent!important;box-shadow:none!important;border-color:transparent!important}
+#tfloat{position:absolute;z-index:60;font-family:Oxanium,'Segoe UI',sans-serif;visibility:visible!important}
+#tfloat .tfbar{height:34px;display:flex;align-items:center;gap:6px;padding:0 4px;cursor:grab;touch-action:none;user-select:none;background:none;border:none}
+#tfloat.drag .tfbar{cursor:grabbing}
+#tfloat .tfgrip{color:#9fc3e6;letter-spacing:-2px;font-size:15px;padding:0 6px}
+#tfloat .tftab{padding:4px 11px;border-radius:12px;font-size:11px;letter-spacing:1.5px;color:#9fc3e6;cursor:pointer;background:rgba(2,8,14,.55)}
+#tfloat .tftab.on{color:#fff;background:#0b3a66;box-shadow:0 0 6px #1f9eff}
+#tfloat .tfbar em{font-style:normal;font-size:10px;letter-spacing:2px;color:#ffae00;margin-left:auto;padding:0 6px}
+#tfloat .tfback{margin-left:auto;padding:4px 12px;border-radius:12px;background:#06192a;color:#fff;font-size:11px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 4px #1f9eff}
+#tfloat .tfbar em + .tfback{margin-left:4px}
+#tfloat .tfwin{overflow:hidden;border:none;background:none;box-shadow:none}
+#tfloat iframe{border:0;transform-origin:0 0;display:block;background:transparent}
+
+/* 24 NOV flight bottom pages: the small clickable page strip under the POWER frame */
+#deck #fbhost .fbdots{position:absolute;left:50%;transform:translateX(-50%);bottom:2px;display:flex;gap:8px;pointer-events:auto;padding:4px 8px;border-radius:14px;background:rgba(2,8,14,.7)}
+#deck #fbhost .fbdots i{display:flex;align-items:center;height:30px;padding:0 14px;border-radius:15px;border:1.5px solid rgba(53,168,255,.45);cursor:pointer;font-style:normal}
+#deck #fbhost .fbdots i b{font:700 13px Oxanium,'Segoe UI',sans-serif;letter-spacing:1.5px;color:#9fc3e6}
+#deck #fbhost .fbdots i.on{border-color:#3dabff;background:#0b3a66;box-shadow:0 0 6px #1f9eff}
+#deck #fbhost .fbdots i.on b{color:#fff}
+#deck #fbhost .fbk{pointer-events:auto}
+/* 24 NOV RAZ: "for the holo remove all bound pills" - the page strips are plain words now, no pill boxes; the chosen page = white with a blue glow line */
+#tfloat .tftab,#tfloat .tfback,#deck #fbhost .fbdots,#deck #fbhost .fbdots i{background:none!important;border:none!important;box-shadow:none!important}
+#tfloat .tftab.on,#deck #fbhost .fbdots i.on b,#tfloat .tfback{color:#fff!important;text-shadow:0 0 6px #1f9eff}
+#tfloat .tftab.on,#deck #fbhost .fbdots i.on{box-shadow:inset 0 -2px 0 #3dabff!important;border-radius:0!important}
+#deck .tocwarn em{display:block;font-style:normal;font-size:13px;letter-spacing:1.5px;color:#fff;margin-top:8px;max-width:760px;line-height:1.35}
+/* 24 NOV grouped tabs: the open group's tab splits into two halves (COMBAT | TURRET, MINING | SALVAGE) */
+#deck .tab.left.grp{padding:0!important;gap:0!important;display:flex!important;align-items:stretch!important}
+#deck .tab.left.grp .gseg{flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;letter-spacing:2px;color:rgba(214,235,255,.55);cursor:pointer;position:relative;z-index:2;border-radius:inherit}
+#deck .tab.left.grp .gseg.on{color:#fff;text-shadow:0 0 8px #1f9eff,0 0 2px #fff;background:radial-gradient(90% 80% at 50% 50%,rgba(61,171,255,.35),transparent 75%)}
+#deck .tab.left.grp .gdiv{width:2px;margin:12px 0;background:linear-gradient(180deg,transparent,#3dabff,transparent);position:relative;z-index:2}
+/* 24 NOV glam pass: page words readable at Holo size, glowing like the deck lettering */
+#deck #fbhost .fbdots{gap:18px!important}
+#deck #fbhost .fbdots i b{font-size:16px!important;letter-spacing:3px!important;color:rgba(214,235,255,.6)!important}
+#deck #fbhost .fbdots i.on b{color:#fff!important;text-shadow:0 0 8px #1f9eff,0 0 2px #fff!important}
+#tfloat .tftab{font-size:14px!important;letter-spacing:2.5px!important;color:rgba(214,235,255,.6)!important}
+#tfloat .tftab.on{color:#fff!important;text-shadow:0 0 8px #1f9eff,0 0 2px #fff!important}
+#tfloat .tfback{font-size:14px!important}
+#deck .tab.left.grp .gseg{font-size:16px!important;letter-spacing:1.5px!important}
+#deck #fbhost .fbdots i b{color:rgba(214,235,255,.8)!important;text-shadow:0 0 4px rgba(31,158,255,.7)}
+/* 24 NOV late: page column hidden until its key is tapped; one glass key shows the page you are on */
+body.menuhid #deck #chrome .tab.left:not(.menuhandle){opacity:0;pointer-events:none;transform:translateX(calc(var(--mx,0px) - 24px));transition:opacity .3s,transform .3s}
+body.menuhid.menuopen #deck #chrome .tab.left:not(.menuhandle){opacity:1;pointer-events:auto;transform:translateX(var(--mx,0px))}
+#deck #chrome .menuhandle{transition:opacity .3s;cursor:pointer;justify-content:center}
+body:not(.menuhid) #deck #chrome .menuhandle,body.menuopen #deck #chrome .menuhandle{opacity:0;pointer-events:none}
+#deck #chrome .menuhandle .mhl{display:flex;align-items:center;gap:12px;font-size:26px;letter-spacing:2px;color:#fff;text-shadow:0 0 8px #1f9eff;white-space:nowrap;position:relative;z-index:2}
+#deck #chrome .menuhandle .mhi{width:18px;height:14px;background:linear-gradient(#fff 0 2px,transparent 2px 6px,#fff 6px 8px,transparent 8px 12px,#fff 12px 14px);filter:drop-shadow(0 0 4px #1f9eff)}
+
+/* 24 NOV late: the page key matches SHIP POWER / EJECT (dark glass, glowing words), not a solid blue tab */
+#deck #chrome .menuhandle{background:radial-gradient(85% 90% at 50% 45%,rgba(31,158,255,.2),rgba(31,158,255,.05) 70%,transparent),linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92))!important;border:2px solid #35a8ff!important;box-shadow:0 3px 0 0 #0c233a,0 5px 0 0 #050f1a,0 0 6px #1f9eff,inset 0 0 8px rgba(31,158,255,.45)!important;display:flex!important;align-items:center;justify-content:center}
+#deck #chrome .menuhandle .mhl{flex-direction:column;gap:6px;text-align:center;line-height:1.1}
+#deck #chrome .menuhandle .mhi{width:26px;height:18px;background:linear-gradient(#fff 0 3px,transparent 3px 7.5px,#fff 7.5px 10.5px,transparent 10.5px 15px,#fff 15px 18px)}
+
+/* menu open: SHIP POWER steps aside while the column fills the left slot */
+#deck #plant{transition:opacity .3s}
+body.menuhid.menuopen #deck #plant{opacity:0;pointer-events:none}
+/* 24 NOV late FONT STANDARD (RAZ: "get the right font on all buttons" / "go through all the fonts on all pages first").
+   Audit found key names at 22 / 25 / 25.5 / 27 / 28 px depending on the page, page key + EJECT in bold 700, FPS button words at 8 - 10 px.
+   One standard now, every page: key name = Oxanium 500, 26 px, 0.8 px spacing, white glow; sub-word (TAP / HOLD / TOGGLE / state) = Oxanium 400, 19 px.
+   Long names wrap to two lines instead of shrinking. Live state words (LIGHTS ON, ATC replies, gear) keep their approved state look. */
+
+
+
+
+
+/* FPS panel (shown at 1.13x): words were 8 - 10 px */
+#deck .eqb span,#deck .eqside .eqb span{font-size:11.5px!important;font-weight:500!important;letter-spacing:.8px!important;line-height:1.15!important}
+#deck .qk span{font-size:13px!important;font-weight:500!important;letter-spacing:1px!important}
+#deck .eqslot .eql,#deck .rpage .eqslot.rw .eql{font-size:14px!important;font-weight:500!important}
+#deck .eqb[data-act="holster"] span,#deck .eqb b{font-weight:500!important}
+/* FPS words: largest size that fits each small key (FLASHLIGHT / MULTITOOL / HELMET ON / FIRE MODE whole) */
+#deck .qk span{font-size:10.5px!important;letter-spacing:.4px!important;white-space:nowrap}
+#deck .eqb span,#deck .eqside .eqb span{font-size:9.5px!important;letter-spacing:.3px!important;white-space:normal;text-align:center;padding:0 2px}
+
+/* 25 NOV FINE WRITING (RAZ: "next sub target and other buttons look clumsy. it's supposed to be a fine writing" + "the label on the bottom ... is the wrong font").
+   Last night's 26 px / medium "standard" is withdrawn: the round keys and EJECT / SELF DESTRUCT are back to the deck's own lettering.
+   The keys and words added on 24 NOV now use the deck's fine lettering (as on the flat row QUANTUM / CRUISE and the page tabs): small, wide-spaced, white glow. */
+#deck #fbhost .bpl{font-size:19px!important;font-weight:500!important;letter-spacing:2.4px!important;line-height:1.25!important;padding:0 14px!important;max-width:100%;box-sizing:border-box;white-space:normal!important;overflow-wrap:break-word}
+#deck #fbhost .bps{font-size:13px!important;font-weight:400!important;letter-spacing:2.4px!important}
+#deck #fbhost .bpk [data-mc]{width:100%!important;box-sizing:border-box}
+#deck #fbhost .fbdots i b{font-weight:400!important;font-size:17px!important;letter-spacing:3.5px!important;color:rgba(214,235,255,.72)!important;text-shadow:0 0 1px #fff,0 0 6px rgba(31,158,255,.8)!important}
+#deck #fbhost .fbdots i.on b{color:#fff!important;text-shadow:0 0 1px #fff,0 0 3px rgba(255,255,255,.9),0 0 10px #1f9eff!important}
+#deck #chrome .menuhandle .mhl{font-weight:400!important;font-size:21px!important;letter-spacing:3.5px!important}
+#tfloat .tftab,#tfloat .tfback{font-weight:400!important;letter-spacing:3.5px!important}
+/* page indicator: a short glowing line centred under the chosen word (was a full-width underline); no side bars */
+#deck #fbhost .fbdots i,#deck #fbhost .fbdots i.on{box-shadow:none!important;border:0!important;border-radius:0!important;background:none!important;position:relative;padding:0 6px!important}
+#deck #fbhost .fbdots i::before,#deck #fbhost .fbdots i::after{content:none}
+#deck #fbhost .fbdots i.on::after{content:"";position:absolute;left:50%;bottom:-3px;width:34px;height:2px;transform:translateX(-50%);border-radius:2px;background:linear-gradient(90deg,transparent,#3dabff 30%,#fff 50%,#3dabff 70%,transparent);box-shadow:0 0 8px #1f9eff}
+#tfloat .tftab.on{box-shadow:none!important;position:relative}
+#tfloat .tftab.on::after{content:"";position:absolute;left:50%;bottom:0;width:30px;height:2px;transform:translateX(-50%);border-radius:2px;background:linear-gradient(90deg,transparent,#3dabff 30%,#fff 50%,#3dabff 70%,transparent);box-shadow:0 0 8px #1f9eff}
+/* 25 NOV (chat 2) RAZ: "words like targeting and weapons on the bottom of the display are too blurry". The white haze (0 0 1px #fff) + 6-10px glow on thin
+   17px letters smeared them, worse when the Holo window scales the deck down. Now: solid colour, heavier stroke, one tight glow only. */
+#deck #fbhost .fbdots i b{font-weight:600!important;font-size:18px!important;letter-spacing:3px!important;color:#b9d9f7!important;text-shadow:0 0 2px rgba(31,158,255,.55)!important;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#deck #fbhost .fbdots i.on b{color:#fff!important;text-shadow:0 0 3px rgba(31,158,255,.8)!important}
+/* 25 NOV: a pinned target key = lit in RSI blue (a state, not good/bad, so no green) */
+#deck .nb.k.pinned .holo{filter:drop-shadow(0 0 10px #1f9eff) brightness(1.25)}
+#deck .nb.k.pinned .nt{color:#fff!important;text-shadow:0 0 6px #1f9eff}
+#deck .nb.k.pinned .ns{color:#7cc4ff!important;letter-spacing:2px}
+/* 25 NOV (chat 2) RAZ: "only the individual buttons have a solid presence on the holo deck. there is no background squares or coloring, the buttons and holo
+   just sit on the monitor with no background". The EQUIPMENT page's vitals panel, page panel, weapon cards and value chips lose their fill, outline and glow;
+   their words, bars and pictures stay. Buttons keep their look. */
+#deck .vit2,#deck .rot,#deck .rcard,#deck .vchip{background:none!important;border-color:transparent!important;box-shadow:none!important}
+#deck .rcard.down,#deck .rfeed,#deck .rfeed.vr{border-color:transparent!important;background:none!important;box-shadow:none!important;outline:0!important}
+/* 25 NOV (chat 2) RAZ: "most of the pages still have black backgrounds behind the pages". MORE, settings, TRAVEL and TELEM painted a near-black sheet over the
+   whole deck to hide the keys behind them. Now the sheet is clear and the keys behind are hidden instead, so each page floats on the monitor like the deck.
+   (Settings "peek" while dragging a slider still shows the deck behind.) */
+body.moreopen #more,body.travelopen #travel,body.telemopen #telem,body.cfgopen #cfg{background:transparent!important;box-shadow:none!important}
+body.moreopen #area,body.moreopen #chrome,body.travelopen #area,body.travelopen #chrome,body.telemopen #area,body.telemopen #chrome,body.cfgopen:not(.peek) #area,body.cfgopen:not(.peek) #chrome{visibility:hidden!important}
+/* 25 NOV RAZ: "the font is still clumsy". Key names had three stacked glows (white 1 px + white 3 px + blue), which thickened every letter. Now: regular weight,
+   wider spacing, one thin white edge + one soft blue glow - the fine deck lettering of the bottom row. Sizes unchanged. */
+#deck .nb .nt,#deck .dz .nt,#deck .flatk span,#deck .flatk b{font-weight:400!important;letter-spacing:2px!important;text-shadow:0 0 1px rgba(255,255,255,.55),0 0 6px rgba(31,158,255,.7)!important}
+#deck .nb .ns,#deck .dz .ns{font-weight:400!important;letter-spacing:2px!important;text-shadow:0 0 4px rgba(31,158,255,.6)!important}
+
+/* HOLO TELEMETRY split (chat 2, 25 NOV). FLIGHT = the top row inside a holo display pill (the keys' raised glass: RSI-blue rim, glow, lit top bevel, faint
+   honeycomb inside only) with a corner grip to make it bigger or smaller. SYSTEMS = the lower half on its own page, faint honeycomb, no frame. */
+/* 25 NOV, RAZ: "actually remoe the pill outline from that telemetry page" -> no rim, no glow, no raised base: only the rounded honeycomb glass + the grip */
+#tfloat[data-kind=pill] .tfwin{position:relative;border-radius:34px!important;border:none!important;box-shadow:none!important;
+ background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2714%27 height=%2724%27%3E%3Cpath d=%27M7 0l7 4v8l-7 4-7-4V4z M7 16v8%27 fill=%27none%27 stroke=%27%2360b5ff%27 stroke-opacity=%27.13%27 stroke-width=%27.6%27/%3E%3C/svg%3E") 0 0/14px 24px repeat,rgba(1,3,6,.86)!important}
+#tfloat[data-kind=hex] .tfwin{border-radius:26px!important;background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2714%27 height=%2724%27%3E%3Cpath d=%27M7 0l7 4v8l-7 4-7-4V4z M7 16v8%27 fill=%27none%27 stroke=%27%2360b5ff%27 stroke-opacity=%27.13%27 stroke-width=%27.6%27/%3E%3C/svg%3E") 0 0/14px 24px repeat,rgba(1,3,6,.86)!important}
+#tfloat .tfsize{display:none}
+#tfloat[data-kind=pill] .tfsize{display:block;position:absolute;right:10px;bottom:10px;width:22px;height:22px;cursor:nwse-resize;touch-action:none;z-index:3;
+ background:linear-gradient(135deg,transparent 46%,#3dabff 46%,#3dabff 54%,transparent 54%,transparent 66%,#3dabff 66%,#3dabff 74%,transparent 74%);filter:drop-shadow(0 0 3px #1f9eff);opacity:.75}
+#tfloat[data-kind=pill] .tfsize:hover,#tfloat.sizing .tfsize{opacity:1}
+/* 25 NOV, RAZ: "move the 3 lines to the left of flight so it matches the rest of the design" -> the FLIGHT menu key = icon left of the word on one line, like SHIP POWER */
+#deck #chrome .menuhandle .mhl{flex-direction:row!important;gap:14px!important;text-align:left!important}
+/* 25 NOV, RAZ: "more and ON fotot lablel look really bad" + "fix everywhere": every sheet heading (MORE, the area name, TELEMETRY, TRAVEL) and the PAGE counter
+   get the deck's fine lettering (light weight, one thin white edge + one soft blue glow, no thick white bloom) and the small glint line the lit page tabs have */
+#deck .hd.nt{font-weight:400!important;font-size:21px!important;letter-spacing:6px!important;color:#fff!important;text-shadow:0 0 1px rgba(255,255,255,.55),0 0 6px rgba(31,158,255,.7)!important}
+#deck .hd.nt::after{content:"";position:absolute;left:0;bottom:-9px;width:38px;height:2px;border-radius:2px;background:linear-gradient(90deg,#3dabff,#fff 45%,#3dabff 75%,transparent);box-shadow:0 0 6px #1f9eff}
+#deck .hd.ns{font-weight:400!important;letter-spacing:3px!important;color:rgba(214,235,255,.75)!important;text-shadow:0 0 4px rgba(31,158,255,.6)!important}
+/* same request, the lit tab ("ON FOOT" in MORE, and every other lit tab): no solid blue block - dark glass like the keys, a bright RSI-blue rim with a soft glow,
+   fine white lettering (no white bloom); matches the page key (24 NOV: "dark glass, glowing words, not a solid blue tab") */
+#deck .tab.on:not(.menuhandle){background:radial-gradient(120% 70% at 50% 0%,rgba(31,158,255,.16),rgba(0,0,0,0) 62%),linear-gradient(180deg,rgba(4,6,10,.92),rgba(0,0,0,.92))!important;border:2px solid #3dabff!important;color:#fff!important;text-shadow:0 0 1px rgba(255,255,255,.6),0 0 7px rgba(31,158,255,.85)!important;box-shadow:0 3px 0 0 #0c233a,0 6px 0 0 #050f1a,0 6px 0 1.5px #123c5e,0 0 10px rgba(31,158,255,.45),inset 0 0 12px rgba(31,158,255,.28)!important}
